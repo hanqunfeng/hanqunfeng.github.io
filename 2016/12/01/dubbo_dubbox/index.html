@@ -1,0 +1,1242 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="dubbo," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Study Zone" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="摘要
+官网地址，官网有完整的资料以帮助使用者快速熟悉dubbo，不过目前相关下载地址已经失效，代码已经迁移到github，请参看下面的代码地址，自行编译打包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dubbo初体验">
+<meta property="og:url" content="http://blog.hanqunfeng.com/2016/12/01/dubbo_dubbox/index.html">
+<meta property="og:site_name" content="Study Zone">
+<meta property="og:description" content="摘要
+官网地址，官网有完整的资料以帮助使用者快速熟悉dubbo，不过目前相关下载地址已经失效，代码已经迁移到github，请参看下面的代码地址，自行编译打包">
+<meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/dubbo_simple_monitor.png">
+<meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/dubbo-monitor.png">
+<meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/dubbo-admin.png">
+<meta property="og:updated_time" content="2016-12-01T10:05:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dubbo初体验">
+<meta name="twitter:description" content="摘要
+官网地址，官网有完整的资料以帮助使用者快速熟悉dubbo，不过目前相关下载地址已经失效，代码已经迁移到github，请参看下面的代码地址，自行编译打包">
+<meta name="twitter:image" content="http://blog.hanqunfeng.com/images_glob/dubbo_simple_monitor.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.hanqunfeng.com/2016/12/01/dubbo_dubbox/"/>
+
+
+
+
+
+  <title> Dubbo初体验 | Study Zone </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?635a42e398161a0821f5aafa0d6a8f0e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Study Zone</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Spring--java程序员的春天</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.hanqunfeng.com/2016/12/01/dubbo_dubbox/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="hanqunfeng">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/uploads/touxiang.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Study Zone">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Study Zone" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Dubbo初体验
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-01T19:24:04+08:00">
+                2016-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/01/dubbo_dubbox/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/01/dubbo_dubbox/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/01/dubbo_dubbox/" class="leancloud_visitors" data-flag-title="Dubbo初体验">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          <span class="post-time">
+              &nbsp; | &nbsp;
+           <span class="post-meta-item-icon">
+             <i class="fa fa-calendar-o"></i>
+           </span>
+           <span class="post-meta-item-text">字数统计:</span>
+           <span class="post-count">2,230(字)</span>
+           
+          </span>
+    
+         <span class="post-time">
+            &nbsp; | &nbsp;
+           <span class="post-meta-item-icon">
+             <i class="fa fa-calendar-o"></i>
+           </span>
+           <span class="post-meta-item-text">阅读时长:</span>
+           <span class="post-count">10(分)</span>
+           
+         </span>
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><ul>
+<li><a href="http://dubbo.io/Home-zh.htm" target="_blank" rel="external">官网地址</a>，官网有完整的资料以帮助使用者快速熟悉dubbo，不过目前相关下载地址已经失效，代码已经迁移到github，请参看下面的代码地址，自行编译打包</li>
+</ul>
+<a id="more"></a>
+<h2 id="dubbo代码地址"><a href="#dubbo代码地址" class="headerlink" title="dubbo代码地址"></a>dubbo代码地址</h2><blockquote>
+<ul>
+<li><a href="https://github.com/alibaba/dubbo" target="_blank" rel="external">2.5.4(官方版本)</a>，基于spring3.2.16.RELEASE</li>
+<li><a href="https://github.com/dangdangdotcom/dubbox" target="_blank" rel="external">2.8.4(第三方基于2.5.3修改)</a>，基于spring3.2.9.RELEASE,项目名称为dubbox，但生成的包名依然是dubbo</li>
+</ul>
+</blockquote>
+<h2 id="git、maven、jdk、tomcat、nexus请自行安装，我安装的版本如下"><a href="#git、maven、jdk、tomcat、nexus请自行安装，我安装的版本如下" class="headerlink" title="git、maven、jdk、tomcat、nexus请自行安装，我安装的版本如下"></a>git、maven、jdk、tomcat、nexus请自行安装，我安装的版本如下</h2><blockquote>
+<p>git version 2.9.3<br>Apache Maven 3.3.9<br>java version “1.8.0_31”<br>tomcat version 8.5.4<br>nexus version 2.5.0-04</p>
+</blockquote>
+<h2 id="编译打包"><a href="#编译打包" class="headerlink" title="编译打包"></a>编译打包</h2><h3 id="以dubbo2-8-4为例"><a href="#以dubbo2-8-4为例" class="headerlink" title="以dubbo2.8.4为例"></a>以dubbo2.8.4为例</h3><blockquote>
+<ul>
+<li>git clone <a href="https://github.com/dangdangdotcom/dubbox.git" target="_blank" rel="external">https://github.com/dangdangdotcom/dubbox.git</a></li>
+<li>cd dubbox </li>
+<li>mvn clean package install -Dmaven.test.skip=true</li>
+</ul>
+</blockquote>
+<h3 id="发布dubbo2-8-4到nexus的3rd-party仓库"><a href="#发布dubbo2-8-4到nexus的3rd-party仓库" class="headerlink" title="发布dubbo2.8.4到nexus的3rd party仓库"></a>发布dubbo2.8.4到nexus的3rd party仓库</h3><blockquote>
+<ul>
+<li>登录nexus，设置3rd party的Deployment Policy=Allow Redeploy(在Configuration中配置)</li>
+<li><p>vi ~/.m2/settings.xml，在servers中增加如下配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">server</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>thirdparty<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">username</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">username</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">password</span>&gt;</span>admin123<span class="tag">&lt;/<span class="name">password</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">server</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>修改dubbox的pom.xml，增加如下配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">distributionManagement</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">repository</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>thirdparty<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.36.49:8080/nexus/content/repositories/thirdparty/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">distributionManagement</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>mvn clean package deploy -Dmaven.test.skip=true</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="发布dubbo2-5-4到nexus的3rd-party仓库"><a href="#发布dubbo2-5-4到nexus的3rd-party仓库" class="headerlink" title="发布dubbo2.5.4到nexus的3rd party仓库"></a>发布dubbo2.5.4到nexus的3rd party仓库</h3><blockquote>
+<ul>
+<li>因为目前2.5.4是Snapshots版本，所以不能直接发布到3rd party中，如果要发布到3rd party，需要修改pom.xml，去掉版本号中的Snapshots，比如在intellij IDEA中，使用快捷键Command+Shift+R；</li>
+</ul>
+</blockquote>
+<h2 id="dubbo包含四个组件"><a href="#dubbo包含四个组件" class="headerlink" title="dubbo包含四个组件"></a>dubbo包含四个组件</h2><ul>
+<li>Provider: 暴露服务的服务提供方。这里我们自己提供(基于2.8.4)；</li>
+<li>Consumer: 调用远程服务的服务消费方。这里我们自己提供(基于2.8.4)；</li>
+<li>Registry: 服务注册与发现的注册中心。这里使用zookeeper；</li>
+<li>Monitor: 统计服务的调用次调和调用时间的监控中心。这里介绍两个，一个是dubbo提供的dubbo-monitor-simple，另一个是第三方对dubbo-monitor-simple的改进版本：<a href="http://git.oschina.net/handu/dubbo-monitor" target="_blank" rel="external">改版的monitor(基于2.8.4)</a></li>
+</ul>
+<hr>
+<p>下面分别介绍：顺序为Registry，Provider，Consumer，Monitor。</p>
+<hr>
+<h2 id="ZooKeeper安装"><a href="#ZooKeeper安装" class="headerlink" title="ZooKeeper安装"></a>ZooKeeper安装</h2><p><a href="http://zookeeper.apache.org" target="_blank" rel="external">官网地址</a></p>
+<h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ wget http://apache.fayea.com/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz</div><div class="line">$ tar zxvf zookeeper-3.4.9.tar.gz</div><div class="line">$ <span class="built_in">cd</span> zookeeper-3.4.9</div><div class="line">$ cp conf/zoo_sample.cfg conf/zoo.cfg</div></pre></td></tr></table></figure>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>$ vi conf/zoo.cfg<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">tickTime=2000</div><div class="line">initLimit=10</div><div class="line">syncLimit=5</div><div class="line"><span class="comment">#实际上只需要配置dataDir，这里修改为自己的存储目录</span></div><div class="line">dataDir=/usr/<span class="built_in">local</span>/zookeeper-3.4.9/data</div><div class="line">clientPort=2181</div></pre></td></tr></table></figure></p>
+<h3 id="集群配置"><a href="#集群配置" class="headerlink" title="集群配置"></a>集群配置</h3><ul>
+<li>分别在两台主机上按上述方法安装zookeeper，比如两台主机的IP分别为192.168.37.144、192.168.37.143；</li>
+<li><p>分别在两台主机的zoo.cfg中增加如下配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">server.1=192.168.37.144:2555:3555</div><div class="line">server.2=192.168.37.143:2555:3555</div></pre></td></tr></table></figure>
+</li>
+<li><p>在144主机的dataDir指定的目录(/usr/local/zookeeper-3.4.9/data)下创建文件myid</p>
+<blockquote>
+<p>vi myid<br>设置内容为1  #就是zoo.cfg中server.后面对应的数字</p>
+</blockquote>
+</li>
+<li><p>同理将143的myid文件中内容设置为2</p>
+</li>
+</ul>
+<h3 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h3><ul>
+<li><p>两台主机分别开放2181，2555，3555端口<br>vi /etc/sysconfig/iptablse，加入如下内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#zookeeper</span></div><div class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 2181 -j ACCEPT</div><div class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 2555 -j ACCEPT</div><div class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 3555 -j ACCEPT</div></pre></td></tr></table></figure>
+</li>
+<li><p>重启iptables</p>
+</li>
+</ul>
+<h3 id="启动与关闭zookeeper"><a href="#启动与关闭zookeeper" class="headerlink" title="启动与关闭zookeeper"></a>启动与关闭zookeeper</h3><p>./bin/zkServer.sh start<br>./bin/zkServer.sh stop</p>
+<h3 id="查看在zookeeper中注册的信息"><a href="#查看在zookeeper中注册的信息" class="headerlink" title="查看在zookeeper中注册的信息"></a>查看在zookeeper中注册的信息</h3><p>echo dump | nc 192.168.37.144 2181<br>OR<br>telnet 192.168.37.144 2188<br>dump</p>
+<h2 id="Provider-amp-Consumer"><a href="#Provider-amp-Consumer" class="headerlink" title="Provider&amp;Consumer"></a>Provider&amp;Consumer</h2><p>阿里官方的实例很详细了，这里只做简单的说明，示例项目依赖于dubbo2.8.4,spring替换为4.3.3，使用中并未见异常，示例源码地址:<a href="https://github.com/hanqunfeng/DubboStudy" target="_blank" rel="external">https://github.com/hanqunfeng/DubboStudy</a></p>
+<h3 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></div><div class="line">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">       <span class="attr">xmlns:dubbo</span>=<span class="string">"http://code.alibabatech.com/schema/dubbo"</span></div><div class="line">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd</span></div><div class="line">    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"&gt;</div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 一个项目中只能有一个dubbo:application配置项 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:application</span> <span class="attr">name</span>=<span class="string">"demo-provider"</span> <span class="attr">owner</span>=<span class="string">"hanqf"</span> <span class="attr">organization</span>=<span class="string">"dubbox"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 使用zookeeper注册中心暴露服务地址--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:registry</span></span></div><div class="line">            <span class="attr">address</span>=<span class="string">"zookeeper://192.168.37.144:2181?backup=192.168.37.143:2181"</span> <span class="attr">timeout</span>=<span class="string">"50000"</span>/&gt;</div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 用dubbo协议在20880端口暴露服务 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:protocol</span> <span class="attr">name</span>=<span class="string">"dubbo"</span> <span class="attr">port</span>=<span class="string">"20880"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 声明需要暴露的服务接口 服务实现类是通过注解注册的，所以此处不需要声明实现类 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">"web.function.demo.service.DemoService"</span> <span class="attr">ref</span>=<span class="string">"demoService"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">"web.function.demo.service.Demo2Service"</span> <span class="attr">ref</span>=<span class="string">"demo2Service"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 启用monitor服务，只有配置这个，才会主动向monitor推送信息 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:monitor</span> <span class="attr">protocol</span>=<span class="string">"registry"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>不同的Provider之间可以使用相同的应用名称（比如这里是name=”demo-provider”），因为注册的服务只基于服务所在服务器的ip地址和dubbo协议开放的端口号，两者有一个不相同即可，但是不建议这样做。</li>
+<li>对于提供相同服务的Provider，也就是副本（同一个war包，部署到不同主机），则不可以不去修改name，但是对于提供不同服务的Provider，不要使用相同的name，这样不便于在monitor中查看。</li>
+<li>对于同一个Provider，要在同一台主机中部署（同一个war包，部署到同一台主机），则需要修改duboo协议端口，比如示例代码中的dubbo-provider和dubbo-provider02，因为两者提供相同的服务，所以应用名称相同，但是因为都在本机部署，所以一个用20880，一个使用20881</li>
+</ul>
+</blockquote>
+<h3 id="Consumer"><a href="#Consumer" class="headerlink" title="Consumer"></a>Consumer</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></div><div class="line">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">       <span class="attr">xmlns:dubbo</span>=<span class="string">"http://code.alibabatech.com/schema/dubbo"</span></div><div class="line">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd</span></div><div class="line">    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:application</span> <span class="attr">name</span>=<span class="string">"demo-consumer"</span> <span class="attr">owner</span>=<span class="string">"hanqf"</span> <span class="attr">organization</span>=<span class="string">"dubbox"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 设置check的缺省值，如果配置中有显式的声明，如：&lt;dubbo:reference check="true"/&gt;，不会受影响 --&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 关闭所有服务的启动时检查,注意：如果关闭某个服务的启动时检查，需要在指定的服务单独配置check="false" --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:consumer</span> <span class="attr">check</span>=<span class="string">"false"</span> /&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:registry</span> <span class="attr">protocol</span>=<span class="string">"zookeeper"</span></span></div><div class="line">                    <span class="attr">address</span>=<span class="string">"192.168.37.144:2181,192.168.37.143:2181"</span> <span class="attr">timeout</span>=<span class="string">"50000"</span>/&gt;</div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 用dubbo协议在20880端口暴露服务 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:protocol</span> <span class="attr">name</span>=<span class="string">"dubbo"</span> <span class="attr">port</span>=<span class="string">"20880"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 声明需要暴露的服务接口 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">interface</span>=<span class="string">"web.function.demo.service.DemoService"</span> <span class="attr">id</span>=<span class="string">"demoService"</span> <span class="attr">timeout</span>=<span class="string">"50000"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">interface</span>=<span class="string">"web.function.demo.service.Demo2Service"</span> <span class="attr">id</span>=<span class="string">"demo2Service"</span> <span class="attr">timeout</span>=<span class="string">"50000"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dubbo:monitor</span> <span class="attr">protocol</span>=<span class="string">"registry"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>Consumer和Provider如果部署在同一台主机，可以使用相同的dubbo协议端口，两者不受影响</li>
+</ul>
+</blockquote>
+<hr>
+<p>关于相关配置属性的说明，还是参考官方资料吧，在dubbo源码中已经包含了Consumer和Provider的示例，可以作为参考。</p>
+<hr>
+<h2 id="Monitor"><a href="#Monitor" class="headerlink" title="Monitor"></a>Monitor</h2><h3 id="dubbo-monitor-simple-简易监控中心"><a href="#dubbo-monitor-simple-简易监控中心" class="headerlink" title="dubbo-monitor-simple 简易监控中心"></a>dubbo-monitor-simple 简易监控中心</h3><ul>
+<li>dubbo项目源码中已经自带了一个Monitor，就是dubbo-monitor-simple，使用maven编译后，会在dubbox/dubbo-simple/dubbo-monitor-simple/target下生成dubbo-monitor-simple-2.8.4-assembly.tar.gz</li>
+<li><p>将dubbo-monitor-simple-2.8.4-assembly.tar.gz拷贝的合适的地方并解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ tar -zxvf dubbo-monitor-simple-2.8.4-assembly.tar.gz</div><div class="line">$ <span class="built_in">cd</span> dubbo-monitor-simple-2.8.4</div><div class="line">$ vi conf/dubbo.properties</div></pre></td></tr></table></figure>
+</li>
+<li><p>主要修改zookeeper地址、端口、绘图目录（该目录必须手工创建，比如这里是/Users/hanqunfeng/monitor）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">dubbo.container=<span class="built_in">log</span>4j,spring,registry,jetty</div><div class="line">dubbo.application.name=simple-monitor</div><div class="line">dubbo.application.owner=</div><div class="line"><span class="comment">#dubbo.registry.address=multicast://224.5.6.7:1234</span></div><div class="line">dubbo.registry.address=zookeeper://192.168.37.144:2181?backup=192.168.37.143:2181</div><div class="line"><span class="comment">#dubbo.registry.address=redis://127.0.0.1:6379</span></div><div class="line"><span class="comment">#dubbo.registry.address=dubbo://127.0.0.1:9090</span></div><div class="line">dubbo.protocol.port=7070</div><div class="line">dubbo.jetty.port=8085</div><div class="line">dubbo.jetty.directory=/Users/hanqunfeng/monitor</div><div class="line">dubbo.charts.directory=<span class="variable">$&#123;dubbo.jetty.directory&#125;</span>/charts</div><div class="line">dubbo.statistics.directory=/Users/hanqunfeng/monitor/statistics</div><div class="line">dubbo.log4j.file=logs/dubbo-monitor-simple.log</div><div class="line">dubbo.log4j.level=WARN</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动与关闭</p>
+<blockquote>
+<p>./bin/start.sh<br>./bin/stop.sh</p>
+</blockquote>
+</li>
+<li>浏览器访问<a href="http://localhost:8085，图表中的效果是注册了Provider，Consumer的效果" target="_blank" rel="external">http://localhost:8085，图表中的效果是注册了Provider，Consumer的效果</a><br><img src="/images_glob/dubbo_simple_monitor.png" alt=""></li>
+</ul>
+<h3 id="改版的monitor-基于2-8-4"><a href="#改版的monitor-基于2-8-4" class="headerlink" title="改版的monitor(基于2.8.4)"></a>改版的monitor(基于2.8.4)</h3><ul>
+<li>特点：使用mysql作为数据存储，界面使用bootstrap进行优化</li>
+<li><p>下载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> http://git.oschina.net/handu/dubbo-monitor</div><div class="line">$ <span class="built_in">cd</span> dubbo-monitor</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置<br>vi src/main/resources/application.properties，修改zookeeper地址，端口，数据库信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">dubbo.application.name=dubbo-monitor</div><div class="line">dubbo.application.owner=hanqunfeng</div><div class="line">dubbo.registry.address=zookeeper://192.168.37.144:2181?backup=192.168.37.143:2181</div><div class="line">dubbo.protocol.port=6060</div><div class="line"></div><div class="line"><span class="comment"># Database Settings</span></div><div class="line">db.url=jdbc:mysql://127.0.0.1:3306/monitor?prepStmtCacheSize=517&amp;cachePrepStmts=<span class="literal">true</span>&amp;autoReconnect=<span class="literal">true</span>&amp;characterEncoding=utf-8</div><div class="line">db.username=root</div><div class="line">db.password=password</div><div class="line">db.maxActive=500</div><div class="line"></div><div class="line"><span class="comment"># System Manager</span></div><div class="line">manager.username=admin</div><div class="line">manager.password=admin</div></pre></td></tr></table></figure>
+</li>
+<li><p>数据库初始化</p>
+<blockquote>
+<ul>
+<li>创建monitor数据库</li>
+<li>执行sql目录下的create.sql</li>
+</ul>
+</blockquote>
+</li>
+<li><p>打包<br>mvn clean package -Dmaven.test.skip=true</p>
+<blockquote>
+<p>基于本地nexus编译打包时，提示找不到jetbrick-template-2.0.10.jar，去maven中央仓库<a href="http://mvnrepository.com/artifact/com.github.subchen/jetbrick-template/2.0.10" target="_blank" rel="external">下载</a>再上传到nexus中吧。</p>
+</blockquote>
+</li>
+<li><p>部署<br>将生成的dubbo-monitor.war包部署到tomcat中，启动tomcat（端口8084）<br>访问地址<a href="http://localhost:8084/dubbo-monitor" target="_blank" rel="external">http://localhost:8084/dubbo-monitor</a><br><img src="/images_glob/dubbo-monitor.png" alt=""></p>
+</li>
+</ul>
+<hr>
+<p>最后说一下dubbo-admin，这个是dubbo官方提供的dubbo管理控制台<br>官方说明：管理控制台为内部裁剪版本，开源部分主要包含：路由规则，动态配置，服务降级，访问控制，权重调整，负载均衡，等管理功能。</p>
+<hr>
+<h2 id="dubbo-admin-管理控制台"><a href="#dubbo-admin-管理控制台" class="headerlink" title="dubbo-admin 管理控制台"></a>dubbo-admin 管理控制台</h2><p>dubbo项目源码中有一个模块叫做dubbo-admin</p>
+<blockquote>
+<p>cd dubbox/dubbo-admin/src/main/webapp/WEB-INF<br>vi dubbo.properties<br>配置dubbo.registry.address=zookeeper://192.168.37.144:2181?backup=192.168.37.143:2181<br>编译打包，将生成的dubbo-admin-2.8.4.war部署到tomcat<br><img src="/images_glob/dubbo-admin.png" alt=""></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dubbo/" rel="tag"># dubbo</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/17/hexo-theme-next/" rel="next" title="Hexo--NexT主题">
+                <i class="fa fa-chevron-left"></i> Hexo--NexT主题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/01/dubbo_dubbox/"
+           data-title="Dubbo初体验" data-url="http://blog.hanqunfeng.com/2016/12/01/dubbo_dubbox/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/touxiang.jpg"
+               alt="hanqunfeng" />
+          <p class="site-author-name" itemprop="name">hanqunfeng</p>
+          <p class="site-description motion-element" itemprop="description">分享成长与快乐的地方</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/hanqunfeng" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hanqunfeng.iteye.com" target="_blank" title="Iteye">
+                  
+                    <i class="fa fa-fw fa-bus"></i>
+                  
+                  Iteye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/hanqunfeng" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-car"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://fontawesome.io/icons/" target="_blank" title="FontAwsome">
+                  
+                    <i class="fa fa-fw fa-font-awesome"></i>
+                  
+                  FontAwsome
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://duoshuo.com" title="多说评论" target="_blank">多说评论</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tongji.baidu.com/web/welcome/login" title="百度统计" target="_blank">百度统计</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.aliyun.com" title="阿里云" target="_blank">阿里云</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://leancloud.cn" title="Leancloud" target="_blank">Leancloud</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo代码地址"><span class="nav-number">2.</span> <span class="nav-text">dubbo代码地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git、maven、jdk、tomcat、nexus请自行安装，我安装的版本如下"><span class="nav-number">3.</span> <span class="nav-text">git、maven、jdk、tomcat、nexus请自行安装，我安装的版本如下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译打包"><span class="nav-number">4.</span> <span class="nav-text">编译打包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#以dubbo2-8-4为例"><span class="nav-number">4.1.</span> <span class="nav-text">以dubbo2.8.4为例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布dubbo2-8-4到nexus的3rd-party仓库"><span class="nav-number">4.2.</span> <span class="nav-text">发布dubbo2.8.4到nexus的3rd party仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布dubbo2-5-4到nexus的3rd-party仓库"><span class="nav-number">4.3.</span> <span class="nav-text">发布dubbo2.5.4到nexus的3rd party仓库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo包含四个组件"><span class="nav-number">5.</span> <span class="nav-text">dubbo包含四个组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZooKeeper安装"><span class="nav-number">6.</span> <span class="nav-text">ZooKeeper安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载安装"><span class="nav-number">6.1.</span> <span class="nav-text">下载安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">6.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群配置"><span class="nav-number">6.3.</span> <span class="nav-text">集群配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开放端口"><span class="nav-number">6.4.</span> <span class="nav-text">开放端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动与关闭zookeeper"><span class="nav-number">6.5.</span> <span class="nav-text">启动与关闭zookeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看在zookeeper中注册的信息"><span class="nav-number">6.6.</span> <span class="nav-text">查看在zookeeper中注册的信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Provider-amp-Consumer"><span class="nav-number">7.</span> <span class="nav-text">Provider&Consumer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Provider"><span class="nav-number">7.1.</span> <span class="nav-text">Provider</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consumer"><span class="nav-number">7.2.</span> <span class="nav-text">Consumer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monitor"><span class="nav-number">8.</span> <span class="nav-text">Monitor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dubbo-monitor-simple-简易监控中心"><span class="nav-number">8.1.</span> <span class="nav-text">dubbo-monitor-simple 简易监控中心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改版的monitor-基于2-8-4"><span class="nav-number">8.2.</span> <span class="nav-text">改版的monitor(基于2.8.4)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo-admin-管理控制台"><span class="nav-number">9.</span> <span class="nav-text">dubbo-admin 管理控制台</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hanqunfeng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hanqunfeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz", "A0HB73VDqWDODaRS4yyiW6V8");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
