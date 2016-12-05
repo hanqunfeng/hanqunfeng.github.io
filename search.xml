@@ -3,6 +3,13 @@
   
     
     <entry>
+      <title><![CDATA[Hexo--解决百度不能索引git page的问题]]></title>
+      <url>%2F2016%2F12%2F05%2Fhexo-baidu-coding%2F</url>
+      <content type="text"><![CDATA[摘要 由于git page网站对百度spider进行了屏蔽，所以导致了百度是无法对我们发布在git page上的网站进行索引； 解决方式是将我们的代码发布到国内的coding站点，其同样可以提供代码托管和Pages服务； Coding配置 Coding站点地址，注册个帐号 新建一个项目，比如： 设置SSH公钥，实现免密提交代码，如下图，将我们设置github page时生成的公钥填入其中，这里注意，要去掉最后面的邮箱地址 新建coding-pages分支，并设置为默认 开启Pages服务 注意，此时提交代码后，可以通过http://hanqunfeng.coding.me访问 Hexo配置 hexo支持多仓库发布 1234567deploy:- type: git repo: https://github.com/hanqunfeng/hanqunfeng.github.io.git branch: master- type: git repo: https://git.coding.net/hanqunfeng/hanqunfeng.git branch: coding-pages 执行hexo d，会将代码同时发布到github和coding 域名解析–Dnspod 因为代码同时发布到github和coding，所以我希望国内用户访问coding，国外用户访问github，这样可以提高访问效率； 使用Dnspod实现域名解析，其支持让来源为指定线路的用户访问特定的地址； 注册一个Dnspod帐号，注册成功后在【域名解析】中添加一个域名，我这里添加的就是hanqunfeng.com； 添加成功后会自动解析出两个记录类型为A的记录，选择导入； 之后手工添加两条记录，一个CNAME到hanqunfeng.github.io.【国外】，一个CNAME到hanqunfeng.coding.me.【国内】，如下： 注意记录值最后都要加个点 修改万网的域名DNS 因为我的域名是在万网购买的，所以要想Dnspod起作用，需要修改万网中的DNS为Dnspod提供的地址； 万网域名修改 DNS 方法12f1g1ns1.dnspod.netf1g1ns2.dnspod.net Coding Pages服务中配置映射域名]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[Hexo--百度和谷歌搜索引擎索引方法]]></title>
       <url>%2F2016%2F12%2F05%2Fhexo-baidu-google%2F</url>
       <content type="text"><![CDATA[摘要 让百度和谷歌搜索引擎对当前站点进行索引的方法。 由于国内对谷歌的访问限制，所以可以使用chrome浏览器安装『谷歌访问助手』插件，安装方法 百度搜索 需要拥有百度帐号，并进行网站验证，因为我已经验证过blog.hanqunfneg.com，所以这里为了演示，使用www.hanqunfeng.com进行验证。 推荐『HTML 文件上传』的方式进行验证 将谷歌的验证文件，如我的是baidu_verify_5T5OVCioxp.html下载到本地，并拷贝到source目录下，并在文件上方增加如下内容,这样可以保证该文件不会被编译： 123layout: false---5T5OVCioxp 编译并发布，之后在刚才的下载页面进行验证 谷歌搜索 需要拥有谷歌帐号，并进行网站验证 推荐『HTML 文件上传』的方式进行验证 将谷歌的验证文件，如我的是googleea53a22ff4210278.html下载到本地，并拷贝到source目录下，并在文件上方增加如下内容,这样可以保证该文件不会被编译： 123layout: false---google-site-verification: googleea53a22ff4210278.html 编译并发布，之后在刚才的下载页面进行验证 插件站点地图安装 分别使用以下命令来安装针对百度和Google的地图插件，在站点的根目录下执行以下命令： 12$ npm install hexo-generator-sitemap --save$ npm install hexo-generator-baidu-sitemap --save 配置hexo的站点配置文件_config.yml 1234567891011#启用相应插件Plugins:- hexo-generator-sitemap- hexo-generator-baidu-sitemap#配置站点地图文件#sitemapsitemap: path: sitemap.xml baidusitemap:path: baidusitemap.xml 执行hexo g，当你成功编译并在Public目录下生成对应的baidusitemap.xml(针对百度)，sitemap.xml(针对Google)表明你已经成功建立的站点地图。 收录站点地图 百度推送 入口：百度站长–网页抓取–链接提交 谷歌推送 入口：Google Search Console–抓取–站点地图 百度推送方式–自动推送 索引效率：主动推送&gt;自动推送&gt;sitemap 百度的网站上有说明，地址 将自动推送的js脚本拷贝到themes\next\layout\_partials\footer.swig文件的最下方即可]]></content>
