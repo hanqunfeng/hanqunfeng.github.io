@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.hanqunfeng.com/"/>
-  <updated>2016-12-06T06:49:01.000Z</updated>
+  <updated>2016-12-09T15:37:38.000Z</updated>
   <id>http://blog.hanqunfeng.com/</id>
   
   <author>
@@ -14,6 +14,284 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Spring Boot学习笔记01--基本介绍</title>
+    <link href="http://blog.hanqunfeng.com/2016/12/09/spring-boot-study/"/>
+    <id>http://blog.hanqunfeng.com/2016/12/09/spring-boot-study/</id>
+    <published>2016-12-09T15:33:15.000Z</published>
+    <updated>2016-12-09T15:37:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>看完本文你将掌握如下知识点：</p>
+<ol>
+<li>如何搭建一个SpringBoot项目</li>
+<li>SpringBoot自动配置原理</li>
+<li>SpringBoot属性配置方法</li>
+<li>修改默认的Logback日志为log4j和log4j2的方法</li>
+<li>SpringBoot单元测试方法</li>
+</ol>
+<h2 id="Spring-Boot简介"><a href="#Spring-Boot简介" class="headerlink" title="Spring Boot简介"></a>Spring Boot简介</h2><ul>
+<li>要我给<a href="http://projects.spring.io/spring-boot/" target="_blank" rel="external">Spring Boot</a>做个定义，简单来说就是一个基于强大的Spring框架的、推崇JavaConfig的极简配置的web开发框架；</li>
+<li>Spring Boot通过内嵌Servlet容器（tomcat、tetty等等）的方式，可以以jar包的形式独立运行一个web项目；</li>
+<li>Spring Boot提倡JavaConfig和注解的零配置方式，并且默认配置满足绝大多数场景的需要，意味着少量修改默认配置即可快速搭建一个web项目，极大的提高开发效率；</li>
+<li>项目中加入某一个<code>spring-boot-starter-*</code>依赖，就可以引入该功能的完整jar包，降低pom的复杂度</li>
+<li>本文基于Spring Boot的版本为<a href="http://docs.spring.io/spring-boot/docs/1.4.2.RELEASE/reference/htmlsingle/#appendix-dependency-versions" target="_blank" rel="external">1.4.2.RELEASE</a></li>
+</ul>
+<a id="more"></a>
+<h2 id="Spring-Boot项目创建方法"><a href="#Spring-Boot项目创建方法" class="headerlink" title="Spring Boot项目创建方法"></a>Spring Boot项目创建方法</h2><ul>
+<li><a href="http://start.spring.io" target="_blank" rel="external">http://start.spring.io</a>：可以通过网页创建项目结构并下载；</li>
+<li><a href="http://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-installing-spring-boot.html" target="_blank" rel="external">Spring Boot CLI</a>：通过命令行的方式创建Spring Boot项目；</li>
+<li><a href="http://spring.io/tools/sts" target="_blank" rel="external">Spring Tool Suite</a>：习惯Eclipse的用户可以使用STS创建『Spring Starter Project』项目;</li>
+<li><a href="https://www.jetbrains.com/idea/" target="_blank" rel="external">IntelliJ IDEA</a>：强大的生产力工具，推荐使用，创建『Spring Initializr』项目;</li>
+</ul>
+<h2 id="使用IntelliJ-IDEA创建一个web项目"><a href="#使用IntelliJ-IDEA创建一个web项目" class="headerlink" title="使用IntelliJ IDEA创建一个web项目"></a>使用IntelliJ IDEA创建一个web项目</h2><ol>
+<li>新建Spring Initializr项目<br><img src="/images_glob/spring-boot-study/create1.png" alt=""><blockquote>
+<p>说明：Spring Boot要求JDK1.6+</p>
+</blockquote>
+</li>
+<li>填写项目信息，构建工具使用maven<br><img src="/images_glob/spring-boot-study/create2.png" alt=""></li>
+<li>选择项目使用的依赖，这里我们只需要勾选web<br><img src="/images_glob/spring-boot-study/create3.png" alt=""><blockquote>
+<ol>
+<li>Spring Boot当前最新的稳定版是1.4.2；</li>
+<li>所有依赖可以在创建时勾选，也可以在创建后手工将依赖添加到pom中，如果对依赖比较熟悉，推荐手工添加，这样可以加快创建项目的时间；</li>
+</ol>
+</blockquote>
+</li>
+<li>填写项目名称，点击Finish<br><img src="/images_glob/spring-boot-study/create4.png" alt=""></li>
+<li>新建的项目结构如下<br><img src="/images_glob/spring-boot-study/create5.png" alt=""><blockquote>
+<p>SpringBoot项目只会在项目根目录下生成一个类–SpringBootWebDemoApplication(artifactId+Application)，它就是一个带有main函数的启动类；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.example;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line"></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootWebDemoApplication</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SpringApplication.run(SpringBootWebDemoApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li>pom.xml说明<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></div><div class="line">	<span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">	<span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.example<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springbootwebdemo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line"></div><div class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>SpringBootWebDemo<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">description</span>&gt;</span>Demo project for Spring Boot<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="comment">&lt;!-- 创建的Springboot项目需要继承于spring-boot-starter-parent --&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span> <span class="comment">&lt;!-- lookup parent from repository --&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">parent</span>&gt;</span></div><div class="line"></div><div class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">project.reporting.outputEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.reporting.outputEncoding</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div><div class="line"></div><div class="line">	<span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 创建项目是勾选的web依赖 --&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- 每个项目都会自动添加一个test依赖 --&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"></div><div class="line">	<span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Springboot的编译插件 --&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>这就是一个web项目的pom文件，可以看到只关联了很少的依赖，这是因为我们继承的spring-boot-starter-parent和关联的spring-boot-starter-web本身已经为我们关联了全部的依赖，如下是该项目所有的依赖包<br><img src="/images_glob/spring-boot-study/create6.png" alt=""><br><img src="/images_glob/spring-boot-study/create7.png" alt=""></p>
+</blockquote>
+<h2 id="运行Spring-Boot项目"><a href="#运行Spring-Boot项目" class="headerlink" title="运行Spring Boot项目"></a>运行Spring Boot项目</h2><ol>
+<li>maven运行：<code>mvn spring-boot:run</code>；</li>
+<li>main函数运行：右键单击SpringBootWebDemoApplication，选择『Run 或者 Debug』；</li>
+<li>推荐安装JRebel插件，支持热部署；</li>
+<li>当然，也可以maven先打成jar，然后通过命令行执行<code>java -jar xx.jar</code>；<blockquote>
+<ul>
+<li>运行成功会看到控制台打印了如下信息<br><img src="/images_glob/spring-boot-study/run1.png" alt=""></li>
+<li>可以看到打印信息中有tomcat的启动信息，说明springboot默认使用tomcat作为web运行容器，这点从上面的依赖包中也可以看到。因为当前项目并没有开放任何服务，所以此时访问8080端口会提示无服务<br><img src="/images_glob/spring-boot-study/run2.png" alt=""></li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<h3 id="添加服务"><a href="#添加服务" class="headerlink" title="添加服务"></a>添加服务</h3><ul>
+<li><p>我们可以在项目中创建一个Controller控制器，比如DemoController</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.example.Controller;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</div><div class="line">    <span class="function">String <span class="title">index</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Hello Spring Boot!"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>运行SpringBootWebDemoApplication，再次访问<a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a><br><img src="/images_glob/spring-boot-study/run3.png" alt=""></p>
+</li>
+</ul>
+<hr>
+<p><strong>一切似乎就是那么美好，我们什么都没配置，一个web项目就这样运行起来了，SpringBoot自动帮我们默认了一些常用的配置</strong></p>
+<hr>
+<h2 id="自动配置原理说明"><a href="#自动配置原理说明" class="headerlink" title="自动配置原理说明"></a>自动配置原理说明</h2><h3 id="SpringBootWebDemoApplication类上的注解：-SpringBootApplication"><a href="#SpringBootWebDemoApplication类上的注解：-SpringBootApplication" class="headerlink" title="SpringBootWebDemoApplication类上的注解：@SpringBootApplication"></a>SpringBootWebDemoApplication类上的注解：@SpringBootApplication</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.springframework.boot.autoconfigure;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Inherited;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Target;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.SpringBootConfiguration;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.EnableAutoConfiguration;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.context.TypeExcludeFilter;</div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.ComponentScan;</div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.FilterType;</div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.ComponentScan.Filter;</div><div class="line"><span class="keyword">import</span> org.springframework.core.annotation.AliasFor;</div><div class="line"></div><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@SpringBootConfiguration</span></div><div class="line"><span class="meta">@EnableAutoConfiguration</span></div><div class="line"><span class="meta">@ComponentScan</span>(</div><div class="line">    excludeFilters = &#123;<span class="meta">@Filter</span>(</div><div class="line">    type = FilterType.CUSTOM,</div><div class="line">    classes = &#123;TypeExcludeFilter.class&#125;</div><div class="line">)&#125;</div><div class="line">)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootApplication &#123;</div><div class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = ComponentScan.class,</div><div class="line">        attribute = <span class="string">"basePackages"</span></div><div class="line">    )</div><div class="line">    String[] scanBasePackages() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = ComponentScan.class,</div><div class="line">        attribute = <span class="string">"basePackageClasses"</span></div><div class="line">    )</div><div class="line">    Class&lt;?&gt;[] scanBasePackageClasses() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>@SpringBootConfiguration实际上就是@Configuration，说明这是一个JavaConfig</li>
+<li>@EnableAutoConfiguration的作用是根据类路径中jar包是否存在来决定是否开启某一个功能的自动配置，比如，我们项目中添加了spring-boot-starter-web依赖，因其关联Tomcat和Srping MVC，所以类路径下就会存在Tomcat和Spring MVC的jar包，SpringBoot项目扫描到这些jar包后会自动开启两者的配置，当然，这个配置是默认配置，我们可以根据需要进行修改（下文介绍）。</li>
+<li><p>exclude和excludeName用于关闭指定的自动配置，比如关闭数据源相关的自动配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SpringBootApplication</span>(exclude=&#123;DataSourceAutoConfiguration.class&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>scanBasePackages和scanBasePackageClasses用于指定扫描的路径，默认情况下会自动扫描被@SpringBootApplication注解的类（这里是SpringBootWebDemoApplication）的同级包以及子包中的Bean。比如我们创建的DemoController，因为开启了SpringMVC自动配置，同时又在对应的路径下，所以该Controller会被自动加载。比如我们这里指定扫描的包路径如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SpringBootApplication</span>(scanBasePackages = &#123;<span class="string">"com.temp.Controller"</span>&#125;)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>再次运行程序，发现原来的DemoController不能被访问了，而『com.temp.Controller』下的controller却可以被访问。</p>
+</blockquote>
+<h3 id="那么问题来了，SpringBoot到底为我们自动配置了哪些功能呢？"><a href="#那么问题来了，SpringBoot到底为我们自动配置了哪些功能呢？" class="headerlink" title="那么问题来了，SpringBoot到底为我们自动配置了哪些功能呢？"></a>那么问题来了，SpringBoot到底为我们自动配置了哪些功能呢？</h3><ul>
+<li>开启Debug模式，方式有多种:<blockquote>
+<ul>
+<li>java -jar xx.jar –debug</li>
+<li>在IDE中执行Run时添加VM arguments:<code>-Ddebug</code></li>
+<li>在项目resources下的application.properties文件中增加<code>debug=true</code></li>
+</ul>
+</blockquote>
+</li>
+<li>Debug模式运行程序，打印信息中会显示如下内容<blockquote>
+<p>启动的自动配置<br><img src="/images_glob/spring-boot-study/conf1.png" alt=""><br>未启用的自动配置<br><img src="/images_glob/spring-boot-study/conf2.png" alt=""></p>
+</blockquote>
+</li>
+<li><p>从打印结果中看到，每一个<code>*AutoConfiguration*</code>都对应着一类功能的自动配置类，比如<em>HttpEncodingAutoConfiguration</em>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">HttpEncodingAutoConfiguration matched:</div><div class="line">      - @ConditionalOnClass found required class &apos;org.springframework.web.filter.CharacterEncodingFilter&apos; (OnClassCondition)</div><div class="line">      - @ConditionalOnWebApplication (required) found StandardServletEnvironment (OnWebApplicationCondition)</div><div class="line">      - @ConditionalOnProperty (spring.http.encoding.enabled) matched (OnPropertyCondition)</div></pre></td></tr></table></figure>
+</li>
+<li><p>开启的自动配置中都会有<code>@ConditionalOnClass</code>、<code>@ConditionalOnWebApplication</code>等标识，这是什么意思呢？为了弄清楚这个，我们需要先来认识一下<code>@EnableAutoConfiguration</code>；</p>
+</li>
+</ul>
+<h3 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.springframework.boot.autoconfigure;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Inherited;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Target;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.AutoConfigurationPackage;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.EnableAutoConfigurationImportSelector;</div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.Import;</div><div class="line"></div><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@AutoConfigurationPackage</span></div><div class="line"><span class="meta">@Import</span>(&#123;EnableAutoConfigurationImportSelector.class&#125;)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAutoConfiguration &#123;</div><div class="line">    String ENABLED_OVERRIDE_PROPERTY = <span class="string">"spring.boot.enableautoconfiguration"</span>;</div><div class="line"></div><div class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>这里我们需要了解一下@Import注解中的EnableAutoConfigurationImportSelector<blockquote>
+<p>感兴趣的可以看一下源码，大体的功能就是扫描jar包里是否含有<code>META-INF/spring.factories</code>文件;<br>spring.factories中的<em>org.springframework.boot.autoconfigure.EnableAutoConfiguration</em>属性用于声明都需要启用哪些自动配置类;<br>比如<em>spring-boot-autoconfigure-1.4.2.RELEASE.jar</em>中就有一个spring.factories，可以看到<em>org.springframework.boot.autoconfigure.EnableAutoConfiguration</em>参数中列出了自动配置类列表，而<em>HttpEncodingAutoConfiguration</em>这个自动配置类就是其声明的;<br><img src="/images_glob/spring-boot-study/conf3.png" alt=""></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="HttpEncodingAutoConfiguration"><a href="#HttpEncodingAutoConfiguration" class="headerlink" title="HttpEncodingAutoConfiguration"></a>HttpEncodingAutoConfiguration</h3><ul>
+<li><p>先看下源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="meta">@EnableConfigurationProperties</span>(&#123;HttpEncodingProperties.class&#125;)</div><div class="line"><span class="meta">@ConditionalOnWebApplication</span></div><div class="line"><span class="meta">@ConditionalOnClass</span>(&#123;CharacterEncodingFilter.class&#125;)</div><div class="line"><span class="meta">@ConditionalOnProperty</span>(</div><div class="line">    prefix = <span class="string">"spring.http.encoding"</span>,</div><div class="line">    value = &#123;<span class="string">"enabled"</span>&#125;,</div><div class="line">    matchIfMissing = <span class="keyword">true</span></div><div class="line">)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpEncodingAutoConfiguration</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> HttpEncodingProperties properties;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HttpEncodingAutoConfiguration</span><span class="params">(HttpEncodingProperties properties)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.properties = properties;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="meta">@ConditionalOnMissingBean</span>(&#123;CharacterEncodingFilter.class&#125;)</div><div class="line">    <span class="function"><span class="keyword">public</span> CharacterEncodingFilter <span class="title">characterEncodingFilter</span><span class="params">()</span> </span>&#123;</div><div class="line">        OrderedCharacterEncodingFilter filter = <span class="keyword">new</span> OrderedCharacterEncodingFilter();</div><div class="line">        filter.setEncoding(<span class="keyword">this</span>.properties.getCharset().name());</div><div class="line">        filter.setForceRequestEncoding(<span class="keyword">this</span>.properties.shouldForce(Type.REQUEST));</div><div class="line">        filter.setForceResponseEncoding(<span class="keyword">this</span>.properties.shouldForce(Type.RESPONSE));</div><div class="line">        <span class="keyword">return</span> filter;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//.......省略以下........</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>熟悉JavaConfig的都会明白，这就是一个配置类<code>@Configuration</code>，并且通过<code>@Bean</code>注册了一个<code>CharacterEncodingFilter</code>;</p>
+</li>
+</ul>
+<hr>
+<p>但是还有一些注解，是什么意思呢，我们分别说明：</p>
+<hr>
+<ul>
+<li>@EnableConfigurationProperties：开启属性注入<blockquote>
+<p>本例中表示<em>HttpEncodingProperties</em>是属性类，并使用@Autowired自动注入；<br>属性类实际上是一个是注解了<code>@ConfigurationProperties</code>的JavaBean，SpringBoot将属性文件（application.properties）中的键值对与JavaBean的属性建立起一一对应关系:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ConfigurationProperties</span>(</div><div class="line">    prefix = <span class="string">"spring.http.encoding"</span> <span class="comment">//属性值的前缀</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">举例：application.properties中设置如下属性</div><div class="line">spring.http.encoding.charset=UTF-8</div><div class="line">spring.http.encoding.force=true</div><div class="line">*/</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpEncodingProperties</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Charset charset;</div><div class="line">    <span class="keyword">private</span> Boolean force;</div><div class="line">    <span class="comment">//....属性声明及set、get方法........</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+<hr>
+<p>所有<strong>@ConditionalOn</strong>开头的注解都是用于进行条件判断的</p>
+<hr>
+<ul>
+<li>@ConditionalOnWebApplication：当前项目是web项目的条件下才加载当前配置类</li>
+<li><p>@ConditionalOnClass：当类路径下有指定的类的条件下才加载当前配置类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//本例表示，当前类路径（含jar）下必须存在CharacterEncodingFilter</span></div><div class="line"><span class="meta">@ConditionalOnClass</span>(&#123;CharacterEncodingFilter.class&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>@ConditionalOnProperty：当指定的属性等于指定的值的情况下加载当前配置类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// spring.http.encoding=enabled</span></div><div class="line"><span class="comment">// matchIfMissing = true表示如果没有在application.properties设置该属性，则默认为条件符合</span></div><div class="line"><span class="meta">@ConditionalOnProperty</span>(</div><div class="line">    prefix = <span class="string">"spring.http.encoding"</span>,</div><div class="line">    value = &#123;<span class="string">"enabled"</span>&#125;,</div><div class="line">    matchIfMissing = <span class="keyword">true</span></div><div class="line">)</div></pre></td></tr></table></figure>
+</li>
+<li><p>@ConditionalOnMissingBean：当前容器里没有指定的Bean的情况下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 如果当前容器中找不到CharacterEncodingFilter实例，则创建当前的Bean</span></div><div class="line"><span class="meta">@ConditionalOnMissingBean</span>(&#123;CharacterEncodingFilter.class&#125;)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<p>通过上面的分析，应该可以明白SpringBoot是如何做到自动配置的，简单总结如下：</p>
+<ol>
+<li>@SpringBootConfiguration实际上就是@Configuration，说明这是一个JavaConfig</li>
+<li>@EnableAutoConfiguration负责扫描jar包中的<code>META-INF/spring.factories</code>来找到要初始化的各种<strong>AutoConfiguration</strong>类</li>
+<li>各种@Conditional注解决定哪些Bean可以被容器初始化</li>
+<li>如果希望进一步了解SpringBoot的自动配置，建议查看每一个<strong>AutoConfiguration</strong>类的源码</li>
+</ol>
+<hr>
+<h3 id="除了上面介绍的，-Conditional注解还有如下形式"><a href="#除了上面介绍的，-Conditional注解还有如下形式" class="headerlink" title="除了上面介绍的，@Conditional注解还有如下形式"></a>除了上面介绍的，@Conditional注解还有如下形式</h3><ul>
+<li>@ConditionalOnExpression：基于SpEL表达式作为条件判断</li>
+<li>@ConditionalOnJava：基于JAVA版本作为判断条件</li>
+<li>@ConditionalOnJndi：在JNDI存在的条件下查找指定的位置</li>
+<li>@ConditionalOnMissingClass：当前类路径下没有指定的类的条件下</li>
+<li>@ConditionalOnNotWebApplication：当前项目不是web项目的条件下</li>
+<li>@ConditionalOnResource：类路径下是否有指定的值</li>
+<li>@ConditionalOnSingleCandidate：当指定的Bean在容器中只有一个的情况下</li>
+</ul>
+<hr>
+<p>如果我们希望自己创建一个自动配置类(AutoConfiguration)，则只需要在我们自己创建的JavaConfig中加上<strong>@ConditionalOn</strong>注解，并且在类路径下创建<code>META-INF/spring.factories</code>，加入参数<code>org.springframework.boot.autoconfigure.EnableAutoConfiguration=xxxxAutoConfiguration</code></p>
+<hr>
+<h2 id="SpringBoot的配置文件"><a href="#SpringBoot的配置文件" class="headerlink" title="SpringBoot的配置文件"></a>SpringBoot的配置文件</h2><ul>
+<li>SpringBoot支持常规的properties配置文件(application.properties)，还支持<a href="http://baike.baidu.com/link?url=Fe_VBwl7yKA6SO6fZF6USjJwefUUGq5VeN3tSjp3gpRTm7l3ZIoRvTye4QsIz95qJmaW6LC99Nkvb2vnLHBU4_" target="_blank" rel="external">yaml</a>语言的配置文件(application.yml)</li>
+<li>SpringBoot会从classpath下的/config目录或者classpath的根目录查找application.properties或application.yml</li>
+<li>如果要修改SpringBoot自动配置中默认配置，可以通过在配置文件中配置相应的参数即可</li>
+<li>比如，项目启动时，tomcat默认的端口号是『8080』，访问路径是『/』，修改如下：</li>
+<li><p><strong>application.properties</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">server.port=8081</div><div class="line">server.context-path=/demo</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>application.yml</strong></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">server:</span></div><div class="line"><span class="attr">  port:</span> <span class="number">8081</span></div><div class="line"><span class="attr">  context-path:</span> /demo</div></pre></td></tr></table></figure>
+</li>
+<li><p>IntelliJ IDEA支持对properties和yml的代码提示功能，编辑起来还是很方便的，不需要特别记住这些属性名称</p>
+</li>
+<li>SpringBoot默认使用priperites进行配置</li>
+</ul>
+<hr>
+<p>SpringBoot的属性可以通过多种方式指定，配置文件只是其中一种方式，常用的方式还有如下几种，按加载的优先级列出：</p>
+<blockquote>
+<p>命令行参数：<code>java -jar xx.jar --server.port=8081 --server.context-path=/demo</code><br>操作系统环境变量：有些OS不支持使用.这种名字，如server.port，可以使用SERVER_PORT来配置。<br>项目中的配置文件：application.properties或者application.yml<br>项目依赖jar包中的配置文件：application.properties或者application.yml</p>
+</blockquote>
+<p><strong>关于SpringBoot支持的配置属性可以查看<a href="http://docs.spring.io/spring-boot/docs/1.4.2.RELEASE/reference/htmlsingle/#common-application-properties" target="_blank" rel="external">官网地址1.4.2.RELEASE</a></strong></p>
+<hr>
+<h3 id="Profile配置"><a href="#Profile配置" class="headerlink" title="Profile配置"></a>Profile配置</h3><ul>
+<li>不同的环境可以使用不同的配置文件，application-{profile}.properties，比如<blockquote>
+<p>开发：application-rnd.properties<br>测试：application-release.properties<br>验证：application-verify.properties<br>生产：application-prod.properties</p>
+</blockquote>
+</li>
+<li>通过在application.properties(项目中必须包含该文件)中设置<code>spring.profiles.active=prod</code>来指定启用哪一个Profile。</li>
+</ul>
+<h2 id="关于属性配置还想多说的一些内容"><a href="#关于属性配置还想多说的一些内容" class="headerlink" title="关于属性配置还想多说的一些内容"></a>关于属性配置还想多说的一些内容</h2><ul>
+<li>application.properties也可以配置自定义属性：my.name=hanqf</li>
+<li><p>通过<code>@Value</code>将属性注入Bean属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;my.name&#125;"</span>)</div><div class="line"><span class="keyword">private</span> String myName;</div></pre></td></tr></table></figure>
+</li>
+<li><p>通过<code>@ConfigurationProperties</code>将属性注入Bean对象</p>
+</li>
+</ul>
+<p>使用<code>prefix</code><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">my.name=hanqf</div><div class="line">my.servers[<span class="number">0</span>]=rnd.hanqf.com</div><div class="line">my.servers[<span class="number">1</span>]=release.hanqf.com</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ConfigurationProperties</span>(prefix=<span class="string">"my"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> List&lt;String&gt; servers = <span class="keyword">new</span> ArrayList&lt;String&gt;();<span class="comment">//list需要初始化</span></div><div class="line"></div><div class="line">    <span class="comment">//....set and get method</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不使用<code>prefix</code><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">name=hanqf</div><div class="line">jdbc.username=root</div><div class="line">jdbc.password=root</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ConfigurationProperties</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> Jdbc jdbc;</div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Jdbc</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> String username;</div><div class="line">        <span class="keyword">private</span> String password;</div><div class="line">        <span class="comment">//....set and get method</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//....set and get method</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>属性占位符</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">app.name=MyApp</div><div class="line">app.description=$&#123;app.name&#125; is a Spring Boot application </div><div class="line"></div><div class="line">server.port=$&#123;port:<span class="number">8080</span>&#125; <span class="comment"># 如果没有设置port，则使用默认值8080</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>属性名匹配规则</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ConfigurationProperties</span>(prefix=<span class="string">"person"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String firstName;</div><div class="line"></div><div class="line">    <span class="comment">//....set and get method</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><code>firstName</code>可以使用的属性名如下：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">person.firstName，标准的驼峰式命名</div><div class="line">person.first-name，虚线（-）分割方式，推荐在.properties和.yml配置文件中使用</div><div class="line">PERSON_FIRST_NAME，大写下划线形式，建议在系统环境变量中使用</div></pre></td></tr></table></figure></p>
+<h2 id="日志配置"><a href="#日志配置" class="headerlink" title="日志配置"></a>日志配置</h2><ul>
+<li>Spring Boot默认使用Logback作为日志框架，这是推荐的方式，如果希望修改为熟悉的log4j可以看下文<blockquote>
+<p>创建项目时我们引入了<code>spring-boot-starter-web</code>，其依赖<code>spring-boot-starter</code>，<code>spring-boot-starter</code>又依赖于<code>spring-boot-starter-logging</code>，该依赖内容就是Spring Boot默认的日志框架Logback<br>Logback相关设置，可以在<code>application.properties</code>中进行如下配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 日志文件路径</span></div><div class="line">logging.file=D:/my_log.log </div><div class="line"></div><div class="line"><span class="comment"># 配置日志打印级别</span></div><div class="line">logging.level.org.springframework=INFO</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>当然，也可以直接将自己的<code>logback.xml</code>放到项目根路径下</p>
+</blockquote>
+<ul>
+<li>修改为log4j框架<br>pom中排除对<code>spring-boot-starter-logging</code>的依赖，并加入对<code>spring-boot-starter-log4j</code>的依赖<br>目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j" target="_blank" rel="external">1.3.8.RELEASE</a><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span> </div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.8.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>项目根路径下添加<code>log4j.properties</code></p>
+<ul>
+<li>修改为log4j2框架<br>与log4j类似，修改pom，增加<code>spring-boot-starter-log4j2</code>依赖<br>目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2" target="_blank" rel="external">1.4.2.RELEASE</a><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span> </div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-log4j2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>项目根路径下添加<code>log4j2.xml</code></p>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><ul>
+<li><p>创建一个单元测试的抽象父类，用于初始化必要的对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.common;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.junit.Before;</div><div class="line"><span class="keyword">import</span> org.junit.runner.RunWith;</div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;</div><div class="line"><span class="keyword">import</span> org.springframework.test.context.junit4.SpringRunner;</div><div class="line"><span class="keyword">import</span> org.springframework.test.web.servlet.MockMvc;</div><div class="line"><span class="keyword">import</span> org.springframework.test.web.servlet.setup.MockMvcBuilders;</div><div class="line"><span class="keyword">import</span> org.springframework.web.context.WebApplicationContext;</div><div class="line"></div><div class="line"><span class="meta">@RunWith</span>(SpringRunner.class)</div><div class="line"><span class="comment">//1.4.2.RELEASE中不再需要@SpringApplicationConfiguration和@WebAppConfiguration</span></div><div class="line"><span class="meta">@SpringBootTest</span> </div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootTestParent</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> MockMvc mockMvc;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    WebApplicationContext webApplicationContext;</div><div class="line"></div><div class="line">    <span class="meta">@Before</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>继承抽象父类，并实现测试逻辑</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootWebDemoApplicationTests</span> <span class="keyword">extends</span> <span class="title">SpringBootTestParent</span></span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    DemoService demoService;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">content</span><span class="params">()</span></span>&#123;</div><div class="line">        String content = <span class="string">"456"</span>;</div><div class="line">        System.out.println(demoService.printContent(content));</div><div class="line">        Assert.assertEquals(content,demoService.printContent(content));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">DemoControllerContent</span><span class="params">()</span></span>&#123;</div><div class="line">        String uri = <span class="string">"/content/123"</span>;</div><div class="line">        MvcResult mvcResult;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(uri)).andReturn();</div><div class="line">            System.out.println(mvcResult.getResponse().getStatus() + <span class="string">"##"</span> + mvcResult.getResponse().getContentAsString());</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h2&gt;&lt;p&gt;看完本文你将掌握如下知识点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;如何搭建一个SpringBoot项目&lt;/li&gt;
+&lt;li&gt;SpringBoot自动配置原理&lt;/li&gt;
+&lt;li&gt;SpringBoot属性配置方法&lt;/li&gt;
+&lt;li&gt;修改默认的Logback日志为log4j和log4j2的方法&lt;/li&gt;
+&lt;li&gt;SpringBoot单元测试方法&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;Spring-Boot简介&quot;&gt;&lt;a href=&quot;#Spring-Boot简介&quot; class=&quot;headerlink&quot; title=&quot;Spring Boot简介&quot;&gt;&lt;/a&gt;Spring Boot简介&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;要我给&lt;a href=&quot;http://projects.spring.io/spring-boot/&quot;&gt;Spring Boot&lt;/a&gt;做个定义，简单来说就是一个基于强大的Spring框架的、推崇JavaConfig的极简配置的web开发框架；&lt;/li&gt;
+&lt;li&gt;Spring Boot通过内嵌Servlet容器（tomcat、tetty等等）的方式，可以以jar包的形式独立运行一个web项目；&lt;/li&gt;
+&lt;li&gt;Spring Boot提倡JavaConfig和注解的零配置方式，并且默认配置满足绝大多数场景的需要，意味着少量修改默认配置即可快速搭建一个web项目，极大的提高开发效率；&lt;/li&gt;
+&lt;li&gt;项目中加入某一个&lt;code&gt;spring-boot-starter-*&lt;/code&gt;依赖，就可以引入该功能的完整jar包，降低pom的复杂度&lt;/li&gt;
+&lt;li&gt;本文基于Spring Boot的版本为&lt;a href=&quot;http://docs.spring.io/spring-boot/docs/1.4.2.RELEASE/reference/htmlsingle/#appendix-dependency-versions&quot;&gt;1.4.2.RELEASE&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="技术" scheme="http://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Spring Boot" scheme="http://blog.hanqunfeng.com/tags/Spring-Boot/"/>
+    
+  </entry>
   
   <entry>
     <title>Markdown编辑器--Sublime Text和Atom</title>
@@ -101,7 +379,7 @@
     <link href="http://blog.hanqunfeng.com/2016/12/05/hexo-baidu-coding/"/>
     <id>http://blog.hanqunfeng.com/2016/12/05/hexo-baidu-coding/</id>
     <published>2016-12-05T11:33:15.000Z</published>
-    <updated>2016-12-06T03:14:08.000Z</updated>
+    <updated>2016-12-07T07:12:13.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><ul>
 <li>由于git page网站对百度spider进行了屏蔽，所以导致了百度是无法对我们发布在git page上的网站进行索引；</li>
@@ -111,7 +389,7 @@
 <h2 id="Coding配置"><a href="#Coding配置" class="headerlink" title="Coding配置"></a>Coding配置</h2><ul>
 <li><a href="https://coding.net" target="_blank" rel="external">Coding站点地址</a>，注册个帐号</li>
 <li>新建一个项目，比如：<br><img src="/images_glob/hexo-baidu-coding/coding1.png" alt=""></li>
-<li>设置SSH公钥，实现免密提交代码，如下图，将我们设置github page时生成的公钥填入其中，这里注意，要去掉最后面的邮箱地址<br><img src="/images_glob/hexo-baidu-coding/coding2.png" alt=""></li>
+<li>设置SSH公钥，实现免密提交代码，如下图，将我们设置github page时生成的公钥填入其中，这里注意，要去掉最后面的邮箱地址。<a href="/2016/11/14/hexo_gitpage/">参考</a><br><img src="/images_glob/hexo-baidu-coding/coding2.png" alt=""></li>
 <li>新建coding-pages分支，并设置为默认<br><img src="/images_glob/hexo-baidu-coding/coding3.png" alt=""></li>
 <li>开启Pages服务<br><img src="/images_glob/hexo-baidu-coding/coding4.png" alt=""><blockquote>
 <p>注意，此时提交代码后，可以通过<a href="http://hanqunfeng.coding.me" target="_blank" rel="external">http://hanqunfeng.coding.me</a>访问</p>
