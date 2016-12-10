@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.hanqunfeng.com/"/>
-  <updated>2016-12-10T08:02:05.000Z</updated>
+  <updated>2016-12-10T15:18:34.000Z</updated>
   <id>http://blog.hanqunfeng.com/</id>
   
   <author>
@@ -16,11 +16,63 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Spring Boot学习笔记02--Web配置</title>
+    <link href="http://blog.hanqunfeng.com/2016/12/10/spring-boot-study-web/"/>
+    <id>http://blog.hanqunfeng.com/2016/12/10/spring-boot-study-web/</id>
+    <published>2016-12-10T15:33:15.000Z</published>
+    <updated>2016-12-10T15:18:34.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>看完本文你将掌握如下知识点：</p>
+<ol>
+<li>SpringBoot都帮我们做了哪些web相关的自动配置</li>
+<li>我们如何接管SpringBoot的web配置</li>
+</ol>
+<a id="more"></a>
+<h2 id="SpringBoot的web自动配置"><a href="#SpringBoot的web自动配置" class="headerlink" title="SpringBoot的web自动配置"></a>SpringBoot的web自动配置</h2><p>1.与web相关的自动配置类都存放在<em>spring-boot-autoconfigure-1.4.2.RELEASE.jar</em>下的<em>org.springframework.boot.autoconfigure.web</em>路径下；<br><img src="/images_glob/spring-boot-study-web/web1.png" alt=""><br>2.从图中我们可以看到如下AutoConfiguration，application.properties中配置<code>debug=true</code>后启动容器，可以看到服务器的初始化顺序结果如下:</p>
+<ul>
+<li>DispatcherServletAutoConfiguration<br>注册<strong>org.springframework.web.servlet.DispatcherServlet</strong></li>
+<li>EmbeddedServletContainerAutoConfiguration<br>注册容器类型，如类路径下存在<strong>org.apache.catalina.startup.Tomcat</strong>，就会注册Tomcat容器</li>
+<li>ErrorMvcAutoConfiguration<br>注册异常处理处理器</li>
+<li>HttpEncodingAutoConfiguration<br>注册http编码过滤器</li>
+<li>HttpMessageConvertersAutoConfiguration<br>注册json或者xml处理器</li>
+<li>MultipartAutoConfiguration<br>注册文件传输处理器</li>
+<li>ServerPropertiesAutoConfiguration<br>用于初始化容器相关的配置属性，如服务地址、端口、contextPath，并根据当前容器类型初始化各个容器的特有属性，如tomcat的maxThreads、uriEncoding等等，其对应的属性类为<strong>ServerProperties</strong>；</li>
+<li>WebClientAutoConfiguration<br>注册RestTemplate</li>
+<li>WebMvcAutoConfiguration<br>注册SpringMvc相关Bean</li>
+</ul>
+<hr>
+<p>从各个AutoConfiguration配置类中可以看到如下注解，基于这些注解也可以确定这些AutoConfiguration的初始化顺序：</p>
+<ul>
+<li>@AutoConfigureOrder(-2147483648)：数越小越先初始化</li>
+<li>@AutoConfigureAfter({EmbeddedServletContainerAutoConfiguration.class})：在指定的配置类初始化后再加载</li>
+<li>@AutoConfigureBefore({WebMvcAutoConfiguration.class})：在指定的配置类初始化前加载</li>
+</ul>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h2&gt;&lt;p&gt;看完本文你将掌握如下知识点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;SpringBoot都帮我们做了哪些web相关的自动配置&lt;/li&gt;
+&lt;li&gt;我们如何接管SpringBoot的web配置&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="技术" scheme="http://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Spring Boot" scheme="http://blog.hanqunfeng.com/tags/Spring-Boot/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Spring Boot学习笔记01--基本介绍</title>
     <link href="http://blog.hanqunfeng.com/2016/12/09/spring-boot-study/"/>
     <id>http://blog.hanqunfeng.com/2016/12/09/spring-boot-study/</id>
     <published>2016-12-09T15:33:15.000Z</published>
-    <updated>2016-12-10T08:02:05.000Z</updated>
+    <updated>2016-12-10T14:55:22.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>看完本文你将掌握如下知识点：</p>
 <ol>
@@ -28,7 +80,7 @@
 <li>SpringBoot自动配置原理</li>
 <li>SpringBoot属性配置方法</li>
 <li>修改默认的Logback日志为log4j和log4j2的方法</li>
-<li>修改默认的内置tomcat容器为Jetty容器 </li>
+<li>修改默认的内置tomcat容器为Jetty容器和Undertow容器的方法 </li>
 <li>SpringBoot单元测试方法</li>
 <li>使用war包运行项目</li>
 </ol>
@@ -265,6 +317,13 @@
 <li><p><code>application.properties</code>中的属性配置与tomcat一致</p>
 </li>
 </ul>
+<h2 id="修改内置Tomcat为Undertow容器"><a href="#修改内置Tomcat为Undertow容器" class="headerlink" title="修改内置Tomcat为Undertow容器"></a>修改内置Tomcat为Undertow容器</h2><ul>
+<li><p>修改pom，去除<code>spring-boot-starter-tomcat</code>的依赖，增加<code>spring-boot-starter-undertow</code>依赖<br>目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-undertow" target="_blank" rel="external">1.4.2.RELEASE</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-undertow<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>application.properties</code>中的属性配置与tomcat一致</p>
+</li>
+</ul>
 <h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><ul>
 <li><p>创建一个单元测试的抽象父类，用于初始化必要的对象</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.common;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.junit.Before;</div><div class="line"><span class="keyword">import</span> org.junit.runner.RunWith;</div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;</div><div class="line"><span class="keyword">import</span> org.springframework.test.context.junit4.SpringRunner;</div><div class="line"><span class="keyword">import</span> org.springframework.test.web.servlet.MockMvc;</div><div class="line"><span class="keyword">import</span> org.springframework.test.web.servlet.setup.MockMvcBuilders;</div><div class="line"><span class="keyword">import</span> org.springframework.web.context.WebApplicationContext;</div><div class="line"></div><div class="line"><span class="meta">@RunWith</span>(SpringRunner.class)</div><div class="line"><span class="comment">//1.4.2.RELEASE中不再需要@SpringApplicationConfiguration和@WebAppConfiguration</span></div><div class="line"><span class="meta">@SpringBootTest</span> </div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootTestParent</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> MockMvc mockMvc;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    WebApplicationContext webApplicationContext;</div><div class="line"></div><div class="line">    <span class="meta">@Before</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -297,7 +356,7 @@
 &lt;li&gt;SpringBoot自动配置原理&lt;/li&gt;
 &lt;li&gt;SpringBoot属性配置方法&lt;/li&gt;
 &lt;li&gt;修改默认的Logback日志为log4j和log4j2的方法&lt;/li&gt;
-&lt;li&gt;修改默认的内置tomcat容器为Jetty容器 &lt;/li&gt;
+&lt;li&gt;修改默认的内置tomcat容器为Jetty容器和Undertow容器的方法 &lt;/li&gt;
 &lt;li&gt;SpringBoot单元测试方法&lt;/li&gt;
 &lt;li&gt;使用war包运行项目&lt;/li&gt;
 &lt;/ol&gt;
