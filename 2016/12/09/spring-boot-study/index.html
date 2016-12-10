@@ -92,10 +92,12 @@
 SpringBoot自动配置原理
 SpringBoot属性配置方法
 修改默认的Logback日志为log4j和log4j2的方法
+修改默认的内置tomcat容器为Jetty容器 
 SpringBoot单元测试方法
+使用war包运行项目
 
 Spring Boot简介
-要我给Spring Boot做个定义，简单来说就是一个基于强大的Spring框架的、推崇JavaConfig的极简配置的web开发框">
+要我给Spring Boot做个定义，简单来说就是一个基于强">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Boot学习笔记01--基本介绍">
 <meta property="og:url" content="http://blog.hanqunfeng.com/2016/12/09/spring-boot-study/index.html">
@@ -106,10 +108,12 @@ Spring Boot简介
 SpringBoot自动配置原理
 SpringBoot属性配置方法
 修改默认的Logback日志为log4j和log4j2的方法
+修改默认的内置tomcat容器为Jetty容器 
 SpringBoot单元测试方法
+使用war包运行项目
 
 Spring Boot简介
-要我给Spring Boot做个定义，简单来说就是一个基于强大的Spring框架的、推崇JavaConfig的极简配置的web开发框">
+要我给Spring Boot做个定义，简单来说就是一个基于强">
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/create1.png">
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/create2.png">
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/create3.png">
@@ -123,7 +127,9 @@ Spring Boot简介
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/conf1.png">
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/conf2.png">
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/conf3.png">
-<meta property="og:updated_time" content="2016-12-10T02:02:04.000Z">
+<meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/war1.png">
+<meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/war2.png">
+<meta property="og:updated_time" content="2016-12-10T07:52:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Boot学习笔记01--基本介绍">
 <meta name="twitter:description" content="摘要看完本文你将掌握如下知识点：
@@ -132,10 +138,12 @@ Spring Boot简介
 SpringBoot自动配置原理
 SpringBoot属性配置方法
 修改默认的Logback日志为log4j和log4j2的方法
+修改默认的内置tomcat容器为Jetty容器 
 SpringBoot单元测试方法
+使用war包运行项目
 
 Spring Boot简介
-要我给Spring Boot做个定义，简单来说就是一个基于强大的Spring框架的、推崇JavaConfig的极简配置的web开发框">
+要我给Spring Boot做个定义，简单来说就是一个基于强">
 <meta name="twitter:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/create1.png">
 
 
@@ -452,7 +460,7 @@ Spring Boot简介
              <i class="fa fa-calendar-o"></i>
            </span>
            <span class="post-meta-item-text">字数统计:</span>
-           <span class="post-count">3,830(字)</span>
+           <span class="post-count">4,327(字)</span>
            
           </span>
     
@@ -462,7 +470,7 @@ Spring Boot简介
              <i class="fa fa-calendar-o"></i>
            </span>
            <span class="post-meta-item-text">阅读时长:</span>
-           <span class="post-count">17(分)</span>
+           <span class="post-count">19(分)</span>
            
          </span>
 
@@ -487,7 +495,9 @@ Spring Boot简介
 <li>SpringBoot自动配置原理</li>
 <li>SpringBoot属性配置方法</li>
 <li>修改默认的Logback日志为log4j和log4j2的方法</li>
+<li>修改默认的内置tomcat容器为Jetty容器 </li>
 <li>SpringBoot单元测试方法</li>
+<li>使用war包运行项目</li>
 </ol>
 <h2 id="Spring-Boot简介"><a href="#Spring-Boot简介" class="headerlink" title="Spring Boot简介"></a>Spring Boot简介</h2><ul>
 <li>要我给<a href="http://projects.spring.io/spring-boot/" target="_blank" rel="external">Spring Boot</a>做个定义，简单来说就是一个基于强大的Spring框架的、推崇JavaConfig的极简配置的web开发框架；</li>
@@ -715,6 +725,13 @@ Spring Boot简介
 </li>
 </ul>
 <p>项目根路径下添加<code>log4j2.xml</code></p>
+<h2 id="修改内置Tomcat为Jetty"><a href="#修改内置Tomcat为Jetty" class="headerlink" title="修改内置Tomcat为Jetty"></a>修改内置Tomcat为Jetty</h2><ul>
+<li><p>修改pom，去除<code>spring-boot-starter-tomcat</code>的依赖，增加<code>spring-boot-starter-jetty</code>依赖<br>目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jetty" target="_blank" rel="external">1.4.2.RELEASE</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jetty<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>application.properties</code>中的属性配置与tomcat一致</p>
+</li>
+</ul>
 <h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><ul>
 <li><p>创建一个单元测试的抽象父类，用于初始化必要的对象</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.common;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.junit.Before;</div><div class="line"><span class="keyword">import</span> org.junit.runner.RunWith;</div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;</div><div class="line"><span class="keyword">import</span> org.springframework.test.context.junit4.SpringRunner;</div><div class="line"><span class="keyword">import</span> org.springframework.test.web.servlet.MockMvc;</div><div class="line"><span class="keyword">import</span> org.springframework.test.web.servlet.setup.MockMvcBuilders;</div><div class="line"><span class="keyword">import</span> org.springframework.web.context.WebApplicationContext;</div><div class="line"></div><div class="line"><span class="meta">@RunWith</span>(SpringRunner.class)</div><div class="line"><span class="comment">//1.4.2.RELEASE中不再需要@SpringApplicationConfiguration和@WebAppConfiguration</span></div><div class="line"><span class="meta">@SpringBootTest</span> </div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootTestParent</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> MockMvc mockMvc;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    WebApplicationContext webApplicationContext;</div><div class="line"></div><div class="line">    <span class="meta">@Before</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -723,6 +740,20 @@ Spring Boot简介
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootWebDemoApplicationTests</span> <span class="keyword">extends</span> <span class="title">SpringBootTestParent</span></span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    DemoService demoService;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">content</span><span class="params">()</span></span>&#123;</div><div class="line">        String content = <span class="string">"456"</span>;</div><div class="line">        System.out.println(demoService.printContent(content));</div><div class="line">        Assert.assertEquals(content,demoService.printContent(content));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">DemoControllerContent</span><span class="params">()</span></span>&#123;</div><div class="line">        String uri = <span class="string">"/content/123"</span>;</div><div class="line">        MvcResult mvcResult;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(uri)).andReturn();</div><div class="line">            System.out.println(mvcResult.getResponse().getStatus() + <span class="string">"##"</span> + mvcResult.getResponse().getContentAsString());</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
 </ul>
+<h2 id="使用war包的形式运行项目"><a href="#使用war包的形式运行项目" class="headerlink" title="使用war包的形式运行项目"></a>使用war包的形式运行项目</h2><p>上面我们介绍了SpringBoot通过jar的形式运行项目的方法，这也是SpringBoot推荐的方式，因其内置Servlet容器，所以发布和部署都非常方便，但是某些情况下，我们希望将web项目部署到自己的容器中，这时候就需要将SpringBoot项目打成war包部署，有两种方式：<br>1.创建项目时打包方式选择：war<br><img src="/images_glob/spring-boot-study/war1.png" alt=""></p>
+<blockquote>
+<p>war项目目录结构<br><img src="/images_glob/spring-boot-study/war2.png" alt=""></p>
+</blockquote>
+<p>2.将原打包方式为jar的项目修改为war形式<br>与war项目对比发现，通过修改如下内容，可以将jar项目修改为war项目<br>2.1 pom中将<code>&lt;packaging&gt;jar&lt;/packaging&gt;</code>==&gt;<code>&lt;packaging&gt;war&lt;/packaging&gt;</code><br>2.2 pom中添加tomcat依赖，显示声明scope为provided，这样打包时就不会将tomcat的jar包打到war中<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>2.3 创建<em>ServletInitializer</em>类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServletInitializer</span> <span class="keyword">extends</span> <span class="title">SpringBootServletInitializer</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> SpringApplicationBuilder <span class="title">configure</span><span class="params">(SpringApplicationBuilder application)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> application.sources(DemoWarApplication.class);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>Servlet3.0规范，支持将web.xml相关配置也硬编码到代码中，并由<code>javax.servlet.ServletContainerInitializer</code>的实现类负责在容器启动时进行加载</li>
+<li>spring提供了一个实现类<code>org.springframework.web.SpringServletContainerInitializer</code>,<br>该类会调用所有<code>org.springframework.web.WebApplicationInitializer</code>的实现类的onStartup(ServletContext servletContext)方法，从而将相关的容器组件注册到容器；</li>
+<li>SpringBootServletInitializer就是WebApplicationInitializer的实现类；</li>
+<li>我之前写过一篇<a href="http://hanqunfeng.iteye.com/blog/2113820" target="_blank" rel="external">SpringMVC4零配置</a>的文章，对零配置感兴趣的同学可以参考。</li>
+</ul>
+<hr>
 
       
     </div>
@@ -1011,7 +1042,7 @@ Spring Boot简介
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot简介"><span class="nav-number">2.</span> <span class="nav-text">Spring Boot简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot项目创建方法"><span class="nav-number">3.</span> <span class="nav-text">Spring Boot项目创建方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用IntelliJ-IDEA创建一个web项目"><span class="nav-number">4.</span> <span class="nav-text">使用IntelliJ IDEA创建一个web项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行Spring-Boot项目"><span class="nav-number">5.</span> <span class="nav-text">运行Spring Boot项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加服务"><span class="nav-number">5.1.</span> <span class="nav-text">添加服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动配置原理说明"><span class="nav-number">6.</span> <span class="nav-text">自动配置原理说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringBootWebDemoApplication类上的注解：-SpringBootApplication"><span class="nav-number">6.1.</span> <span class="nav-text">SpringBootWebDemoApplication类上的注解：@SpringBootApplication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那么问题来了，SpringBoot到底为我们自动配置了哪些功能呢？"><span class="nav-number">6.2.</span> <span class="nav-text">那么问题来了，SpringBoot到底为我们自动配置了哪些功能呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EnableAutoConfiguration"><span class="nav-number">6.3.</span> <span class="nav-text">@EnableAutoConfiguration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HttpEncodingAutoConfiguration"><span class="nav-number">6.4.</span> <span class="nav-text">HttpEncodingAutoConfiguration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#除了上面介绍的，-Conditional注解还有如下形式"><span class="nav-number">6.5.</span> <span class="nav-text">除了上面介绍的，@Conditional注解还有如下形式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot的配置文件"><span class="nav-number">7.</span> <span class="nav-text">SpringBoot的配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Profile配置"><span class="nav-number">7.1.</span> <span class="nav-text">Profile配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于属性配置还想多说的一些内容"><span class="nav-number">8.</span> <span class="nav-text">关于属性配置还想多说的一些内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志配置"><span class="nav-number">9.</span> <span class="nav-text">日志配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单元测试"><span class="nav-number">10.</span> <span class="nav-text">单元测试</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot简介"><span class="nav-number">2.</span> <span class="nav-text">Spring Boot简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot项目创建方法"><span class="nav-number">3.</span> <span class="nav-text">Spring Boot项目创建方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用IntelliJ-IDEA创建一个web项目"><span class="nav-number">4.</span> <span class="nav-text">使用IntelliJ IDEA创建一个web项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行Spring-Boot项目"><span class="nav-number">5.</span> <span class="nav-text">运行Spring Boot项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加服务"><span class="nav-number">5.1.</span> <span class="nav-text">添加服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动配置原理说明"><span class="nav-number">6.</span> <span class="nav-text">自动配置原理说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringBootWebDemoApplication类上的注解：-SpringBootApplication"><span class="nav-number">6.1.</span> <span class="nav-text">SpringBootWebDemoApplication类上的注解：@SpringBootApplication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那么问题来了，SpringBoot到底为我们自动配置了哪些功能呢？"><span class="nav-number">6.2.</span> <span class="nav-text">那么问题来了，SpringBoot到底为我们自动配置了哪些功能呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EnableAutoConfiguration"><span class="nav-number">6.3.</span> <span class="nav-text">@EnableAutoConfiguration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HttpEncodingAutoConfiguration"><span class="nav-number">6.4.</span> <span class="nav-text">HttpEncodingAutoConfiguration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#除了上面介绍的，-Conditional注解还有如下形式"><span class="nav-number">6.5.</span> <span class="nav-text">除了上面介绍的，@Conditional注解还有如下形式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot的配置文件"><span class="nav-number">7.</span> <span class="nav-text">SpringBoot的配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Profile配置"><span class="nav-number">7.1.</span> <span class="nav-text">Profile配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于属性配置还想多说的一些内容"><span class="nav-number">8.</span> <span class="nav-text">关于属性配置还想多说的一些内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志配置"><span class="nav-number">9.</span> <span class="nav-text">日志配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改内置Tomcat为Jetty"><span class="nav-number">10.</span> <span class="nav-text">修改内置Tomcat为Jetty</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单元测试"><span class="nav-number">11.</span> <span class="nav-text">单元测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用war包的形式运行项目"><span class="nav-number">12.</span> <span class="nav-text">使用war包的形式运行项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number">13.</span> <span class="nav-text">说明</span></a></li></ol></div>
             
 
           </div>
