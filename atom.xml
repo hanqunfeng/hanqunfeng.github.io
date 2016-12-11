@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.hanqunfeng.com/"/>
-  <updated>2016-12-10T15:18:34.000Z</updated>
+  <updated>2016-12-11T02:56:25.000Z</updated>
   <id>http://blog.hanqunfeng.com/</id>
   
   <author>
@@ -16,32 +16,39 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Spring Boot学习笔记02--Web配置</title>
+    <title>Spring Boot学习笔记02--自动配置</title>
     <link href="http://blog.hanqunfeng.com/2016/12/10/spring-boot-study-web/"/>
     <id>http://blog.hanqunfeng.com/2016/12/10/spring-boot-study-web/</id>
     <published>2016-12-10T15:33:15.000Z</published>
-    <updated>2016-12-10T15:18:34.000Z</updated>
+    <updated>2016-12-11T02:56:25.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>看完本文你将掌握如下知识点：</p>
 <ol>
-<li>SpringBoot都帮我们做了哪些web相关的自动配置</li>
-<li>我们如何接管SpringBoot的web配置</li>
+<li>SpringBoot都帮我们做了哪些自动配置</li>
+<li>我们如何接管SpringBoot的自动配置</li>
 </ol>
 <a id="more"></a>
-<h2 id="SpringBoot的web自动配置"><a href="#SpringBoot的web自动配置" class="headerlink" title="SpringBoot的web自动配置"></a>SpringBoot的web自动配置</h2><p>1.与web相关的自动配置类都存放在<em>spring-boot-autoconfigure-1.4.2.RELEASE.jar</em>下的<em>org.springframework.boot.autoconfigure.web</em>路径下；<br><img src="/images_glob/spring-boot-study-web/web1.png" alt=""><br>2.从图中我们可以看到如下AutoConfiguration，application.properties中配置<code>debug=true</code>后启动容器，可以看到服务器的初始化顺序结果如下:</p>
+<h2 id="SpringBoot的自动配置"><a href="#SpringBoot的自动配置" class="headerlink" title="SpringBoot的自动配置"></a>SpringBoot的自动配置</h2><p>1.自动配置类都存放在<em>spring-boot-autoconfigure-1.4.2.RELEASE.jar</em>下的<br><em>org.springframework.boot.autoconfigure</em>路径下；<br>2.application.properties中配置<code>debug=true</code>后启动容器，可以看到服务器初始化的自动配置如下:</p>
 <ul>
 <li>DispatcherServletAutoConfiguration<br>注册<strong>org.springframework.web.servlet.DispatcherServlet</strong></li>
 <li>EmbeddedServletContainerAutoConfiguration<br>注册容器类型，如类路径下存在<strong>org.apache.catalina.startup.Tomcat</strong>，就会注册Tomcat容器</li>
-<li>ErrorMvcAutoConfiguration<br>注册异常处理处理器</li>
+<li>ErrorMvcAutoConfiguration<br>注册异常处理器</li>
 <li>HttpEncodingAutoConfiguration<br>注册http编码过滤器</li>
 <li>HttpMessageConvertersAutoConfiguration<br>注册json或者xml处理器</li>
+<li>JacksonAutoConfiguration<br>注册json对象解析器</li>
+<li>JmxAutoConfiguration<br>注册<a href="http://baike.baidu.com/link?url=UrBouL697r00U6pJyc5IXwk_GiFaWf0di0wZEpG9J9obYa69_7nApO5iddAuj4ajDz0hwJZ8CA-iBghoyqI39a" target="_blank" rel="external">JMX</a>管理器<blockquote>
+<p><a href="https://my.oschina.net/bayuanqian/blog/90043" target="_blank" rel="external">JMX与Spring集成</a><br><a href="http://blog.csdn.net/yaerfeng/article/details/28232435" target="_blank" rel="external">spring通过annotation注解注册MBean到JMX实现监控java运行状态</a></p>
+</blockquote>
+</li>
 <li>MultipartAutoConfiguration<br>注册文件传输处理器</li>
 <li>ServerPropertiesAutoConfiguration<br>用于初始化容器相关的配置属性，如服务地址、端口、contextPath，并根据当前容器类型初始化各个容器的特有属性，如tomcat的maxThreads、uriEncoding等等，其对应的属性类为<strong>ServerProperties</strong>；</li>
 <li>WebClientAutoConfiguration<br>注册RestTemplate</li>
-<li>WebMvcAutoConfiguration<br>注册SpringMvc相关Bean</li>
+<li>WebMvcAutoConfiguration<br>注册SpringMvc相关处理器，如ResourceResolver、RequestMappingHandlerAdapter、ExceptionHandlerExceptionResolver、ViewResolver、LocaleResolver，等等</li>
+<li>WebSocketAutoConfiguration<br>注册webSocket相关处理器，根据容器类型注册不同的处理器</li>
 </ul>
+<p>3.如果依赖中加入了其它功能的依赖，SpringBoot还会实现这些功能的自动适配，比如我们增加数据库的JPA的功能，就会启用对<em>JpaRepositoriesAutoConfiguration</em>的自动配置功能。关于数据库方面的内容将在后文介绍。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-jpa<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <hr>
-<p>从各个AutoConfiguration配置类中可以看到如下注解，基于这些注解也可以确定这些AutoConfiguration的初始化顺序：</p>
+<p><strong>说明</strong><br>从各个AutoConfiguration配置类中可以看到如下注解，基于这些注解可以确定这些AutoConfiguration的初始化顺序：</p>
 <ul>
 <li>@AutoConfigureOrder(-2147483648)：数越小越先初始化</li>
 <li>@AutoConfigureAfter({EmbeddedServletContainerAutoConfiguration.class})：在指定的配置类初始化后再加载</li>
@@ -54,8 +61,8 @@
     
       &lt;h2 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h2&gt;&lt;p&gt;看完本文你将掌握如下知识点：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;SpringBoot都帮我们做了哪些web相关的自动配置&lt;/li&gt;
-&lt;li&gt;我们如何接管SpringBoot的web配置&lt;/li&gt;
+&lt;li&gt;SpringBoot都帮我们做了哪些自动配置&lt;/li&gt;
+&lt;li&gt;我们如何接管SpringBoot的自动配置&lt;/li&gt;
 &lt;/ol&gt;
     
     </summary>
