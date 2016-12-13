@@ -123,7 +123,7 @@ SpringBoot单元测试方法
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/conf3.png">
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/war1.png">
 <meta property="og:image" content="http://blog.hanqunfeng.com/images_glob/spring-boot-study/war2.png">
-<meta property="og:updated_time" content="2016-12-11T08:42:39.000Z">
+<meta property="og:updated_time" content="2016-12-12T08:52:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Boot学习笔记01--基本介绍">
 <meta name="twitter:description" content="摘要看完本文你将掌握如下知识点：
@@ -451,7 +451,7 @@ SpringBoot单元测试方法
              <i class="fa fa-calendar-o"></i>
            </span>
            <span class="post-meta-item-text">字数统计:</span>
-           <span class="post-count">4,528(字)</span>
+           <span class="post-count">4,545(字)</span>
            
           </span>
     
@@ -593,7 +593,7 @@ SpringBoot单元测试方法
 <h3 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.springframework.boot.autoconfigure;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Inherited;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</div><div class="line"><span class="keyword">import</span> java.lang.annotation.Target;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.AutoConfigurationPackage;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.EnableAutoConfigurationImportSelector;</div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.Import;</div><div class="line"></div><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@AutoConfigurationPackage</span></div><div class="line"><span class="meta">@Import</span>(&#123;EnableAutoConfigurationImportSelector.class&#125;)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAutoConfiguration &#123;</div><div class="line">    String ENABLED_OVERRIDE_PROPERTY = <span class="string">"spring.boot.enableautoconfiguration"</span>;</div><div class="line"></div><div class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
 <li>这里我们需要了解一下@Import注解中的EnableAutoConfigurationImportSelector<blockquote>
-<p>感兴趣的可以看一下源码，大体的功能就是扫描jar包里是否含有<code>META-INF/spring.factories</code>文件;<br>spring.factories中的<em>org.springframework.boot.autoconfigure.EnableAutoConfiguration</em>属性用于声明都需要启用哪些自动配置类;<br>比如<em>spring-boot-autoconfigure-1.4.2.RELEASE.jar</em>中就有一个spring.factories，可以看到<em>org.springframework.boot.autoconfigure.EnableAutoConfiguration</em>参数中列出了自动配置类列表，而<em>HttpEncodingAutoConfiguration</em>这个自动配置类就是其声明的;<br><img src="/images_glob/spring-boot-study/conf3.png" alt=""></p>
+<p>感兴趣的可以看一下源码，大体的功能就是扫描jar包里是否含有<code>META-INF/spring.factories</code>文件;<br>并在spring.factories中找到<strong>@EnableAutoConfiguration</strong>的全路径名称<strong>org.springframework.boot.autoconfigure.EnableAutoConfiguration</strong>这个key，该key对应的value就是用于声明都需要启用哪些自动配置类;<br>比如<em>spring-boot-autoconfigure-1.4.2.RELEASE.jar</em>中就有一个spring.factories，可以看到<em>org.springframework.boot.autoconfigure.EnableAutoConfiguration</em>参数中列出了自动配置类列表，而<em>HttpEncodingAutoConfiguration</em>这个自动配置类就是其声明的;<br><img src="/images_glob/spring-boot-study/conf3.png" alt=""></p>
 </blockquote>
 </li>
 </ul>
@@ -801,8 +801,8 @@ SpringBoot单元测试方法
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/12/10/spring-boot-study-web/" rel="prev" title="Spring Boot学习笔记02--自动配置">
-                Spring Boot学习笔记02--自动配置 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/12/10/spring-boot-study-web/" rel="prev" title="Spring Boot学习笔记02--深入了解自动配置">
+                Spring Boot学习笔记02--深入了解自动配置 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -916,7 +916,7 @@ SpringBoot单元测试方法
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
