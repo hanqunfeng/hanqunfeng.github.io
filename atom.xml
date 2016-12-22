@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.hanqunfeng.com/"/>
-  <updated>2016-12-22T04:38:23.000Z</updated>
+  <updated>2016-12-22T11:53:01.000Z</updated>
   <id>http://blog.hanqunfeng.com/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Spring Boot学习笔记07--DataSource的创建方法</title>
+    <link href="http://blog.hanqunfeng.com/2016/12/22/spring-boot-study-datasource/"/>
+    <id>http://blog.hanqunfeng.com/2016/12/22/spring-boot-study-datasource/</id>
+    <published>2016-12-22T15:33:15.000Z</published>
+    <updated>2016-12-22T11:53:01.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>看完本文你将掌握如下知识点：</p>
+<ol>
+<li>Spring Boot项目中DataSource的创建方法</li>
+</ol>
+<a id="more"></a>
+<hr>
+<p><strong>SpringBoot系列</strong>：<a href="/tags/Spring-Boot/">Spring Boot学习笔记</a></p>
+<hr>
+<h2 id="DataSource的创建方法"><a href="#DataSource的创建方法" class="headerlink" title="DataSource的创建方法"></a>DataSource的创建方法</h2><p>前面讲了很多Spring Boot数据访问方面的内容，在讲到自己扩展数据访问的时候，示例代码中给出的DataSource创建方式都是<strong>DriverManagerDataSource</strong>，比如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#datasource</span></div><div class="line">spring.datasource.driver-class-name=com.mysql.jdbc.Driver</div><div class="line">spring.datasource.url=jdbc:mysql://localhost:<span class="number">3306</span>/springboot1?useUnicode=<span class="literal">true</span>&amp;characterEncoding=utf<span class="bullet">-8</span></div><div class="line">spring.datasource.username=root</div><div class="line">spring.datasource.password=newpwd</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;spring.datasource.driver-class-name&#125;"</span>)</div><div class="line">String driverClass;</div><div class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;spring.datasource.url&#125;"</span>)</div><div class="line">String url;</div><div class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;spring.datasource.username&#125;"</span>)</div><div class="line">String userName;</div><div class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;spring.datasource.password&#125;"</span>)</div><div class="line">String passWord;</div><div class="line"></div><div class="line"><span class="meta">@Bean</span>(name = <span class="string">"dataSource"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> DataSource <span class="title">dataSource</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    DriverManagerDataSource dataSource = <span class="keyword">new</span> DriverManagerDataSource();</div><div class="line">    dataSource.setDriverClassName(driverClass);</div><div class="line">    dataSource.setUrl(url);</div><div class="line">    dataSource.setUsername(userName);</div><div class="line">    dataSource.setPassword(passWord);</div><div class="line">    <span class="keyword">return</span> dataSource;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果有多个数据源，就再创建多个<strong>DriverManagerDataSource</strong>。<br>一般生产项目中我们不会这样使用，通常可以使用<strong>org.apache.commons.dbcp.BasicDataSource</strong>。</p>
+<hr>
+<p>实际上Spring Boot为我们提供了简便的创建DataSource的方法：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#datasource</span></div><div class="line"><span class="comment">#需要执行数据源的类型</span></div><div class="line">spring.datasource.ds1.type=org.apache.tomcat.jdbc.pool.DataSource</div><div class="line">spring.datasource.ds1.driver-class-name=com.mysql.jdbc.Driver</div><div class="line">spring.datasource.ds1.url=jdbc:mysql://localhost:<span class="number">3306</span>/springboot1?useUnicode=<span class="literal">true</span>&amp;characterEncoding=utf<span class="bullet">-8</span></div><div class="line">spring.datasource.ds1.username=root</div><div class="line">spring.datasource.ds1.password=newpwd</div><div class="line"></div><div class="line">spring.datasource.ds2.type=org.apache.tomcat.jdbc.pool.DataSource</div><div class="line">spring.datasource.ds2.driver-class-name=com.mysql.jdbc.Driver</div><div class="line">spring.datasource.ds2.url=jdbc:mysql://localhost:<span class="number">3306</span>/springboot2?useUnicode=<span class="literal">true</span>&amp;characterEncoding=utf<span class="bullet">-8</span></div><div class="line">spring.datasource.ds2.username=root</div><div class="line">spring.datasource.ds2.password=newpwd</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Bean</span>(name = <span class="string">"dataSource1"</span>)</div><div class="line"><span class="comment">//application.properties中属性名称的前缀</span></div><div class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"spring.datasource.ds1"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> DataSource <span class="title">dataSource1</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> DataSourceBuilder.create().build();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Bean</span>(name = <span class="string">"dataSource2"</span>)</div><div class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"spring.datasource.ds2"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> DataSource <span class="title">dataSource2</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> DataSourceBuilder.create().build();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>目前，此种方式支持如下几种数据源类型：</p>
+<p>“org.apache.tomcat.jdbc.pool.DataSource”, “com.zaxxer.hikari.HikariDataSource”, “org.apache.commons.dbcp.BasicDataSource”, “org.apache.commons.dbcp2.BasicDataSource”</p>
+<p>使用哪种数据源类型，就要在项目中加入相应的jar依赖，<br>比如<strong>org.apache.tomcat.jdbc.pool.DataSource</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.5.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h2&gt;&lt;p&gt;看完本文你将掌握如下知识点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Spring Boot项目中DataSource的创建方法&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="技术" scheme="http://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Spring Boot" scheme="http://blog.hanqunfeng.com/tags/Spring-Boot/"/>
+    
+  </entry>
   
   <entry>
     <title>Spring Boot学习笔记06--JPA</title>
