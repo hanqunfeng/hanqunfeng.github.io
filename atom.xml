@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.hanqunfeng.com/"/>
-  <updated>2017-08-09T06:17:11.000Z</updated>
+  <updated>2018-02-26T10:09:16.788Z</updated>
   <id>http://blog.hanqunfeng.com/</id>
   
   <author>
@@ -14,6 +14,68 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Protocol Buffer学习笔记</title>
+    <link href="http://blog.hanqunfeng.com/2018/02/26/protocol-buffer-study/"/>
+    <id>http://blog.hanqunfeng.com/2018/02/26/protocol-buffer-study/</id>
+    <published>2018-02-26T08:30:05.000Z</published>
+    <updated>2018-02-26T10:09:16.788Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="什么是Protocol-Buffer"><a href="#什么是Protocol-Buffer" class="headerlink" title="什么是Protocol Buffer"></a>什么是Protocol Buffer</h2><p>Protocol Buffers(也称protobuf)是Google公司出口的一种独立于开发语言，独立于平台的可扩展的结构化数据序列机制。通俗点来讲它跟xml和json是一类。是一种数据交互格式协议。<br>主要优点是它是基于二进制的，所以比起结构化的xml协议来说，它的体积很少，数据在传输过程中会更快。另外它也支持c++、java、python、php、javascript等主流开发语言。</p>
+<a id="more"></a>
+<h2 id="Protoc-3-x-x安装"><a href="#Protoc-3-x-x安装" class="headerlink" title="Protoc-3.x.x安装"></a>Protoc-3.x.x安装</h2><p><a href="https://github.com/google/protobuf/releases" target="_blank" rel="external">下载地址</a>：3.x.x的版本基本都按照操作系统和语言进行了区分，系统包里只包含了protoc命令，语言包则是用于编译后使用，比如java需要生成对应的jar包。这里可以根据需要下载对应的操作系统和语言包，比如这里我下载的是protoc-3.5.1-osx-x86_64.zip（苹果系统）和protobuf-java-3.5.1.tar.gz（java语言）。</p>
+<ul>
+<li>unzip protoc-3.5.1-osx-x86_64.zip</li>
+<li>在/etc/profile中添加环境变量PROTOCTL_BUFFER_HOME（protoc-3.5.1-osx-x86_64.zip解压后目录），并在PATH中添加$PROTOCTL_BUFFER_HOME/bin</li>
+<li>查看版本：protoc –version ：输出 libprotoc 3.5.1</li>
+<li>tar -zxcf protobuf-java-3.5.1.tar.gz，解压后目录名称为protobuf-3.5.1</li>
+<li>cd protobuf-3.5.1/src，创建软连接 ln -s $PROTOCTL_BUFFER_HOME/bin/protoc protoc</li>
+<li>cd protobuf-3.5.1/java，mvn package（maven请自行安装），成功后会在protobuf-3.5.1/java/code/target下生成protobuf-java-3.5.1.jar</li>
+<li><p>然后将protobuf-java-3.5.1.jar上传到maven私服或者安装到本地仓库就可以使用了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn install:install-file -Dfile=protobuf-java-3.5.1.jar -DgroupId=com.google.protobuf -DartifactId=protobuf-java -Dversion=3.5.1 -Dpackaging=jar</div></pre></td></tr></table></figure>
+</li>
+<li><p>pom中添加依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- protocol buffer --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.protobuf<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protobuf-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Protoc-2-x-x安装"><a href="#Protoc-2-x-x安装" class="headerlink" title="Protoc-2.x.x安装"></a>Protoc-2.x.x安装</h2><p><a href="http://repo1.maven.org/maven2/com/google/protobuf/protoc/" target="_blank" rel="external">下载地址</a>：这里只是操作系统包，比如这里我下载的是protoc-2.6.1-osx-x86_64.exe，<a href="https://github.com/google/protobuf/releases/tag/v2.6.1" target="_blank" rel="external">语言包protobuf-2.6.1.tar.gz</a>。</p>
+<ul>
+<li>mv protoc-2.6.1-osx-x86_64.exe protoc</li>
+<li>将上面重命名后的protoc文件所在目录加到系统环境变量PATH中</li>
+<li>查看版本：protoc –version ：输出 libprotoc 2.6.1</li>
+<li>tar -zxcf protobuf-2.6.1.tar.gz，解压后目录名称为protobuf-2.6.1</li>
+<li>cd protobuf-2.6.1/src，创建软连接 ln -s $PROTOCTL_BUFFER_HOME/bin/protoc protoc</li>
+<li>cd protobuf-2.6.1/java，mvn package（maven请自行安装），成功后会在protobuf-2.6.1/java/target下生成protobuf-java-2.6.1.jar</li>
+<li><p>然后将protobuf-java-2.6.1.jar上传到maven私服或者安装到本地仓库就可以使用了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn install:install-file -Dfile=protobuf-java-2.6.1.jar -DgroupId=com.google.protobuf -DartifactId=protobuf-java -Dversion=2.6.1 -Dpackaging=jar</div></pre></td></tr></table></figure>
+</li>
+<li><p>pom中添加依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- protocol buffer --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.protobuf<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protobuf-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="protoc使用"><a href="#protoc使用" class="headerlink" title="protoc使用"></a>protoc使用</h2><ul>
+<li>先编写proto文件，具体语法请参考<a href="http://blog.csdn.net/briblue/article/details/53187780" target="_blank" rel="external">通信协议之Protocol buffer(Java篇)</a></li>
+<li>protoc –java_out=.  XXXX.proto</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://blog.csdn.net/fangzhangsc2006/article/details/8687415" target="_blank" rel="external">springMVC项目中实现Protocol Buffers对象自动转换</a></li>
+<li><a href="http://blog.csdn.net/zhuyijian135757/article/details/52294745" target="_blank" rel="external">protobuf实现js与java间的http通信</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;什么是Protocol-Buffer&quot;&gt;&lt;a href=&quot;#什么是Protocol-Buffer&quot; class=&quot;headerlink&quot; title=&quot;什么是Protocol Buffer&quot;&gt;&lt;/a&gt;什么是Protocol Buffer&lt;/h2&gt;&lt;p&gt;Protocol Buffers(也称protobuf)是Google公司出口的一种独立于开发语言，独立于平台的可扩展的结构化数据序列机制。通俗点来讲它跟xml和json是一类。是一种数据交互格式协议。&lt;br&gt;主要优点是它是基于二进制的，所以比起结构化的xml协议来说，它的体积很少，数据在传输过程中会更快。另外它也支持c++、java、python、php、javascript等主流开发语言。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="技术" scheme="http://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="protocbuf" scheme="http://blog.hanqunfeng.com/tags/protocbuf/"/>
+    
+  </entry>
   
   <entry>
     <title>钉钉与企业微信之OA产品分析</title>
