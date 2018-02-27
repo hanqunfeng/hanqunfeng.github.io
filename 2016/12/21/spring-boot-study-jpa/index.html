@@ -86,31 +86,18 @@
 
 
 
-<meta name="description" content="摘要看完本文你将掌握如下知识点：
-
-Spring Boot项目中JPA的配置及使用方法
-Spring Boot项目配置Spring Data JPA的方法
-Spring Data JPA与Atomikos整合实现多数据源事务管理
-扩展JPA的方法">
+<meta name="description" content="摘要看完本文你将掌握如下知识点：  Spring Boot项目中JPA的配置及使用方法 Spring Boot项目配置Spring Data JPA的方法 Spring Data JPA与Atomikos整合实现多数据源事务管理 扩展JPA的方法">
+<meta name="keywords" content="Spring Boot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Boot学习笔记06--JPA">
 <meta property="og:url" content="http://blog.hanqunfeng.com/2016/12/21/spring-boot-study-jpa/index.html">
-<meta property="og:site_name" content="hanqunfeng's blog">
-<meta property="og:description" content="摘要看完本文你将掌握如下知识点：
-
-Spring Boot项目中JPA的配置及使用方法
-Spring Boot项目配置Spring Data JPA的方法
-Spring Data JPA与Atomikos整合实现多数据源事务管理
-扩展JPA的方法">
+<meta property="og:site_name" content="hanqunfeng&#39;s blog">
+<meta property="og:description" content="摘要看完本文你将掌握如下知识点：  Spring Boot项目中JPA的配置及使用方法 Spring Boot项目配置Spring Data JPA的方法 Spring Data JPA与Atomikos整合实现多数据源事务管理 扩展JPA的方法">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2016-12-25T07:51:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Boot学习笔记06--JPA">
-<meta name="twitter:description" content="摘要看完本文你将掌握如下知识点：
-
-Spring Boot项目中JPA的配置及使用方法
-Spring Boot项目配置Spring Data JPA的方法
-Spring Data JPA与Atomikos整合实现多数据源事务管理
-扩展JPA的方法">
+<meta name="twitter:description" content="摘要看完本文你将掌握如下知识点：  Spring Boot项目中JPA的配置及使用方法 Spring Boot项目配置Spring Data JPA的方法 Spring Data JPA与Atomikos整合实现多数据源事务管理 扩展JPA的方法">
 
 
 
@@ -447,7 +434,7 @@ Spring Data JPA与Atomikos整合实现多数据源事务管理
 <p><strong>SpringBoot系列</strong>：<a href="/tags/Spring-Boot/">Spring Boot学习笔记</a></p>
 <hr>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>JPA即Java Persistence API，是一个基于O/R映射的标准规范，该规范只负责定义规则的标准（注解或接口），而不需要提供具体实现，具体的实现交由软件提供商来实现，目前主要的JPA提供商为Hibernate，EclipseLink和OperJPA。</p>
-<p><a href="http://projects.spring.io/spring-data-jpa/" target="_blank" rel="external">Spring Data JPA</a>是Spring Data的一个子项目，通过提供基于JPA的Repository来简化代码量。<br>其提供了一个<strong>org.springframework.data.jpa.repository.JpaRepository</strong>，我们的Repository只要继承该JpaRepository，即可享受到JPA带来的好处。</p>
+<p><a href="http://projects.spring.io/spring-data-jpa/" target="_blank" rel="noopener">Spring Data JPA</a>是Spring Data的一个子项目，通过提供基于JPA的Repository来简化代码量。<br>其提供了一个<strong>org.springframework.data.jpa.repository.JpaRepository</strong>，我们的Repository只要继承该JpaRepository，即可享受到JPA带来的好处。</p>
 <p>Spring Boot通过<strong>spring-boot-starter-data-jpa</strong>来提供对JPA的支持，Spring Boot默认的JPA实现者是Hibernate。</p>
 <hr>
 <p><strong>说明</strong><br>在讲解下面的内容前，我们先在数据库中创建一张表</p>
@@ -516,7 +503,7 @@ Spring Data JPA与Atomikos整合实现多数据源事务管理
 <h3 id="自定义Repository继承BaseJpaRepository"><a href="#自定义Repository继承BaseJpaRepository" class="headerlink" title="自定义Repository继承BaseJpaRepository"></a>自定义Repository继承BaseJpaRepository</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">PersonRepository</span> <span class="keyword">extends</span> <span class="title">BaseJpaRepository</span>&lt;<span class="title">Person</span>, <span class="title">Integer</span>&gt; </span>&#123;</div><div class="line">    <span class="comment">//………依然可以在该接口中对功能进行扩展………</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RunWith</span>(SpringRunner.class)</div><div class="line"><span class="meta">@SpringBootTest</span></div><div class="line"><span class="meta">@Transactional</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JpaExtendApplicationTests</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> PersonRepository personRepository;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findByAuto</span><span class="params">()</span> </span>&#123;</div><div class="line">        Person person = <span class="keyword">new</span> Person();</div><div class="line">        person.setpName(<span class="string">"王五"</span>);</div><div class="line">        person.setpAge(<span class="number">18</span>);</div><div class="line">        Sort sort = <span class="keyword">new</span> Sort(Sort.Direction.DESC, <span class="string">"pId"</span>);</div><div class="line">        <span class="comment">//查询第一页，按一页三行分页</span></div><div class="line">        Pageable pageable = <span class="keyword">new</span> PageRequest(<span class="number">0</span>, <span class="number">3</span>, sort);</div><div class="line">        Page&lt;Person&gt; list = personRepository.findByAuto(person,pageable);</div><div class="line">        <span class="keyword">for</span>(Person p:list)&#123;</div><div class="line">            System.out.println(p);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>本文示例代码下载地址：<a href="https://github.com/hanqunfeng/SpringBootStudy" target="_blank" rel="external">https://github.com/hanqunfeng/SpringBootStudy</a></p>
+<p>本文示例代码下载地址：<a href="https://github.com/hanqunfeng/SpringBootStudy" target="_blank" rel="noopener">https://github.com/hanqunfeng/SpringBootStudy</a></p>
 
       
     </div>
