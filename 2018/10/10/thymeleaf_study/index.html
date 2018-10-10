@@ -94,7 +94,7 @@
 <meta property="og:site_name" content="hanqunfeng&#39;s blog">
 <meta property="og:description" content="摘要看完本文你将掌握如下知识点：  Spring Boot(2.0.4)中使用thymeleaf(3.0.9)的常用语法">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-10T11:02:17.030Z">
+<meta property="og:updated_time" content="2018-10-10T11:55:06.226Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Boot2学习笔记--thymeleaf">
 <meta name="twitter:description" content="摘要看完本文你将掌握如下知识点：  Spring Boot(2.0.4)中使用thymeleaf(3.0.9)的常用语法">
@@ -393,7 +393,7 @@
              <i class="fa fa-calendar-o"></i>
            </span>
            <span class="post-meta-item-text">字数统计:</span>
-           <span class="post-count">1,930(字)</span>
+           <span class="post-count">2,015(字)</span>
            
           </span>
     
@@ -403,7 +403,7 @@
              <i class="fa fa-calendar-o"></i>
            </span>
            <span class="post-meta-item-text">阅读时长:</span>
-           <span class="post-count">9(分)</span>
+           <span class="post-count">10(分)</span>
            
          </span>
 
@@ -429,6 +429,7 @@
 <a id="more"></a>
 <h2 id="项目准备"><a href="#项目准备" class="headerlink" title="项目准备"></a>项目准备</h2><h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--spring对thymeleaf的支持--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
 <h3 id="开启spring-boot对thymeleaf的支持"><a href="#开启spring-boot对thymeleaf的支持" class="headerlink" title="开启spring boot对thymeleaf的支持"></a>开启spring boot对thymeleaf的支持</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">##thymeleaf</div><div class="line">spring.thymeleaf.enabled=true</div><div class="line">spring.thymeleaf.prefix=classpath:/templates/</div><div class="line">spring.thymeleaf.suffix=.html</div><div class="line">spring.thymeleaf.encoding=UTF-8</div><div class="line">spring.thymeleaf.mode=HTML</div><div class="line">#关闭页面缓存</div><div class="line">spring.thymeleaf.cache=false</div><div class="line">spring.thymeleaf.servlet.content-type=text/html</div></pre></td></tr></table></figure>
+<p>也可以通过@Bean的方式开启支持<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Bean</span></div><div class="line"><span class="function"><span class="keyword">public</span> ThymeleafViewResolver <span class="title">thymeleafViewResolver</span><span class="params">()</span></span>&#123;</div><div class="line">    log.info(<span class="string">"thymeleafViewResolver"</span>);</div><div class="line">    ThymeleafViewResolver viewResolver = <span class="keyword">new</span> ThymeleafViewResolver();</div><div class="line">    viewResolver.setTemplateEngine(templateEngine());</div><div class="line">    viewResolver.setOrder(<span class="number">1</span>);</div><div class="line">    viewResolver.setCharacterEncoding(<span class="string">"UTF-8"</span>);</div><div class="line">    viewResolver.setContentType(<span class="string">"text/html"</span>);</div><div class="line">    viewResolver.setCache(<span class="keyword">false</span>);</div><div class="line">    <span class="keyword">return</span> viewResolver;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Bean</span></div><div class="line"><span class="function"><span class="keyword">public</span> SpringResourceTemplateResolver <span class="title">templateResolver</span><span class="params">()</span></span>&#123;</div><div class="line">    SpringResourceTemplateResolver templateResolver = <span class="keyword">new</span> SpringResourceTemplateResolver();</div><div class="line">    templateResolver.setApplicationContext(<span class="keyword">this</span>.applicationContext);</div><div class="line">    templateResolver.setPrefix(<span class="string">"classpath:/templates/"</span>);</div><div class="line">    templateResolver.setSuffix(<span class="string">".html"</span>);        </div><div class="line">    templateResolver.setTemplateMode(TemplateMode.HTML);</div><div class="line">    templateResolver.setCacheable(<span class="keyword">false</span>);</div><div class="line">    <span class="keyword">return</span> templateResolver;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Bean</span></div><div class="line"><span class="function"><span class="keyword">public</span> SpringTemplateEngine <span class="title">templateEngine</span><span class="params">()</span></span>&#123;</div><div class="line">    SpringTemplateEngine templateEngine = <span class="keyword">new</span> SpringTemplateEngine();</div><div class="line">    templateEngine.setTemplateResolver(templateResolver());</div><div class="line">    templateEngine.setEnableSpringELCompiler(<span class="keyword">true</span>);</div><div class="line">    <span class="keyword">return</span> templateEngine;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="开启html页面对thymeleaf语法的支持"><a href="#开启html页面对thymeleaf语法的支持" class="headerlink" title="开启html页面对thymeleaf语法的支持"></a>开启html页面对thymeleaf语法的支持</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns:th</span>=<span class="string">"http://www.thymeleaf.org"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
 <h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h3 id="各种表达式语法"><a href="#各种表达式语法" class="headerlink" title="各种表达式语法"></a>各种表达式语法</h3><ol>
 <li><p>${…} 变量表达式，用于展示后台传递过来的变量（request和session中的值）</p>
@@ -522,8 +523,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/28/python_virtualenv/" rel="next" title="Python--virtualenv">
-                <i class="fa fa-chevron-left"></i> Python--virtualenv
+              <a href="/2018/04/28/django2_study/" rel="next" title="Django2学习笔记">
+                <i class="fa fa-chevron-left"></i> Django2学习笔记
               </a>
             
           </div>
