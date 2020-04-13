@@ -317,18 +317,22 @@
 </ul>
 <h2 id="python中使用protobuf"><a href="#python中使用protobuf" class="headerlink" title="python中使用protobuf"></a>python中使用protobuf</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> proto <span class="keyword">import</span> OTIpcDef_pb2</span><br><span class="line"></span><br><span class="line">otIpcList = OTIpcDef_pb2.OTIpcList()</span><br><span class="line"></span><br><span class="line"><span class="comment"># list类型数据创建方式</span></span><br><span class="line">otIpc = otIpcList.otpic.add()</span><br><span class="line">otIpc.CompanyId = <span class="string">"companyId"</span></span><br><span class="line">otIpc.Source = <span class="string">"Source"</span></span><br><span class="line">otIpc.IPCType = OTIpcDef_pb2.baseInfoCompany</span><br><span class="line"><span class="comment"># list类型数据创建方式</span></span><br><span class="line">baseInfoCompany = otIpc.baseInfoCompany.add()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(type(baseInfoCompany))</span></span><br><span class="line"></span><br><span class="line">baseInfoCompany.Address = <span class="number">110011</span></span><br><span class="line">baseInfoCompany.CompanyId = <span class="string">"companyId"</span></span><br><span class="line">baseInfoCompany.CompanyName = <span class="string">"companyName中文"</span></span><br><span class="line">baseInfoCompany.Identifier = <span class="string">"identifier"</span></span><br><span class="line">baseInfoCompany.BusinessScope = <span class="string">"BusinessScope"</span></span><br><span class="line">baseInfoCompany.ContactAddress = <span class="string">"ContactAddress"</span></span><br><span class="line">baseInfoCompany.EconomicType = <span class="string">"EconomicType"</span></span><br><span class="line">baseInfoCompany.RegCapital = <span class="string">"RegCapital"</span></span><br><span class="line">baseInfoCompany.LegalName = <span class="string">"LegalName"</span></span><br><span class="line">baseInfoCompany.LegalID = <span class="string">"LegalID"</span></span><br><span class="line">baseInfoCompany.LegalPhone = <span class="string">"LegalPhone"</span></span><br><span class="line">baseInfoCompany.State = <span class="number">0</span></span><br><span class="line">baseInfoCompany.Flag = <span class="number">1</span></span><br><span class="line">baseInfoCompany.UpdateTime = <span class="number">20180226121212</span></span><br><span class="line"></span><br><span class="line">otIpc2 = otIpcList.otpic.add()</span><br><span class="line">otIpc2.CompanyId = <span class="string">"companyId"</span></span><br><span class="line">otIpc2.Source = <span class="string">"Source"</span></span><br><span class="line">otIpc2.IPCType = OTIpcDef_pb2.baseInfoCompanyStat</span><br><span class="line">baseInfoCompanyStat = otIpc2.baseInfoCompanyStat.add()</span><br><span class="line">baseInfoCompanyStat.CompanyId = <span class="string">"companyId"</span></span><br><span class="line">baseInfoCompanyStat.DriverNum = <span class="number">10</span></span><br><span class="line">baseInfoCompanyStat.Flag = <span class="number">0</span></span><br><span class="line">baseInfoCompanyStat.UpdateTime = <span class="number">20180226121212</span></span><br><span class="line">baseInfoCompanyStat.VehicleNum = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">"============================================"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># print(otIpc)</span></span><br><span class="line">print(otIpcList)</span><br><span class="line">print(<span class="string">"============================================"</span>)</span><br><span class="line"><span class="comment"># 序列化</span></span><br><span class="line">b = otIpcList.SerializeToString()</span><br><span class="line"><span class="comment"># 打印二进制数据</span></span><br><span class="line">print(b)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"============================================"</span>)</span><br><span class="line"></span><br><span class="line">otIpcList2 = OTIpcDef_pb2.OTIpcList()</span><br><span class="line"><span class="comment"># 反序列化</span></span><br><span class="line">otIpcList2.ParseFromString(b)</span><br><span class="line"></span><br><span class="line">print(otIpcList2)</span><br></pre></td></tr></table></figure>
 
-    </div>
-<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+        <div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
 
-    <div>
-  <p id="div-border-left-red">
-  <b>作者：飘逸峰</b><br/>
-   <b>版权声明：本博客所有文章遵循 <a target="_blank" title="Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA 4.0 </a>版权协议。转载请注明出处！</b><br/>
-    <span>
-    <b>本文链接：</b><a href="/2018/03/27/protocol-buffer-study-python/" title="Protocol Buffer学习笔记(Python)">http://blog.hanqunfeng.com/2018/03/27/protocol-buffer-study-python/</a>
-    </span>
-  </p>
-  </div>
+        <div>
+          <p id="div-border-left-red">
+          <b>作者：飘逸峰</b><br/>
+           <b>版权声明：本博客所有文章遵循 <a target="_blank" title="Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA 4.0 </a>版权协议。转载请注明出处！</b><br/>
+            <span>
+            <b>本文链接：</b><a href="/2018/03/27/protocol-buffer-study-python/" title="Protocol Buffer学习笔记(Python)">http://blog.hanqunfeng.com/2018/03/27/protocol-buffer-study-python/</a>
+            </span>
+          </p>
+        </div>
+
+
+    </div>
+
+
 
     
     
@@ -540,11 +544,15 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2020&nbsp; | &nbsp;</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  <span class="author" itemprop="copyrightHolder">飘逸峰&nbsp; | &nbsp;</span>
+  <span class="with-love">
+    <i class="fa fa-area-chart"></i>
+  </span>
+  <span class="post-count">全站字数： 54.2k</span>
 </div>
 
         

@@ -317,18 +317,22 @@
 
 <h2 id="生产者"><a href="#生产者" class="headerlink" title="生产者"></a>生产者</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span>(<span class="string">"springboot.queue.a"</span>)</span><br><span class="line">    <span class="keyword">private</span> Queue queuea;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span>(<span class="string">"springboot.queue.b"</span>)</span><br><span class="line">    <span class="keyword">private</span> Queue queueb;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span>(<span class="string">"springboot.topic"</span>)</span><br><span class="line">    <span class="keyword">private</span> Topic topic;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span>(<span class="string">"springboot.queuereply"</span>)</span><br><span class="line">    <span class="keyword">private</span> Queue queuereply;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JmsMessagingTemplate jmsTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送消息，destination是发送到的队列，message是待发送的消息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(Destination destination, <span class="keyword">final</span> String message)</span></span>&#123;</span><br><span class="line">        jmsTemplate.convertAndSend(destination, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendQueueAMessage</span><span class="params">(<span class="keyword">final</span> String message)</span></span>&#123;</span><br><span class="line">        sendMessage(queuea, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendQueueBMessage</span><span class="params">(<span class="keyword">final</span> String message)</span></span>&#123;</span><br><span class="line">        sendMessage(queueb, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendTopicMessage</span><span class="params">(<span class="keyword">final</span> String message)</span></span>&#123;</span><br><span class="line">        sendMessage(topic, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendQueueMessageReply</span><span class="params">(<span class="keyword">final</span> String message)</span></span>&#123;</span><br><span class="line">        sendMessage(queuereply, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//生产者监听消费者的应答</span></span><br><span class="line">    <span class="meta">@JmsListener</span>(destination = <span class="string">"out.replyTo.queue"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consumerMessage</span><span class="params">(String text)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"从out.replyTo.queue收到报文"</span>+text);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    </div>
-<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+        <div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
 
-    <div>
-  <p id="div-border-left-red">
-  <b>作者：飘逸峰</b><br/>
-   <b>版权声明：本博客所有文章遵循 <a target="_blank" title="Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA 4.0 </a>版权协议。转载请注明出处！</b><br/>
-    <span>
-    <b>本文链接：</b><a href="/2018/12/12/activemq-springboot/" title="Spring Boot2学习笔记--activemq">http://blog.hanqunfeng.com/2018/12/12/activemq-springboot/</a>
-    </span>
-  </p>
-  </div>
+        <div>
+          <p id="div-border-left-red">
+          <b>作者：飘逸峰</b><br/>
+           <b>版权声明：本博客所有文章遵循 <a target="_blank" title="Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA 4.0 </a>版权协议。转载请注明出处！</b><br/>
+            <span>
+            <b>本文链接：</b><a href="/2018/12/12/activemq-springboot/" title="Spring Boot2学习笔记--activemq">http://blog.hanqunfeng.com/2018/12/12/activemq-springboot/</a>
+            </span>
+          </p>
+        </div>
+
+
+    </div>
+
+
 
     
     
@@ -540,11 +544,15 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2020&nbsp; | &nbsp;</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  <span class="author" itemprop="copyrightHolder">飘逸峰&nbsp; | &nbsp;</span>
+  <span class="with-love">
+    <i class="fa fa-area-chart"></i>
+  </span>
+  <span class="post-count">全站字数： 54.2k</span>
 </div>
 
         
