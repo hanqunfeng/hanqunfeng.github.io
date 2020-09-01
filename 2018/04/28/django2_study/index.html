@@ -25,7 +25,7 @@
   <meta name="description" content="摘要 版本：python3.6.4+django2.0.3Demo：https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng&#x2F;DjangoHelloWorld  参考资料：官方资料Django 1.8.2 文档Django 1.11.6 文档Django 2.0.2文档Django中文教程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Django2学习笔记">
-<meta property="og:url" content="http://blog.hanqunfeng.com/2018/04/28/django2_study/index.html">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2018/04/28/django2_study/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
 <meta property="og:description" content="摘要 版本：python3.6.4+django2.0.3Demo：https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng&#x2F;DjangoHelloWorld  参考资料：官方资料Django 1.8.2 文档Django 1.11.6 文档Django 2.0.2文档Django中文教程">
 <meta property="og:locale" content="zh_CN">
@@ -35,7 +35,7 @@
 <meta property="article:tag" content="Django">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://blog.hanqunfeng.com/2018/04/28/django2_study/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2018/04/28/django2_study/">
 
 
 <script id="page-configurations">
@@ -112,7 +112,7 @@
       <h1 class="site-title">飘逸峰的博客</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">Spring--java程序员的春天</p>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
   </div>
 
   <div class="site-nav-right">
@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.hanqunfeng.com/2018/04/28/django2_study/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2018/04/28/django2_study/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -414,9 +414,9 @@
 
 <p>view.py中：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">user_query_json</span>(<span class="params">request</span>):</span></span><br><span class="line">    user_list = User.objects.all()</span><br><span class="line">    <span class="keyword">return</span> JSONUtil.render_json(user_list, safe=<span class="literal">False</span>) <span class="comment"># safe=False可以传递对象，否则必须传递一个dict，ajax请求时这样要设置safe=False，这样页面可以直接获取到对象</span></span><br></pre></td></tr></table></figure>
-<p>返回结果，可以看到两边没有引号：<br>[{“model”: “myapp.user”, “pk”: 4, “fields”: {“name”: “\u54c8\u54c8”, “birth_day”: “2018-04-09”, “phone”: “None”, “email”: “None”}}, {“model”: “myapp.user”, “pk”: 9, “fields”: {“name”: “\u5929\u738b\u5c71”, “birth_day”: “2018-09-10”, “phone”: “123”, “email”: “<a href="mailto:&#x31;&#x32;&#x33;&#64;&#49;&#x32;&#51;&#x2e;&#99;&#x6f;&#x6d;">&#x31;&#x32;&#x33;&#64;&#49;&#x32;&#51;&#x2e;&#99;&#x6f;&#x6d;</a>“}}]</p>
+<p>返回结果，可以看到两边没有引号：<br>[{“model”: “myapp.user”, “pk”: 4, “fields”: {“name”: “\u54c8\u54c8”, “birth_day”: “2018-04-09”, “phone”: “None”, “email”: “None”}}, {“model”: “myapp.user”, “pk”: 9, “fields”: {“name”: “\u5929\u738b\u5c71”, “birth_day”: “2018-09-10”, “phone”: “123”, “email”: “<a href="mailto:&#x31;&#50;&#51;&#64;&#x31;&#x32;&#51;&#x2e;&#x63;&#x6f;&#109;">&#x31;&#50;&#51;&#64;&#x31;&#x32;&#51;&#x2e;&#x63;&#x6f;&#109;</a>“}}]</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">user_query_json_get</span>(<span class="params">request, user_id</span>):</span></span><br><span class="line">    user = User.objects.get(pk=user_id)</span><br><span class="line">    <span class="comment"># user = User.objects.filter(pk=user_id)</span></span><br><span class="line">    <span class="keyword">return</span> JSONUtil.render_json(user, dict_key=<span class="string">&#x27;user&#x27;</span>, safe=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p>返回结果：[{“model”: “myapp.user”, “pk”: 1, “fields”: {“name”: “\u97e9\u7fa4\u5cf0”, “birth_day”: “2018-04-07”, “phone”: “None”, “email”: “<a href="mailto:&#113;&#117;&#110;&#x66;&#x65;&#x6e;&#x67;&#95;&#x68;&#x61;&#110;&#x40;&#49;&#50;&#x36;&#46;&#x63;&#x6f;&#109;">&#113;&#117;&#110;&#x66;&#x65;&#x6e;&#x67;&#95;&#x68;&#x61;&#110;&#x40;&#49;&#50;&#x36;&#46;&#x63;&#x6f;&#109;</a>“}}]</p>
+<p>返回结果：[{“model”: “myapp.user”, “pk”: 1, “fields”: {“name”: “\u97e9\u7fa4\u5cf0”, “birth_day”: “2018-04-07”, “phone”: “None”, “email”: “<a href="mailto:&#113;&#117;&#x6e;&#102;&#101;&#x6e;&#x67;&#95;&#104;&#97;&#x6e;&#x40;&#49;&#x32;&#54;&#x2e;&#x63;&#x6f;&#x6d;">&#113;&#117;&#x6e;&#102;&#101;&#x6e;&#x67;&#95;&#104;&#97;&#x6e;&#x40;&#49;&#x32;&#54;&#x2e;&#x63;&#x6f;&#x6d;</a>“}}]</p>
 <p>模板中：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;&#123;% static &#x27;polls/js/jquery-1.11.0.min.js&#x27; %&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span> #注意这里必须有闭合标签<span class="tag">&lt;/<span class="name">script</span>&gt;</span>，否则显示会有问题</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;userdiv&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;userlistdiv&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">    $.getJSON(<span class="string">&quot;&#123;% url &#x27;myapp:user_query_json_get&#x27; 1 %&#125;&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">ret</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        $.each(ret, <span class="function"><span class="keyword">function</span> (<span class="params">key, value</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">// key 为字典的 key，value 为对应的值</span></span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;#userdiv&quot;</span>).append(value.pk+<span class="string">&quot;#&quot;</span>+value.fields.name+<span class="string">&quot;#&quot;</span>+value.fields.birth_day+<span class="string">&quot;#&quot;</span>+value.fields.phone+<span class="string">&quot;#&quot;</span>+value.fields.email+<span class="string">&quot;&lt;br&gt;&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line"><span class="javascript">    $.getJSON(<span class="string">&quot;&#123;% url &#x27;myapp:user_query_json&#x27; %&#125;&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">ret</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        $.each(ret, <span class="function"><span class="keyword">function</span> (<span class="params">key, value</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">// key 为字典的 key，value 为对应的值</span></span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;#userlistdiv&quot;</span>).append(value.pk+<span class="string">&quot;#&quot;</span>+value.fields.name+<span class="string">&quot;#&quot;</span>+value.fields.birth_day+<span class="string">&quot;#&quot;</span>+value.fields.phone+<span class="string">&quot;#&quot;</span>+value.fields.email+<span class="string">&quot;&lt;br&gt;&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -623,7 +623,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://blog.hanqunfeng.com/2018/04/28/django2_study/" title="Django2学习笔记">http://blog.hanqunfeng.com/2018/04/28/django2_study/</a>
+    <a href="https://blog.hanqunfeng.com/2018/04/28/django2_study/" title="Django2学习笔记">https://blog.hanqunfeng.com/2018/04/28/django2_study/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-SA</a> 许可协议。转载请注明出处！
