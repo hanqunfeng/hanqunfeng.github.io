@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"blog.hanqunfeng.com","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="摘要 CAS服务端基于cas-overlay-template-5.3.14 CAS客户端基于spring-boot-2.3.3.RELEASE，spring-security-cas-5.3.4.RELEASE 本文代码地址：https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng&#x2F;springbootchapter&#x2F;tree&#x2F;master&#x2F;chapter36">
+  <meta name="description" content="摘要 CAS服务端基于cas-overlay-template-5.3.14，已实现基于jdbc的自定义登录策略、验证码、动态service配置、多属性返回，等等 CAS客户端基于spring-boot-2.3.3.RELEASE，spring-security-cas-5.3.4.RELEASE 本文代码地址：https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng&#x2F;springbootcha">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CAS客户端使用SpringSecurity访问CAS发布的属性">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2020/09/25/springsecurity-cas-attrs/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要 CAS服务端基于cas-overlay-template-5.3.14 CAS客户端基于spring-boot-2.3.3.RELEASE，spring-security-cas-5.3.4.RELEASE 本文代码地址：https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng&#x2F;springbootchapter&#x2F;tree&#x2F;master&#x2F;chapter36">
+<meta property="og:description" content="摘要 CAS服务端基于cas-overlay-template-5.3.14，已实现基于jdbc的自定义登录策略、验证码、动态service配置、多属性返回，等等 CAS客户端基于spring-boot-2.3.3.RELEASE，spring-security-cas-5.3.4.RELEASE 本文代码地址：https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng&#x2F;springbootcha">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-09-25T10:30:05.000Z">
-<meta property="article:modified_time" content="2020-09-25T04:05:34.434Z">
+<meta property="article:modified_time" content="2020-09-25T04:22:52.282Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="cas">
 <meta name="twitter:card" content="summary">
@@ -239,7 +239,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-25 18:30:05 / 修改时间：12:05:34" itemprop="dateCreated datePublished" datetime="2020-09-25T18:30:05+08:00">2020-09-25</time>
+              <time title="创建时间：2020-09-25 18:30:05 / 修改时间：12:22:52" itemprop="dateCreated datePublished" datetime="2020-09-25T18:30:05+08:00">2020-09-25</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -285,7 +285,7 @@
              <i class="fa fa-bar-chart"></i>
            </span>
            <span class="post-meta-item-text">字数统计:</span>
-           <span class="post-count">1.7k(字)</span>
+           <span class="post-count">1.8k(字)</span>
 
           </span>
 
@@ -323,16 +323,17 @@
 
       
         <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><ul>
-<li>CAS服务端基于cas-overlay-template-5.3.14</li>
+<li>CAS服务端基于cas-overlay-template-5.3.14，已实现基于jdbc的自定义登录策略、验证码、动态service配置、多属性返回，等等</li>
 <li>CAS客户端基于spring-boot-2.3.3.RELEASE，spring-security-cas-5.3.4.RELEASE</li>
 <li>本文代码地址：<a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/springbootchapter/tree/master/chapter36">https://github.com/hanqunfeng/springbootchapter/tree/master/chapter36</a></li>
+<li>其重点是client的UserDetailsService的实现类要继承自AbstractCasAssertionUserDetailsService</li>
 </ul>
 <a id="more"></a>
 
 <h2 id="cas服务配置"><a href="#cas服务配置" class="headerlink" title="cas服务配置"></a>cas服务配置</h2><ul>
 <li>如果是json配置方式：services目录下需要为每个客户端配置一个json文件，如client1-10000005.json</li>
 </ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;@class&quot;</span> : <span class="string">&quot;org.apereo.cas.services.RegexRegisteredService&quot;</span>,</span><br><span class="line">  &quot;serviceId&quot; : &quot;^(https|http|imaps)://localhost:8081.*&quot;, #对应客户端的地址匹配路径</span><br><span class="line">  &quot;name&quot; : &quot;client1&quot;,  #与文件名称对应</span><br><span class="line">  &quot;id&quot; : 10000005,     #与文件名称对应</span><br><span class="line">  &quot;description&quot; : &quot;This service definition authorizes all application urls that support HTTPS and IMAPS protocols.&quot;,</span><br><span class="line">  &quot;evaluationOrder&quot; : 10, #顺序id不能重复</span><br><span class="line">  &quot;logoutType&quot; : &quot;BACK_CHANNEL&quot;, #固定写法</span><br><span class="line">  &quot;logoutUrl&quot; : &quot;http://localhost:8081/&quot;,  #客户端地址</span><br><span class="line">  &quot;attributeReleasePolicy&quot;: &#123;</span><br><span class="line">    &quot;@class&quot;: &quot;org.apereo.cas.services.ReturnAllAttributeReleasePolicy&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;accessStrategy&quot; : &#123;</span><br><span class="line">    &quot;@class&quot; : &quot;org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy&quot;,</span><br><span class="line">    &quot;enabled&quot; : true,</span><br><span class="line">    &quot;ssoEnabled&quot; : true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;@class&quot;</span> : <span class="string">&quot;org.apereo.cas.services.RegexRegisteredService&quot;</span>,</span><br><span class="line">  &quot;serviceId&quot; : &quot;^(https|http|imaps)://localhost:8081.*&quot;, #对应客户端的地址匹配路径</span><br><span class="line">  &quot;name&quot; : &quot;client1&quot;,  #与文件名称对应</span><br><span class="line">  &quot;id&quot; : 10000005,     #与文件名称对应</span><br><span class="line">  &quot;description&quot; : &quot;This service definition authorizes all application urls that support HTTPS and IMAPS protocols.&quot;,</span><br><span class="line">  &quot;evaluationOrder&quot; : 10, #顺序id不能重复</span><br><span class="line">  &quot;logoutType&quot; : &quot;BACK_CHANNEL&quot;, #固定写法</span><br><span class="line">  &quot;logoutUrl&quot; : &quot;http://localhost:8081/&quot;,  #客户端地址，用于单点登出时通知客户端使用</span><br><span class="line">  &quot;attributeReleasePolicy&quot;: &#123; # 属性返回策略</span><br><span class="line">    &quot;@class&quot;: &quot;org.apereo.cas.services.ReturnAllAttributeReleasePolicy&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;accessStrategy&quot; : &#123;</span><br><span class="line">    &quot;@class&quot; : &quot;org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy&quot;,</span><br><span class="line">    &quot;enabled&quot; : true,</span><br><span class="line">    &quot;ssoEnabled&quot; : true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="cas多属性返回"><a href="#cas多属性返回" class="headerlink" title="cas多属性返回"></a>cas多属性返回</h2><ul>
 <li>services的json文件中要增加如下配置<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 返回全部配置属性</span><br><span class="line">&quot;attributeReleasePolicy&quot;: &#123;</span><br><span class="line">    &quot;@class&quot;: &quot;org.apereo.cas.services.ReturnAllAttributeReleasePolicy&quot;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"># 返回指定配置属性，这里指定只返回username和email两个属性</span><br><span class="line">  &quot;attributeReleasePolicy&quot; : &#123;</span><br><span class="line">  	&quot;@class&quot; : &quot;org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy&quot;,</span><br><span class="line"> 	&quot;allowedAttributes&quot; : [ &quot;java.util.ArrayList&quot;, [ &quot;username&quot;, &quot;email&quot; ] ]</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
