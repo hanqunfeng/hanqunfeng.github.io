@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.hanqunfeng.com","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="摘要 CAS服务端基于cas-orerlay-template-5.3.14 CAS客户端基于spring-boot-2.3.3.RELEASE，spring-security-cas-5.3.4.RELEASE 本文代码地址：https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng&#x2F;springbootchapter&#x2F;tree&#x2F;master&#x2F;chapter36">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CAS客户端使用SpringSecurity访问CAS发布的属性">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2020/09/25/springsecurity-cas-attrs/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要 CAS服务端基于cas-orerlay-template-5.3.14 CAS客户端基于spring-boot-2.3.3.RELEASE，spring-security-cas-5.3.4.RELEASE 本文代码地址：https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng&#x2F;springbootchapter&#x2F;tree&#x2F;master&#x2F;chapter36">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-25T10:30:05.000Z">
+<meta property="article:modified_time" content="2020-09-25T04:03:36.406Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="cas">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2020/09/25/springsecurity-cas-attrs/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CAS客户端使用SpringSecurity访问CAS发布的属性 | 飘逸峰的博客</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df09093d4aac102842ad15c241595440";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">飘逸峰的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/2016/12/02/book/" rel="section"><i class="fa fa-fw fa-book"></i>资料</a>
+
+  </li>
+        <li class="menu-item menu-item-rss">
+
+    <a href="/atom.xml" rel="section"><i class="fa fa-fw fa-rss"></i>RSS</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2020/09/25/springsecurity-cas-attrs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CAS客户端使用SpringSecurity访问CAS发布的属性
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-25 18:30:05 / 修改时间：12:03:36" itemprop="dateCreated datePublished" datetime="2020-09-25T18:30:05+08:00">2020-09-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/09/25/springsecurity-cas-attrs/" class="post-meta-item leancloud_visitors" data-flag-title="CAS客户端使用SpringSecurity访问CAS发布的属性" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+
+          <br>
+
+          <!-- 置顶，精品 -->
+          
+          <span class="post-meta-item-icon">
+                  <i class="fa fa-thumb-tack zhidingtop">置顶</i>
+              </span>
+
+          
+          
+          
+          <span class="post-meta-item-icon">
+                  <i class="fa fa-newspaper-o jingping">精品</i>
+          </span>
+
+          
+
+
+          <span class="post-time">
+
+           <span class="post-meta-item-icon">
+             <i class="fa fa-bar-chart"></i>
+           </span>
+           <span class="post-meta-item-text">字数统计:</span>
+           <span class="post-count">1.7k(字)</span>
+
+          </span>
+
+          <span class="post-time">
+           &nbsp; | &nbsp;
+           <span class="post-meta-item-icon">
+             <i class="fa fa-clock-o"></i>
+           </span>
+           <span class="post-meta-item-text">阅读时长:</span>
+           <span class="post-count">8(分)</span>
+           &nbsp; | &nbsp;
+         </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/25/springsecurity-cas-attrs/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/25/springsecurity-cas-attrs/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><ul>
+<li>CAS服务端基于cas-orerlay-template-5.3.14</li>
+<li>CAS客户端基于spring-boot-2.3.3.RELEASE，spring-security-cas-5.3.4.RELEASE</li>
+<li>本文代码地址：<a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/springbootchapter/tree/master/chapter36">https://github.com/hanqunfeng/springbootchapter/tree/master/chapter36</a></li>
+</ul>
+<a id="more"></a>
+
+<h2 id="cas服务配置"><a href="#cas服务配置" class="headerlink" title="cas服务配置"></a>cas服务配置</h2><ul>
+<li>如果是json配置方式：services目录下需要为每个客户端配置一个json文件，如client1-10000005.json</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;@class&quot;</span> : <span class="string">&quot;org.apereo.cas.services.RegexRegisteredService&quot;</span>,</span><br><span class="line">  &quot;serviceId&quot; : &quot;^(https|http|imaps)://localhost:8081.*&quot;, #对应客户端的地址匹配路径</span><br><span class="line">  &quot;name&quot; : &quot;client1&quot;,  #与文件名称对应</span><br><span class="line">  &quot;id&quot; : 10000005,     #与文件名称对应</span><br><span class="line">  &quot;description&quot; : &quot;This service definition authorizes all application urls that support HTTPS and IMAPS protocols.&quot;,</span><br><span class="line">  &quot;evaluationOrder&quot; : 10, #顺序id不能重复</span><br><span class="line">  &quot;logoutType&quot; : &quot;BACK_CHANNEL&quot;, #固定写法</span><br><span class="line">  &quot;logoutUrl&quot; : &quot;http://localhost:8081/&quot;,  #客户端地址</span><br><span class="line">  &quot;attributeReleasePolicy&quot;: &#123;</span><br><span class="line">    &quot;@class&quot;: &quot;org.apereo.cas.services.ReturnAllAttributeReleasePolicy&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;accessStrategy&quot; : &#123;</span><br><span class="line">    &quot;@class&quot; : &quot;org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy&quot;,</span><br><span class="line">    &quot;enabled&quot; : true,</span><br><span class="line">    &quot;ssoEnabled&quot; : true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="cas多属性返回"><a href="#cas多属性返回" class="headerlink" title="cas多属性返回"></a>cas多属性返回</h2><ul>
+<li>services的json文件中要增加如下配置<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 返回全部配置属性</span><br><span class="line">&quot;attributeReleasePolicy&quot;: &#123;</span><br><span class="line">    &quot;@class&quot;: &quot;org.apereo.cas.services.ReturnAllAttributeReleasePolicy&quot;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"># 返回指定配置属性，这里指定只返回username和email两个属性</span><br><span class="line">  &quot;attributeReleasePolicy&quot; : &#123;</span><br><span class="line">  	&quot;@class&quot; : &quot;org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy&quot;,</span><br><span class="line"> 	&quot;allowedAttributes&quot; : [ &quot;java.util.ArrayList&quot;, [ &quot;username&quot;, &quot;email&quot; ] ]</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="动态service"><a href="#动态service" class="headerlink" title="动态service"></a>动态service</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果使用代码的方式维护service,则也要根据情况来创建返回策略，</span><br><span class="line">参考代码chapter36&#x2F;cas-overlay-template-5.3.14&#x2F;src&#x2F;main&#x2F;java&#x2F;com&#x2F;cas&#x2F;controller&#x2F;ServiceController.java</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>配置属性</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 动态services配置</span></span><br><span class="line"><span class="comment">################################################</span></span><br><span class="line"><span class="comment"># 开启识别Json文件，默认false</span></span><br><span class="line"><span class="comment"># 这一段表示从json文件里面初始化服务，如果我们配置了这个，就会将这写json里面的数据，都会自动导入到数据库中</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.initFromJson</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.watcherEnabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment">#设置配置的服务，一直都有，不会给清除掉 ， 第一次使用，需要配置为 create-drop</span></span><br><span class="line"><span class="comment">#create-drop 重启cas服务的时候，就会给干掉</span></span><br><span class="line"><span class="comment">#create  没有表就创建，有就不创建</span></span><br><span class="line"><span class="comment">#none 什么也不做</span></span><br><span class="line"><span class="comment">#update 更新</span></span><br><span class="line"><span class="comment">#Unrecognized legacy `hibernate.hbm2ddl.auto` value : create-drops</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.ddlAuto</span>=<span class="string">update</span></span><br><span class="line"><span class="comment">#配置将service配置到数据库中</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.isolateInternalQueries</span>=<span class="string">false</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.url</span>=<span class="string">$&#123;jdbc.url&#125;</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.user</span>=<span class="string">$&#123;jdbc.username&#125;</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.password</span>=<span class="string">$&#123;jdbc.password&#125;</span></span><br><span class="line"><span class="comment">#这个必须是org.hibernate.dialect.MySQL5Dialect ,我就是这个问题导致表创建失败</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.dialect</span>=<span class="string">org.hibernate.dialect.MySQL5Dialect</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.driverClass</span>=<span class="string">$&#123;jdbc.driver&#125;</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.leakThreshold</span>=<span class="string">10</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.batchSize</span>=<span class="string">1</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.autocommit</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">cas.serviceRegistry.jpa.idleTimeout</span>=<span class="string">5000</span></span><br><span class="line"><span class="comment">#配置结束</span></span><br><span class="line"><span class="comment">################################################</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这里说一下delete异常的问题，可以引入jdbcTemplate直接操作数据表，参考chapter36/cas-overlay-template-5.3.14/src/main/java/com/cas/config/DataSourceConfig.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Map&lt;String, Object&gt;&gt; list = jdbcTemplate.queryForList(<span class="string">&quot;select * from regexregisteredservice where serviceId = &#x27;&quot;</span> + serviceId + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (list != <span class="keyword">null</span> &amp;&amp; list.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    has_data = <span class="keyword">true</span>;</span><br><span class="line">    jdbcTemplate.update(<span class="string">&quot;delete from regexregisteredservice where serviceId = &#x27;&quot;</span> + serviceId + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">//执行load生效</span></span><br><span class="line"> servicesManager.load();</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="基于配置文件返回属性"><a href="#基于配置文件返回属性" class="headerlink" title="基于配置文件返回属性"></a>基于配置文件返回属性</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#####################################################</span></span><br><span class="line"><span class="comment">## 属性返回</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].sql</span>=<span class="string">select username,password,email from cas_user where username=?</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 格式cas.authn.attributeRepository.jdbc[0].attributes.key=value</span></span><br><span class="line"><span class="comment"># 返回上面查询结果的username，属性key名称也为username ,以下雷同</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].attributes.username</span>=<span class="string">username</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].attributes.password</span>=<span class="string">password</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].attributes.email</span>=<span class="string">email</span></span><br><span class="line"></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].singleRow</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].order</span>=<span class="string">0</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].requireAllAttributes</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># cas.authn.attributeRepository.jdbc[0].caseCanonicalization=NONE|LOWER|UPPER</span></span><br><span class="line"><span class="comment"># cas.authn.attributeRepository.jdbc[0].queryType=OR|AND</span></span><br><span class="line"></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].username</span>=<span class="string">username</span></span><br><span class="line"><span class="comment">#数据库连接</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].url</span>=<span class="string">$&#123;jdbc.url&#125;</span></span><br><span class="line"><span class="comment">#数据库dialect配置</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].dialect</span>=<span class="string">$&#123;jdbc.dialect&#125;</span></span><br><span class="line"><span class="comment">#数据库用户名</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].user</span>=<span class="string">$&#123;jdbc.username&#125;</span></span><br><span class="line"><span class="comment">#数据库用户密码</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].password</span>=<span class="string">$&#123;jdbc.password&#125;</span></span><br><span class="line"><span class="comment">#数据库事务自动提交</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].autocommit</span>=<span class="string">true</span></span><br><span class="line"><span class="comment">#数据库驱动</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].driverClass</span>=<span class="string">$&#123;jdbc.driver&#125;</span></span><br><span class="line"><span class="comment">#超时配置</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].idleTimeout</span>=<span class="string">5000</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].ddlAuto</span>=<span class="string">none</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].leakThreshold</span>=<span class="string">10</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].batchSize</span>=<span class="string">1</span></span><br><span class="line"><span class="meta">cas.authn.attributeRepository.jdbc[0].dataSourceProxy</span>=<span class="string">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#####################################################</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="代码实现返回属性内容"><a href="#代码实现返回属性内容" class="headerlink" title="代码实现返回属性内容"></a>代码实现返回属性内容</h2><ul>
+<li>这个需要结合自定义登录策略来实现，代码参考：chapter36/cas-overlay-template-5.3.14/src/main/java/com/cas/security/CustomerHandlerAuthentication.java，注意要关闭配置文件的登录策略，否则会失效</li>
+<li>注册自定义登录策略，代码参考：chapter36/cas-overlay-template-5.3.14/src/main/java/com/cas/config/CustomAuthenticationConfig.java</li>
+<li>然后将其加入自动配置中,chapter36/cas-overlay-template-5.3.14/src/main/resources/META-INF/spring.factories<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">org.springframework.boot.autoconfigure.EnableAutoConfiguration</span>=<span class="string">\</span></span><br><span class="line">  org.apereo.cas.config.CasEmbeddedContainerTomcatConfiguration,\</span><br><span class="line">  org.apereo.cas.config.CasEmbeddedContainerTomcatFiltersConfiguration,\</span><br><span class="line">  <span class="attr">com.cas.config.MyConfiguration,\ #自定义的其它需要加入spring上下文的bean</span></span><br><span class="line">  <span class="attr">com.cas.config.DataSourceConfig,\ #数据源配置，为了引入JdbcTemplate</span></span><br><span class="line">  <span class="meta">com.cas.config.CustomAuthenticationConfig,\ </span> <span class="string">#自定义登录策略配置</span></span><br><span class="line">  <span class="meta">com.cas.config.CustomerAuthWebflowConfiguration</span> <span class="string">#自定义登录流程配置</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h2 id="cas-client-springsecurity"><a href="#cas-client-springsecurity" class="headerlink" title="cas-client-springsecurity"></a>cas-client-springsecurity</h2><ul>
+<li><p>这里说一下，如果不使用springsecurity，而是直接依赖cas-client，其获取cas返回属性的方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Principal principal = request.getUserPrincipal();</span><br><span class="line"><span class="keyword">if</span>(principal <span class="keyword">instanceof</span> AttributePrincipal)&#123;</span><br><span class="line">    <span class="comment">//cas传递过来的数据</span></span><br><span class="line">    Map&lt;String,Object&gt; result =( (AttributePrincipal)principal).getAttributes();</span><br><span class="line">    <span class="keyword">for</span>(Map.Entry&lt;String, Object&gt; entry :result.entrySet()) &#123;</span><br><span class="line">        String key = entry.getKey();</span><br><span class="line">        Object val = entry.getValue();</span><br><span class="line">        System.out.printf(<span class="string">&quot;%s:%s\r\n&quot;</span>,key,val);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用springsecurity的配置类代码参考：chapter36/springsecurity-client-demo/src/main/java/com/example/springsecuritydemo/config/WebSecurityConfigByCASByAttrs.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * cas 认证 Provider</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CasAuthenticationProvider <span class="title">casAuthenticationProvider</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建CAS授权认证器</span></span><br><span class="line">        CasAuthenticationProvider casAuthenticationProvider = <span class="keyword">new</span> CasAuthenticationProvider();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置Cas授权认证器相关配置</span></span><br><span class="line">        casAuthenticationProvider.setServiceProperties(serviceProperties());</span><br><span class="line">        <span class="comment">//设置票据校验器</span></span><br><span class="line">        casAuthenticationProvider.setTicketValidator(cas30ServiceTicketValidator());</span><br><span class="line">        casAuthenticationProvider.setKey(<span class="string">&quot;casAuthenticationProviderKey&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//setUserDetailsService和setAuthenticationUserDetailsService只能设置一个，其目的都是为了初始化属性authenticationUserDetailsService</span></span><br><span class="line">        <span class="comment">//setUserDetailsService的类型为UserDetailsService</span></span><br><span class="line">        <span class="comment">//setAuthenticationUserDetailsService的类型为AuthenticationUserDetailsService&lt;CasAssertionAuthenticationToken&gt;</span></span><br><span class="line">        <span class="comment">// 如果使用setUserDetailsService，则其会对UserDetailsService进行封装，new UserDetailsByNameServiceWrapper(userDetailsService)，</span></span><br><span class="line">        <span class="comment">// 将其转换为AuthenticationUserDetailsService&lt;CasAssertionAuthenticationToken&gt;类型</span></span><br><span class="line">        <span class="comment">//这里使用setAuthenticationUserDetailsService是为了接收cas服务端返回的属性，因为CasAssertionAuthenticationToken会接收到返回的属性</span></span><br><span class="line">        casAuthenticationProvider.setAuthenticationUserDetailsService(userDetailsServiceImplByAttrs());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> casAuthenticationProvider;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> UserDetailsServiceImplByAttrs <span class="title">userDetailsServiceImplByAttrs</span><span class="params">()</span></span>&#123;</span><br><span class="line">        UserDetailsServiceImplByAttrs userDetailsServiceImplByAttrs = <span class="keyword">new</span> UserDetailsServiceImplByAttrs();</span><br><span class="line">        <span class="keyword">return</span> userDetailsServiceImplByAttrs;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>UserDetailsServiceImplByAttrs的重点就是要继承AbstractCasAssertionUserDetailsService，而不是实现UserDetailsService</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实际可以接收的属性</span></span><br><span class="line">Map&lt;String, Object&gt; objectMap = assertion.getPrincipal().getAttributes();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这里说一下AbstractCasAssertionUserDetailsService，它有一个实现类GrantedAuthorityFromAssertionAttributesUserDetailsService<br>不过其将返回数据都做为用户的权限了，所以其只是用来从服务器端获取用户权限使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CasAuthenticationToken principal = (CasAuthenticationToken) request.getUserPrincipal();</span><br><span class="line">UserDetails userDetails = principal.getUserDetails();</span><br><span class="line">Collection&lt;SimpleGrantedAuthority&gt; authorities = (Collection&lt;SimpleGrantedAuthority&gt;) userDetails.getAuthorities();</span><br><span class="line">authorities.stream().forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果希望灵活使用cas返回属性，则需要自定义实现类，笔者这里将获取到的属性map存储到自定义的CustomerUser属性中了</p>
+</li>
+<li><p>代码中使用属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#获取登录的用户名称</span><br><span class="line">String username = request.getRemoteUser();</span><br><span class="line">#获取cas返回属性</span><br><span class="line">CasAuthenticationToken principal = (CasAuthenticationToken) request.getUserPrincipal();</span><br><span class="line">UserDetails userDetails = principal.getUserDetails();</span><br><span class="line"><span class="keyword">if</span>(userDetails <span class="keyword">instanceof</span> CustomerUser)&#123;</span><br><span class="line">    Map&lt;String, Object&gt; map = ((CustomerUser) userDetails).getMap();</span><br><span class="line">    <span class="keyword">for</span> (String key : map.keySet()) &#123;</span><br><span class="line">        Object value = map.get(key);</span><br><span class="line">        <span class="keyword">if</span> (value != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (value <span class="keyword">instanceof</span> List) &#123;</span><br><span class="line">                List list = (List) value;</span><br><span class="line">                Iterator iterator = list.iterator();</span><br><span class="line">                <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">                    Object object = iterator.next();</span><br><span class="line">                    System.out.println(<span class="string">&quot;key:&quot;</span> + key + <span class="string">&quot;,values[&quot;</span> + i + <span class="string">&quot;]:&quot;</span> + object.toString());</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;key:&quot;</span> + key + <span class="string">&quot;,value:&quot;</span> + value.toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+
+        <div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+
+        <!--  css & js -->
+        <link rel="stylesheet" href="/social-share/share.min.css">
+        <script src="/social-share/share.min.js"></script>
+
+
+        <div class="social-share" style="float:right">分享到：</div>
+
+
+        <br/>
+
+
+    </div>
+
+
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.hanqunfeng.com/2020/09/25/springsecurity-cas-attrs/" title="CAS客户端使用SpringSecurity访问CAS发布的属性">https://blog.hanqunfeng.com/2020/09/25/springsecurity-cas-attrs/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa fa-font-awesome"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://hanqunfeng.iteye.com">
+            <span class="icon">
+              <i class="fa fa-bus"></i>
+            </span>
+
+            <span class="label">Iteye</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa fa-car"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/cas/" rel="tag"><i class="fa fa-tag"></i> cas</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/03/mysql100w-delete2/" rel="prev" title="AAAAOrder2020-0000001之面试题">
+      <i class="fa fa-chevron-left"></i> AAAAOrder2020-0000001之面试题
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cas%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">cas服务配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cas%E5%A4%9A%E5%B1%9E%E6%80%A7%E8%BF%94%E5%9B%9E"><span class="nav-number">3.</span> <span class="nav-text">cas多属性返回</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81service"><span class="nav-number">4.</span> <span class="nav-text">动态service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%BF%94%E5%9B%9E%E5%B1%9E%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">基于配置文件返回属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E8%BF%94%E5%9B%9E%E5%B1%9E%E6%80%A7%E5%86%85%E5%AE%B9"><span class="nav-number">6.</span> <span class="nav-text">代码实现返回属性内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cas-client-springsecurity"><span class="nav-number">7.</span> <span class="nav-text">cas-client-springsecurity</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <a href="/"
+<div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+</a>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:hanqf2008@gmail.com" title="E-Mail → mailto:hanqf2008@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/3006531213" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;3006531213" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://plus.google.com/114701878463320377633" title="Google → https:&#x2F;&#x2F;plus.google.com&#x2F;114701878463320377633" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/hanqf2" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;hanqf2" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/qunfeng.han" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;qunfeng.han" rel="noopener" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.youtube.com/channel/UCSjdVGBKBlvvIP1T433NAAg" title="YouTube → https:&#x2F;&#x2F;www.youtube.com&#x2F;channel&#x2F;UCSjdVGBKBlvvIP1T433NAAg" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>YouTube</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/hanqf2008" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;hanqf2008" rel="noopener" target="_blank"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://hanqunfeng.iteye.com/" title="Iteye → http:&#x2F;&#x2F;hanqunfeng.iteye.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-bus"></i>Iteye</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://blog.csdn.net/hanqunfeng" title="CSDN → http:&#x2F;&#x2F;blog.csdn.net&#x2F;hanqunfeng" rel="noopener" target="_blank"><i class="fa fa-fw fa-car"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.jianshu.com/users/763c53661578/latest_articles" title="简书 → http:&#x2F;&#x2F;www.jianshu.com&#x2F;users&#x2F;763c53661578&#x2F;latest_articles" rel="noopener" target="_blank"><i class="fa fa-fw fa-font-awesome"></i>简书</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hanqunfeng.coding.net/" title="https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener" target="_blank">Coding</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.dnspod.cn/" title="https:&#x2F;&#x2F;www.dnspod.cn" rel="noopener" target="_blank">Dnspod</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016~2020&nbsp; | &nbsp;</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">飘逸峰&nbsp; | &nbsp;</span>
+  <span class="with-love">
+    <i class="fa fa-area-chart"></i>
+  </span>
+  <span class="post-count">全站字数： 70.9k</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user-circle-o"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        总访客量：<span id="busuanzi_value_site_uv"></span> 人次
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-line-chart"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+      总访问量：<span id="busuanzi_value_site_pv"></span> 次
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz',
+      appKey     : 'A0HB73VDqWDODaRS4yyiW6V8',
+      placeholder: "说点什么吧",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+
+$(function(){
+  //$(".vcopy").hide();
+  $(window).scroll(
+        function() {
+            var scrollTop = $(this).scrollTop();
+            var scrollHeight = $(document).height();
+            var windowHeight = $(this).height();
+            if (scrollTop + windowHeight == scrollHeight) {
+				        // 此处写滚动条到底部时候触发的事件
+                //alert('已经到底了，别再滑了！');
+                $(".vcopy").hide();
+            }
+        }
+	);
+
+
+});
+</script>
+
+</body>
+</html>
