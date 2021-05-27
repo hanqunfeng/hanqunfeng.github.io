@@ -436,22 +436,17 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建内存表，重启数据库后，内存表中的数据会被清空，但是表结构依旧存在，不需要时可以drop掉</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> `test_order_memory`;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `test_order_memory` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  `orderId` <span class="type">varchar</span>(<span class="number">30</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `index_order_id` (`orderId`) <span class="keyword">USING</span> HASH</span><br><span class="line">) ENGINE<span class="operator">=</span>MEMORY AUTO_INCREMENT<span class="operator">=</span><span class="number">1</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 初始化内存表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">PROCEDURE</span> IF <span class="keyword">EXISTS</span> add_test_order_memory;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> `add_test_order_memory`(<span class="keyword">IN</span> n <span class="type">int</span>)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">DECLARE</span> i <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">1</span>;</span><br><span class="line">    WHILE (i <span class="operator">&lt;=</span> n ) DO</span><br><span class="line">      <span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_order_memory (orderId) <span class="keyword">VALUES</span> (concat(<span class="string">&#x27;aaaaorder2020-&#x27;</span>,LPAD(i, <span class="number">7</span>, <span class="number">0</span>)));</span><br><span class="line">      <span class="keyword">set</span> i<span class="operator">=</span>i<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">    <span class="keyword">END</span> WHILE;</span><br><span class="line"><span class="keyword">END</span>;</span><br></pre></td></tr></table></figure>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建1000000条数据</span></span><br><span class="line"><span class="keyword">call</span> add_test_order_memory(<span class="number">1000000</span>);</span><br><span class="line">Query OK, <span class="number">1000000</span> <span class="keyword">rows</span> affected (<span class="number">7.354</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将内存表中数据导入实际表中</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">into</span> test_order <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">from</span>  test_order_memory;</span><br><span class="line">Query OK, <span class="number">1000000</span> <span class="keyword">rows</span> affected (<span class="number">5.035</span> sec)</span><br><span class="line">Records: <span class="number">1000000</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看结果</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> test_order limit <span class="number">5</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-----------------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> orderId               <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-----------------------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> aaaaorder2020<span class="number">-0000001</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> aaaaorder2020<span class="number">-0000002</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> aaaaorder2020<span class="number">-0000003</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> aaaaorder2020<span class="number">-0000004</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> aaaaorder2020<span class="number">-0000005</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-----------------------+</span></span><br><span class="line"><span class="number">5</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.000</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除两条数据，这里就随便填两个id号</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_order <span class="keyword">where</span> id <span class="keyword">in</span> (<span class="number">233490</span>,<span class="number">943220</span>);</span><br><span class="line">Query OK, <span class="number">2</span> <span class="keyword">rows</span> affected (<span class="number">0.001</span> sec)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
          <div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
-
-         <!-- 分享 css & js -->
-        <link rel="stylesheet" href="/social-share/share.min.css">
-        <script src="/social-share/share.min.js"></script>
-
-
-        <div class="social-share" style="float:right">分享到：</div>
-
-
-        <br/>
     </div>
+
+
 
     
     
     
       
+
+
+
 
 
     <footer class="post-footer">
@@ -545,19 +540,23 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2020/04/18/http-utils/" rel="prev" title="HttpClient、OkHttp、RestTemplate、WebClient的基本使用">
-                  <i class="fa fa-chevron-left"></i> HttpClient、OkHttp、RestTemplate、WebClient的基本使用
+                <a href="/2020/09/25/springsecurity-cas-attrs/" rel="prev" title="CAS客户端使用SpringSecurity访问CAS发布的属性">
+                  <i class="fa fa-chevron-left"></i> CAS客户端使用SpringSecurity访问CAS发布的属性
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2020/09/25/springsecurity-cas-attrs/" rel="next" title="CAS客户端使用SpringSecurity访问CAS发布的属性">
-                  CAS客户端使用SpringSecurity访问CAS发布的属性 <i class="fa fa-chevron-right"></i>
+                <a href="/2020/04/18/http-utils/" rel="next" title="HttpClient、OkHttp、RestTemplate、WebClient的基本使用">
+                  HttpClient、OkHttp、RestTemplate、WebClient的基本使用 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
     </footer>
   </article>
 </div>
+
+
+
+
 
 
 

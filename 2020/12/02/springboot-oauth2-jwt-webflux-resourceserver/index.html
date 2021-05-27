@@ -402,17 +402,9 @@
 <h2 id="application-yml"><a href="#application-yml" class="headerlink" title="application.yml"></a>application.yml</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#资源服务器端口号</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8083</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">oauth2-resource-server-webflux</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">#oauth2 配置</span></span><br><span class="line">  <span class="attr">security:</span></span><br><span class="line">    <span class="attr">oauth2:</span></span><br><span class="line">      <span class="attr">resourceserver:</span></span><br><span class="line">        <span class="attr">jwt:</span></span><br><span class="line">          <span class="comment"># 公钥文件路径</span></span><br><span class="line">          <span class="comment"># public-key-location: classpath:oauth2_key.pub</span></span><br><span class="line"></span><br><span class="line">          <span class="comment"># 认证服务器提供的密钥验证路径，这种方式每次验证access_token都需要访问认证服务器</span></span><br><span class="line">          <span class="attr">jwk-set-uri:</span> <span class="string">http://localhost:8080/.well-known/jwks.json</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="资源接口示例"><a href="#资源接口示例" class="headerlink" title="资源接口示例"></a>资源接口示例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.oauth2resourceserverwebfluxdemo.controller;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.oauth2resourceserverwebfluxdemo.exception.AjaxResponse;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.access.prepost.PreAuthorize;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.Authentication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.oauth2.jwt.Jwt;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="keyword">import</span> reactor.core.publisher.Mono;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.security.Principal;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;h1&gt;res&lt;/h1&gt;</span></span><br><span class="line"><span class="comment"> * Created by hanqf on 2020/11/6 17:22.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//注意权限区分大小写</span></span><br><span class="line">    <span class="meta">@PreAuthorize(&quot;hasRole(&#x27;admin&#x27;) or hasRole(&#x27;user&#x27;)&quot;)</span></span><br><span class="line">    <span class="comment">//@PreAuthorize(&quot;#oauth2.hasScope(&#x27;any&#x27;)&quot;) //不支持oauth2表达式</span></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/user&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Mono&lt;AjaxResponse&gt; <span class="title">user</span><span class="params">(Principal principal)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//principal在经过security拦截后，是org.springframework.security.authentication.UsernamePasswordAuthenticationToken</span></span><br><span class="line">        <span class="comment">//在经OAuth2拦截后，是OAuth2Authentication</span></span><br><span class="line">        <span class="keyword">return</span> Mono.just(AjaxResponse.success(principal));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//注意权限区分大小写</span></span><br><span class="line">    <span class="meta">@PreAuthorize(&quot;hasAuthority(&#x27;SCOPE_any&#x27;)&quot;)</span></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/user2&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Mono&lt;AjaxResponse&gt; <span class="title">user2</span><span class="params">(Principal principal)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//principal在经过security拦截后，是org.springframework.security.authentication.UsernamePasswordAuthenticationToken</span></span><br><span class="line">        <span class="comment">//在经OAuth2拦截后，是OAuth2Authentication</span></span><br><span class="line">        <span class="keyword">return</span> Mono.just(AjaxResponse.success(principal));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取用户的claim信息</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/userInfo&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Mono&lt;Map&lt;String, Object&gt;&gt; userInfo(Authentication authentication)&#123;</span><br><span class="line">        Map&lt;String,Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        Object principal = authentication.getPrincipal();</span><br><span class="line">        <span class="keyword">if</span>(principal <span class="keyword">instanceof</span> Jwt)&#123;</span><br><span class="line">            map.put(<span class="string">&quot;username&quot;</span>, ((Jwt) principal).getClaim(<span class="string">&quot;user_name&quot;</span>));</span><br><span class="line">            map.putAll(((Jwt) principal).getClaims());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Mono.just(map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
          <div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
-
-         <!-- 分享 css & js -->
-        <link rel="stylesheet" href="/social-share/share.min.css">
-        <script src="/social-share/share.min.js"></script>
-
-
-        <div class="social-share" style="float:right">分享到：</div>
-
-
-        <br/>
     </div>
+
+
 
     
     
@@ -445,6 +437,9 @@
       <div class="popular-posts-title"><a href="/2018/12/12/activemq-springboot/" rel="bookmark">Spring Boot2学习笔记--activemq</a></div>
     </li>
   </ul>
+
+
+
 
 
     <footer class="post-footer">
@@ -542,19 +537,23 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2020/11/27/gradle-depoly-maven-center-repository/" rel="prev" title="发布Jar到Maven中央仓库--gradle">
-                  <i class="fa fa-chevron-left"></i> 发布Jar到Maven中央仓库--gradle
+                <a href="/2020/12/02/springboot-oauth2-jwt-webflux-clientserver/" rel="prev" title="SpringBoot-OAuth2-JWT-WebFlux-ClientServer">
+                  <i class="fa fa-chevron-left"></i> SpringBoot-OAuth2-JWT-WebFlux-ClientServer
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2020/12/02/springboot-oauth2-jwt-webflux-clientserver/" rel="next" title="SpringBoot-OAuth2-JWT-WebFlux-ClientServer">
-                  SpringBoot-OAuth2-JWT-WebFlux-ClientServer <i class="fa fa-chevron-right"></i>
+                <a href="/2020/11/27/gradle-depoly-maven-center-repository/" rel="next" title="发布Jar到Maven中央仓库--gradle">
+                  发布Jar到Maven中央仓库--gradle <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
     </footer>
   </article>
 </div>
+
+
+
+
 
 
 
