@@ -353,10 +353,9 @@
       <span class="post-meta-item-text">阅读次数：</span>
       <span class="leancloud-visitors-count"></span>
     </span>
-</div>
-
-
 <!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
     <span class="post-meta-item-icon">
       <i class="fas fa-thumbtack zhidingtop">置顶</i>
     </span>
@@ -365,25 +364,26 @@
     <span class="post-meta-item-icon">
             <i class="far fa-newspaper jingping">精品</i>
     </span>
-    <span class="post-meta-item">
-    <span>
 
 
-    <span class="post-meta-item-icon">
-      <i class="far fa-chart-bar"></i>
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>18k</span>
     </span>
-    <span class="post-meta-item-text">字数统计：</span>
-    <span class="post-count">3.7k</span>
-
-
-
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <i class="far fa-clock"></i>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
     </span>
-    <span class="post-meta-item-text">阅读时长：</span>
-    <span class="post-count">17(分钟)</span>
-  </span>
+</div>
+
         </div>
       </header>
 
@@ -454,10 +454,7 @@
 <li>其目的就是在使用RestTemplate访问资源服务时，在请求头中增加Bearer Token<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 调用Resource Server服务使用RestTemplate，当调用的Resource Server时候我们时需要使用Bearer Token在头部传递Access Token；</span></span><br><span class="line"><span class="comment"> * RestTemplateAutoConfiguration已经给我们自动配置了RestTemplateBuilder来配置RestTemplate，我们需要通过RestTemplateCustomizer来对RestTemplate来定制</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">RestTemplateCustomizer <span class="title">restTemplateCustomizer</span><span class="params">(OAuth2AuthorizedClientService clientService)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> restTemplate -&gt; &#123; <span class="comment">//1 RestTemplateCustomizer时函数接口，入参是RestTemplate</span></span><br><span class="line">        List&lt;ClientHttpRequestInterceptor&gt; interceptors = restTemplate.getInterceptors();</span><br><span class="line">        <span class="keyword">if</span> (CollectionUtils.isEmpty(interceptors)) &#123;</span><br><span class="line">            interceptors = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        interceptors.add((request, body, execution) -&gt; &#123; <span class="comment">//2 通过增加RestTemplate拦截器，让每次请求添加Bearer Token（Access Token）；ClientHttpRequestInterceptor是函数接口，可用Lambda表达式来实现</span></span><br><span class="line">            OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken)</span><br><span class="line">                    SecurityContextHolder.getContext().getAuthentication();</span><br><span class="line">            String clientRegistrationId = auth.getAuthorizedClientRegistrationId();</span><br><span class="line">            String principalName = auth.getName();</span><br><span class="line">            OAuth2AuthorizedClient client =</span><br><span class="line">                    clientService.loadAuthorizedClient(clientRegistrationId, principalName); <span class="comment">//3 OAuth2AuthorizedClientService可获得用户的OAuth2AuthorizedClient</span></span><br><span class="line">            <span class="keyword">if</span> (client == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//如果客户端信息使用的是基于内存的InMemoryOAuth2AuthorizedClientService，则重启服务器就会失效，需要重新登录才能恢复，</span></span><br><span class="line">                <span class="comment">// 建议使用基于数据库的JdbcOAuth2AuthorizedClientService，本例使用的就是JdbcOAuth2AuthorizedClientService</span></span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> CustomException(HttpStatus.NOT_ACCEPTABLE, <span class="string">&quot;用户状态异常，请重新登录&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            String accessToken = client.getAccessToken().getTokenValue(); <span class="comment">//4 OAuth2AuthorizedClient可获得用户Access Token</span></span><br><span class="line">            request.getHeaders().add(<span class="string">&quot;Authorization&quot;</span>, <span class="string">&quot;Bearer &quot;</span> + accessToken); <span class="comment">//5 将Access Token通过头部的Bearer Token中访问Resource Server</span></span><br><span class="line"></span><br><span class="line">            log.info(String.format(<span class="string">&quot;请求地址: %s&quot;</span>, request.getURI()));</span><br><span class="line">            log.info(String.format(<span class="string">&quot;请求头信息: %s&quot;</span>, request.getHeaders()));</span><br><span class="line"></span><br><span class="line">            ClientHttpResponse response = execution.execute(request, body);</span><br><span class="line">            log.info(String.format(<span class="string">&quot;响应头信息: %s&quot;</span>, response.getHeaders()));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> response;</span><br><span class="line">        &#125;);</span><br><span class="line">        restTemplate.setInterceptors(interceptors);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="以ResController举例如何访问资源服务"><a href="#以ResController举例如何访问资源服务" class="headerlink" title="以ResController举例如何访问资源服务"></a>以ResController举例如何访问资源服务</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.oauth2clientdemo2.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.oauth2clientdemo2.exception.AjaxResponse;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.web.client.RestTemplateBuilder;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;h1&gt;获取资源服务器数据&lt;/h1&gt;</span></span><br><span class="line"><span class="comment"> * Created by hanqf on 2020/11/7 22:47.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/res&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ResController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ResController</span><span class="params">(RestTemplateBuilder restTemplateBuilder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.restTemplate = restTemplateBuilder.build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取资源服务器的数据</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/res1&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AjaxResponse <span class="title">getRes</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">&quot;http://localhost:8082/res/res1&quot;</span>, AjaxResponse.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AjaxResponse <span class="title">getUser</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.postForObject(<span class="string">&quot;http://localhost:8082/user&quot;</span>,<span class="keyword">null</span>, AjaxResponse.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/rbac&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AjaxResponse <span class="title">getRbac</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">&quot;http://localhost:8082/rbac&quot;</span>, AjaxResponse.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/userInfo&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title">getuserInfo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">&quot;http://localhost:8082/userInfo&quot;</span>, Map.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-         <div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
     </div>
-
-
 
     
     
@@ -492,10 +489,19 @@
   </ul>
 
 
-
-
-
     <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js -->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+
+
+    <div class="social-share" style="float:right">分享到：</div>
+
+
+</div>
           <div class="reward-container">
   <div></div>
   <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
@@ -599,25 +605,9 @@
                 </a>
             </div>
           </div>
-
-        <div>
-        <br>
-    <!-- 分享 css & js -->
-        <link rel="stylesheet" href="/social-share/share.min.css">
-        <script src="/social-share/share.min.js"></script>
-
-
-        <div class="social-share" style="float:right">分享到：</div>
-
-
-        </div>
     </footer>
   </article>
 </div>
-
-
-
-
 
 
 
@@ -642,6 +632,22 @@
   </span>
   <span class="author" itemprop="copyrightHolder">飘逸峰</span>
 </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">549k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:19</span>
+  </span>
+</div>
 <div class="busuanzi-count">
     <span class="post-meta-item" id="busuanzi_container_site_uv">
       <span class="post-meta-item-icon">
@@ -653,7 +659,7 @@
     </span>
     <span class="post-meta-item" id="busuanzi_container_site_pv">
       <span class="post-meta-item-icon">
-        <i class="fas fa-chart-line"></i>
+        <i class="fas fa-chart-area"></i>
       </span>
       <span class="site-pv" title="总访问量">
         <span id="busuanzi_value_site_pv"></span>
@@ -661,12 +667,7 @@
     </span>
 </div>
 
-<div class="busuanzi-count">
-<span class="with-love">
-    <i class="fas fa-chart-area"></i>
-  </span>
-  <span class="post-count">全站字数: 106.1k</span>
-</div>
+
 
 <script type="text/javascript">
           jQuery(function ($) {
