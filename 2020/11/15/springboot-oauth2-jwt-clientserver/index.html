@@ -261,7 +261,79 @@
         </li>
     </ul>
   </div>
+<div id="toBottom">
+<i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+直达底部
+<i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+</div>
 
+<style>
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+<script type="text/javascript">
+
+    let a = true;
+    jQuery(function ($) {
+
+        $("#toBottom").bind("mouseover", function () {
+             $(this).addClass("hover");
+        });
+
+
+        $("#toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");           
+         });
+
+        $("#toBottom").click(function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                //设置定时器
+                timer=setInterval("scrollwindow()",10);
+            }
+
+        });
+    });
+
+        //滚动函数
+    let gao=0;
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        clearInterval(timer);
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+
+                
+                
+                clear();
+                a = false;
+
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
         </div>
       </div>
     </div>
