@@ -281,6 +281,11 @@
 <script type="text/javascript">
 
     let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+
     jQuery(function ($) {
 
         $("#toBottom").bind("mouseover", function () {
@@ -295,15 +300,21 @@
         $("#toBottom").click(function () {
             //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
             if(a){
-                //设置定时器
-                timer=setInterval("scrollwindow()",10);
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
             }
 
         });
     });
 
-        //滚动函数
-    let gao=0;
+    //滚动函数
+
     function scrollwindow(){
         gao=gao+100;
         window.scroll(0,gao);
@@ -311,7 +322,9 @@
 
     //清除定时器
     function clear(){
-        clearInterval(timer);
+        if(no_clear){
+            clearInterval(timer);
+        }
     }
 
     //滚动到底部触发函数
