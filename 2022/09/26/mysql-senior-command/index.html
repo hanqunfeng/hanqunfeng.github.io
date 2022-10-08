@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要 MySql知识点介绍 本文基于mysql-8.0.30">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySql一些有用的知识点">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2022/09/26/mysql-senior-command/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要 MySql知识点介绍 本文基于mysql-8.0.30">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-26T13:30:05.000Z">
+<meta property="article:modified_time" content="2022-10-08T09:31:45.448Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2022/09/26/mysql-senior-command/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2022/09/26/mysql-senior-command/","path":"2022/09/26/mysql-senior-command/","title":"MySql一些有用的知识点"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MySql一些有用的知识点 | 飘逸峰的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?df09093d4aac102842ad15c241595440"></script>
+
+
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa fa-signal fa-fw"></i>阅读排行榜</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+<style>
+ #img_css {
+        cursor:pointer;
+        width: 100%;
+        text-align:center;
+        margin: 0 auto;
+        padding: 10px 0px 0px 0px;
+        }
+</style>
+
+<div id="img_css">
+
+
+
+
+
+
+
+</div>
+
+<script type="text/javascript">
+          jQuery(function ($) {
+			$('#img_css').click(function(){
+                location.href = "/404";
+            });
+          });
+</script>
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%9B%B8%E5%85%B3"><span class="nav-number">2.</span> <span class="nav-text">执行计划相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2inner-join%E4%B9%8B%E6%98%BE%E5%BC%8F%E8%BF%9E%E6%8E%A5-VS-%E9%9A%90%E5%BC%8F%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%BB%8E%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8A%E7%9C%8B%E4%B8%A4%E8%80%85%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B%EF%BC%8C%E6%8E%A8%E8%8D%90%E5%B8%A6on%E7%9A%84%E6%98%BE%E7%A4%BA%E6%9F%A5%E8%AF%A2"><span class="nav-number">3.</span> <span class="nav-text">关联查询inner join之显式连接 VS 隐式连接，从执行计划上看两者是一回事，推荐带on的显示查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3"><span class="nav-number">4.</span> <span class="nav-text">索引相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%97%ADONLY-FULL-GROUP-BY"><span class="nav-number">5.</span> <span class="nav-text">关闭ONLY_FULL_GROUP_BY</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">用户管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%8A%B6%E6%80%81"><span class="nav-number">7.</span> <span class="nav-text">客户端连接状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">8.</span> <span class="nav-text">常用操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E4%BF%A1%E6%81%AF%E7%9B%B8%E5%85%B3"><span class="nav-number">9.</span> <span class="nav-text">表信息相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F%EF%BC%8C%E5%8F%AF%E4%BB%A5%E8%AE%BE%E7%BD%AE%E5%9C%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%AD%EF%BC%8C%E4%B9%9F%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87set%E5%91%BD%E4%BB%A4%E8%BF%9B%E8%A1%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">10.</span> <span class="nav-text">系统变量，可以设置在配置文件中，也可以通过set命令进行设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binlog%E7%9B%B8%E5%85%B3"><span class="nav-number">11.</span> <span class="nav-text">binlog相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%AF%B9%E5%BA%94java%E5%AE%9E%E4%BD%93%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">12.</span> <span class="nav-text">mysql中的数据类型对应java实体数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%8F%8A%E5%85%B6ACID%E5%B1%9E%E6%80%A7"><span class="nav-number">13.</span> <span class="nav-text">事务及其ACID属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">14.</span> <span class="nav-text">并发事务处理带来的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">15.</span> <span class="nav-text">事务隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81"><span class="nav-number">16.</span> <span class="nav-text">数据库锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">17.</span> <span class="nav-text">MVCC多版本并发控制机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undo%E6%97%A5%E5%BF%97%E7%89%88%E6%9C%AC%E9%93%BE"><span class="nav-number">17.1.</span> <span class="nav-text">undo日志版本链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read-view"><span class="nav-number">17.2.</span> <span class="nav-text">read-view</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E9%93%BE%E6%AF%94%E5%AF%B9%E8%A7%84%E5%88%99"><span class="nav-number">17.3.</span> <span class="nav-text">版本链比对规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#innodb-buffer-pool"><span class="nav-number">18.</span> <span class="nav-text">innodb buffer pool</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="mailto:hanqf2008@gmail.com" title="E-Mail → mailto:hanqf2008@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/3006531213" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;3006531213" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://plus.google.com/114701878463320377633" title="Google → https:&#x2F;&#x2F;plus.google.com&#x2F;114701878463320377633" rel="noopener" target="_blank"><i class="fab fa-google fa-fw"></i>Google</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/hanqf2" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;hanqf2" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/qunfeng.han" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;qunfeng.han" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>FB Page</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.youtube.com/channel/UCSjdVGBKBlvvIP1T433NAAg" title="YouTube → https:&#x2F;&#x2F;www.youtube.com&#x2F;channel&#x2F;UCSjdVGBKBlvvIP1T433NAAg" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i>YouTube</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/hanqf2008" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;hanqf2008" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://hanqunfeng.iteye.com/" title="Iteye → http:&#x2F;&#x2F;hanqunfeng.iteye.com" rel="noopener" target="_blank"><i class="fas fa-bus fa-fw"></i>Iteye</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://blog.csdn.net/hanqunfeng" title="CSDN → http:&#x2F;&#x2F;blog.csdn.net&#x2F;hanqunfeng" rel="noopener" target="_blank"><i class="fas fa-car fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.jianshu.com/users/763c53661578/latest_articles" title="简书 → http:&#x2F;&#x2F;www.jianshu.com&#x2F;users&#x2F;763c53661578&#x2F;latest_articles" rel="noopener" target="_blank"><i class="fab fa-font-awesome fa-fw"></i>简书</a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hanqunfeng.coding.net/" title="https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener" target="_blank">Coding</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.dnspod.cn/" title="https:&#x2F;&#x2F;www.dnspod.cn" rel="noopener" target="_blank">Dnspod</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+        </li>
+    </ul>
+  </div>
+<div id="toBottom">
+<i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+直达底部
+<i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+</div>
+
+<style>
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+
+    jQuery(function ($) {
+
+        $("#toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $("#toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $("#toBottom").click(function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+
+                
+                
+                clear();
+                a = false;
+
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2022/09/26/mysql-senior-command/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MySql一些有用的知识点 | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySql一些有用的知识点
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-09-26 21:30:05" itemprop="dateCreated datePublished" datetime="2022-09-26T21:30:05+08:00">2022-09-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-10-08 17:31:45" itemprop="dateModified" datetime="2022-10-08T17:31:45+08:00">2022-10-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fas fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="far fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2022/09/26/mysql-senior-command/" class="leancloud_visitors" data-flag-title="MySql一些有用的知识点" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>27k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>25 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><ul>
+<li>MySql知识点介绍</li>
+<li>本文基于<code>mysql-8.0.30</code><span id="more"></span></li>
+</ul>
+<h2 id="执行计划相关"><a href="#执行计划相关" class="headerlink" title="执行计划相关"></a>执行计划相关</h2><ul>
+<li><p>explain关键字</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> actor <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type <span class="operator">|</span> <span class="keyword">table</span> <span class="operator">|</span> partitions <span class="operator">|</span> type  <span class="operator">|</span> possible_keys <span class="operator">|</span> key     <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>   <span class="operator">|</span> <span class="keyword">rows</span> <span class="operator">|</span> filtered <span class="operator">|</span> Extra <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> SIMPLE      <span class="operator">|</span> actor <span class="operator">|</span> <span class="keyword">NULL</span>       <span class="operator">|</span> const <span class="operator">|</span> <span class="keyword">PRIMARY</span>       <span class="operator">|</span> <span class="keyword">PRIMARY</span> <span class="operator">|</span> <span class="number">4</span>       <span class="operator">|</span> const <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span>   <span class="number">100.00</span> <span class="operator">|</span> <span class="keyword">NULL</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br></pre></td></tr></table></figure></li>
+<li><p>重点属性说明</p>
+<blockquote>
+<p>id</p>
+</blockquote>
+<div class="note success"><p>id列的编号是 select 的序列号，有几个 select 就有几个id，并且id的顺序是按 select 出现的顺序增长的。<br>id列越大执行优先级越高，id相同则从上往下执行，id为NULL最后执行。</p>
+</div>
+<blockquote>
+<p>select_type</p>
+</blockquote>
+<div class="note success"><p>select_type 表示对应行是简单还是复杂的查询。<br>1）simple：简单查询。查询不包含子查询和union<br>2）primary：复杂查询中最外层的 select<br>3）subquery：包含在 select 中的子查询（不在 from 子句中）<br>4）derived：包含在 from 子句中的子查询。MySQL会将结果存放在一个临时表中，也称为派生表（derived的英文含义）<br>5）union：在 union 中的第二个和随后的 select</p>
+</div>
+<blockquote>
+<p>table</p>
+</blockquote>
+<div class="note success"><p>table列表示 explain 的一行正在访问哪个表。<br>当 from 子句中有子查询时，table列是 <derivenN> 格式，表示当前查询依赖 id=N 的查询，于是先执行 id=N 的查 询。<br>当有 union 时，UNION RESULT 的 table 列的值为&lt;union1,2&gt;，1和2表示参与 union 的 select 行id。</p>
+</div>
+<blockquote>
+<p>type</p>
+</blockquote>
+<div class="note success"><p>type表示关联类型或访问类型，从最优到最差分别为：system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL，<br>一般来说，得保证查询达到range级别，最好达到ref。<br>NULL表示mysql能够在优化阶段分解查询语句，在执行阶段用不着再访问表或索引。<br>const, system: 常量查询<br>eq_ref: 主键索引或唯一索引查询<br>ref: 相比 eq_ref，不使用唯一索引，而是使用普通索引或者唯一性索引的部分前缀<br>range: 范围扫描，如 in(), between ,&gt; ,&lt;, &gt;=<br>index: 扫描全索引，一般扫描的是某个二级索引，二级索引一般比较小，所以这种通常比ALL快一些。<br>ALL: 即全表扫描，扫描你的聚簇索引的所有叶子节点。</p>
+</div>
+<blockquote>
+<p>possible_keys</p>
+</blockquote>
+<div class="note success"><p>possible_keys列显示查询可能使用哪些索引来查找。<br>explain 时可能出现 possible_keys 有值，而 key 显示 NULL 的情况，这种情况是因为表中数据不多，mysql认为索引对此查询帮助不大，选择了全表查询。<br>如果该列是NULL，则没有相关的索引。</p>
+</div>
+<blockquote>
+<p>key</p>
+</blockquote>
+<div class="note success"><p>key列显示mysql实际采用哪个索引来优化对该表的访问。<br>如果没有使用索引，则该列是 NULL。</p>
+</div>
+<blockquote>
+<p>key_len</p>
+</blockquote>
+<div class="note success"><p>这一列显示了mysql在索引里使用的字节数，通过这个值可以算出具体使用了索引中的哪些列。<br>key_len计算规则如下：</p>
+<ol>
+<li>字符串，char(n)和varchar(n)，5.0.3以后版本中，n均代表字符数，而不是字节数，如果是utf-8，一个数字 或字母占1个字节，一个汉字占3个字节<br> char(n)：如果存汉字长度就是 3n 字节<br> varchar(n)：如果存汉字则长度是 3n + 2 字节，加的2字节用来存储字符串长度，因为 varchar是变长字符串</li>
+<li>数值类型<br> tinyint：1字节<br> smallint：2字节<br> int：4字节<br> bigint：8字节</li>
+<li>时间类型<br> date：3字节<br> timestamp：4字节<br> datetime：8字节<br>如果字段允许为 NULL，需要1字节记录是否为 NULL。<br>索引最大长度是768字节，当字符串过长时，mysql会做一个类似左前缀索引的处理，将前半部分的字符提取出来做索引。</li>
+</ol>
+</div>
+<blockquote>
+<p>ref</p>
+</blockquote>
+<div class="note success"><p>ref列显示了在key列记录的索引中，表查找值所用到的列或常量，常见的有：const（常量），字段名（例：film.id）</p>
+</div>
+<blockquote>
+<p>rows</p>
+</blockquote>
+<div class="note success"><p>rows列是mysql估计要读取并检测的行数，注意这个不是结果集里的行数。</p>
+</div>
+<blockquote>
+<p>Extra</p>
+</blockquote>
+<div class="note success"><p>Extra列展示的是额外信息，常见信息如下：<br>1）Using index：使用覆盖索引，索引排序<br>2）Using where：使用 where 语句来处理结果，并且查询的列未被索引覆盖<br>3）Using index condition：查询的列不完全被索引覆盖，where条件中是一个前导列的范围<br>4）Using temporary：mysql需要创建一张临时表来处理查询，需要使用索引优化<br>5）Using filesort：将用外部排序而不是索引排序，数据较小时从内存排序，否则需要在磁盘完成排序，需要使用索引优化<br>6）Select tables optimized away：使用某些聚合函数（比如 max、min）来访问存在索引的某个字段</p>
+</div></li>
+<li><p>filesort文件排序方式</p>
+<blockquote>
+<p>单路排序：是一次性取出满足条件行的所有字段，然后在sort buffer中进行排序；<br>双路排序（又叫回表排序模式）：是首先根据相应的条件取出相应的排序字段和可以直接定位行数据的行ID，然后在 sort buffer 中进行排序，排序完后需要再次取回其它需要的字段；<br>MySQL通过比较系统变量 max_length_for_sort_data(默认1024字节)的大小和需要查询的字段总大小来判断使用哪种排序模式。<br>如果字段的总长度小于max_length_for_sort_data ，那么使用单路排序模式；<br>如果字段的总长度大于max_length_for_sort_data ，那么使用双路排序模式;<br>如果全部使用sort_buffer内存排序一般情况下效率会高于磁盘文件排序，但不能因为这个就随便增大sort_buffer(默认1M)，mysql很多参数设置都是做过优化的，不要轻易调整。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># mysql8是<span class="number">4</span>k，mysql5是<span class="number">1</span>k</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;max_length_for_sort_data&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name            <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> max_length_for_sort_data <span class="operator">|</span> <span class="number">4096</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"></span><br><span class="line"># 这里设置的<span class="number">4</span>M</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;sort_buffer_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span>   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br><span class="line"><span class="operator">|</span> sort_buffer_size <span class="operator">|</span> <span class="number">4194304</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br></pre></td></tr></table></figure></li>
+<li><p>优化总结</p>
+<div class="note success"><p>1、MySQL支持两种方式的排序filesort和index，Using index是指MySQL扫描索引本身完成排序。index 效率高，filesort效率低。<br>2、order by满足两种情况会使用Using index:</p>
+<blockquote>
+<ol>
+<li>order by语句使用索引最左前列。</li>
+<li>使用where子句与order by子句条件列组合满足索引最左前列。</li>
+</ol>
+</blockquote>
+<p>3、尽量在索引列上完成排序，遵循索引建立（索引创建的顺序）时的最左前缀法则。<br>4、如果order by的条件不在索引列上，就会产生Using filesort。<br>5、能用覆盖索引尽量用覆盖索引<br>6、group by与order by很类似，其实质是先排序后分组，遵照索引创建顺序的最左前缀法则。对于group by的优化如果不需要排序的可以加上order by null禁止排序。注意，where高于having，能写在where中 的限定条件就不要去having限定了。</p>
+</div></li>
+<li><p>查看优化后的sql</p>
+<blockquote>
+<p>mysql8.0以前的版本需要explain extended select * from actor where id = 1;</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> actor <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"># 显示优化后的<span class="keyword">sql</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> warnings;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------+-----------------------------------------------------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Level <span class="operator">|</span> Code <span class="operator">|</span> Message                                                                                                               <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------+-----------------------------------------------------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Note  <span class="operator">|</span> <span class="number">1003</span> <span class="operator">|</span> <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">&#x27;1&#x27;</span> <span class="keyword">AS</span> `id`,<span class="string">&#x27;a&#x27;</span> <span class="keyword">AS</span> `name`,<span class="string">&#x27;2017-12-22 15:27:18&#x27;</span> <span class="keyword">AS</span> `update_time` <span class="keyword">from</span> `test`.`actor` <span class="keyword">where</span> <span class="literal">true</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------+-----------------------------------------------------------------------------------------------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="关联查询inner-join之显式连接-VS-隐式连接，从执行计划上看两者是一回事，推荐带on的显示查询"><a href="#关联查询inner-join之显式连接-VS-隐式连接，从执行计划上看两者是一回事，推荐带on的显示查询" class="headerlink" title="关联查询inner join之显式连接 VS 隐式连接，从执行计划上看两者是一回事，推荐带on的显示查询"></a>关联查询<code>inner join</code>之<code>显式连接</code> VS <code>隐式连接</code>，从执行计划上看两者是一回事，推荐带on的显示查询</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 显式连接<span class="number">1</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> film_actor <span class="keyword">inner</span> <span class="keyword">join</span> film <span class="keyword">on</span> film_actor.film_id <span class="operator">=</span> film.id;</span><br><span class="line"># 显式连接<span class="number">2</span>，有<span class="keyword">on</span>会先执行<span class="keyword">on</span>的关联，之后在进行<span class="keyword">where</span>过滤，推荐关联关系放到<span class="keyword">on</span>里面</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> film_actor <span class="keyword">inner</span> <span class="keyword">join</span> film <span class="keyword">where</span> film_actor.film_id <span class="operator">=</span> film.id;</span><br><span class="line"></span><br><span class="line"># 隐式链接</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> film_actor,film <span class="keyword">where</span> film_actor.film_id <span class="operator">=</span> film.id;</span><br></pre></td></tr></table></figure>
+
+<h2 id="索引相关"><a href="#索引相关" class="headerlink" title="索引相关"></a>索引相关</h2><ul>
+<li>查看索引<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> index <span class="keyword">from</span> actor;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">Table</span> <span class="operator">|</span> Non_unique <span class="operator">|</span> Key_name <span class="operator">|</span> Seq_in_index <span class="operator">|</span> Column_name <span class="operator">|</span> <span class="keyword">Collation</span> <span class="operator">|</span> <span class="keyword">Cardinality</span> <span class="operator">|</span> Sub_part <span class="operator">|</span> Packed <span class="operator">|</span> <span class="keyword">Null</span> <span class="operator">|</span> Index_type <span class="operator">|</span> Comment <span class="operator">|</span> Index_comment <span class="operator">|</span> Visible <span class="operator">|</span> Expression <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+</span></span><br><span class="line"><span class="operator">|</span> actor <span class="operator">|</span>          <span class="number">0</span> <span class="operator">|</span> <span class="keyword">PRIMARY</span>  <span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span> id          <span class="operator">|</span> A         <span class="operator">|</span>           <span class="number">2</span> <span class="operator">|</span>     <span class="keyword">NULL</span> <span class="operator">|</span>   <span class="keyword">NULL</span> <span class="operator">|</span>      <span class="operator">|</span> BTREE      <span class="operator">|</span>         <span class="operator">|</span>               <span class="operator">|</span> YES     <span class="operator">|</span> <span class="keyword">NULL</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+</span></span><br></pre></td></tr></table></figure></li>
+<li>已有表索引维护<blockquote>
+<p>创建索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 方式<span class="number">1</span></span><br><span class="line"><span class="keyword">create</span> index index_name <span class="keyword">on</span> actor (name);</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">unique</span> index unique_name <span class="keyword">on</span> actor (name);</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">unique</span> index unique_name_time <span class="keyword">on</span> actor (name,update_time);</span><br><span class="line"></span><br><span class="line"># 方式<span class="number">2</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">add</span> index index_name(name);</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">add</span> <span class="keyword">unique</span> index unique_name(name);</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">add</span> <span class="keyword">unique</span> index unique_name_time(name,update_time);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>删除索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 方式<span class="number">1</span></span><br><span class="line"><span class="keyword">drop</span> index index_name <span class="keyword">on</span> actor;</span><br><span class="line"><span class="keyword">drop</span> index unique_name <span class="keyword">on</span> actor;</span><br><span class="line"><span class="keyword">drop</span> index unique_name_time <span class="keyword">on</span> actor;</span><br><span class="line"></span><br><span class="line"># 方式<span class="number">2</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">drop</span> index index_name;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">drop</span> index unique_name;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">drop</span> index unique_name_time;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="关闭ONLY-FULL-GROUP-BY"><a href="#关闭ONLY-FULL-GROUP-BY" class="headerlink" title="关闭ONLY_FULL_GROUP_BY"></a>关闭<code>ONLY_FULL_GROUP_BY</code></h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># 查询</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> version(), @<span class="variable">@sql</span>_mode;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+-----------------------------------------------------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> version() <span class="operator">|</span> @<span class="variable">@sql</span>_mode                                                                                                            <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+-----------------------------------------------------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">8.0</span><span class="number">.30</span>    <span class="operator">|</span> ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+-----------------------------------------------------------------------------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> update_time,name,<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> actor <span class="keyword">group</span> <span class="keyword">by</span> update_time;</span><br><span class="line">ERROR <span class="number">1055</span> (<span class="number">42000</span>): Expression #<span class="number">2</span> <span class="keyword">of</span> <span class="keyword">SELECT</span> list <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">in</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> clause <span class="keyword">and</span> <span class="keyword">contains</span> nonaggregated <span class="keyword">column</span> <span class="string">&#x27;test.actor.name&#x27;</span> which <span class="keyword">is</span> <span class="keyword">not</span> functionally dependent <span class="keyword">on</span> columns <span class="keyword">in</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> clause; this <span class="keyword">is</span> incompatible <span class="keyword">with</span> sql_mode<span class="operator">=</span>only_full_group_by</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> update_time,name,<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> actor <span class="keyword">group</span> <span class="keyword">by</span> update_time,name;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+------+----------+</span></span><br><span class="line"><span class="operator">|</span> update_time         <span class="operator">|</span> name <span class="operator">|</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+------+----------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2017</span><span class="number">-12</span><span class="number">-22</span> <span class="number">15</span>:<span class="number">27</span>:<span class="number">18</span> <span class="operator">|</span> a    <span class="operator">|</span>        <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2017</span><span class="number">-12</span><span class="number">-22</span> <span class="number">15</span>:<span class="number">27</span>:<span class="number">18</span> <span class="operator">|</span> b    <span class="operator">|</span>        <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2017</span><span class="number">-12</span><span class="number">-22</span> <span class="number">15</span>:<span class="number">27</span>:<span class="number">18</span> <span class="operator">|</span> c    <span class="operator">|</span>        <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+------+----------+</span></span><br><span class="line"></span><br><span class="line"># 关闭,重启后失效</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SET</span> sql_mode<span class="operator">=</span>(<span class="keyword">SELECT</span> REPLACE(@<span class="variable">@sql</span>_mode,<span class="string">&#x27;ONLY_FULL_GROUP_BY&#x27;</span>,<span class="string">&#x27;&#x27;</span>));</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> update_time,name,<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> actor <span class="keyword">group</span> <span class="keyword">by</span> update_time;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+------+----------+</span></span><br><span class="line"><span class="operator">|</span> update_time         <span class="operator">|</span> name <span class="operator">|</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+------+----------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2017</span><span class="number">-12</span><span class="number">-22</span> <span class="number">15</span>:<span class="number">27</span>:<span class="number">18</span> <span class="operator">|</span> a    <span class="operator">|</span>        <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+------+----------+</span></span><br><span class="line"></span><br><span class="line"># 永久关闭</span><br><span class="line">my.cnf中[mysqld]中添加</span><br><span class="line">sql_mode <span class="operator">=</span> STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>以下为sql_mode常用值的含义</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ONLY_FULL_GROUP_BY：对于GROUP BY聚合操作，如果在SELECT中的列，没有在GROUP BY中出现，那么这个SQL是不合法的，因为列不在GROUP BY从句中</span><br><span class="line">NO_AUTO_VALUE_ON_ZERO：该值影响自增长列的插入。默认设置下，插入0或NULL代表生成下一个自增长值。如果用户希望插入的值为0，而该列又是自增长的，那么这个选项就有用了。</span><br><span class="line">STRICT_TRANS_TABLES：在该模式下，如果一个值不能插入到一个事务表中，则中断当前的操作，对非事务表不做限制</span><br><span class="line">NO_ZERO_IN_DATE：在严格模式下，不允许日期和月份为零</span><br><span class="line">NO_ZERO_DATE：设置该值，mysql数据库不允许插入零日期，插入零日期会抛出错误而不是警告。</span><br><span class="line">ERROR_FOR_DIVISION_BY_ZERO：在INSERT或UPDATE过程中，如果数据被零除，则产生错误而非警告。如果未给出该模式，那么数据被零除时MySQL返回NULL</span><br><span class="line">NO_AUTO_CREATE_USER：禁止GRANT创建密码为空的用户</span><br><span class="line">NO_ENGINE_SUBSTITUTION：如果需要的存储引擎被禁用或未编译，那么抛出错误。不设置此值时，用默认的存储引擎替代，并抛出一个异常</span><br><span class="line">PIPES_AS_CONCAT：将”||”视为字符串的连接操作符而非或运算符，这和Oracle数据库是一样的，也和字符串的拼接函数Concat相类似</span><br><span class="line">ANSI_QUOTES：启用ANSI_QUOTES后，不能用双引号来引用字符串，因为它被解释为识别符</span><br></pre></td></tr></table></figure>
+
+<h2 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h2><ul>
+<li><p>创建用户并授权</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># 创建用户并初始密码</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;123456&#x27;</span>;</span><br><span class="line"># 修改密码</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"># 授权</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">GRANT</span> <span class="keyword">all</span> privileges <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line"># 刷新数据库</span><br><span class="line">mysql<span class="operator">&gt;</span> FLUSH PRIVILEGES;</span><br><span class="line"># 查询用户权限</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> grants <span class="keyword">for</span> username@&quot;%&quot;\G</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">Grants <span class="keyword">for</span> username@<span class="operator">%</span>: <span class="keyword">GRANT</span> <span class="keyword">SELECT</span>, <span class="keyword">INSERT</span>, UPDATE, <span class="keyword">DELETE</span>, <span class="keyword">CREATE</span>, <span class="keyword">DROP</span>, RELOAD, SHUTDOWN, PROCESS, FILE, <span class="keyword">REFERENCES</span>, INDEX, <span class="keyword">ALTER</span>, <span class="keyword">SHOW</span> DATABASES, SUPER, <span class="keyword">CREATE</span> TEMPORARY TABLES, LOCK TABLES, <span class="keyword">EXECUTE</span>, REPLICATION SLAVE, REPLICATION CLIENT, <span class="keyword">CREATE</span> <span class="keyword">VIEW</span>, <span class="keyword">SHOW</span> <span class="keyword">VIEW</span>, <span class="keyword">CREATE</span> ROUTINE, <span class="keyword">ALTER</span> ROUTINE, <span class="keyword">CREATE</span> <span class="keyword">USER</span>, EVENT, <span class="keyword">TRIGGER</span>, <span class="keyword">CREATE</span> <span class="keyword">TABLE</span>SPACE, <span class="keyword">CREATE</span> ROLE, <span class="keyword">DROP</span> ROLE <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> `username`@`<span class="operator">%</span>`</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">2.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">Grants <span class="keyword">for</span> username@<span class="operator">%</span>: <span class="keyword">GRANT</span> APPLICATION_PASSWORD_ADMIN,AUDIT_ABORT_EXEMPT,AUDIT_ADMIN,AUTHENTICATION_POLICY_ADMIN,BACKUP_ADMIN,BINLOG_ADMIN,BINLOG_ENCRYPTION_ADMIN,CLONE_ADMIN,CONNECTION_ADMIN,ENCRYPTION_KEY_ADMIN,FIREWALL_EXEMPT,FLUSH_OPTIMIZER_COSTS,FLUSH_STATUS,FLUSH_TABLES,FLUSH_USER_RESOURCES,GROUP_REPLICATION_ADMIN,GROUP_REPLICATION_STREAM,INNODB_REDO_LOG_ARCHIVE,INNODB_REDO_LOG_ENABLE,PASSWORDLESS_USER_ADMIN,PERSIST_RO_VARIABLES_ADMIN,REPLICATION_APPLIER,REPLICATION_SLAVE_ADMIN,RESOURCE_GROUP_ADMIN,RESOURCE_GROUP_USER,ROLE_ADMIN,SENSITIVE_VARIABLES_OBSERVER,SERVICE_CONNECTION_ADMIN,SESSION_VARIABLES_ADMIN,SET_USER_ID,SHOW_ROUTINE,<span class="built_in">SYSTEM_USER</span>,SYSTEM_VARIABLES_ADMIN,TABLE_ENCRYPTION_ADMIN,XA_RECOVER_ADMIN <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> `username`@`<span class="operator">%</span>`</span><br><span class="line"></span><br><span class="line"># 查询当前系统用户</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="keyword">user</span>,host <span class="keyword">from</span> mysql.user;</span><br><span class="line"></span><br><span class="line"># 允许远程访问</span><br><span class="line">mysql<span class="operator">&gt;</span> update mysql.user <span class="keyword">set</span> host<span class="operator">=</span><span class="string">&#x27;%&#x27;</span> <span class="keyword">where</span> <span class="keyword">user</span><span class="operator">=</span><span class="string">&#x27;username&#x27;</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure></li>
+<li><p>删除用户</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 方式<span class="number">1</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">delete</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">user</span><span class="operator">=</span><span class="string">&#x27;username&#x27;</span> <span class="keyword">and</span> host<span class="operator">=</span><span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> FLUSH PRIVILEGES;</span><br><span class="line"># 方式<span class="number">2</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">drop</span> <span class="keyword">user</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>授予root用户<code>system_user</code>权限，否则在做一些授权操作时会提示没有权限</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">grant</span> <span class="built_in">system_user</span> <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> <span class="string">&#x27;root&#x27;</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> flush privileges;</span><br></pre></td></tr></table></figure></li>
+<li><p>查看当前登录的用户</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="keyword">USER</span>();</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">USER</span>()         <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+</span></span><br><span class="line"><span class="operator">|</span> root<span class="variable">@localhost</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="客户端连接状态"><a href="#客户端连接状态" class="headerlink" title="客户端连接状态"></a>客户端连接状态</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># 查看</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> processlist;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span> Id  <span class="operator">|</span> <span class="keyword">User</span>            <span class="operator">|</span> Host               <span class="operator">|</span> db       <span class="operator">|</span> Command <span class="operator">|</span> <span class="type">Time</span>   <span class="operator">|</span> State                  <span class="operator">|</span> Info             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">5</span> <span class="operator">|</span> event_scheduler <span class="operator">|</span> localhost          <span class="operator">|</span> <span class="keyword">NULL</span>     <span class="operator">|</span> Daemon  <span class="operator">|</span> <span class="number">628889</span> <span class="operator">|</span> Waiting <span class="keyword">on</span> <span class="keyword">empty</span> queue <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">438</span> <span class="operator">|</span> root            <span class="operator">|</span> localhost:<span class="number">56114</span>    <span class="operator">|</span> mysql    <span class="operator">|</span> Query   <span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span> init                   <span class="operator">|</span> <span class="keyword">show</span> processlist <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">439</span> <span class="operator">|</span> root            <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span>:<span class="number">53840</span> <span class="operator">|</span> novel_db <span class="operator">|</span> Sleep   <span class="operator">|</span>      <span class="number">5</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">440</span> <span class="operator">|</span> root            <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span>:<span class="number">53849</span> <span class="operator">|</span> <span class="keyword">NULL</span>     <span class="operator">|</span> Sleep   <span class="operator">|</span>      <span class="number">5</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"># 或者，两者等价</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> information_schema.processlist;</span><br><span class="line"></span><br><span class="line"># 查看每个客户端连接数</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> id,client_ip,<span class="built_in">count</span>(client_ip) <span class="keyword">as</span> client_num <span class="keyword">from</span> (<span class="keyword">select</span> substring_index(host,<span class="string">&#x27;:&#x27;</span> ,<span class="number">1</span>) <span class="keyword">as</span> client_ip,id <span class="keyword">from</span> information_schema.processlist ) <span class="keyword">as</span> connect_info <span class="keyword">group</span> <span class="keyword">by</span> client_ip <span class="keyword">order</span> <span class="keyword">by</span> client_num <span class="keyword">desc</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> id  <span class="operator">|</span> client_ip    <span class="operator">|</span> client_num <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">440</span> <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span> <span class="operator">|</span>          <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">5</span> <span class="operator">|</span> localhost    <span class="operator">|</span>          <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"></span><br><span class="line"># 找出所有执行时间超过 <span class="number">5</span> 分钟的线程，拼凑出 kill 语句，方便后面查杀</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> concat(<span class="string">&#x27;kill &#x27;</span>, id, <span class="string">&#x27;;&#x27;</span>) <span class="keyword">from</span> information_schema.processlist <span class="keyword">where</span> Command <span class="operator">!=</span> <span class="string">&#x27;Sleep&#x27;</span> <span class="keyword">and</span> <span class="type">Time</span> <span class="operator">&gt;</span> <span class="number">300</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">Time</span> <span class="keyword">desc</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> concat(<span class="string">&#x27;kill &#x27;</span>, id, <span class="string">&#x27;;&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> kill <span class="number">5</span>;                  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"></span><br><span class="line"># 关闭连接，注意kill只能关闭当前正在执行DML的操作，DDL不能关闭</span><br><span class="line">mysql<span class="operator">&gt;</span> kill <span class="number">440</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> databases; 显示所有数据库</span><br><span class="line">mysql<span class="operator">&gt;</span> use dbname; 打开dbname数据库</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> tables; 显示数据库dbname中所有的表；</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">describe</span> tablename; 显示表mysql数据库中tablename表的列信息，也可以简写为 <span class="keyword">desc</span> tablename;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">desc</span> tablename; 同上</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> version(); 查看数据库版本号</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> database(); 查看当前选中的数据库</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> now(); 查看数据库当前时间</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="keyword">user</span>(); 查看当前登录用户</span><br></pre></td></tr></table></figure>
+
+<h2 id="表信息相关"><a href="#表信息相关" class="headerlink" title="表信息相关"></a>表信息相关</h2><ul>
+<li><p>查看建表语句（包括之后对表的修改）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> actor\G</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">       <span class="keyword">Table</span>: actor</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">Table</span>: <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `actor` (</span><br><span class="line">  `id` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">45</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `update_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb3</span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure></li>
+<li><p>查看表信息</p>
+<blockquote>
+<p>方式1</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> information_schema.TABLES <span class="keyword">where</span> TABLE_SCHEMA<span class="operator">=</span><span class="string">&#x27;test_db&#x27;</span> <span class="keyword">and</span> TABLE_NAME<span class="operator">=</span><span class="string">&#x27;tbl_test_info&#x27;</span>\G</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">  TABLE_CATALOG: def</span><br><span class="line">   TABLE_SCHEMA: test_db</span><br><span class="line">     TABLE_NAME: tbl_test_info</span><br><span class="line">     TABLE_TYPE: BASE <span class="keyword">TABLE</span></span><br><span class="line">         ENGINE: InnoDB</span><br><span class="line">        VERSION: <span class="number">10</span></span><br><span class="line">     ROW_FORMAT: <span class="keyword">Dynamic</span></span><br><span class="line">     TABLE_ROWS: <span class="number">199</span></span><br><span class="line"> AVG_ROW_LENGTH: <span class="number">7986</span></span><br><span class="line">    DATA_LENGTH: <span class="number">1589248</span></span><br><span class="line">MAX_DATA_LENGTH: <span class="number">0</span></span><br><span class="line">   INDEX_LENGTH: <span class="number">49152</span></span><br><span class="line">      DATA_FREE: <span class="number">4194304</span></span><br><span class="line"> AUTO_INCREMENT: <span class="number">394</span></span><br><span class="line">    CREATE_TIME: <span class="number">2022</span><span class="number">-09</span><span class="number">-08</span> <span class="number">03</span>:<span class="number">52</span>:<span class="number">27</span></span><br><span class="line">    UPDATE_TIME: <span class="keyword">NULL</span></span><br><span class="line">     CHECK_TIME: <span class="keyword">NULL</span></span><br><span class="line">TABLE_COLLATION: utf8mb4_bin</span><br><span class="line">       CHECKSUM: <span class="keyword">NULL</span></span><br><span class="line"> CREATE_OPTIONS:</span><br><span class="line">  TABLE_COMMENT: 测试表</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>方式2</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> use test_db;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">table</span> status <span class="keyword">like</span> <span class="string">&#x27;tbl_test_info&#x27;</span>\G</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">           Name: tbl_test_info</span><br><span class="line">         Engine: InnoDB</span><br><span class="line">        Version: <span class="number">10</span></span><br><span class="line">     Row_format: <span class="keyword">Dynamic</span></span><br><span class="line">           <span class="keyword">Rows</span>: <span class="number">199</span></span><br><span class="line"> Avg_row_length: <span class="number">7986</span></span><br><span class="line">    Data_length: <span class="number">1589248</span></span><br><span class="line">Max_data_length: <span class="number">0</span></span><br><span class="line">   Index_length: <span class="number">49152</span></span><br><span class="line">      Data_free: <span class="number">4194304</span></span><br><span class="line"> Auto_increment: <span class="number">394</span></span><br><span class="line">    Create_time: <span class="number">2022</span><span class="number">-09</span><span class="number">-08</span> <span class="number">03</span>:<span class="number">52</span>:<span class="number">27</span></span><br><span class="line">    Update_time: <span class="keyword">NULL</span></span><br><span class="line">     Check_time: <span class="keyword">NULL</span></span><br><span class="line">      <span class="keyword">Collation</span>: utf8mb4_bin</span><br><span class="line">       Checksum: <span class="keyword">NULL</span></span><br><span class="line"> Create_options:</span><br><span class="line">        Comment: 测试表</span><br></pre></td></tr></table></figure></li>
+<li><p>查看表字段信息</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 方式<span class="number">1</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">full</span> columns <span class="keyword">from</span> test_db.tbl_test_info;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+--------------+-------------+------+-----+-------------------+-----------------------------------------------+---------------------------------+----------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Field               <span class="operator">|</span> Type         <span class="operator">|</span> <span class="keyword">Collation</span>   <span class="operator">|</span> <span class="keyword">Null</span> <span class="operator">|</span> Key <span class="operator">|</span> <span class="keyword">Default</span>           <span class="operator">|</span> Extra                                         <span class="operator">|</span> Privileges                      <span class="operator">|</span> Comment                                                                    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+--------------+-------------+------+-----+-------------------+-----------------------------------------------+---------------------------------+----------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> id                  <span class="operator">|</span> <span class="type">int</span>          <span class="operator">|</span> <span class="keyword">NULL</span>        <span class="operator">|</span> <span class="keyword">NO</span>   <span class="operator">|</span> PRI <span class="operator">|</span> <span class="keyword">NULL</span>              <span class="operator">|</span> auto_increment                                <span class="operator">|</span> <span class="keyword">select</span>,<span class="keyword">insert</span>,update,<span class="keyword">references</span> <span class="operator">|</span> 主键                                                                       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> create_time         <span class="operator">|</span> <span class="type">timestamp</span>    <span class="operator">|</span> <span class="keyword">NULL</span>        <span class="operator">|</span> YES  <span class="operator">|</span>     <span class="operator">|</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="operator">|</span> DEFAULT_GENERATED                             <span class="operator">|</span> <span class="keyword">select</span>,<span class="keyword">insert</span>,update,<span class="keyword">references</span> <span class="operator">|</span> 创建时间                                                                   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> update_time         <span class="operator">|</span> <span class="type">timestamp</span>    <span class="operator">|</span> <span class="keyword">NULL</span>        <span class="operator">|</span> YES  <span class="operator">|</span>     <span class="operator">|</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="operator">|</span> DEFAULT_GENERATED <span class="keyword">on</span> update <span class="built_in">CURRENT_TIMESTAMP</span> <span class="operator">|</span> <span class="keyword">select</span>,<span class="keyword">insert</span>,update,<span class="keyword">references</span> <span class="operator">|</span> 更新时间                                                                   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+--------------+-------------+------+-----+-------------------+-----------------------------------------------+---------------------------------+----------------------------------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"># 方式<span class="number">2</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> COLUMN_NAME 字段名,column_comment 字段说明,column_type 字段类型,column_key 约束 <span class="keyword">from</span> information_schema.columns  <span class="keyword">where</span> table_schema<span class="operator">=</span><span class="string">&#x27;test_db&#x27;</span> <span class="keyword">and</span> table_name<span class="operator">=</span><span class="string">&#x27;tbl_test_info&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+----------------------------------------------------------------------------+--------------+--------+</span></span><br><span class="line"><span class="operator">|</span> 字段名              <span class="operator">|</span> 字段说明                                                                   <span class="operator">|</span> 字段类型     <span class="operator">|</span> 约束   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+----------------------------------------------------------------------------+--------------+--------+</span></span><br><span class="line"><span class="operator">|</span> id                  <span class="operator">|</span> 主键                                                                       <span class="operator">|</span> <span class="type">int</span>          <span class="operator">|</span> PRI    <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> create_time         <span class="operator">|</span> 创建时间                                                                   <span class="operator">|</span> <span class="type">timestamp</span>    <span class="operator">|</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> update_time         <span class="operator">|</span> 更新时间                                                                   <span class="operator">|</span> <span class="type">timestamp</span>    <span class="operator">|</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+----------------------------------------------------------------------------+--------------+--------+</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="系统变量，可以设置在配置文件中，也可以通过set命令进行设置"><a href="#系统变量，可以设置在配置文件中，也可以通过set命令进行设置" class="headerlink" title="系统变量，可以设置在配置文件中，也可以通过set命令进行设置"></a>系统变量，可以设置在配置文件中，也可以通过set命令进行设置</h2><div class="note success"><p>mysql配置文件中大部分变量都可以通过set命令设置，注意重启mysql后会失效，要及时更新配置文件</p>
+</div>
+<ul>
+<li>设置全局服务器关闭非交互连接之前等待活动的秒数<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 查看全部全局变量</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables\G</span><br><span class="line"></span><br><span class="line"># 查看指定变量，如wait_timeout，也可以使用<span class="operator">%</span>进行模糊匹配</span><br><span class="line"># 默认<span class="number">8</span>小时，客户端超过这个时间没有向服务端发送命令，服务器端会自动断开连接</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> &quot;wait_timeout&quot;;</span><br><span class="line"># 定值查询可以使用如下<span class="keyword">sql</span>形式</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> @<span class="variable">@wait</span>_timeout;</span><br><span class="line"># 模糊匹配</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%log_bin%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 设置全局变量，只要mysql不重启就会一直有效</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> <span class="keyword">global</span> wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br><span class="line"></span><br><span class="line"># 当前会话有效</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> session wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br><span class="line"># 当前会话可简写为如下形式</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="binlog相关"><a href="#binlog相关" class="headerlink" title="binlog相关"></a>binlog相关</h2><ul>
+<li><p>查看binlog状态</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"># 查看bin‐log是否开启</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%log_bin%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------+----------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name                   <span class="operator">|</span> <span class="keyword">Value</span>                                              <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------+----------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> log_bin                         <span class="operator">|</span> <span class="keyword">ON</span>                                                 <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> log_bin_basename                <span class="operator">|</span> <span class="operator">/</span>usr<span class="operator">/</span><span class="keyword">local</span><span class="operator">/</span>soft<span class="operator">/</span>mysql8<span class="operator">/</span>datas<span class="operator">/</span>mysql<span class="operator">/</span>mysql<span class="operator">-</span>bin       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> log_bin_index                   <span class="operator">|</span> <span class="operator">/</span>usr<span class="operator">/</span><span class="keyword">local</span><span class="operator">/</span>soft<span class="operator">/</span>mysql8<span class="operator">/</span>datas<span class="operator">/</span>mysql<span class="operator">/</span>mysql<span class="operator">-</span>bin.index <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> log_bin_trust_function_creators <span class="operator">|</span> OFF                                                <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> log_bin_use_v1_row_events       <span class="operator">|</span> OFF                                                <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> sql_log_bin                     <span class="operator">|</span> <span class="keyword">ON</span>                                                 <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------+----------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"># 查看最后一个bin‐log日志的相关信息</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> master status;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"><span class="operator">|</span> File             <span class="operator">|</span> Position <span class="operator">|</span> Binlog_Do_DB <span class="operator">|</span> Binlog_Ignore_DB <span class="operator">|</span> Executed_Gtid_Set <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"><span class="operator">|</span> mysql<span class="operator">-</span>bin<span class="number">.000012</span> <span class="operator">|</span>   <span class="number">138605</span> <span class="operator">|</span>              <span class="operator">|</span>                  <span class="operator">|</span>                   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"></span><br><span class="line"># 会多一个最新的bin‐log日志</span><br><span class="line">mysql<span class="operator">&gt;</span> flush logs;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.02</span> sec)</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> master status;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"><span class="operator">|</span> File             <span class="operator">|</span> Position <span class="operator">|</span> Binlog_Do_DB <span class="operator">|</span> Binlog_Ignore_DB <span class="operator">|</span> Executed_Gtid_Set <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"><span class="operator">|</span> mysql<span class="operator">-</span>bin<span class="number">.000013</span> <span class="operator">|</span>      <span class="number">157</span> <span class="operator">|</span>              <span class="operator">|</span>                  <span class="operator">|</span>                   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"># 清空所有的bin‐log日志</span><br><span class="line">mysql<span class="operator">&gt;</span> reset master;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.02</span> sec)</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> master status;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"><span class="operator">|</span> File             <span class="operator">|</span> Position <span class="operator">|</span> Binlog_Do_DB <span class="operator">|</span> Binlog_Ignore_DB <span class="operator">|</span> Executed_Gtid_Set <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"><span class="operator">|</span> mysql<span class="operator">-</span>bin<span class="number">.000001</span> <span class="operator">|</span>      <span class="number">157</span> <span class="operator">|</span>              <span class="operator">|</span>                  <span class="operator">|</span>                   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure></li>
+<li><p>binlog数据恢复</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 查看binlog日志，重点关注<span class="keyword">begin</span>和<span class="keyword">commit</span>之间的内容，</span><br><span class="line">mysqlbinlog ‐‐<span class="keyword">no</span>‐defaults <span class="operator">/</span>usr<span class="operator">/</span><span class="keyword">local</span><span class="operator">/</span>soft<span class="operator">/</span>mysql8<span class="operator">/</span>datas<span class="operator">/</span>mysql<span class="operator">/</span>mysql<span class="operator">-</span>bin<span class="number">.000001</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如下为查看binlog日志的内容片段，<code>end_log_pos</code>后面的就是Position的值</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">BEGIN</span><br><span class="line">/*!*/;</span><br><span class="line"><span class="comment"># at 311</span></span><br><span class="line"><span class="comment">#220928  8:22:15 server id 3306  end_log_pos 367 CRC32 0x4f3bcf2a 	Table_map: `test`.`film` mapped to number 186</span></span><br><span class="line"><span class="comment"># at 367</span></span><br><span class="line"><span class="comment">#220928  8:22:15 server id 3306  end_log_pos 412 CRC32 0x3fc87530 	Write_rows: table id 186 flags: STMT_END_F</span></span><br><span class="line"></span><br><span class="line">BINLOG <span class="string">&#x27;</span></span><br><span class="line"><span class="string">NwQ0YxPqDAAAOAAAAG8BAAAAALoAAAAAAAEABHRlc3QABGZpbG0AAgMPAh4AAgEBAAIBISrPO08=</span></span><br><span class="line"><span class="string">NwQ0Yx7qDAAALQAAAJwBAAAAALoAAAAAAAEAAgAC/wAEAAAABHRlc3Qwdcg/</span></span><br><span class="line"><span class="string">&#x27;</span>/*!*/;</span><br><span class="line"><span class="comment"># at 412</span></span><br><span class="line"><span class="comment">#220928  8:22:15 server id 3306  end_log_pos 443 CRC32 0x0712832c 	Xid = 17662</span></span><br><span class="line">COMMIT/*!*/;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>常用的恢复方法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 恢复全部数据</span><br><span class="line">mysqlbinlog ‐‐<span class="keyword">no</span>‐defaults mysql‐bin<span class="number">.000001</span> <span class="operator">|</span> mysql ‐uroot ‐p test(数据库名)</span><br><span class="line"></span><br><span class="line"># 恢复指定位置数据</span><br><span class="line">mysqlbinlog ‐‐<span class="keyword">no</span>‐defaults ‐‐<span class="keyword">start</span>‐position<span class="operator">=</span>&quot;367&quot; ‐‐stop‐position<span class="operator">=</span>&quot;443&quot; mysql‐bin<span class="number">.000001</span> <span class="operator">|</span> mysql ‐uroot ‐p test(数据库)</span><br><span class="line"></span><br><span class="line"># 恢复指定时间段数据</span><br><span class="line">mysqlbinlog ‐‐<span class="keyword">no</span>‐defaults ‐‐stop‐<span class="type">date</span><span class="operator">=</span> &quot;2022‐09‐28 08:22:15&quot; ‐‐<span class="keyword">start</span>‐<span class="type">date</span><span class="operator">=</span> &quot;2022‐09‐28 08:22:15&quot; mysql‐bin<span class="number">.000001</span> <span class="operator">|</span> mysql ‐uroot ‐p test(数据库)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="mysql中的数据类型对应java实体数据类型"><a href="#mysql中的数据类型对应java实体数据类型" class="headerlink" title="mysql中的数据类型对应java实体数据类型"></a>mysql中的数据类型对应java实体数据类型</h2><ul>
+<li><p>数值类型</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">java类型</th>
+<th align="left">大小</th>
+<th align="left">范围（有符号）</th>
+<th align="left">范围（无符号）</th>
+<th align="left">用途</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">TINYINT</td>
+<td align="left">Boolean/int/Integer</td>
+<td align="left">1 字节</td>
+<td align="left">(-128, 127)</td>
+<td align="left">(0, 255)</td>
+<td align="left">小整数值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">SMALLINT</td>
+<td align="left">int/Integer</td>
+<td align="left">2 字节</td>
+<td align="left">(-32768, 32767)</td>
+<td align="left">(0, 65535)</td>
+<td align="left">大整数值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">MEDIUMINT</td>
+<td align="left">int/Integer</td>
+<td align="left">3 字节</td>
+<td align="left">(-8388608, 8388607)</td>
+<td align="left">(0, 16777215)</td>
+<td align="left">大整数值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">INT或 INTEGER</td>
+<td align="left">int/Integer/Long</td>
+<td align="left">4 字节</td>
+<td align="left">(-2147483648, 2147483647)</td>
+<td align="left">(0, 4294967295)</td>
+<td align="left">大整数值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">BIGINT</td>
+<td align="left">int/Integer/Long/BigInteger</td>
+<td align="left">8 字节</td>
+<td align="left">(-9233372036854775808, 9223372036854775807)</td>
+<td align="left">(0, 18446744073709551615)</td>
+<td align="left">极大整数值</td>
+<td align="left">BigInteger最大值没有限制，内部是int[]数组，缺点是速度慢</td>
+</tr>
+<tr>
+<td align="left">FLOAT</td>
+<td align="left">float/Float</td>
+<td align="left">4 字节</td>
+<td align="left">(-3.402823466E+38, -1.175494351E-38)，0，(1.175494351E-38，3.402823466351E+38)</td>
+<td align="left">0, (1.175494351E-38, 3.402823466E+38)</td>
+<td align="left">单精度 浮点数值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">DOUBLE</td>
+<td align="left">double/Double</td>
+<td align="left">8 字节</td>
+<td align="left">(-1.7976931348623157E+308, -2.2250738585072014E-308), 0, (2.2250738585072014E-308, 1.7976931348623157E+308)</td>
+<td align="left">0, (2.2250738585072014E-308, 1.7976931348623157E+308)</td>
+<td align="left">双精度 浮点数值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">DECIMAL</td>
+<td align="left">BigDecimal</td>
+<td align="left">对DECIMAL(M,D)如果M&gt;D,为M+2否则为D+2</td>
+<td align="left">依赖于M和D的值</td>
+<td align="left">依赖于M和D的值</td>
+<td align="left">高精度小数值</td>
+<td align="left">用于货币计算等高精度场景</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>优化建议</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">如果整形数据没有负数，如ID号，建议指定为UNSIGNED无符号类型，容量可以扩大一倍。</span><br><span class="line">建议使用TINYINT代替ENUM、BITENUM、SET。</span><br><span class="line">避免使用整数的显示宽度，也就是说，不要用INT(10)类似的方法指定字段显示宽度，直接用INT。</span><br><span class="line">DECIMAL最适合保存准确度要求高，而且用于计算的数据，比如价格。但是在使用DECIMAL类型的时候，注意长度设置。</span><br><span class="line">建议使用整形类型来运算和存储实数，方法是，实数乘以相应的倍数后再操作。</span><br><span class="line">整数通常是最佳的数据类型，因为它速度快，并且能使用AUTO_INCREMENT。</span><br></pre></td></tr></table></figure></li>
+<li><p>日期和时间</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">java类型</th>
+<th align="left">大小</th>
+<th align="left">范围（有符号）</th>
+<th align="left">范围（无符号）</th>
+<th align="left">用途</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">DATE</td>
+<td align="left">Date/LocalDate</td>
+<td align="left">3</td>
+<td align="left">1000-01-01 到 9999-12-31</td>
+<td align="left">YYYY-MM-DD</td>
+<td align="left">日期值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">TIME</td>
+<td align="left">Date/LocalDateTime</td>
+<td align="left">3</td>
+<td align="left">‘-838:59:59’ 到 ‘838:59:59’</td>
+<td align="left">HH:MM:SS</td>
+<td align="left">时间值或持续时间</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">YEAR</td>
+<td align="left">Date</td>
+<td align="left">1</td>
+<td align="left">1901 到 2155</td>
+<td align="left">YYYY</td>
+<td align="left">年份值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">DATETIME</td>
+<td align="left">Date/LocalDateTime</td>
+<td align="left">8</td>
+<td align="left">1000-01-01 00:00:00 到 9999-12-31 23:59:59</td>
+<td align="left">YYYY-MM-DD HH:MM:SS</td>
+<td align="left">混合日期和时间值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">TIMESTAMP</td>
+<td align="left">Date/LocalDateTime</td>
+<td align="left">4</td>
+<td align="left">1970-01-01 00:00:00 到 2038-01-19 03:14:07</td>
+<td align="left">YYYYMMDDhhmmss</td>
+<td align="left">混合日期和时间值，时间戳</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>优化建议</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TIME 类型的取值范围为 -838：59：59～838：59：59，小时部分如此大的原因是TIME类型不仅可以用于表示一天的时间，还可能是某个事件过去的时间或两个事件之间的时间间隔（可大于 24 小时，或者甚至为负）。</span><br><span class="line">MySQL能存储的最小时间粒度为秒。</span><br><span class="line">建议用DATE数据类型来保存日期。MySQL中默认的日期格式是yyyy-mm-dd。</span><br><span class="line">用MySQL的内建类型DATE、TIME、DATETIME来存储时间，而不是使用字符串。</span><br><span class="line">当数据格式为TIMESTAMP和DATETIME时，可以用CURRENT_TIMESTAMP作为默认（MySQL5.6以后）， MySQL会自动返回记录插入的确切时间。</span><br><span class="line">TIMESTAMP是UTC时间戳，与时区相关。</span><br><span class="line">DATETIME的存储格式是一个YYYYMMDD HH:MM:SS的整数，与时区无关，你存了什么，读出来就是什么。</span><br><span class="line">除非有特殊需求，一般的公司建议使用TIMESTAMP，它比DATETIME更节约空间，但是像阿里这样的公司一般 会用DATETIME，因为不用考虑TIMESTAMP将来的时间上限问题。</span><br><span class="line">有时人们把Unix的时间戳保存为整数值，但是这通常没有任何好处，这种格式处理起来不太方便，我们并不推荐 它。</span><br></pre></td></tr></table></figure></li>
+<li><p>字符串–String</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">java类型</th>
+<th align="left">大小</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">CHAR</td>
+<td align="left">String</td>
+<td align="left">0-255字节</td>
+<td align="left">定长字符串，char(n)当插入的字符串实际长度不足n时， 插入空格进行补充保存。在进行检索时，尾部的空格会被 去掉。</td>
+</tr>
+<tr>
+<td align="left">VARCHAR</td>
+<td align="left">String</td>
+<td align="left">0-65535字节</td>
+<td align="left">变长字符串，varchar(n)中的n代表最大列长度，插入的字符串实际长度不足n时不会补充空格</td>
+</tr>
+<tr>
+<td align="left">TINYBLOB</td>
+<td align="left">byte[]</td>
+<td align="left">0-255字节</td>
+<td align="left">不超过 255 个字符的二进制字符串</td>
+</tr>
+<tr>
+<td align="left">TINYTEXT</td>
+<td align="left">String</td>
+<td align="left">0-255字节</td>
+<td align="left">短文本字符串</td>
+</tr>
+<tr>
+<td align="left">BLOB</td>
+<td align="left">byte[]</td>
+<td align="left">0-65535字节</td>
+<td align="left">二进制形式的长文本数据</td>
+</tr>
+<tr>
+<td align="left">TEXT</td>
+<td align="left">String</td>
+<td align="left">0-65535字节</td>
+<td align="left">长文本数据</td>
+</tr>
+<tr>
+<td align="left">MEDIUMBLOB</td>
+<td align="left">byte[]</td>
+<td align="left">0-16777215字节</td>
+<td align="left">二进制形式的中等长度文本数据</td>
+</tr>
+<tr>
+<td align="left">MEDIUMTEXT</td>
+<td align="left">String</td>
+<td align="left">0-16777215字节</td>
+<td align="left">中等长度文本数据</td>
+</tr>
+<tr>
+<td align="left">LONGBLOB</td>
+<td align="left">byte[]</td>
+<td align="left">0-4294967295字节</td>
+<td align="left">二进制形式的极大文本数据</td>
+</tr>
+<tr>
+<td align="left">LONGTEXT</td>
+<td align="left">String</td>
+<td align="left">0-4294967295字节</td>
+<td align="left">极大文本数据</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>优化建议</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">字符串的长度相差较大用VARCHAR；字符串短，且所有值都接近一个长度用CHAR。</span><br><span class="line">CHAR和VARCHAR适用于包括人名、邮政编码、电话号码和不超过255个字符长度的任意字母数字组合。</span><br><span class="line">那些要用来计算的数字不要用VARCHAR类型保存，因为可能会导致一些与计算相关的问题。换句话说，可能影响到计算的准确性和完整性。</span><br><span class="line">尽量少用BLOB和TEXT，如果实在要用可以考虑将BLOB和TEXT字段单独存一张表，用id关联。</span><br><span class="line">BLOB系列存储二进制字符串，与字符集无关。TEXT系列存储非二进制字符串，与字符集相关。</span><br><span class="line">BLOB和TEXT都不能有默认值。</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="事务及其ACID属性"><a href="#事务及其ACID属性" class="headerlink" title="事务及其ACID属性"></a>事务及其ACID属性</h2><p>事务是由一组SQL语句组成的逻辑处理单元,事务具有以下4个属性,通常简称为事务的ACID属性。</p>
+<ul>
+<li>原子性(Atomicity) ：事务是一个原子操作单元,其对数据的修改,要么全都执行,要么全都不执行。</li>
+<li>一致性(Consistent) ：在事务开始和完成时,数据都必须保持一致状态。这意味着所有相关的数据规则都必须应用于事务的修改,以保持数据的完整性。事务内查询的数据在当前事务内必须保持一致而不会受到其它事务对数据修改的影响。</li>
+<li>隔离性(Isolation) ：数据库系统提供一定的隔离机制,保证事务在不受外部并发操作影响的“独立”环境执行。这意味着事务处理过程中的中间状态对外部是不可见的,反之亦然。</li>
+<li>持久性(Durable) ：事务完成之后,它对于数据的修改是永久性的,即使出现系统故障也能够保持。</li>
+</ul>
+<h2 id="并发事务处理带来的问题"><a href="#并发事务处理带来的问题" class="headerlink" title="并发事务处理带来的问题"></a>并发事务处理带来的问题</h2><ul>
+<li>更新丢失(Lost Update)或脏写<blockquote>
+<p>当两个或多个事务选择同一行，然后基于最初选定的值更新该行时，由于每个事务都不知道其他事务的存在，就会发生丢失更新问题–最后的更新覆盖了由其他事务所做的更新。</p>
+</blockquote>
+</li>
+<li>脏读（Dirty Reads）<blockquote>
+<p>一个事务正在对一条记录做修改，在这个事务完成并提交前，这条记录的数据就处于不一致的状态；<br>这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些“脏”数据，并据此作进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象的叫做“脏读”。<br>一句话：事务A读取到了事务B已经修改但尚未提交的数据，还在这个数据基础上做了操作。此时，如果B事务回滚，A读取的数据无效，不符合一致性要求。</p>
+</blockquote>
+</li>
+<li>不可重读（Non-Repeatable Reads）<blockquote>
+<p>一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现其读出的数据已经发生了改变、或某些记录已经被删除了！这种现象就叫做“不可重复读”。<br>一句话：事务A内部的相同查询语句在不同时刻读出的结果不一致，不符合隔离性</p>
+</blockquote>
+</li>
+<li>幻读（Phantom Reads）<blockquote>
+<p>一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为“幻读”。<br>一句话：事务A读取到了事务B提交的新增数据，不符合隔离性</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h2><ul>
+<li><p><code>脏读</code>、<code>不可重复读</code>和<code>幻读</code>,其实都是数据库读一致性问题,必须由数据库提供一定的事务隔离机制来解决。</p>
+<table>
+<thead>
+<tr>
+<th align="left">隔离级别</th>
+<th align="left">脏读</th>
+<th align="left">不可重复读</th>
+<th align="left">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">读未提交(READ-UNCOMMITTED)</td>
+<td align="left">可能</td>
+<td align="left">可能</td>
+<td align="left">可能</td>
+</tr>
+<tr>
+<td align="left">读已提交(READ-COMMITTED)</td>
+<td align="left">不可能</td>
+<td align="left">可能</td>
+<td align="left">可能</td>
+</tr>
+<tr>
+<td align="left">可重复读(REPEATABLE-READ)</td>
+<td align="left">不可能</td>
+<td align="left">不可能</td>
+<td align="left">可能</td>
+</tr>
+<tr>
+<td align="left">可串行化(SERIALIZABLE)</td>
+<td align="left">不可能</td>
+<td align="left">不可能</td>
+<td align="left">不可能</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>数据库的事务隔离越严格,并发副作用越小,但付出的代价也就越大,因为事务隔离实质上就是使事务在一定程度上“串行化”进行,这显然与“并发”是矛盾的。</p>
+</li>
+<li><p>不同的应用对读一致性和事务隔离程度的要求也是不同的,比如许多应用对“不可重复读”和“幻读”并不敏感,可能更关心数据并发访问的能力。</p>
+</li>
+<li><p>Mysql默认的事务隔离级别是<code>可重复读(REPEATABLE-READ)</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查看当前数据库的事务隔离级别，mysql8之前使用`tx_isolation`</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;transaction_isolation&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+----------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name         <span class="operator">|</span> <span class="keyword">Value</span>          <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+----------------+</span></span><br><span class="line"><span class="operator">|</span> transaction_isolation <span class="operator">|</span> REPEATABLE<span class="operator">-</span>READ <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+----------------+</span></span><br><span class="line"># 设置事务隔离级别</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> transaction_isolation<span class="operator">=</span><span class="string">&#x27;READ-COMMITTED&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="数据库锁"><a href="#数据库锁" class="headerlink" title="数据库锁"></a>数据库锁</h2><ul>
+<li><p>从性能上分为<code>乐观锁</code>(用版本对比来实现)和<code>悲观锁</code></p>
+</li>
+<li><p>从对数据库操作的类型分，分为<code>读锁</code>和<code>写锁</code>(都属于悲观锁)</p>
+<blockquote>
+<p>读锁（共享锁，S锁[Shared]）：针对同一份数据，多个读操作可以同时进行而不会互相影响。读锁可以认为没有加锁，可读但不可写，当写锁锁住数据时，读锁也会不可获取。<br>写锁（排它锁，X锁[eXclusive]）：当前写操作没有完成前，它会阻断其他写锁和读锁</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># 给表加读锁</span><br><span class="line"># 当前session和其他session都可以读该表,当前session中插入或者更新锁定的表都会报错，其他session插入或更新则会等待</span><br><span class="line">mysql<span class="operator">&gt;</span> lock <span class="keyword">table</span> actor read;</span><br><span class="line"></span><br><span class="line"># 给表加写锁</span><br><span class="line"># 当前session对该表的增删改查都没有问题，其他session对该表的所有操作被阻塞</span><br><span class="line">mysql<span class="operator">&gt;</span> lock <span class="keyword">table</span> actor write;</span><br><span class="line"></span><br><span class="line"># 查看哪些表上加了锁</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">open</span> tables;</span><br><span class="line"># 查看指定表</span><br><span class="line"># In_use<span class="operator">=</span><span class="number">1</span>表示被加了写锁</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">open</span> tables <span class="keyword">like</span> <span class="string">&#x27;actor&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> Database <span class="operator">|</span> <span class="keyword">Table</span> <span class="operator">|</span> In_use <span class="operator">|</span> Name_locked <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> test     <span class="operator">|</span> actor <span class="operator">|</span>      <span class="number">1</span> <span class="operator">|</span>           <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"></span><br><span class="line"># 解锁</span><br><span class="line">mysql<span class="operator">&gt;</span> unlock tables;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>对MyISAM表的读操作(加读锁) ,不会阻寒其他进程对同一表的读请求,但会阻赛对同一表的写请求。只有当读锁释放后,才会执行其它进程的写操作。<br>对MylSAM表的写操作(加写锁) ,会阻塞其他进程对同一表的读和写操作,只有当写锁释放后,才会执行其它进程的读写操作</p>
+</blockquote>
+</li>
+<li><p>从对数据操作的粒度分，分为<code>表锁</code>和<code>行锁</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 行锁<span class="keyword">for</span> update，这样其他session只能读这行数据，修改则会被阻塞，直到锁定行的session提交</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> actor <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">10</span> <span class="keyword">for</span> update;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意行锁的查询条件必须走索引，否则会升级为表锁<br>尽可能让所有数据检索都通过索引来完成，避免无索引行锁升级为表锁<br>合理设计索引，尽量缩小锁的范围<br>尽量控制事务大小，减少锁定资源量和时间长度，涉及事务加锁的sql尽量放在事务最后执行</p>
+</blockquote>
+</li>
+<li><p>行锁分析</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> status <span class="keyword">like</span> <span class="string">&#x27;innodb_row_lock%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name                 <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Innodb_row_lock_current_waits <span class="operator">|</span> <span class="number">0</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Innodb_row_lock_time          <span class="operator">|</span> <span class="number">0</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Innodb_row_lock_time_avg      <span class="operator">|</span> <span class="number">0</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Innodb_row_lock_time_max      <span class="operator">|</span> <span class="number">0</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Innodb_row_lock_waits         <span class="operator">|</span> <span class="number">0</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------+-------+</span></span><br><span class="line">Innodb_row_lock_current_waits: 当前正在等待锁定的数量</span><br><span class="line">Innodb_row_lock_time: 从系统启动到现在锁定总时间长度（等待总时长）</span><br><span class="line">Innodb_row_lock_time_avg: 每次等待所花平均时间（等待平均时长）</span><br><span class="line">Innodb_row_lock_time_max: 从系统启动到现在等待最长的一次所花时间</span><br><span class="line">Innodb_row_lock_waits: 系统启动后到现在总共等待的次数（等待总次数）</span><br></pre></td></tr></table></figure></li>
+</ul>
+<div class="note success"><ul>
+<li>MyISAM不支持事务且只支持表锁，在执行查询语句SELECT前，会自动给涉及的所有表加读锁,在执行update、insert、delete操作会自动给涉及的表加写锁。</li>
+<li>InnoDB支持事务和行锁，在执行查询语句SELECT时(非串行隔离级别)，不会加锁。但是update、insert、delete操作会加行锁。</li>
+<li>读锁会阻塞写，但是不会阻塞读。而写锁则会把读和写都阻塞。</li>
+</ul>
+</div>
+
+<ul>
+<li><p><code>间隙锁</code>(Gap Lock): 锁的就是两个值之间的空隙，用于解决幻读。间隙锁是在可重复读隔离级别下才会生效。</p>
+<blockquote>
+<p>如account表的主键id是不连续的（1，2，3，10，20），那么间隙就有id为 (3,10)，(10,20)，(20,正无穷) 这三个区间<br>在Session_1下面执行 <code>update account set age = 10 where id &gt; 8 and id &lt;18;</code><br>则其他Session没法在这个范围所包含的所有行记录(包括间隙行记录)以及行记录所在的间隙里插入或修改任何数据，即id在 (3,20]区间都无法修改数据，注意最后那个20也是包含在内的。<br>注意这里锁住的最后一条记录不是id=18，而是18所在的间隙区间都会锁住。<br>尽可能减少检索条件范围，避免间隙锁</p>
+</blockquote>
+</li>
+<li><p><code>临键锁</code>(Next-key Locks): 是行锁与间隙锁的组合。像上面那个例子里的这个(3,20]的整个区间可以叫做临键锁。</p>
+</li>
+<li><p>查看锁等待详细信息</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> engine innodb status\G;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="MVCC多版本并发控制机制"><a href="#MVCC多版本并发控制机制" class="headerlink" title="MVCC多版本并发控制机制"></a>MVCC多版本并发控制机制</h2><ul>
+<li>Mysql在读已提交和可重复读隔离级别下都实现了MVCC机制</li>
+<li>保证了事务的隔离性</li>
+<li>MVCC机制的实现就是通过read-view机制与undo版本链比对机制，使得不同的事务会根据数据版本链对比规则读取同一条数据在版本链上的不同版本数据。</li>
+</ul>
+<h3 id="undo日志版本链"><a href="#undo日志版本链" class="headerlink" title="undo日志版本链"></a>undo日志版本链</h3><p>undo日志版本链是指一行数据被多个事务依次修改过后，在每个事务修改完后，Mysql会保留修改前的数据undo回滚日志，并且用两个隐藏字段trx_id和roll_pointer把这些undo日志串联起来形成一个历史记录版本链</p>
+<h3 id="read-view"><a href="#read-view" class="headerlink" title="read-view"></a>read-view</h3><p>在可重复读隔离级别，当事务开启，执行任何查询sql时会生成当前事务的一致性视图read-view，该视图在事务结束之前都不会变化(如果是读已提交隔离级别在每次执行查询sql时都会重新生成)，这个视图由执行查询时所有未提交事务id数组（数组里最小的id为min_id）和已创建的最大事务id（max_id）组成，事务里的任何sql查询结果需要从对应版本链里的最新数据开始逐条跟read-view做比对从而得到最终的快照结果。</p>
+<blockquote>
+<p>注意：begin/start transaction 命令并不是一个事务的起点，在执行到它们之后的第一个修改操作InnoDB表的语句， 事务才真正启动，才会向mysql申请事务id，mysql内部是严格按照事务的启动顺序来分配事务id的。</p>
+</blockquote>
+<h3 id="版本链比对规则"><a href="#版本链比对规则" class="headerlink" title="版本链比对规则"></a>版本链比对规则</h3><ul>
+<li><ol>
+<li>如果查询结果中row的 trx_id&lt;min_id，表示这个版本是已提交的事务生成的，这个数据是可见的</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>如果查询结果中row的 trx_id&gt;max_id，表示这个版本是由将来启动的事务生成的，是不可见的(若 row 的 trx_id 就是当前自己的事务是可见的）</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>如果查询结果中row的 min_id &lt;=trx_id&lt;= max_id，那就包括两种情况<blockquote>
+<p>a. 若 row 的 trx_id 在read-view视图数组中，表示这个版本是由还没提交的事务生成的，不可见(若 row 的 trx_id 就是当前自己的事务是可见的)；<br>b. 若 row 的 trx_id 不在read-view视图数组中，表示这个版本是已经提交了的事务生成的，可见。</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>对于删除的情况可以认为是update的特殊情况，会将版本链上最新的数据复制一份，然后将trx_id修改成删除操作的 trx_id，同时在该条记录的头信息（record header）里的（deleted_flag）标记位写上true，来表示当前记录已经被删除，在查询时按照上面的规则查到对应的记录如果delete_flag标记位为true，意味着记录已被删除，则不返回数据。</li>
+</ol>
+</li>
+</ul>
+<h2 id="innodb-buffer-pool"><a href="#innodb-buffer-pool" class="headerlink" title="innodb buffer pool"></a>innodb buffer pool</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 查看buffer_pool设置大小，推荐设置为内存的<span class="number">60</span><span class="operator">%</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_buffer_pool_size&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>增删改查都是直接操作这个<code>buffer pool</code>，并顺序写入<code>undo log</code>和<code>redo log</code>，如果直接操作硬盘就是随机写，效率会非常低</li>
+<li>innodb引擎数据更新执行顺序<blockquote>
+<p>1.加载要查询或修改的硬盘数据所在的页到buffer pool，加载时可能会同时加载相邻的页<br>2.将要修改的数据旧值写入<code>undo log</code>文件，如果事务提交失败，可以用undo日志里的数据进行回滚<br>3.更新<code>buffer pool</code>内存中的数据<br>4.写入<code>redo log buffer</code>(内存)<br>5.提交事务时写入<code>redo log</code>文件，用于在异常情况（如事务提交成功，但buffer pool里的数据尚未写入磁盘，此时宕机）下恢复<code>buffer pool</code>内存中的数据<br>6.写入<code>bin log</code>文件，主要用于恢复数据库磁盘里的数据<br>7.<code>bin log</code>文件记录成功后写入<code>commit</code>标记到<code>redo log</code>文件，保证redo与binlog数据一致性<br>8.<code>buffer pool</code>内存中的数据随机写入磁盘，独立线程每隔一段时间就会刷盘，如果<code>buffer pool</code>写满了也会采用LRU等算法将内存数据写入磁盘</p>
+</blockquote>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+      
+
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2022/09/26/mysql-senior-command/" title="MySql一些有用的知识点">https://blog.hanqunfeng.com/2022/09/26/mysql-senior-command/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+          <span class="icon">
+            <i class="fab fa-font-awesome"></i>
+          </span>
+
+          <span class="label">简书</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="http://hanqunfeng.iteye.com">
+          <span class="icon">
+            <i class="fas fa-bus"></i>
+          </span>
+
+          <span class="label">Iteye</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+          <span class="icon">
+            <i class="fas fa-car"></i>
+          </span>
+
+          <span class="label">CSDN</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fas fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/09/23/springboot-data-jpa-aop-history/" rel="next" title="Springboot-JPA之AOP保存历史记录">
+                  Springboot-JPA之AOP保存历史记录 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">704k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">10:40</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fas fa-user-circle"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fas fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+          });
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+</body>
+</html>
