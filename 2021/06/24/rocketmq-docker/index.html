@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.0">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
@@ -21,12 +21,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要看完本文你将掌握如下知识点：  docker[20.10.7]安装rocketmq[4.8.0]的方法">
+    <meta name="description" content="摘要 看完本文你将掌握如下知识点：  docker[20.10.7]安装rocketmq[4.8.0]的方法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RocketMQ Docker安装方式">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2021/06/24/rocketmq-docker/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要看完本文你将掌握如下知识点：  docker[20.10.7]安装rocketmq[4.8.0]的方法">
+<meta property="og:description" content="摘要 看完本文你将掌握如下知识点：  docker[20.10.7]安装rocketmq[4.8.0]的方法">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-06-24T10:24:04.000Z">
 <meta property="article:modified_time" content="2022-09-14T09:08:28.855Z">
@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 <link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
-<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}</style></head>
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -496,28 +496,55 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>看完本文你将掌握如下知识点：</p>
-<ul>
-<li>docker[20.10.7]安装rocketmq[4.8.0]的方法</li>
+        <h2 id="摘要">摘要</h2>
+<p>看完本文你将掌握如下知识点：</p>
+<ul class="lvl-0">
+<li class="lvl-2">docker[20.10.7]安装rocketmq[4.8.0]的方法</li>
 </ul>
 <span id="more"></span>
-
-<h3 id="server-有日志目录映射"><a href="#server-有日志目录映射" class="headerlink" title="server 有日志目录映射"></a>server 有日志目录映射</h3><ul>
-<li>设置目录权限<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 $(<span class="built_in">pwd</span>)/logs</span><br></pre></td></tr></table></figure></li>
-<li>启动<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -v $(<span class="built_in">pwd</span>)/logs:/home/rocketmq/logs \</span><br><span class="line">-v $(<span class="built_in">pwd</span>)/logs:/home/rocketmq/logs \</span><br><span class="line">--name rmqnamesrv \</span><br><span class="line">-e <span class="string">&quot;JAVA_OPT_EXT=-Xms512M -Xmx512M -Xmn128m&quot;</span> \</span><br><span class="line">-p 9876:9876 \</span><br><span class="line">foxiswho/rocketmq:4.8.0 \</span><br><span class="line">sh mqnamesrv</span><br></pre></td></tr></table></figure></li>
+<h3 id="server-有日志目录映射">server 有日志目录映射</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>设置目录权限</p>
+</li>
 </ul>
-<h3 id="broker-目录映射"><a href="#broker-目录映射" class="headerlink" title="broker 目录映射"></a>broker 目录映射</h3><ul>
-<li><p>设置目录权限</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 $(<span class="built_in">pwd</span>)/logs</span><br><span class="line">chmod 777 $(<span class="built_in">pwd</span>)/store</span><br><span class="line">chmod 777 $(<span class="built_in">pwd</span>)/conf</span><br></pre></td></tr></table></figure></li>
-<li><p>添加文件：$(pwd)/conf/broker.conf</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName = DefaultCluster</span><br><span class="line">brokerName = broker-a</span><br><span class="line">brokerId = 0</span><br><span class="line">deleteWhen = 04</span><br><span class="line">fileReservedTime = 48</span><br><span class="line">brokerRole = ASYNC_MASTER</span><br><span class="line">flushDiskType = ASYNC_FLUSH</span><br><span class="line">brokerIP1 = &#123;宿主机 IP&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>启动</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run -d</span><br><span class="line">-v $(<span class="built_in">pwd</span>)/logs:/home/rocketmq/logs</span><br><span class="line">-v $(<span class="built_in">pwd</span>)/store:/home/rocketmq/store \</span><br><span class="line">-v $(<span class="built_in">pwd</span>)/conf:/home/rocketmq/conf \</span><br><span class="line">--name rmqbroker --link rmqnamesrv:rmqnamesrv \</span><br><span class="line">-e <span class="string">&quot;NAMESRV_ADDR=rmqnamesrv:9876&quot;</span> \</span><br><span class="line">-e <span class="string">&quot;JAVA_OPT_EXT=-Xms512M -Xmx512M -Xmn128m&quot;</span> \</span><br><span class="line">-p 10911:10911 -p 10912:10912 -p 10909:10909 \</span><br><span class="line">foxiswho/rocketmq:4.8.0 \</span><br><span class="line">sh mqbroker -c /home/rocketmq/conf/broker.conf</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 777 $(<span class="built_in">pwd</span>)/logs</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>启动</p>
+</li>
 </ul>
-<h3 id="console"><a href="#console" class="headerlink" title="console"></a>console</h3><ul>
-<li><p>启动</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run --name rmqconsole --link rmqnamesrv:rmqnamesrv \</span><br><span class="line">-e <span class="string">&quot;JAVA_OPTS=-Drocketmq.namesrv.addr=rmqnamesrv:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false&quot;</span> \</span><br><span class="line">-p 8180:8080 -t styletang/rocketmq-console-ng</span><br></pre></td></tr></table></figure></li>
-<li><p>访问地址<br><a target="_blank" rel="noopener" href="http://localhost:8180/">http://localhost:8180/</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -v $(<span class="built_in">pwd</span>)/logs:/home/rocketmq/logs \</span><br><span class="line">-v $(<span class="built_in">pwd</span>)/logs:/home/rocketmq/logs \</span><br><span class="line">--name rmqnamesrv \</span><br><span class="line">-e <span class="string">&quot;JAVA_OPT_EXT=-Xms512M -Xmx512M -Xmn128m&quot;</span> \</span><br><span class="line">-p 9876:9876 \</span><br><span class="line">foxiswho/rocketmq:4.8.0 \</span><br><span class="line">sh mqnamesrv</span><br></pre></td></tr></table></figure>
+<h3 id="broker-目录映射">broker 目录映射</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>设置目录权限</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 777 $(<span class="built_in">pwd</span>)/logs</span><br><span class="line"><span class="built_in">chmod</span> 777 $(<span class="built_in">pwd</span>)/store</span><br><span class="line"><span class="built_in">chmod</span> 777 $(<span class="built_in">pwd</span>)/conf</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>添加文件：$(pwd)/conf/broker.conf</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName = DefaultCluster</span><br><span class="line">brokerName = broker-a</span><br><span class="line">brokerId = 0</span><br><span class="line">deleteWhen = 04</span><br><span class="line">fileReservedTime = 48</span><br><span class="line">brokerRole = ASYNC_MASTER</span><br><span class="line">flushDiskType = ASYNC_FLUSH</span><br><span class="line">brokerIP1 = &#123;宿主机 IP&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>启动</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run -d</span><br><span class="line">-v $(<span class="built_in">pwd</span>)/logs:/home/rocketmq/logs</span><br><span class="line">-v $(<span class="built_in">pwd</span>)/store:/home/rocketmq/store \</span><br><span class="line">-v $(<span class="built_in">pwd</span>)/conf:/home/rocketmq/conf \</span><br><span class="line">--name rmqbroker --<span class="built_in">link</span> rmqnamesrv:rmqnamesrv \</span><br><span class="line">-e <span class="string">&quot;NAMESRV_ADDR=rmqnamesrv:9876&quot;</span> \</span><br><span class="line">-e <span class="string">&quot;JAVA_OPT_EXT=-Xms512M -Xmx512M -Xmn128m&quot;</span> \</span><br><span class="line">-p 10911:10911 -p 10912:10912 -p 10909:10909 \</span><br><span class="line">foxiswho/rocketmq:4.8.0 \</span><br><span class="line">sh mqbroker -c /home/rocketmq/conf/broker.conf</span><br></pre></td></tr></table></figure>
+<h3 id="console">console</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>启动</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run --name rmqconsole --<span class="built_in">link</span> rmqnamesrv:rmqnamesrv \</span><br><span class="line">-e <span class="string">&quot;JAVA_OPTS=-Drocketmq.namesrv.addr=rmqnamesrv:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false&quot;</span> \</span><br><span class="line">-p 8180:8080 -t styletang/rocketmq-console-ng</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问地址<br>
+<a target="_blank" rel="noopener" href="http://localhost:8180/">http://localhost:8180/</a></p>
 </li>
 </ul>
 
@@ -672,14 +699,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">710k</span>
+    <span title="站点总字数">713k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">10:45</span>
+    <span title="站点阅读时长">10:48</span>
   </span>
 </div>
 <div class="busuanzi-count">
@@ -741,7 +768,7 @@
   <script src="/js/third-party/statistics/lean-analytics.js"></script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+<script src="https://unpkg.com/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
 
 <script>
 var options = {
