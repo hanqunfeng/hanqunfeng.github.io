@@ -21,18 +21,18 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要  MySql知识点介绍 本文基于mysql-8.0.30">
+    <meta name="description" content="摘要   MySql知识点介绍   本文基于mysql-8.0.30">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySql一些有用的知识点">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2022/09/26/mysql-senior-command/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  MySql知识点介绍 本文基于mysql-8.0.30">
+<meta property="og:description" content="摘要   MySql知识点介绍   本文基于mysql-8.0.30">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/b%2Btree.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/mvcc.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png">
 <meta property="article:published_time" content="2022-09-26T13:30:05.000Z">
-<meta property="article:modified_time" content="2022-10-10T10:03:15.779Z">
+<meta property="article:modified_time" content="2022-10-11T05:13:51.051Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -185,7 +185,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%9B%B8%E5%85%B3"><span class="nav-number">2.</span> <span class="nav-text">执行计划相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2inner-join%E4%B9%8B%E6%98%BE%E5%BC%8F%E8%BF%9E%E6%8E%A5-VS-%E9%9A%90%E5%BC%8F%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%BB%8E%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8A%E7%9C%8B%E4%B8%A4%E8%80%85%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B%EF%BC%8C%E6%8E%A8%E8%8D%90%E5%B8%A6on%E7%9A%84%E6%98%BE%E7%A4%BA%E6%9F%A5%E8%AF%A2"><span class="nav-number">3.</span> <span class="nav-text">关联查询inner join之显式连接 VS 隐式连接，从执行计划上看两者是一回事，推荐带on的显示查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3"><span class="nav-number">4.</span> <span class="nav-text">索引相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Tree-B-Tree%E5%8F%98%E7%A7%8D"><span class="nav-number">4.1.</span> <span class="nav-text">B+Tree(B-Tree变种)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Tree%E5%8F%AF%E4%BB%A5%E5%AD%98%E6%94%BE%E5%A4%9A%E5%B0%91%E6%9D%A1%E6%95%B0%E6%8D%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF2000%E4%B8%87%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">B+Tree可以存放多少条数据，为什么是2000万？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Tree%E6%9F%A5%E6%89%BE%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%EF%BC%88%E6%AF%94%E8%BE%83%E6%AC%A1%E6%95%B0%EF%BC%89%E8%AE%A1%E7%AE%97%E6%96%B9%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">B+Tree查找的时间复杂度（比较次数）计算方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="nav-number">4.4.</span> <span class="nav-text">索引分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL%E6%9C%89%E5%93%AA%E4%BA%9B%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.5.</span> <span class="nav-text">MySQL有哪些索引类型?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95-%E7%B4%A2%E5%BC%95%E8%A6%86%E7%9B%96"><span class="nav-number">4.6.</span> <span class="nav-text">覆盖索引&#x2F;索引覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E7%B4%A2%E5%BC%95"><span class="nav-number">4.7.</span> <span class="nav-text">前缀索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%98%9F%E7%B4%A2%E5%BC%95"><span class="nav-number">4.8.</span> <span class="nav-text">三星索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BB%A3%E4%BB%B7"><span class="nav-number">4.9.</span> <span class="nav-text">索引的代价</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E7%BB%B4%E6%8A%A4"><span class="nav-number">4.10.</span> <span class="nav-text">索引的维护</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ONLY-FULL-GROUP-BY"><span class="nav-number">5.</span> <span class="nav-text">ONLY_FULL_GROUP_BY</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">用户管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%8A%B6%E6%80%81"><span class="nav-number">7.</span> <span class="nav-text">客户端连接状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">8.</span> <span class="nav-text">常用操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E4%BF%A1%E6%81%AF%E7%9B%B8%E5%85%B3"><span class="nav-number">9.</span> <span class="nav-text">表信息相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F%EF%BC%8C%E5%8F%AF%E4%BB%A5%E8%AE%BE%E7%BD%AE%E5%9C%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%AD%EF%BC%8C%E4%B9%9F%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87set%E5%91%BD%E4%BB%A4%E8%BF%9B%E8%A1%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">10.</span> <span class="nav-text">系统变量，可以设置在配置文件中，也可以通过set命令进行设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binlog%E7%9B%B8%E5%85%B3"><span class="nav-number">11.</span> <span class="nav-text">binlog相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%AF%B9%E5%BA%94java%E5%AE%9E%E4%BD%93%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">12.</span> <span class="nav-text">mysql中的数据类型对应java实体数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%8F%8A%E5%85%B6ACID%E5%B1%9E%E6%80%A7"><span class="nav-number">13.</span> <span class="nav-text">事务及其ACID属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">14.</span> <span class="nav-text">并发事务处理带来的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">15.</span> <span class="nav-text">事务隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81"><span class="nav-number">16.</span> <span class="nav-text">数据库锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">17.</span> <span class="nav-text">MVCC多版本并发控制机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undo%E6%97%A5%E5%BF%97%E7%89%88%E6%9C%AC%E9%93%BE"><span class="nav-number">17.1.</span> <span class="nav-text">undo日志版本链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read-view"><span class="nav-number">17.2.</span> <span class="nav-text">read-view</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E9%93%BE%E6%AF%94%E5%AF%B9%E8%A7%84%E5%88%99"><span class="nav-number">17.3.</span> <span class="nav-text">版本链比对规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB-Buffer-Pool"><span class="nav-number">18.</span> <span class="nav-text">InnoDB Buffer Pool</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MyISAM-Key-Buffer"><span class="nav-number">19.</span> <span class="nav-text">MyISAM Key Buffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="nav-number">20.</span> <span class="nav-text">慢查询</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%9B%B8%E5%85%B3"><span class="nav-number">2.</span> <span class="nav-text">执行计划相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2inner-join%E4%B9%8B%E6%98%BE%E5%BC%8F%E8%BF%9E%E6%8E%A5-VS-%E9%9A%90%E5%BC%8F%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%BB%8E%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8A%E7%9C%8B%E4%B8%A4%E8%80%85%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B%EF%BC%8C%E6%8E%A8%E8%8D%90%E5%B8%A6on%E7%9A%84%E6%98%BE%E7%A4%BA%E6%9F%A5%E8%AF%A2"><span class="nav-number">3.</span> <span class="nav-text">关联查询inner join之显式连接 VS 隐式连接，从执行计划上看两者是一回事，推荐带on的显示查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3"><span class="nav-number">4.</span> <span class="nav-text">索引相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Tree-B-Tree%E5%8F%98%E7%A7%8D"><span class="nav-number">4.1.</span> <span class="nav-text">B+Tree(B-Tree变种)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Tree%E5%8F%AF%E4%BB%A5%E5%AD%98%E6%94%BE%E5%A4%9A%E5%B0%91%E6%9D%A1%E6%95%B0%E6%8D%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF2000%E4%B8%87%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">B+Tree可以存放多少条数据，为什么是2000万？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Tree%E6%9F%A5%E6%89%BE%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%EF%BC%88%E6%AF%94%E8%BE%83%E6%AC%A1%E6%95%B0%EF%BC%89%E8%AE%A1%E7%AE%97%E6%96%B9%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">B+Tree查找的时间复杂度（比较次数）计算方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="nav-number">4.4.</span> <span class="nav-text">索引分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL%E6%9C%89%E5%93%AA%E4%BA%9B%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.5.</span> <span class="nav-text">MySQL有哪些索引类型?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95-%E7%B4%A2%E5%BC%95%E8%A6%86%E7%9B%96"><span class="nav-number">4.6.</span> <span class="nav-text">覆盖索引&#x2F;索引覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E7%B4%A2%E5%BC%95"><span class="nav-number">4.7.</span> <span class="nav-text">前缀索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%98%9F%E7%B4%A2%E5%BC%95"><span class="nav-number">4.8.</span> <span class="nav-text">三星索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BB%A3%E4%BB%B7"><span class="nav-number">4.9.</span> <span class="nav-text">索引的代价</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E7%BB%B4%E6%8A%A4"><span class="nav-number">4.10.</span> <span class="nav-text">索引的维护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E6%9D%A1%E4%BB%B6%E4%B8%8B%E6%8E%A8"><span class="nav-number">4.11.</span> <span class="nav-text">索引条件下推</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6"><span class="nav-number">4.12.</span> <span class="nav-text">索引合并</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ONLY-FULL-GROUP-BY"><span class="nav-number">5.</span> <span class="nav-text">ONLY_FULL_GROUP_BY</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">用户管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="nav-number">7.</span> <span class="nav-text">查看线程状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">8.</span> <span class="nav-text">常用操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E4%BF%A1%E6%81%AF%E7%9B%B8%E5%85%B3"><span class="nav-number">9.</span> <span class="nav-text">表信息相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F%EF%BC%8C%E5%8F%AF%E4%BB%A5%E8%AE%BE%E7%BD%AE%E5%9C%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%AD%EF%BC%8C%E4%B9%9F%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87set%E5%91%BD%E4%BB%A4%E8%BF%9B%E8%A1%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">10.</span> <span class="nav-text">系统变量，可以设置在配置文件中，也可以通过set命令进行设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binlog%E7%9B%B8%E5%85%B3"><span class="nav-number">11.</span> <span class="nav-text">binlog相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%AF%B9%E5%BA%94java%E5%AE%9E%E4%BD%93%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">12.</span> <span class="nav-text">mysql中的数据类型对应java实体数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%8F%8A%E5%85%B6ACID%E5%B1%9E%E6%80%A7"><span class="nav-number">13.</span> <span class="nav-text">事务及其ACID属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">14.</span> <span class="nav-text">并发事务处理带来的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">15.</span> <span class="nav-text">事务隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81"><span class="nav-number">16.</span> <span class="nav-text">数据库锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">17.</span> <span class="nav-text">MVCC多版本并发控制机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undo%E6%97%A5%E5%BF%97%E7%89%88%E6%9C%AC%E9%93%BE"><span class="nav-number">17.1.</span> <span class="nav-text">undo日志版本链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read-view"><span class="nav-number">17.2.</span> <span class="nav-text">read-view</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E9%93%BE%E6%AF%94%E5%AF%B9%E8%A7%84%E5%88%99"><span class="nav-number">17.3.</span> <span class="nav-text">版本链比对规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB-Buffer-Pool"><span class="nav-number">18.</span> <span class="nav-text">InnoDB Buffer Pool</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MyISAM-Key-Buffer"><span class="nav-number">19.</span> <span class="nav-text">MyISAM Key Buffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="nav-number">20.</span> <span class="nav-text">慢查询</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -206,7 +206,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -439,7 +439,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-10-10 18:03:15" itemprop="dateModified" datetime="2022-10-10T18:03:15+08:00">2022-10-10</time>
+      <time title="修改时间：2022-10-11 13:13:51" itemprop="dateModified" datetime="2022-10-11T13:13:51+08:00">2022-10-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -448,6 +448,10 @@
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
         </span>
     </span>
 
@@ -483,14 +487,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>36k</span>
+      <span>39k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>33 分钟</span>
+      <span>36 分钟</span>
     </span>
 
         </div>
@@ -500,18 +504,54 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="摘要">摘要</h2>
+        <!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+ -->
+<h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
-<li class="lvl-2">MySql知识点介绍</li>
-<li class="lvl-2">本文基于<code>mysql-8.0.30</code></li>
+<li class="lvl-2">
+<p>MySql知识点介绍</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>mysql-8.0.30</code></p>
+</li>
 </ul>
 <span id="more"></span>
 <h2 id="执行计划相关">执行计划相关</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>explain关键字</p>
+<p>什么是执行计划一条查询语句在经过MySQL查询优化器的各种基于成本和规则的优化会后生成一个所谓的执行计划，这个执行计划展示了接下来具体执行查询的方式，比如多表连接的顺序是什么，对于每个表采用什么访问方法来具体执行查询等等。<code>EXPLAIN</code>语句来帮助我们查看某个查询语句的具体执行计划，我们需要搞懂<code>EXPLAIN</code>的各个输出项都是干嘛使的，从而可以有针对性的提升我们查询语句的性能。通过使用<code>EXPLAIN</code>关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的，分析查询语句或是表结构的性能瓶颈。</p>
+</li>
+<li class="lvl-2">
+<p>通过<code>EXPLAIN</code>我们可以知道：<br>
+⚫ 表的读取顺序<br>
+⚫ 数据读取操作的操作类型<br>
+⚫ 哪些索引可以使用<br>
+⚫ 哪些索引被实际使用<br>
+⚫ 表之间的引用<br>
+⚫ 每张表有多少行被优化器查询</p>
+</li>
+<li class="lvl-2">
+<p>查看执行计划</p>
 </li>
 </ul>
+<blockquote>
+<p>执行计划的语法其实非常简单：在SQL查询的前面加上<code>EXPLAIN</code>关键字就行</p>
+</blockquote>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> actor <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type <span class="operator">|</span> <span class="keyword">table</span> <span class="operator">|</span> partitions <span class="operator">|</span> type  <span class="operator">|</span> possible_keys <span class="operator">|</span> key     <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>   <span class="operator">|</span> <span class="keyword">rows</span> <span class="operator">|</span> filtered <span class="operator">|</span> Extra <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> SIMPLE      <span class="operator">|</span> actor <span class="operator">|</span> <span class="keyword">NULL</span>       <span class="operator">|</span> const <span class="operator">|</span> <span class="keyword">PRIMARY</span>       <span class="operator">|</span> <span class="keyword">PRIMARY</span> <span class="operator">|</span> <span class="number">4</span>       <span class="operator">|</span> const <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span>   <span class="number">100.00</span> <span class="operator">|</span> <span class="keyword">NULL</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -521,18 +561,24 @@
 <blockquote>
 <p>id</p>
 </blockquote>
-<div class="note success"><p>id列的编号是 select 的序列号，有几个 select 就有几个id，并且id的顺序是按 select 出现的顺序增长的。<br>
+<div class="note success"><p>id列的编号是 select 的序列号，每个SELECT关键字都对应一个唯一的 id，有几个select就有几个id，并且id的顺序是按select出现的顺序增长的。<br>
 id列越大执行优先级越高，id相同则从上往下执行，id为NULL最后执行。</p>
 </div>
 <blockquote>
 <p>select_type</p>
 </blockquote>
-<div class="note success"><p>select_type 表示对应行是简单还是复杂的查询。<br>
+<div class="note success"><p>select_type 查询的类型，表示对应行是简单还是复杂的查询。<br>
 1）simple：简单查询。查询不包含子查询和union<br>
 2）primary：复杂查询中最外层的 select<br>
-3）subquery：包含在 select 中的子查询（不在 from 子句中）<br>
+3）subquery：包含在 select 中的子查询（不在 from 子句中），不依赖于外部查询的结果集<br>
 4）derived：包含在 from 子句中的子查询。MySQL会将结果存放在一个临时表中，也称为派生表（derived的英文含义）<br>
-5）union：在 union 中的第二个和随后的 select</p>
+5）union：在 union 中的第二个和随后的 select查询,不依赖于外部查询的结果集<br>
+6）UNION RESULT：UNION 结果集<br>
+7）DEPENDENT UNION：UNION 中的第二个或随后的 select 查询,依赖于外部查询的结果集<br>
+8）DEPENDENT SUBQUERY：子查询中的第一个 select 查询,依赖于外部查询的结果集<br>
+9）MATERIALIZED：物化子查询<br>
+10）UNCACHEABLE SUBQUERY： 结果集不能被缓存的子查询,必须重新为外层查询的每一行进行评估，出现极少。<br>
+11）UNCACHEABLE UNION：UNION 中的第二个或随后的 select 查询,属于不可缓存的子查询，出现极少。</p>
 </div>
 <blockquote>
 <p>table</p>
@@ -542,14 +588,31 @@ id列越大执行优先级越高，id相同则从上往下执行，id为NULL最�
 <blockquote>
 <p>type</p>
 </blockquote>
-<div class="note success"><p>type表示关联类型或访问类型，从最优到最差分别为：system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL，一般来说，得保证查询达到range级别，最好达到ref。<br>
-NULL表示mysql能够在优化阶段分解查询语句，在执行阶段用不着再访问表或索引。<br>
-const, system: 常量查询<br>
-eq_ref: 主键索引或唯一索引查询<br>
-ref: 相比 eq_ref，不使用唯一索引，而是使用普通索引或者唯一性索引的部分前缀<br>
-range: 范围扫描，如 in(), between ,&gt; ,&lt;, &gt;=<br>
-index: 扫描全索引，一般扫描的是某个二级索引，二级索引一般比较小，所以这种通常比ALL快一些。<br>
-ALL: 即全表扫描，扫描你的聚簇索引的所有叶子节点。</p>
+<div class="note success"><p>type表示关联类型或访问类型，从最优到最差分别为：<br>
+system &gt; const &gt; eq_ref &gt; ref &gt; fulltext &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; index &gt; ALL<br>
+出现比较多的是: system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL，一般来说，得保证查询达到range级别，最好达到ref。<br>
+NULL表示mysql能够在优化阶段分解查询语句，在执行阶段用不着再访问表或索引。</p>
+<blockquote>
+<p>类型说明</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">const, system: 常量查询</li>
+<li class="lvl-2">eq_ref: 主键索引或唯一索引查询</li>
+<li class="lvl-2">ref: 相比 eq_ref，不使用唯一索引，而是使用普通索引或者唯一性索引的部分前缀</li>
+<li class="lvl-2">range: 范围扫描，如 in(), between ,&gt; ,&lt;, &gt;=</li>
+<li class="lvl-2">index: 扫描全索引，一般扫描的是某个二级索引，二级索引一般比较小，所以这种通常比ALL快一些。</li>
+<li class="lvl-2">ALL: 即全表扫描，扫描你的聚簇索引的所有叶子节点。</li>
+</ul>
+<blockquote>
+<p>其它不常出现的也做简单说明</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">fulltext: 全文索引，不推荐使用</li>
+<li class="lvl-2">ref_or_null: 不仅想找出某个二级索引列的值等于某个常数的记录，还想把该列的值为NULL的记录也找出来，如<code>WHERE order_no= 'abc' OR order_no IS NULL;</code></li>
+<li class="lvl-2">index_merge: 一般情况下对于某个表的查询只能使用到一个索引，在某些场景下可以使用索引合并的方式来执行查询</li>
+<li class="lvl-2">unique_subquery: 是针对在一些包含IN子查询的查询语句中，如果查询优化器决定将IN子查询转换为EXISTS子查询，而且子查询可以使用到主键进行等值匹配</li>
+<li class="lvl-2">index_subquery:  与unique_subquery类似，只不过访问⼦查询中的表时使⽤的是普通的索引</li>
+</ul>
 </div>
 <blockquote>
 <p>possible_keys</p>
@@ -599,7 +662,7 @@ datetime：8字节如果字段允许为 NULL，需要1字节记录是否为 NULL
 1）Using index：使用覆盖索引，索引排序<br>
 2）Using where：使用 where 语句来处理结果，并且查询的列未被索引覆盖<br>
 3）Using index condition：查询的列不完全被索引覆盖，where条件中是一个前导列的范围<br>
-4）Using temporary：mysql需要创建一张临时表来处理查询，需要使用索引优化<br>
+4）Using temporary：mysql需要创建一张临时表来处理查询，比如去重、排序之类的，需要使用索引优化<br>
 5）Using filesort：将用外部排序而不是索引排序，数据较小时从内存排序，否则需要在磁盘完成排序，需要使用索引优化<br>
 6）Select tables optimized away：使用某些聚合函数（比如 max、min）来访问存在索引的某个字段</p>
 </div>
@@ -688,7 +751,7 @@ MySQL通过比较系统变量 max_length_for_sort_data(默认1024字节)的大�
 <p>举例，比如有一课B+Tree的总的数据量是65536，最大分支为16，则N=65536，R=16，M = log<sub>2</sub>R = log<sub>2</sub>16 = 4，H = log<sub>R</sub>N = log<sub>16</sub>65536 = 4，则 M * H = log<sub>2</sub>N = log<sub>2</sub>65536 = 16，即最多查找16次就可以找到对应的数据</p>
 </li>
 <li class="lvl-2">
-<p>注意这里仅是计算内存中查找的比较次数，而没有考虑每次加载数据页到内存的IO成本，而实际上IO成本才是制约mysql查找快慢的关键因素</p>
+<p>注意这里仅是计算内存中查找的比较次数，而没有考虑每次加载数据页到内存的IO成本，而实际上IO成本才是制约mysql查找快慢的关键因素，所以mysql每次IO都会将查询页附近的几个页一并加载到内存，以此减少IO次数</p>
 </li>
 </ul>
 </div>
@@ -803,6 +866,59 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <p>删除索引</p>
 </blockquote>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 方式<span class="number">1</span></span><br><span class="line"><span class="keyword">drop</span> index index_name <span class="keyword">on</span> actor;</span><br><span class="line"><span class="keyword">drop</span> index unique_name <span class="keyword">on</span> actor;</span><br><span class="line"><span class="keyword">drop</span> index unique_name_time <span class="keyword">on</span> actor;</span><br><span class="line"></span><br><span class="line"># 方式<span class="number">2</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">drop</span> index index_name;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">drop</span> index unique_name;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> actor <span class="keyword">drop</span> index unique_name_time;</span><br></pre></td></tr></table></figure>
+<h3 id="索引条件下推">索引条件下推</h3>
+<p>什么是索引条件下推，这里举例说明:<br>
+<code>SELECT * FROM s1 WHERE order_no &gt; 'z' AND order_no LIKE '%a';</code><br>
+其中的<code>order_no &gt; 'z'</code>可以使用到索引，但是 <code>order_no LIKE '%a'</code>却无法使用到索引</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在MySQL5.6之前的版本中，是按照下边步骤来执行这个查询的：<br>
+1、先根据 <code>order_no&gt; 'z'</code>这个条件，从二级索引 idx_order_no 中获取到对应的二级索引记录。<br>
+2、根据上一步骤得到的二级索引记录中的主键值进行回表(因为是 select *)，找到完整的用户记录再检测该记录是否符合 <code>key1 LIKE '%a'</code>这个条件，将符合条件的记录加入到最后的结果集。</p>
+</li>
+<li class="lvl-2">
+<p>MySQL5.6之后的版本开始支持索引下推，其执行步骤如下：<br>
+1、先根据 <code>order_no&gt; 'z'</code>这个条件，定位到二级索引 idx_order_no 中对应的二级索引记录。<br>
+2、对于指定的二级索引记录，先不着急回表，而是先检测一下该记录是否满足 <code>order_no LIKE '%a'</code>这个条件，如果这个条件不满足，则该二级索引记录压根儿就没必要回表。<br>
+3、对于满足 <code>order_no LIKE '%a'</code>这个条件的二级索引记录执行回表操作。</p>
+</li>
+<li class="lvl-2">
+<p>回表操作其实是一个随机 IO，比较耗时，所以上述修改可以省去很多回表操作的成本。这个改进称之为索引条件下推（英文名：ICP ，Index Condition Pushdown）。</p>
+</li>
+<li class="lvl-2">
+<p>如果在查询语句的执行过程中将要使用索引条件下推这个特性，在执行计划的 Extra 列中将会显示Using index condition</p>
+</li>
+</ul>
+<h3 id="索引合并">索引合并</h3>
+<p>过MySQL在一般情况下执行一个查询时最多只会用到单个二级索引，但存在有特殊情况下也可能在一个查询中使用到多个二级索引，MySQL中这种使用到多个索引来完成一次查询的执行方法称之为：索引合并/index merge。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>索引合并算法有如下三种：</p>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>1.Intersection合并: 将从多个二级索引中查询到的结果取交集，某些特定的情况下才可能会使用到Intersection索引合并</p>
+<ul class="lvl-4">
+<li class="lvl-6">情况一：等值匹配</li>
+<li class="lvl-6">情况二：主键列可以是范围匹配</li>
+</ul>
+</li>
+<li class="lvl-4">
+<p>2.Union合并: 使用不同索引的搜索条件之间使用OR连接起来的情况，某些特定的情况下才可能会使用到Union索引合并</p>
+<ul class="lvl-4">
+<li class="lvl-6">情况一：等值匹配</li>
+<li class="lvl-6">情况二：主键列可以是范围匹配</li>
+<li class="lvl-6">情况三：使用Intersection索引合并的搜索条件</li>
+</ul>
+<blockquote>
+<p>就是搜索条件的某些部分使用Intersection索引合并的方式得到的主键集合和其他方式得到的主键集合取交集，比方说这个查询： SELECT * FROM order_exp WHERE insert_time = ‘a’ AND order_status = ‘b’ AND expire_time = ‘c’ OR (order_no = ‘a’ AND expire_time = ‘b’);</p>
+</blockquote>
+</li>
+<li class="lvl-4">
+<p>3.Sort-Union合并: 先按照二级索引记录的主键值进行排序，之后按照Union索引合并方式执行的方式称之为Sort-Union索引合并，很显然，这种Sort-Union索引合并比单纯的Union索引合并多了一步对二级索引记录的主键值排序的过程</p>
+</li>
+</ul>
+</li>
+</ul>
 <h2 id="ONLY-FULL-GROUP-BY">ONLY_FULL_GROUP_BY</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -839,8 +955,17 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="keyword">USER</span>();</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">USER</span>()         <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+</span></span><br><span class="line"><span class="operator">|</span> root<span class="variable">@localhost</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+</span></span><br></pre></td></tr></table></figure>
-<h2 id="客户端连接状态">客户端连接状态</h2>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># 查看</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> processlist;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span> Id  <span class="operator">|</span> <span class="keyword">User</span>            <span class="operator">|</span> Host               <span class="operator">|</span> db       <span class="operator">|</span> Command <span class="operator">|</span> <span class="type">Time</span>   <span class="operator">|</span> State                  <span class="operator">|</span> Info             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">5</span> <span class="operator">|</span> event_scheduler <span class="operator">|</span> localhost          <span class="operator">|</span> <span class="keyword">NULL</span>     <span class="operator">|</span> Daemon  <span class="operator">|</span> <span class="number">628889</span> <span class="operator">|</span> Waiting <span class="keyword">on</span> <span class="keyword">empty</span> queue <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">438</span> <span class="operator">|</span> root            <span class="operator">|</span> localhost:<span class="number">56114</span>    <span class="operator">|</span> mysql    <span class="operator">|</span> Query   <span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span> init                   <span class="operator">|</span> <span class="keyword">show</span> processlist <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">439</span> <span class="operator">|</span> root            <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span>:<span class="number">53840</span> <span class="operator">|</span> novel_db <span class="operator">|</span> Sleep   <span class="operator">|</span>      <span class="number">5</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">440</span> <span class="operator">|</span> root            <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span>:<span class="number">53849</span> <span class="operator">|</span> <span class="keyword">NULL</span>     <span class="operator">|</span> Sleep   <span class="operator">|</span>      <span class="number">5</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"># 或者，两者等价</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> information_schema.processlist;</span><br><span class="line"></span><br><span class="line"># 查看每个客户端连接数</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> id,client_ip,<span class="built_in">count</span>(client_ip) <span class="keyword">as</span> client_num <span class="keyword">from</span> (<span class="keyword">select</span> substring_index(host,<span class="string">&#x27;:&#x27;</span> ,<span class="number">1</span>) <span class="keyword">as</span> client_ip,id <span class="keyword">from</span> information_schema.processlist ) <span class="keyword">as</span> connect_info <span class="keyword">group</span> <span class="keyword">by</span> client_ip <span class="keyword">order</span> <span class="keyword">by</span> client_num <span class="keyword">desc</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> id  <span class="operator">|</span> client_ip    <span class="operator">|</span> client_num <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">440</span> <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span> <span class="operator">|</span>          <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">5</span> <span class="operator">|</span> localhost    <span class="operator">|</span>          <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"></span><br><span class="line"># 找出所有执行时间超过 <span class="number">5</span> 分钟的线程，拼凑出 kill 语句，方便后面查杀</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> concat(<span class="string">&#x27;kill &#x27;</span>, id, <span class="string">&#x27;;&#x27;</span>) <span class="keyword">from</span> information_schema.processlist <span class="keyword">where</span> Command <span class="operator">!=</span> <span class="string">&#x27;Sleep&#x27;</span> <span class="keyword">and</span> <span class="type">Time</span> <span class="operator">&gt;</span> <span class="number">300</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">Time</span> <span class="keyword">desc</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> concat(<span class="string">&#x27;kill &#x27;</span>, id, <span class="string">&#x27;;&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> kill <span class="number">5</span>;                  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"></span><br><span class="line"># 关闭连接，注意kill只能关闭当前正在执行DML的操作，DDL不能关闭</span><br><span class="line">mysql<span class="operator">&gt;</span> kill <span class="number">440</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="查看线程状态">查看线程状态</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># 会显示用户，客户端ip，访问的数据库，执行的命令及其状态等信息</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> processlist;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span> Id  <span class="operator">|</span> <span class="keyword">User</span>            <span class="operator">|</span> Host               <span class="operator">|</span> db       <span class="operator">|</span> Command <span class="operator">|</span> <span class="type">Time</span>   <span class="operator">|</span> State                  <span class="operator">|</span> Info             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">5</span> <span class="operator">|</span> event_scheduler <span class="operator">|</span> localhost          <span class="operator">|</span> <span class="keyword">NULL</span>     <span class="operator">|</span> Daemon  <span class="operator">|</span> <span class="number">628889</span> <span class="operator">|</span> Waiting <span class="keyword">on</span> <span class="keyword">empty</span> queue <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">438</span> <span class="operator">|</span> root            <span class="operator">|</span> localhost:<span class="number">56114</span>    <span class="operator">|</span> mysql    <span class="operator">|</span> Query   <span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span> init                   <span class="operator">|</span> <span class="keyword">show</span> processlist <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">439</span> <span class="operator">|</span> root            <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span>:<span class="number">53840</span> <span class="operator">|</span> novel_db <span class="operator">|</span> Sleep   <span class="operator">|</span>      <span class="number">5</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">440</span> <span class="operator">|</span> root            <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span>:<span class="number">53849</span> <span class="operator">|</span> <span class="keyword">NULL</span>     <span class="operator">|</span> Sleep   <span class="operator">|</span>      <span class="number">5</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"># 或者，两者等价</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> information_schema.processlist;</span><br><span class="line"></span><br><span class="line"># 查看每个客户端连接数</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> id,client_ip,<span class="built_in">count</span>(client_ip) <span class="keyword">as</span> client_num <span class="keyword">from</span> (<span class="keyword">select</span> substring_index(host,<span class="string">&#x27;:&#x27;</span> ,<span class="number">1</span>) <span class="keyword">as</span> client_ip,id <span class="keyword">from</span> information_schema.processlist ) <span class="keyword">as</span> connect_info <span class="keyword">group</span> <span class="keyword">by</span> client_ip <span class="keyword">order</span> <span class="keyword">by</span> client_num <span class="keyword">desc</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> id  <span class="operator">|</span> client_ip    <span class="operator">|</span> client_num <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">440</span> <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span> <span class="operator">|</span>          <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">5</span> <span class="operator">|</span> localhost    <span class="operator">|</span>          <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"></span><br><span class="line"># 找出所有执行时间超过 <span class="number">5</span> 分钟的线程，拼凑出 kill 语句，方便后面查杀</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> concat(<span class="string">&#x27;kill &#x27;</span>, id, <span class="string">&#x27;;&#x27;</span>) <span class="keyword">from</span> information_schema.processlist <span class="keyword">where</span> Command <span class="operator">!=</span> <span class="string">&#x27;Sleep&#x27;</span> <span class="keyword">and</span> <span class="type">Time</span> <span class="operator">&gt;</span> <span class="number">300</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">Time</span> <span class="keyword">desc</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> concat(<span class="string">&#x27;kill &#x27;</span>, id, <span class="string">&#x27;;&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> kill <span class="number">5</span>;                  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"></span><br><span class="line"># 关闭连接，注意kill只能关闭当前正在执行DML的操作，DDL不能关闭</span><br><span class="line">mysql<span class="operator">&gt;</span> kill <span class="number">440</span>;</span><br></pre></td></tr></table></figure>
+<div class="note success"><p><strong>State说明</strong><br>
+通过<code>show processlist;</code>查看线程状态非常有用,这可以让我们很快地了解当前MySQL在进行的线程,包括线程的状态、是否锁表等，可以实时地查看SQL的执行情况，同时对一些锁表操作进行优化。在一个繁忙的服务器上，可能会看到大量的不正常的状态，例如statistics正占用大量的时间。这通常表示，某个地方有异常了。线程常见的状态有很多，比如:</p>
+<ul class="lvl-0">
+<li class="lvl-2">statistics: 服务器正在计算统计信息以研究一个查询执行计划。如果线程长时间处于此状态，则服 务器可能是磁盘绑定执行其他工作。</li>
+<li class="lvl-2">Creating tmp table: 该线程正在内存或磁盘上创建临时表。如果表在内存中创建但稍后转换为磁盘表，则该操作期间的状态将为 Copying to tmp table on disk</li>
+<li class="lvl-2">Sending data: 线程正在读取和处理SELECT语句的行，并将数据发送到客户端。由于在此状态期间发生的操作往往会执行大量磁盘访问（读取），因此它通常是给定查询生命周期中运行时间最长的状态。</li>
+<li class="lvl-2">其它状态参考：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/general-thread-states.html">https://dev.mysql.com/doc/refman/8.0/en/general-thread-states.html</a></li>
+</ul>
+</div>
 <h2 id="常用操作">常用操作</h2>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> databases; 显示所有数据库</span><br><span class="line">mysql<span class="operator">&gt;</span> use dbname; 打开dbname数据库</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> tables; 显示数据库dbname中所有的表；</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">describe</span> tablename; 显示表mysql数据库中tablename表的列信息，也可以简写为 <span class="keyword">desc</span> tablename;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">desc</span> tablename; 同上</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> version(); 查看数据库版本号</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> database(); 查看当前选中的数据库</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> now(); 查看数据库当前时间</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="keyword">user</span>(); 查看当前登录用户</span><br></pre></td></tr></table></figure>
 <h2 id="表信息相关">表信息相关</h2>
@@ -902,56 +1027,246 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <h2 id="mysql中的数据类型对应java实体数据类型">mysql中的数据类型对应java实体数据类型</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>数值类型<br>
-|类型 |java类型 |大小 |范围（有符号） |范围（无符号）| 用途 |	备注|<br>
-|:—|:—|:—|:—|:—|:—|:—|<br>
-|TINYINT|Boolean/int/Integer| 1 字节| (-128, 127) |(0, 255) |小整数值||<br>
-|SMALLINT| int/Integer|2 字节| (-32768, 32767) |(0, 65535) |大整数值||<br>
-|MEDIUMINT|int/Integer| 3 字节 |(-8388608, 8388607)| (0, 16777215)| 大整数值||<br>
-|INT或 INTEGER| int/Integer/Long|4 字节 |(-2147483648, 2147483647)| (0, 4294967295) |大整数值||<br>
-|BIGINT|int/Integer/Long/BigInteger |8 字节| (-9233372036854775808, 9223372036854775807)| (0, 18446744073709551615)| 极大整数值 |BigInteger最大值没有限制，内部是int[]数组，缺点是速度慢|<br>
-|FLOAT|float/Float |4 字节| (-3.402823466E+38, -1.175494351E-38)，0，(1.175494351E-38，3.402823466351E+38)| 0, (1.175494351E-38, 3.402823466E+38) |单精度 浮点数值||<br>
-|DOUBLE |double/Double|8 字节| (-1.7976931348623157E+308, -2.2250738585072014E-308), 0, (2.2250738585072014E-308, 1.7976931348623157E+308) |0, (2.2250738585072014E-308, 1.7976931348623157E+308)|双精度 浮点数值||<br>
-|DECIMAL|BigDecimal|对DECIMAL(M,D)如果M&gt;D,为M+2否则为D+2|依赖于M和D的值|依赖于M和D的值|高精度小数值|用于货币计算等高精度场景|</p>
+<p>数值类型</p>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">java类型</th>
+<th style="text-align:left">大小</th>
+<th style="text-align:left">范围（有符号）</th>
+<th style="text-align:left">范围（无符号）</th>
+<th style="text-align:left">用途</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">TINYINT</td>
+<td style="text-align:left">Boolean/int/Integer</td>
+<td style="text-align:left">1 字节</td>
+<td style="text-align:left">(-128, 127)</td>
+<td style="text-align:left">(0, 255)</td>
+<td style="text-align:left">小整数值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">SMALLINT</td>
+<td style="text-align:left">int/Integer</td>
+<td style="text-align:left">2 字节</td>
+<td style="text-align:left">(-32768, 32767)</td>
+<td style="text-align:left">(0, 65535)</td>
+<td style="text-align:left">大整数值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">MEDIUMINT</td>
+<td style="text-align:left">int/Integer</td>
+<td style="text-align:left">3 字节</td>
+<td style="text-align:left">(-8388608, 8388607)</td>
+<td style="text-align:left">(0, 16777215)</td>
+<td style="text-align:left">大整数值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">INT或 INTEGER</td>
+<td style="text-align:left">int/Integer/Long</td>
+<td style="text-align:left">4 字节</td>
+<td style="text-align:left">(-2147483648, 2147483647)</td>
+<td style="text-align:left">(0, 4294967295)</td>
+<td style="text-align:left">大整数值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">BIGINT</td>
+<td style="text-align:left">int/Integer/Long/BigInteger</td>
+<td style="text-align:left">8 字节</td>
+<td style="text-align:left">(-9233372036854775808, 9223372036854775807)</td>
+<td style="text-align:left">(0, 18446744073709551615)</td>
+<td style="text-align:left">极大整数值</td>
+<td style="text-align:left">BigInteger最大值没有限制，内部是int[]数组，缺点是速度慢</td>
+</tr>
+<tr>
+<td style="text-align:left">FLOAT</td>
+<td style="text-align:left">float/Float</td>
+<td style="text-align:left">4 字节</td>
+<td style="text-align:left">(-3.402823466E+38, -1.175494351E-38)，0，(1.175494351E-38，3.402823466351E+38)</td>
+<td style="text-align:left">0, (1.175494351E-38, 3.402823466E+38)</td>
+<td style="text-align:left">单精度 浮点数值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">DOUBLE</td>
+<td style="text-align:left">double/Double</td>
+<td style="text-align:left">8 字节</td>
+<td style="text-align:left">(-1.7976931348623157E+308, -2.2250738585072014E-308), 0, (2.2250738585072014E-308, 1.7976931348623157E+308)</td>
+<td style="text-align:left">0, (2.2250738585072014E-308, 1.7976931348623157E+308)</td>
+<td style="text-align:left">双精度 浮点数值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">DECIMAL</td>
+<td style="text-align:left">BigDecimal</td>
+<td style="text-align:left">对DECIMAL(M,D)如果M&gt;D,为M+2否则为D+2</td>
+<td style="text-align:left">依赖于M和D的值</td>
+<td style="text-align:left">依赖于M和D的值</td>
+<td style="text-align:left">高精度小数值</td>
+<td style="text-align:left">用于货币计算等高精度场景</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>优化建议</p>
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">如果整形数据没有负数，如ID号，建议指定为UNSIGNED无符号类型，容量可以扩大一倍。</span><br><span class="line">建议使用TINYINT代替ENUM、BITENUM、SET。</span><br><span class="line">避免使用整数的显示宽度，也就是说，不要用INT(10)类似的方法指定字段显示宽度，直接用INT。</span><br><span class="line">DECIMAL最适合保存准确度要求高，而且用于计算的数据，比如价格。但是在使用DECIMAL类型的时候，注意长度设置。</span><br><span class="line">建议使用整形类型来运算和存储实数，方法是，实数乘以相应的倍数后再操作。</span><br><span class="line">整数通常是最佳的数据类型，因为它速度快，并且能使用AUTO_INCREMENT。</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>日期和时间<br>
-|类型 |java类型 |大小 |范围（有符号） |范围（无符号）| 用途 |	备注|<br>
-|:—|:—|:—|:—|:—|:—|:—|<br>
-|DATE|Date/LocalDate| 3 |1000-01-01 到 9999-12-31 |YYYY-MM-DD |日期值 ||<br>
-|TIME|Date/LocalDateTime| 3 |‘-838:59:59’ 到 ‘838:59:59’ |HH:MM:SS| 时间值或持续时间 ||<br>
-|YEAR|Date |1| 1901 到 2155| YYYY |年份值||<br>
-|DATETIME|Date/LocalDateTime| 8 |1000-01-01 00:00:00 到 9999-12-31 23:59:59| YYYY-MM-DD HH:MM:SS |混合日期和时间值 ||<br>
-|TIMESTAMP|Date/LocalDateTime |4| 1970-01-01 00:00:00 到 2038-01-19 03:14:07| YYYYMMDDhhmmss |混合日期和时间值，时间戳||</p>
+<p>日期和时间</p>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">java类型</th>
+<th style="text-align:left">大小</th>
+<th style="text-align:left">范围（有符号）</th>
+<th style="text-align:left">范围（无符号）</th>
+<th style="text-align:left">用途</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">DATE</td>
+<td style="text-align:left">Date/LocalDate</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">1000-01-01 到 9999-12-31</td>
+<td style="text-align:left">YYYY-MM-DD</td>
+<td style="text-align:left">日期值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">TIME</td>
+<td style="text-align:left">Date/LocalDateTime</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">‘-838:59:59’ 到 ‘838:59:59’</td>
+<td style="text-align:left">HH:MM:SS</td>
+<td style="text-align:left">时间值或持续时间</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">YEAR</td>
+<td style="text-align:left">Date</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1901 到 2155</td>
+<td style="text-align:left">YYYY</td>
+<td style="text-align:left">年份值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">DATETIME</td>
+<td style="text-align:left">Date/LocalDateTime</td>
+<td style="text-align:left">8</td>
+<td style="text-align:left">1000-01-01 00:00:00 到 9999-12-31 23:59:59</td>
+<td style="text-align:left">YYYY-MM-DD HH:MM:SS</td>
+<td style="text-align:left">混合日期和时间值</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">TIMESTAMP</td>
+<td style="text-align:left">Date/LocalDateTime</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">1970-01-01 00:00:00 到 2038-01-19 03:14:07</td>
+<td style="text-align:left">YYYYMMDDhhmmss</td>
+<td style="text-align:left">混合日期和时间值，时间戳</td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>优化建议</p>
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TIME 类型的取值范围为 -838：59：59～838：59：59，小时部分如此大的原因是TIME类型不仅可以用于表示一天的时间，还可能是某个事件过去的时间或两个事件之间的时间间隔（可大于 24 小时，或者甚至为负）。</span><br><span class="line">MySQL能存储的最小时间粒度为秒。</span><br><span class="line">建议用DATE数据类型来保存日期。MySQL中默认的日期格式是yyyy-mm-dd。</span><br><span class="line">用MySQL的内建类型DATE、TIME、DATETIME来存储时间，而不是使用字符串。</span><br><span class="line">当数据格式为TIMESTAMP和DATETIME时，可以用CURRENT_TIMESTAMP作为默认（MySQL5.6以后）， MySQL会自动返回记录插入的确切时间。</span><br><span class="line">TIMESTAMP是UTC时间戳，与时区相关。</span><br><span class="line">DATETIME的存储格式是一个YYYYMMDD HH:MM:SS的整数，与时区无关，你存了什么，读出来就是什么。</span><br><span class="line">除非有特殊需求，一般的公司建议使用TIMESTAMP，它比DATETIME更节约空间，但是像阿里这样的公司一般 会用DATETIME，因为不用考虑TIMESTAMP将来的时间上限问题。</span><br><span class="line">有时人们把Unix的时间戳保存为整数值，但是这通常没有任何好处，这种格式处理起来不太方便，我们并不推荐 它。</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>字符串–String<br>
-|类型|java类型| 大小| 用途|<br>
-|:—|:—|:—|:—|<br>
-|CHAR|String |0-255字节 |定长字符串，char(n)当插入的字符串实际长度不足n时， 插入空格进行补充保存。在进行检索时，尾部的空格会被 去掉。|<br>
-|VARCHAR|String| 0-65535字节 |变长字符串，varchar(n)中的n代表最大列长度，插入的字符串实际长度不足n时不会补充空格<br>
-TINYBLOB|byte[]| 0-255字节| 不超过 255 个字符的二进制字符串<br>
-TINYTEXT|String| 0-255字节 |短文本字符串<br>
-BLOB|byte[] |0-65535字节| 二进制形式的长文本数据<br>
-TEXT |String|0-65535字节| 长文本数据<br>
-MEDIUMBLOB|byte[]| 0-16777215字节 |二进制形式的中等长度文本数据<br>
-MEDIUMTEXT|String |0-16777215字节| 中等长度文本数据<br>
-LONGBLOB|byte[]| 0-4294967295字节| 二进制形式的极大文本数据<br>
-LONGTEXT|String |0-4294967295字节 |极大文本数据</p>
+<p>字符串–String</p>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">java类型</th>
+<th style="text-align:left">大小</th>
+<th style="text-align:left">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">CHAR</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">0-255字节</td>
+<td style="text-align:left">定长字符串，char(n)当插入的字符串实际长度不足n时， 插入空格进行补充保存。在进行检索时，尾部的空格会被 去掉。</td>
+</tr>
+<tr>
+<td style="text-align:left">VARCHAR</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">0-65535字节</td>
+<td style="text-align:left">变长字符串，varchar(n)中的n代表最大列长度，插入的字符串实际长度不足n时不会补充空格</td>
+</tr>
+<tr>
+<td style="text-align:left">TINYBLOB</td>
+<td style="text-align:left">byte[]</td>
+<td style="text-align:left">0-255字节</td>
+<td style="text-align:left">不超过 255 个字符的二进制字符串</td>
+</tr>
+<tr>
+<td style="text-align:left">TINYTEXT</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">0-255字节</td>
+<td style="text-align:left">短文本字符串</td>
+</tr>
+<tr>
+<td style="text-align:left">BLOB</td>
+<td style="text-align:left">byte[]</td>
+<td style="text-align:left">0-65535字节</td>
+<td style="text-align:left">二进制形式的长文本数据</td>
+</tr>
+<tr>
+<td style="text-align:left">TEXT</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">0-65535字节</td>
+<td style="text-align:left">长文本数据</td>
+</tr>
+<tr>
+<td style="text-align:left">MEDIUMBLOB</td>
+<td style="text-align:left">byte[]</td>
+<td style="text-align:left">0-16777215字节</td>
+<td style="text-align:left">二进制形式的中等长度文本数据</td>
+</tr>
+<tr>
+<td style="text-align:left">MEDIUMTEXT</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">0-16777215字节</td>
+<td style="text-align:left">中等长度文本数据</td>
+</tr>
+<tr>
+<td style="text-align:left">LONGBLOB</td>
+<td style="text-align:left">byte[]</td>
+<td style="text-align:left">0-4294967295字节</td>
+<td style="text-align:left">二进制形式的极大文本数据</td>
+</tr>
+<tr>
+<td style="text-align:left">LONGTEXT</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">0-4294967295字节</td>
+<td style="text-align:left">极大文本数据</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>优化建议</p>
 </blockquote>
@@ -1008,14 +1323,46 @@ LONGTEXT|String |0-4294967295字节 |极大文本数据</p>
 <h2 id="事务隔离级别">事务隔离级别</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>脏读</code>、<code>不可重复读</code>和<code>幻读</code>,其实都是数据库读一致性问题,必须由数据库提供一定的事务隔离机制来解决。<br>
-|隔离级别|脏读|不可重复读|幻读|<br>
-|:—|:—|:—|:—|<br>
-|读未提交(READ-UNCOMMITTED)|可能|可能|可能|<br>
-|读已提交(READ-COMMITTED)|不可能|可能|可能|<br>
-|可重复读(REPEATABLE-READ)|不可能|不可能|可能|<br>
-|可串行化(SERIALIZABLE)|不可能|不可能|不可能|</p>
+<p><code>脏读</code>、<code>不可重复读</code>和<code>幻读</code>,其实都是数据库读一致性问题,必须由数据库提供一定的事务隔离机制来解决。</p>
 </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">隔离级别</th>
+<th style="text-align:left">脏读</th>
+<th style="text-align:left">不可重复读</th>
+<th style="text-align:left">幻读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">读未提交(READ-UNCOMMITTED)</td>
+<td style="text-align:left">可能</td>
+<td style="text-align:left">可能</td>
+<td style="text-align:left">可能</td>
+</tr>
+<tr>
+<td style="text-align:left">读已提交(READ-COMMITTED)</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">可能</td>
+<td style="text-align:left">可能</td>
+</tr>
+<tr>
+<td style="text-align:left">可重复读(REPEATABLE-READ)</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">可能</td>
+</tr>
+<tr>
+<td style="text-align:left">可串行化(SERIALIZABLE)</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">不可能</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
 <li class="lvl-2">
 <p>数据库的事务隔离越严格,并发副作用越小,但付出的代价也就越大,因为事务隔离实质上就是使事务在一定程度上“串行化”进行,这显然与“并发”是矛盾的。</p>
 </li>
@@ -1357,14 +1704,14 @@ b. 若 row 的 trx_id 不在read-view视图数组中，表示这个版本是已�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">713k</span>
+    <span title="站点总字数">716k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">10:48</span>
+    <span title="站点阅读时长">10:51</span>
   </span>
 </div>
 <div class="busuanzi-count">
