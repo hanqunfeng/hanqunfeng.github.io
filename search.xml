@@ -493,15 +493,54 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 方式<span class="number">1</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">full</span> columns <span class="keyword">from</span> test_db.tbl_test_info;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+--------------+-------------+------+-----+-------------------+-----------------------------------------------+---------------------------------+----------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Field               <span class="operator">|</span> Type         <span class="operator">|</span> <span class="keyword">Collation</span>   <span class="operator">|</span> <span class="keyword">Null</span> <span class="operator">|</span> Key <span class="operator">|</span> <span class="keyword">Default</span>           <span class="operator">|</span> Extra                                         <span class="operator">|</span> Privileges                      <span class="operator">|</span> Comment                                                                    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+--------------+-------------+------+-----+-------------------+-----------------------------------------------+---------------------------------+----------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> id                  <span class="operator">|</span> <span class="type">int</span>          <span class="operator">|</span> <span class="keyword">NULL</span>        <span class="operator">|</span> <span class="keyword">NO</span>   <span class="operator">|</span> PRI <span class="operator">|</span> <span class="keyword">NULL</span>              <span class="operator">|</span> auto_increment                                <span class="operator">|</span> <span class="keyword">select</span>,<span class="keyword">insert</span>,<span class="keyword">update</span>,<span class="keyword">references</span> <span class="operator">|</span> 主键                                                                       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> create_time         <span class="operator">|</span> <span class="type">timestamp</span>    <span class="operator">|</span> <span class="keyword">NULL</span>        <span class="operator">|</span> YES  <span class="operator">|</span>     <span class="operator">|</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="operator">|</span> DEFAULT_GENERATED                             <span class="operator">|</span> <span class="keyword">select</span>,<span class="keyword">insert</span>,<span class="keyword">update</span>,<span class="keyword">references</span> <span class="operator">|</span> 创建时间                                                                   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> update_time         <span class="operator">|</span> <span class="type">timestamp</span>    <span class="operator">|</span> <span class="keyword">NULL</span>        <span class="operator">|</span> YES  <span class="operator">|</span>     <span class="operator">|</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="operator">|</span> DEFAULT_GENERATED <span class="keyword">on</span> <span class="keyword">update</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="operator">|</span> <span class="keyword">select</span>,<span class="keyword">insert</span>,<span class="keyword">update</span>,<span class="keyword">references</span> <span class="operator">|</span> 更新时间                                                                   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+--------------+-------------+------+-----+-------------------+-----------------------------------------------+---------------------------------+----------------------------------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"># 方式<span class="number">2</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> COLUMN_NAME 字段名,column_comment 字段说明,column_type 字段类型,column_key 约束 <span class="keyword">from</span> information_schema.columns  <span class="keyword">where</span> table_schema<span class="operator">=</span><span class="string">&#x27;test_db&#x27;</span> <span class="keyword">and</span> table_name<span class="operator">=</span><span class="string">&#x27;tbl_test_info&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+----------------------------------------------------------------------------+--------------+--------+</span></span><br><span class="line"><span class="operator">|</span> 字段名              <span class="operator">|</span> 字段说明                                                                   <span class="operator">|</span> 字段类型     <span class="operator">|</span> 约束   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+----------------------------------------------------------------------------+--------------+--------+</span></span><br><span class="line"><span class="operator">|</span> id                  <span class="operator">|</span> 主键                                                                       <span class="operator">|</span> <span class="type">int</span>          <span class="operator">|</span> PRI    <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> create_time         <span class="operator">|</span> 创建时间                                                                   <span class="operator">|</span> <span class="type">timestamp</span>    <span class="operator">|</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> update_time         <span class="operator">|</span> 更新时间                                                                   <span class="operator">|</span> <span class="type">timestamp</span>    <span class="operator">|</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+----------------------------------------------------------------------------+--------------+--------+</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="系统变量，可以设置在配置文件中，也可以通过set命令进行设置">系统变量，可以设置在配置文件中，也可以通过set命令进行设置</h2>
+<h2 id="系统变量">系统变量</h2>
+<p>可以设置在配置文件中，也可以通过set命令进行设置</p>
 <div class="note success"><p>mysql配置文件中大部分变量都可以通过set命令设置，注意重启mysql后会失效，要及时更新配置文件</p>
 </div>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>设置全局服务器关闭非交互连接之前等待活动的秒数</p>
+<p>设置变量示例</p>
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 查看全部全局变量</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables\G</span><br><span class="line"></span><br><span class="line"># 查看指定变量，如wait_timeout，也可以使用<span class="operator">%</span>进行模糊匹配</span><br><span class="line"># 默认<span class="number">8</span>小时，客户端超过这个时间没有向服务端发送命令，服务器端会自动断开连接</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> &quot;wait_timeout&quot;;</span><br><span class="line"># 定值查询可以使用如下<span class="keyword">sql</span>形式</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> @<span class="variable">@wait</span>_timeout;</span><br><span class="line"># 模糊匹配</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%log_bin%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 设置全局变量，只要mysql不重启就会一直有效</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> <span class="keyword">global</span> wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br><span class="line"></span><br><span class="line"># 当前会话有效</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> session wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br><span class="line"># 当前会话可简写为如下形式</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>MySQL 8.0 版本支持在线修改全局参数持久化，通过加上 <code>PERSIST</code> 关键字，可以将调整持久化到新的配置文件中，再次重启 db 还可以应用到最新的参数。</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist max_connections<span class="operator">=</span><span class="number">300</span>;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p>这种方式并不会修改mysql的配置文件，而是在datadir路径下创建一个<code>mysqld-auto.cnf</code>文件，在数据库启动时，会首先读取它配置文件，最后才读取mysqld-auto.cnf文件。不要手工修改这个文件。</p>
+</li>
+</ul>
+  <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2, <span class="string">&quot;mysql_dynamic_parse_early_variables&quot;</span>: &#123;<span class="string">&quot;max_connections&quot;</span>: &#123;<span class="string">&quot;Value&quot;</span>: <span class="string">&quot;300&quot;</span>, <span class="string">&quot;Metadata&quot;</span>: &#123;<span class="string">&quot;Host&quot;</span>: <span class="string">&quot;localhost&quot;</span>, <span class="string">&quot;User&quot;</span>: <span class="string">&quot;root&quot;</span>, <span class="string">&quot;Timestamp&quot;</span>: 1665567597776824&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p>可手动删除mysqld-auto.cnf文件或将<code>persisted_globals_load</code>变量设置为off来避免该文件的加载。</p>
+</li>
+</ul>
+  <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;persisted_globals_load&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name          <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> persisted_globals_load <span class="operator">|</span> <span class="keyword">ON</span>    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p>持久化为默认值: 全局变量持久化为默认值。注意，是默认值，而不是修改前的值</p>
+</li>
+</ul>
+  <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist max_connections<span class="operator">=</span><span class="keyword">default</span>;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p>清空持久化变量</p>
+</li>
+</ul>
+  <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> reset persist;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p>修改只读变量，对于read only的参数，修改参数后需要重启才能生效</p>
+</li>
+</ul>
+  <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">ERROR <span class="number">1238</span> (HY000): Variable <span class="string">&#x27;innodb_log_file_size&#x27;</span> <span class="keyword">is</span> a read <span class="keyword">only</span> variable</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist_only innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">ERROR <span class="number">3630</span> (<span class="number">42000</span>): Access denied; you need SYSTEM_VARIABLES_ADMIN <span class="keyword">and</span> PERSIST_RO_VARIABLES_ADMIN privileges <span class="keyword">for</span> this operation</span><br><span class="line"># 先授权</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">GRANT</span> SYSTEM_VARIABLES_ADMIN,PERSIST_RO_VARIABLES_ADMIN <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist_only innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_log_file_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name        <span class="operator">|</span> <span class="keyword">Value</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> innodb_log_file_size <span class="operator">|</span> <span class="number">268435456</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2, <span class="string">&quot;mysql_static_variables&quot;</span>: &#123;<span class="string">&quot;innodb_log_file_size&quot;</span>: &#123;<span class="string">&quot;Value&quot;</span>: <span class="string">&quot;2073741824&quot;</span>, <span class="string">&quot;Metadata&quot;</span>: &#123;<span class="string">&quot;Host&quot;</span>: <span class="string">&quot;localhost&quot;</span>, <span class="string">&quot;User&quot;</span>: <span class="string">&quot;root&quot;</span>, <span class="string">&quot;Timestamp&quot;</span>: 1665568764002942&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="binlog相关">binlog相关</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -986,11 +1025,82 @@ b. 若 row 的 trx_id 不在read-view视图数组中，表示这个版本是已�
 <h2 id="InnoDB-Buffer-Pool">InnoDB Buffer Pool</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
+<p>InnoDB为了缓存磁盘中的页，在MySQL服务器启动的时候就向操作系统申请了一片连续的内存，这片内存叫做Buffer Pool（中文名是缓冲池）,默认情况下Buffer Pool只有128M大小。</p>
+</li>
+<li class="lvl-2">
 <p><code>innodb_buffer_pool_size</code>规定了系统将多少内存用作InnoDB的索引缓存</p>
 </li>
 </ul>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 查看buffer pool设置大小，推荐设置为内存的<span class="number">60</span><span class="operator">%</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_buffer_pool_size&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 查看buffer pool设置大小，推荐设置为内存的<span class="number">60</span><span class="operator">%</span>，最大不要超过<span class="number">75</span><span class="operator">%</span>，比如这里设置了<span class="number">1</span>G，单位是字节</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_buffer_pool_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------+------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name           <span class="operator">|</span> <span class="keyword">Value</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------+------------+</span></span><br><span class="line"><span class="operator">|</span> innodb_buffer_pool_size <span class="operator">|</span> <span class="number">1073741824</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------+------------+</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
+<li class="lvl-2">
+<p>Buffer Pool中默认的缓存页大小和在磁盘上默认的页大小是一样的，都是16KB。</p>
+</li>
+<li class="lvl-2">
+<p>为了更好的管理这些在Buffer Pool中的缓存页，InnoDB为每一个缓存页都创建了一些所谓的控制信息，这些控制信息包括该页所属的表空间编号、页号、缓存页在Buffer Pool中的地址、链表节点信息、一些锁信息以及LSN信息，当然还有一些别的控制信息。</p>
+</li>
+<li class="lvl-2">
+<p>每个缓存页对应的控制信息占用的内存大小是相同的，我们称为控制块。控制块和缓存页是一一对应的，它们都被存放到 Buffer Pool 中，Buffer Pool的初始化过程，就是把申请到的Buffer Pool的内存空间划分成若干对控制块和缓存页的过程。其中控制块被存放到 Buffer Pool 的前边，缓存页被存放到 Buffer Pool 后边<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/buffer_pool.png" alt="" width="600" height="100"></p>
+</li>
+<li class="lvl-2">
+<p><code>free</code>链表：与空闲的缓存页一一对应的控制块会组成一个<code>free</code>链表，用于表示哪些缓冲页可用，每当需要从磁盘中加载一个页到Buffer Pool中时，就从free链表中取一个空闲的缓存页，并且把该缓存页对应的控制块的信息填上（就是该页所在的表空间、页号之类的信息），然后把该缓存页对应的free链表节点从链表中移除，表示该缓存页已经被使用了。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/free.png" alt="" width="600" height="270"></p>
+</li>
+</ul>
+<div class="note success"><ul class="lvl-0">
+<li class="lvl-2">
+<p>缓存页的哈希处理</p>
+<ul class="lvl-2">
+<li class="lvl-4">当我们需要访问某个页中的数据时，就会把该页从磁盘加载到Buffer Pool中，如果该页已经在Buffer Pool中的话直接使用就可以了。</li>
+<li class="lvl-4">那么问题也就来了，我们怎么知道该页在不在Buffer Pool中呢？难不成需要依次遍历Buffer Pool中各个缓存页么？</li>
+<li class="lvl-4">可以用<code>表空间号 + 页号</code>作为key，<code>缓存页</code>作为value创建一个哈希表，在需要访问某个页的数据时，先从哈希表中根据表<code>空间号 + 页号</code>看看有没有对应的缓存页，如果有，直接使用该缓存页就好，如果没有，那就从free链表中选一个空闲的缓存页，然后把 磁盘中对应的页加载到该缓存页的位置。</li>
+</ul>
+</li>
+</ul>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>flush</code>链表：因为频繁的往磁盘中写数据会严重的影响程序的性能，所以并不是修改了某个页面的数据就立刻刷新到磁盘上，凡是修改过的缓存页对应的控制块都会作为一个节点加入到一个链表中，因为这个链表节点对应的缓存页都是需要在未来某个时间被刷新到磁盘上的，所以也叫flush链表。链表的构造和free链表差不多。</p>
+</li>
+<li class="lvl-2">
+<p><code>LRU</code>链表：Buffer Pool没有多于的空间时，需要基于LRU算法将旧的缓存页从Buffer Pool中移除，然后再把新的页放进来。当我们需要访问某个页时，如果该页不在Buffer Pool中，在把该页从磁盘加载到Buffer Pool中的缓存页时，就把该缓存页对应的控制块作为节点塞到LRU链表的头部。如果该页已经缓存在Buffer Pool中，则直接把该页对应的控制块移动到LRU链表的头部。所以当Buffer Pool中的空闲缓存页使用完时，到LRU链表的尾部找些缓存页淘汰就行了。</p>
+<div class="note success"><ul class="lvl-0">
+<li class="lvl-2">
+<p>实际上LRU链表的规则并不是这么简单，因为mysql支持预读，即读取一个数据页时会同时读取其附近的多个页面（这些页可能用不到），或者执行了大表的扫描全表的查询语句（使用频率偏低），这样就有可能淘汰掉Buffer Pool中那些高频访问的页。</p>
+</li>
+<li class="lvl-2">
+<p>解决方法是把这个LRU链表按照一定比例分成两截</p>
+<ul class="lvl-2">
+<li class="lvl-4">一部分存储使用频率非常高的缓存页，所以这一部分链表也叫做热数据，或者称young区域。</li>
+<li class="lvl-4">另一部分存储使用频率不是很高的缓存页，所以这一部分链表也叫做冷数据，或者称old区域。</li>
+<li class="lvl-4">可以通过查看系统变量<code>innodb_old_blocks_pct</code>的值来确定old区域在LRU链表中所占的比例</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;innodb_old_blocks_pct&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name         <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> innodb_old_blocks_pct <span class="operator">|</span> <span class="number">37</span>    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p>InnoDB规定，当磁盘上的某个页面在初次加载到Buffer Pool中的某个缓存页时，该缓存页对应的控制块会被放到old区域的头部，该缓存页再次被访问到时才会把该页放到young区域的头部，前提是这两次访问的时间间隔大于系统变量<code>innodb_old_blocks_time</code>设置的时间间隔，默认1000毫秒</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;innodb_old_blocks_time&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name          <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> innodb_old_blocks_time <span class="operator">|</span> <span class="number">1000</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">对于young区域的缓存页来说，我们每次访问一个缓存页就要把它移动到LRU链表的头部，这样频繁的对LRU链表进行节点移动操作也会拖慢速度？为了解决这个问题，MySQL规定只有被访问的缓存页位于young区域的1/4的后边，才会被移动到LRU链表头部，这样就 可以降低调整LRU链表的频率，从而提升性能。</li>
+</ul>
+</div>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/lru.png" alt="" width="600" height="100"></p>
+</li>
+</ul>
+<div class="note success"><p><strong>刷新脏页到磁盘</strong><br>
+mysql后台有专门的线程每隔一段时间负责把脏页刷新到磁盘，这样可以不影响用户线程处理正常的请求。主要有两种刷新路径：</p>
+<ul class="lvl-0">
+<li class="lvl-4">1、从LRU链表的冷数据中刷新一部分页面到磁盘。</li>
+<li class="lvl-4">2、从flush链表中刷新一部分页面到磁盘。</li>
+</ul>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>每个控制块大约占用缓存页大小的5%，而我们设置的<code>innodb_buffer_pool_size</code>并不包含这部分控制块占用的内存空间大小，也就是说InnoDB在为Buffer Pool向操作系统申请连续的内存空间时，这片连续的内存空间一般会比innodb_buffer_pool_size的值大5%左右，这也是为什么不建议设置<code>innodb_buffer_pool_size</code>超过内存的75%。</p>
+</li>
 <li class="lvl-2">
 <p>InnoDB增删改查都是直接操作这个<code>buffer pool</code>，并顺序写入<code>undo log</code>和<code>redo log</code>，如果直接操作硬盘就是随机写，效率会非常低</p>
 </li>
@@ -1009,6 +1119,56 @@ b. 若 row 的 trx_id 不在read-view视图数组中，表示这个版本是已�
 8.<code>buffer pool</code>内存中的数据随机写入磁盘，独立线程每隔一段时间就会刷盘，如果<code>buffer pool</code>写满了也会采用LRU等算法将内存数据写入磁盘</p>
 </blockquote>
 <p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png" alt="" width="900" height="600"></p>
+<h3 id="多个Buffer-Pool实例">多个Buffer Pool实例</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Buffer Pool本质是InnoDB向操作系统申请的一块连续的内存空间，在多线程环境下，访问Buffer Pool中的各种链表都需要加锁处理，在Buffer Pool特别大而且多线程并发访问特别高的情况下，单一的Buffer Pool可能会影响请求的处理速度。所以在Buffer Pool特别大的时候，我们可以把它们拆分成若干个小的Buffer Pool，每个Buffer Pool都称为一个实例，它们都是独立的，独立的去申请内存空间，独立的管理各种链表，所以在多线程并发访问时并不会相互影响，从而提高并发处理能力。</p>
+</li>
+<li class="lvl-2">
+<p>我们可以在服务器启动的时候通过设置<code>innodb_buffer_pool_instances</code>的值来修改Buffer Pool实例的个数，默认8，最大值是64。</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_buffer_pool_instances&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name                <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> innodb_buffer_pool_instances <span class="operator">|</span> <span class="number">8</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------+-------+</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>每个Buffer Pool实例实际占内存空间: <code>innodb_buffer_pool_size/innodb_buffer_pool_instances</code></p>
+</li>
+<li class="lvl-2">
+<p>innodb_buffer_pool_size（默认128M）的值小于1G的时候设置多个实例是无效的，InnoDB会默认把innodb_buffer_pool_instances的值修改为1。</p>
+</li>
+<li class="lvl-2">
+<p>最佳的innodb_buffer_pool_instances的数量是，innodb_buffer_pool_size除以innodb_buffer_pool_instances，可以让每个Buffer Pool实例达到<code>1个G</code></p>
+</li>
+</ul>
+<h3 id="查看Buffer-Pool的状态信息">查看Buffer Pool的状态信息</h3>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> ENGINE INNODB STATUS\G</span><br><span class="line">………………</span><br><span class="line"><span class="comment">----------------------</span></span><br><span class="line">BUFFER POOL <span class="keyword">AND</span> MEMORY</span><br><span class="line"><span class="comment">----------------------</span></span><br><span class="line">Total <span class="keyword">large</span> memory allocated <span class="number">0</span></span><br><span class="line">Dictionary memory allocated <span class="number">1009326</span></span><br><span class="line">Buffer pool size   <span class="number">65530</span></span><br><span class="line"><span class="keyword">Free</span> buffers       <span class="number">63832</span></span><br><span class="line">Database pages     <span class="number">1689</span></span><br><span class="line"><span class="keyword">Old</span> database pages <span class="number">0</span></span><br><span class="line">Modified db pages  <span class="number">0</span></span><br><span class="line">Pending <span class="keyword">reads</span>      <span class="number">0</span></span><br><span class="line">Pending writes: LRU <span class="number">0</span>, flush list <span class="number">0</span>, single page <span class="number">0</span></span><br><span class="line">Pages made young <span class="number">0</span>, <span class="keyword">not</span> young <span class="number">0</span></span><br><span class="line"><span class="number">0.00</span> youngs<span class="operator">/</span>s, <span class="number">0.00</span> non<span class="operator">-</span>youngs<span class="operator">/</span>s</span><br><span class="line">Pages read <span class="number">1542</span>, created <span class="number">161</span>, written <span class="number">352</span></span><br><span class="line"><span class="number">0.00</span> <span class="keyword">reads</span><span class="operator">/</span>s, <span class="number">0.00</span> creates<span class="operator">/</span>s, <span class="number">0.00</span> writes<span class="operator">/</span>s</span><br><span class="line"><span class="keyword">No</span> buffer pool page gets since the <span class="keyword">last</span> printout</span><br><span class="line">Pages read ahead <span class="number">0.00</span><span class="operator">/</span>s, evicted <span class="keyword">without</span> access <span class="number">0.00</span><span class="operator">/</span>s, Random read ahead <span class="number">0.00</span><span class="operator">/</span>s</span><br><span class="line">LRU len: <span class="number">1689</span>, unzip_LRU len: <span class="number">0</span></span><br><span class="line">I<span class="operator">/</span>O sum[<span class="number">0</span>]:cur[<span class="number">0</span>], unzip sum[<span class="number">0</span>]:cur[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<div class="note success"><p><strong>返回值说明</strong><br>
+Total memory allocated：代表Buffer Pool向操作系统申请的连续内存空间大小，包括全部控制块、缓存页、以及碎片的大小。<br>
+Dictionary memory allocated：为数据字典信息分配的内存空间大小，注意这个内存空间和Buffer Pool没啥关系，不包括在Total memory allocated中。<br>
+Buffer pool size：代表该Buffer Pool可以容纳多少缓存页，注意，单位是页！<br>
+Free buffers：代表当前Buffer Pool还有多少空闲缓存页，也就是free链表中还有多少个节点。<br>
+Database pages：代表LRU链表中的页的数量，包含young和old两个区域的节点数量。<br>
+Old database pages：代表LRU链表old区域的节点数量。<br>
+Modified db pages：代表脏页数量，也就是flush链表中节点的数量。<br>
+Pending reads：正在等待从磁盘上加载到Buffer Pool中的页面数量。当准备从磁盘中加载某个页面时，会先为这个页面在Buffer Pool中分配一个缓存页以及它对应的控制块，然后把这个控制块添加到LRU的old区域的头部，但是这个时候真正的磁盘页并没有被加载进来，Pending reads的值会跟着加1。<br>
+Pending writes LRU：即将从LRU链表中刷新到磁盘中的页面数量。<br>
+Pending writes flush list：即将从flush链表中刷新到磁盘中的页面数量。<br>
+Pending writes single page：即将以单个页面的形式刷新到磁盘中的页面数量。<br>
+Pages made young：代表LRU链表中曾经从old区域移动到young区域头部的节点数量。<br>
+Page made not young：在将innodb_old_blocks_time设置的值大于0时，首次访问或者后续访问某个处在old区域的节点时由于不符合时间间隔的限制而不能将其移动到young区域头部时，Page made not young的值会加1。<br>
+youngs/s：代表每秒从old区域被移动到young区域头部的节点数量。<br>
+non-youngs/s：代表每秒由于不满足时间限制而不能从old区域移动到young区域头部的节点数量。<br>
+Pages read、created、written：代表读取，创建，写入了多少页。后边跟着读取、创建、写入的速率。<br>
+Buffer pool hit rate：表示在过去某段时间，平均访问1000次页面，有多少次该页面已经被缓存到Buffer Pool了。<br>
+young-making rate：表示在过去某段时间，平均访问1000次页面，有多少次访问使页面移动到young区域的头部了。<br>
+not (young-making rate)：表示在过去某段时间，平均访问1000次页面，有多少次访问没有使页面移动到young区域的头部。<br>
+LRU len：代表LRU链表中节点的数量。<br>
+unzip_LRU：代表unzip_LRU链表中节点的数量。<br>
+I/O sum：最近50s读取磁盘页的总数。<br>
+I/O cur：现在正在读取的磁盘页数量。<br>
+I/O unzip sum：最近50s解压的页面数量。<br>
+I/O unzip cur：正在解压的页面数量。</p>
+</div>
 <h2 id="MyISAM-Key-Buffer">MyISAM Key Buffer</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1228,7 +1388,7 @@ Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真
 <ul class="lvl-2">
 <li class="lvl-4">1、将所有正常的记录（包括最大和最小记录，不包括标记为已删除的记录）划分为几个组。</li>
 <li class="lvl-4">2、每个组的最后一条记录（也就是组内最大的那条记录）的头信息中的n_owned属性表示该记录拥有多少条记录，也就是该组内共有几条记录。</li>
-<li class="lvl-4">3、将每个组的最后一条记录的地址偏移量单独提取出来按顺序存储到靠近页的尾部的地方，这个地方就是所谓的Page Directory，也就是页目录页面目录中的这些地址偏移量被称为槽（英文名：Slot），所以这个页面目录就是由槽组成的。</li>
+<li class="lvl-4">3、将每个组的最后一条记录的地址偏移量单独提取出来按顺序存储到靠近页的尾部的地方，这个地方就是所谓的Page Directory，也就是页目录，页面目录中的这些地址偏移量被称为槽（英文名：Slot），所以这个页面目录就是由槽组成的。</li>
 <li class="lvl-4">4、每个分组中的记录条数是有规定的：对于最小记录所在的分组只能有 1 条记录，最大记录所在的分组拥有的记录条数只能在 1~8 条之间，剩下的分组中记录的条数范围只能在是 4~8 条之间。</li>
 </ul>
 </li>
@@ -1244,7 +1404,7 @@ Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真
 </li>
 <li class="lvl-2">
 <p>Page Header</p>
-<div class="note info"><p>InnoDB为了能得到一个数据页中存储的记录的状态信息，比如本页中已经存储了多少条记录，第一条记录的地址是什么，页目录中存储了多少个槽等等，特意在页中定义了一个叫Page Header的部分，它是页结构的第二部分，这个部分占用固定的56个字节，专门存储 各种状态信息。</p>
+<div class="note info"><p>InnoDB为了能得到一个数据页中存储的记录的状态信息，比如本页中已经存储了多少条记录，第一条记录的地址是什么，页目录中存储了多少个槽等等，特意在页中定义了一个叫Page Header的部分，它是页结构的第二部分，这个部分占用固定的56个字节，专门存储各种状态信息。</p>
 </div>
 </li>
 <li class="lvl-2">
@@ -1254,10 +1414,10 @@ Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真
 <p>File Header针对各种类型的页都通用，也就是说不同类型的页都会以File Header作为第一个组成部分，它描述了一些针对各种页都通用的一些信息，</p>
 </li>
 <li class="lvl-2">
-<p>比方说页的类型，这个页的 编号是多少，它的上一个页、下一个页是谁，页的校验和等等，这个部分占用固定的38个字节。</p>
+<p>比方说页的类型，这个页的编号是多少，它的上一个页、下一个页是谁，页的校验和等等，这个部分占用固定的38个字节。</p>
 </li>
 <li class="lvl-2">
-<p>页的类型，包括Undo日志页、段信息节点、Insert Buffer空闲列表、Insert Buffer位图、系统页、事务系统数据、表空间头部信息、扩展描述页、溢出页、索引页，有些页会在后面的课程看到。</p>
+<p>页的类型有很多种，包括Undo日志页、段信息节点、Insert Buffer空闲列表、Insert Buffer位图、系统页、事务系统数据、表空间头部信息、扩展描述页、溢出页(存储变长字段的大数据)、以及我们正在讲的索引页，等等。</p>
 </li>
 <li class="lvl-2">
 <p>同时通过上一个页、下一个页建立一个双向链表把许许多多的页就串联起来，而无需这些页在物理上真正连着。</p>
@@ -1275,7 +1435,7 @@ Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真
 <p>InnoDB存储引擎会把数据存储到磁盘上，但是磁盘速度太慢，需要以页为单位把数据加载到内存中处理，如果该页中的数据在内存中被修改了，那么在修改后的某个时间需要把数据同步到磁盘中。</p>
 </li>
 <li class="lvl-2">
-<p>但是在同步了一半的时候中断电了咋办？ 为了检测一个页是否完整（也就是在同步的时候有没有发生只同步一半的尴尬情况），InnoDB每个页的尾部都加了一个File Trailer部分，这个部分由8个字节组成，可以分成2个小部分：</p>
+<p>但是在同步了一半的时候断电了咋办？为了检测一个页是否完整（也就是在同步的时候有没有发生只同步一半的尴尬情况），InnoDB每个页的尾部都加了一个File Trailer部分，这个部分由8个字节组成，可以分成2个小部分：</p>
 <ul class="lvl-2">
 <li class="lvl-4">前4个字节代表页的校验和
 <ul class="lvl-4">
@@ -1292,6 +1452,119 @@ Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真
 </div>
 </li>
 </ul>
+<h2 id="InnoDB表空间-TableSpace">InnoDB表空间(TableSpace)</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>系统表空间(System Tablespace): 对应着文件系统中一个或多个实际文件，一般是<code>ibdata1</code>，表空间 ID（Space ID）是0</p>
+</li>
+<li class="lvl-2">
+<p>独立表空间(File-Per-Table Tablespaces): 对应着文件系统中一个名称为<code>dbname/tablename.ibd</code>的实际文件</p>
+</li>
+<li class="lvl-2">
+<p>临时表空间(Temporary Tablespaces): 对应着文件系统中一个或多个实际文件，一般是<code>ibtmp1</code>和<code>#innodb_temp/temp_数字.ibt</code></p>
+</li>
+<li class="lvl-2">
+<p>通用表空间(General Tablespaces): 允许多个表存储数据的共享表空间</p>
+</li>
+<li class="lvl-2">
+<p>Undo Tablespaces: 对应着文件系统中的<code>undo_001</code>和<code>undo_002</code></p>
+</li>
+<li class="lvl-2">
+<p>关于表空间的详细说明可以参考<a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-tablespace.html">mysql官方文档</a></p>
+</li>
+</ul>
+<blockquote>
+<p>可以查看<code>information_schema.INNODB_TABLESPACES</code>获取表空间信息,<code>information_schema.INNODB_DATAFILES</code>获取表空间对应文件系统的文件路径信息</p>
+</blockquote>
+<h3 id="表空间与页的关系">表空间与页的关系</h3>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/tablespace.png" alt="" width="800" height="500"></p>
+<h3 id="双写缓冲区-双写机制">双写缓冲区/双写机制</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>双写缓冲区/双写机制是InnoDB的三大特性之一，还有两个是Buffer Pool、自适应Hash索引。</p>
+</li>
+<li class="lvl-2">
+<p>它是一种特殊文件flush技术，带给InnoDB存储引擎的是数据页的可靠性。它的作用是，在把页写到数据文件之前，InnoDB先把它们写到一个叫doublewrite buffer（双写缓冲 区）的连续区域内，在写doublewrite buffer完成后，InnoDB才会把页写到数据文件的适当的位置。如果在写页的过程中发生意外崩溃，InnoDB在稍后的恢复过程中在doublewrite buffer中找到完好的page副本用于恢复。</p>
+</li>
+<li class="lvl-2">
+<p>所以，虽然叫双写缓冲区，但是这个缓冲区不仅在内存中有，更多的是属于MySQL的系统表空间，属于磁盘文件的一部分。</p>
+</li>
+<li class="lvl-2">
+<p>正常的情况下, MySQL写数据页时，会写两遍到磁盘上，第一遍是写到doublewrite buffer，第二遍是写到真正的数据文件中。如果发生了极端情况（断电），InnoDB再次启动后，发现了一个页数据已经损坏，那么此时就可以从doublewrite buffer中进行数据恢复了。</p>
+</li>
+<li class="lvl-2">
+<p>doublewrite buffer的作用有两个:</p>
+<ul class="lvl-2">
+<li class="lvl-4">提高innodb把缓存的数据写到硬盘这个过程的安全性；</li>
+<li class="lvl-4">innodb的事务日志不需要包含所有数据的前后映像,而是二进制变化量，这可以节省大量的IO。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>doublewrite buffer与Redo Log的区别: Redo Log日志中记录的是对页的物理操作，而doublewrite buffer记录的是页面的全量记录</p>
+</li>
+</ul>
+<h2 id="InnoDB元数据表">InnoDB元数据表</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>information_schema数据库</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">mysql8</th>
+<th style="text-align:left">mysql5</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">INNODB_TABLES</td>
+<td style="text-align:left">INNODB_SYS_TABLES</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的表的信息</td>
+</tr>
+<tr>
+<td style="text-align:left">INNODB_COLUMNS</td>
+<td style="text-align:left">INNODB_SYS_COLUMNS</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的列的信息</td>
+</tr>
+<tr>
+<td style="text-align:left">INNODB_INDEXES</td>
+<td style="text-align:left">INNODB_SYS_INDEXES</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的索引的信息</td>
+</tr>
+<tr>
+<td style="text-align:left">INNODB_FIELDS</td>
+<td style="text-align:left">INNODB_SYS_FIELDS</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的索引对应的列的信息</td>
+</tr>
+<tr>
+<td style="text-align:left">INNODB_FOREIGN</td>
+<td style="text-align:left">INNODB_SYS_FOREIGN</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的外键的信息</td>
+</tr>
+<tr>
+<td style="text-align:left">INNODB_FOREIGN_COLS</td>
+<td style="text-align:left">INNODB_SYS_FOREIGN_COLS</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的外键对应列的信息</td>
+</tr>
+<tr>
+<td style="text-align:left">INNODB_TABLESPACES</td>
+<td style="text-align:left">INNODB_SYS_TABLESPACES</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的表空间信息</td>
+</tr>
+<tr>
+<td style="text-align:left">INNODB_DATAFILES</td>
+<td style="text-align:left">INNODB_SYS_DATAFILES</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的表空间对应文件系统的文件路径信息</td>
+</tr>
+<tr>
+<td style="text-align:left">INNODB_VIRTUAL</td>
+<td style="text-align:left">INNODB_SYS_VIRTUAL</td>
+<td style="text-align:left">整个InnoDB存储引擎中所有的虚拟生成列的信息</td>
+</tr>
+</tbody>
+</table>
 ]]></content>
       <categories>
         <category>技术</category>
