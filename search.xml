@@ -31,6 +31,7 @@
 </ul>
 <span id="more"></span>
 <h2 id="binlog相关">binlog相关</h2>
+<p>MySQL的二进制日志binlog可以说是MySQL最重要的日志，它记录了所有的DDL和DML语句（除了数据查询语句select）,其以事件形式记录，还包含语句所执行的消耗的时间，MySQL的二进制日志是事务安全型的，所以binlog内记录的是事务提交成功后的内容。</p>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>查看binlog状态</p>
@@ -348,6 +349,9 @@ mysql后台有专门的线程每隔一段时间负责把脏页刷新到磁盘，
 </li>
 <li class="lvl-2">
 <p>最佳的innodb_buffer_pool_instances的数量是，innodb_buffer_pool_size除以innodb_buffer_pool_instances，可以让每个Buffer Pool实例达到<code>1个G</code></p>
+</li>
+<li class="lvl-2">
+<p>mysql服务启动时（故障后重启），会先将<code>redo log</code>中的内容加载到<code>Buffer Pool</code>中，然后在读取<code>undo log</code>进行事务回滚，以此达到重启前的状态</p>
 </li>
 </ul>
 <h3 id="查看Buffer-Pool的状态信息">查看Buffer Pool的状态信息</h3>
@@ -763,14 +767,16 @@ Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真
 </li>
 </ul>
 <h3 id="redo-log"><em>redo log</em></h3>
-<p><em><code>redo log</code></em> 称为重做日志，每当有操作时，在数据变更之前将操作写入 <strong>redo log</strong>， 这样当发生掉电之类的情况时系统可以在重启后继续操作。<br>
-<strong>redo log</strong> 用来在系统 Crash 重启之类的情况时修复数据，以此来保证事务的持久性</p>
+<p><em><code>redo log</code></em> 称为重做日志，每当有操作时，在数据变更之前（此时事务并没有提交，所以可能需要回滚，回滚是通过<code>undo log</code>记录的）将操作写入 <strong>redo log</strong>， 这样当发生掉电之类的情况时系统可以在重启后继续操作。<br>
+<strong>redo log</strong> 用来在系统 Crash 重启之类的情况时修复数据，以此来保证事务的持久性<br>
+<strong>binlog</strong> 记录完成后会在 <strong>redo log</strong>中加入一个<code>commit</code>标记，表示redo与binlog数据一致</p>
 <div class="tips">
 <p><em><strong><code>redo log</code>的作用</strong></em><br>
 我们知道，InnoDB的增删改查都是在<code>Buffer Pool</code>完成的，如果我们只在内存的 Buffer Pool 中修改了页面，假设在事务提交后突然发生了某个故障，导致内存中的数据都失效了，那么这个已经提交了的事务对数据库中所做的更改也就跟着丢失了，这是我们所不能忍受的。那么如何保证这个持久性呢？</p>
 <p>我们只是想让已经提交了的事务对数据库中数据所做的修改永久生效，即使后来系统崩溃，在重启后也能把这种修改恢复出来。所以我们其实没有必要在每次事务提交时就把该事务在内存中修改过的全部页面刷新到磁盘，因为这样做效率太低(还是那个原则，把随机写改为顺序写)，我们只需要把修改了哪些东西记录一下就好，比方说某个事务将系统表空间中的第 100号 页面中偏移量为 1000 处的那个字节的值 1 改成 2 ，我们只需要记录一下：<br>
 <em><strong>将第 0 号表空间的 100 号页面的偏移量为 1000 处的值更新为 2。</strong></em><br>
 这样我们在事务提交时，把上述内容刷新到磁盘中，即使之后系统崩溃了，重启之后只要按照上述内容所记录的步骤重新更新一下数据页，那么该事务对数据库中所做的修改又可以被恢复出来，也就意味着满足持久性的要求。</p>
+<p>理论上，<strong>redo log</strong>的容量足够恢复因掉电等原因导致<code>Buffer Pool</code>没有及时刷入磁盘的内容。否则<strong>redo log</strong>因容量不够而被覆盖，而此时<code>Buffer Pool</code>尚未刷入磁盘，就不能保证事务的持久性了</p>
 <p>这样做与如下好处：<br>
 1、redo 日志占用的空间非常小，存储<em>表空间ID</em>、<em>页号</em>、<em>偏移量</em> 以及 <em>需要更新的值</em> 所需的存储空间是很小的。<br>
 2、redo 日志是顺序写入磁盘的，在执行事务的过程中，每执行一条语句，就可能产生若干条 redo 日志，这些日志是按照产生的顺序写入磁盘的，也就是使用 <em>顺序IO</em>。</p>
