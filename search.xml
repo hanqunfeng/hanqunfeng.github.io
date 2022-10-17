@@ -1026,7 +1026,7 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>MySql知识点介绍:执行计划相关、索引相关、用户管理、线程状态、常用操作、表信息相关、系统变量、mysql中的数据类型对应java实体数据类型，等等</p>
+<p>MySql知识点介绍:执行计划相关、索引相关、用户管理、线程状态、常用操作、表信息相关、系统变量、mysql中的数据类型对应java实体数据类型、数据库导出与导入，等等</p>
 </li>
 <li class="lvl-2">
 <p>本文基于<code>mysql-8.0.30</code>，<a href="https://dev.mysql.com/doc/refman/8.0/en/">https://dev.mysql.com/doc/refman/8.0/en/</a></p>
@@ -1791,6 +1791,21 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <p>优化建议</p>
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">字符串的长度相差较大用VARCHAR；字符串短，且所有值都接近一个长度用CHAR。</span><br><span class="line">CHAR和VARCHAR适用于包括人名、邮政编码、电话号码和不超过255个字符长度的任意字母数字组合。</span><br><span class="line">那些要用来计算的数字不要用VARCHAR类型保存，因为可能会导致一些与计算相关的问题。换句话说，可能影响到计算的准确性和完整性。</span><br><span class="line">尽量少用BLOB和TEXT，如果实在要用可以考虑将BLOB和TEXT字段单独存一张表，用id关联。</span><br><span class="line">BLOB系列存储二进制字符串，与字符集无关。TEXT系列存储非二进制字符串，与字符集相关。</span><br><span class="line">BLOB和TEXT都不能有默认值。</span><br></pre></td></tr></table></figure>
+<h2 id="数据库导出与导入">数据库导出与导入</h2>
+<h3 id="全量导出">全量导出</h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建库、建表和数据语句</span></span><br><span class="line">mysqldump -uroot --all-databases --triggers --routines --events -p &gt; all_databases.sql</span><br></pre></td></tr></table></figure>
+<h3 id="导出指定数据库">导出指定数据库</h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建表和数据语句</span></span><br><span class="line">mysqldump -uroot -p DB1 &gt; DB1.sql</span><br><span class="line"></span><br><span class="line"><span class="comment"># 包含建库、建表和数据语句</span></span><br><span class="line">mysqldump -uroot -p --databases DB1 DB2 &gt; databases.sql</span><br></pre></td></tr></table></figure>
+<h3 id="导出指定数据库的指定表">导出指定数据库的指定表</h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建表和数据语句</span></span><br><span class="line">mysqldump -uroot -p DB1 --tables table1 table2 &gt; tables.sql</span><br></pre></td></tr></table></figure>
+<h3 id="导出指定数据库时排除某些表">导出指定数据库时排除某些表</h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建库、建表和数据语句</span></span><br><span class="line">mysqldump -uroot -p --databases DB1 DB2 --ignore-table=DB1.table1 --ignore-table=DB2.table2 &gt; tables.sql</span><br></pre></td></tr></table></figure>
+<h3 id="导出结构不导出数据-d">导出结构不导出数据 <code>-d</code></h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建表语句</span></span><br><span class="line">mysqldump -uroot -p -d DB1 --tables table1 table2 &gt; tables.sql</span><br></pre></td></tr></table></figure>
+<h3 id="导出数据不导出结构-t">导出数据不导出结构 <code>-t</code></h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含数据语句</span></span><br><span class="line">mysqldump -uroot -p -t DB1 --tables table1 table2 &gt; tables.sql</span><br></pre></td></tr></table></figure>
+<h3 id="导入数据">导入数据</h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysql -uroot -p &lt; all_databases.sql</span><br><span class="line">mysql -uroot -p &lt; databases.sql</span><br><span class="line"></span><br><span class="line"><span class="comment"># -D指定要导入的数据库，此时数据库必须先创建好</span></span><br><span class="line">mysql -uroot -p -Dbdname &lt; DB1.sql</span><br><span class="line">mysql -uroot -p -Dbdname &lt; tables.sql</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>技术</category>
@@ -2234,10 +2249,10 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">ln</span> -s /usr/lib64/libtinfo.so.6.0 /usr/lib64/libtinfo.so.5</span><br><span class="line"><span class="comment"># 注意：不同系统的版本可能这个文件名称后缀不一样，总之找到类似libtinfo.so.6.x的就行</span></span><br></pre></td></tr></table></figure>
 <h3 id="修改密码">修改密码</h3>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改密码</span></span><br><span class="line">mysql&gt; ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;123456&#x27;</span>;</span><br><span class="line"><span class="comment"># 刷新权限</span></span><br><span class="line">mysql&gt; FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+<h3 id="授予root用户system-user权限">授予root用户<code>system_user</code>权限</h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysql&gt; grant system_user on *.* to <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">mysql&gt; flush privileges;</span><br></pre></td></tr></table></figure>
 <h3 id="开启远程访问">开启远程访问</h3>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 允许远程访问</span></span><br><span class="line">mysql&gt; use mysql;</span><br><span class="line">mysql&gt; update user <span class="built_in">set</span> user.Host=<span class="string">&#x27;%&#x27;</span> <span class="built_in">where</span> user.User=<span class="string">&#x27;root&#x27;</span>;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; select user,host from user;</span><br></pre></td></tr></table></figure>
-<h3 id="授予root用户system-user权限">授予root用户<code>system_user</code>权限</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysql&gt; grant system_user on *.* to <span class="string">&#x27;root&#x27;</span>;</span><br><span class="line">mysql&gt; flush privileges;</span><br></pre></td></tr></table></figure>
 <h3 id="关闭mysql">关闭mysql</h3>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo mysqladmin -h127.0.0.1 -uroot -p shutdown</span><br></pre></td></tr></table></figure>
 <h2 id="2-主从">2.主从</h2>
