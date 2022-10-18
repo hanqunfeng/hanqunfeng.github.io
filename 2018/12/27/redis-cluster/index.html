@@ -142,7 +142,9 @@
     padding: 0px 0px 0px 0px;
 }
 
-ul, ol, li {
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -874,7 +876,8 @@ ul, ol, li {
 <h4 id="2-4为新加入的master添加slave">2.4为新加入的master添加slave</h4>
 <p>同样需要先加入集群</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster add-node 10.211.55.16:6382 10.211.55.16:6380</span><br></pre></td></tr></table></figure>
-<p>之后不需要做分配和平衡槽的操作登录这个redis， <code>./redis-cli -h 10.211.55.16 -p 6382</code></p>
+<p>之后不需要做分配和平衡槽的操作<br>
+登录这个redis， <code>./redis-cli -h 10.211.55.16 -p 6382</code></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6382&gt; cluster replicate 316e068fd71ee228299198a271efd839d3493835 <span class="comment">#主节点的id</span></span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
 <h3 id="3-删除节点">3.删除节点</h3>
 <h4 id="3-1删除主节点">3.1删除主节点</h4>
@@ -882,11 +885,13 @@ ul, ol, li {
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster reshard 10.211.55.15:6382 <span class="comment">#集群中任意ip即可</span></span><br></pre></td></tr></table></figure>
 <p>1.问你是否从原有的1-16384个槽中分配多少到新的主节点我们这里分配4096，即该节点上的槽数<br>
 2：然后紧接着会询问你给id为谁的主节点分配，这里我们分配给10.211.55.16:6379，即15506850b235f4277306368533cacf4a5ec1bbd1<br>
-3：询问你是从所有的空间去给这个节点分配空间还是从某一个节点分配我这里输入要移出的节点ID ,即316e068fd71ee228299198a271efd839d3493835 回车继续 输入 done<br>
+3：询问你是从所有的空间去给这个节点分配空间还是从某一个节点分配<br>
+我这里输入要移出的节点ID ,即316e068fd71ee228299198a271efd839d3493835 回车继续 输入 done<br>
 4：然后会给你分配出一个分配计划，输入yes开始分配。完成ok</p>
 <p>执行删除节点命令</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster del-node 10.211.55.16:6379 316e068fd71ee228299198a271efd839d3493835</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">&gt;&gt;&gt; Removing node 316e068fd71ee228299198a271efd839d3493835 from cluster 10.211.55.16:6379</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...</span><br><span class="line">&gt;&gt;&gt; SHUTDOWN the node.</span><br></pre></td></tr></table></figure>
-<p>说明：删除节点会自动关闭被移出的redis服务，此时，该主节点的从节点会自动转为其它主节点的从节点，而不会升级为主节点</p>
+<p>说明：<br>
+删除节点会自动关闭被移出的redis服务，此时，该主节点的从节点会自动转为其它主节点的从节点，而不会升级为主节点</p>
 <h4 id="3-2删除从节点">3.2删除从节点</h4>
 <p>直接执行节点删除命令</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster del-node 10.211.55.16:6379 从节点ID</span><br></pre></td></tr></table></figure>

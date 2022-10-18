@@ -142,7 +142,9 @@
     padding: 0px 0px 0px 0px;
 }
 
-ul, ol, li {
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -834,21 +836,24 @@ ul, ol, li {
 <h2 id="参考答案，作者水平有限，仅供学习交流">参考答案，作者水平有限，仅供学习交流</h2>
 <div class="note info"><ol>
 <li class="lvl-3">
-<p>存在自增主键Id，与orderId序号一致，可以通过错位法计算不存在的Id值。运行时间基本符合要求。</p>
+<p>存在自增主键Id，与orderId序号一致，可以通过错位法计算不存在的Id值。<br>
+运行时间基本符合要求。</p>
 </li>
 </ol>
 </div>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> id<span class="number">-1</span> <span class="keyword">as</span> id_del <span class="keyword">from</span> test_order <span class="keyword">where</span> id <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">select</span> id<span class="operator">+</span><span class="number">1</span> <span class="keyword">from</span> test_order);</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> id_del <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">233490</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">943220</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span>  #这里去除<span class="number">0</span>号记录，因为不存在id为<span class="number">0</span>的记录</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="number">3</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">1.063</span> sec)</span><br></pre></td></tr></table></figure>
 <div class="note info"><ol start="2">
 <li class="lvl-3">
-<p>如果不存在自增主键ID，而是使用orderId作为主键，则也可以通过错位法计算不存在的Id值，主要比较时一定要用完整的orderId，否则不能使用索引。运行时间超过要求。</p>
+<p>如果不存在自增主键ID，而是使用orderId作为主键，则也可以通过错位法计算不存在的Id值，主要比较时一定要用完整的orderId，否则不能使用索引。<br>
+运行时间超过要求。</p>
 </li>
 </ol>
 </div>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">RIGHT</span>(orderId, <span class="number">7</span>) <span class="operator">-</span> <span class="number">1</span> <span class="keyword">AS</span> id_del <span class="keyword">FROM</span> test_order</span><br><span class="line">  <span class="keyword">WHERE</span> orderId <span class="keyword">NOT</span> <span class="keyword">in</span>(</span><br><span class="line">    <span class="keyword">SELECT</span> concat( <span class="keyword">left</span>(orderId, <span class="number">14</span>), LPAD( <span class="keyword">RIGHT</span>(orderId, <span class="number">7</span>) <span class="operator">+</span> <span class="number">1</span>, <span class="number">7</span>, <span class="number">0</span>))</span><br><span class="line">    <span class="keyword">FROM</span> test_order);</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> id_del <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span>   #这里去除<span class="number">0</span>号记录，因为不存在id为<span class="number">0</span>的记录</span><br><span class="line"><span class="operator">|</span> <span class="number">233490</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">943220</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="number">3</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">2.999</span> sec)</span><br></pre></td></tr></table></figure>
 <div class="note info"><ol start="3">
 <li class="lvl-3">
-<p>如果不存在自增主键ID，而是使用orderId作为主键，也可以比较orderId的序号与行号，获取到不一致的第一条记录，然后在从该记录开始继续比较获得下一条不一致的记录，也可以通过存储过程实现。运行时间符合要求。</p>
+<p>如果不存在自增主键ID，而是使用orderId作为主键，也可以比较orderId的序号与行号，获取到不一致的第一条记录，然后在从该记录开始继续比较获得下一条不一致的记录，也可以通过存储过程实现。<br>
+运行时间符合要求。</p>
 </li>
 </ol>
 </div>

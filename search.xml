@@ -95,7 +95,10 @@
 </ul>
 <div class="tips">
 <p><strong>事务Id分配策略</strong><br>
-服务器会在内存中维护一个全局变量，每当需要为某个事务分配一个事务id时，就会把该变量的值当作事务id分配给该事务，并且把该变量自增 1。每当这个变量的值为 256 的倍数时，就会将该变量的值刷新到系统表空间的页号为 5 的页面中一个称之为 Max Trx ID 的属性处，这个属性占用 8 个字节的存储空间。当系统下一次重新启动时，会将上边提到的 Max Trx ID 属性加载到内存中，将该值加上 256 之后赋值给我们前边提到的全局变量（因为在上次关机时该全局变量的值可能大于 Max Trx ID 属性值）。这样就可以保证整个系统中分配的事务id值是一个递增的数字。先被分配id的事务得到的是较小的事务id，后被分配id的事务得到的是较大的事务id。</p>
+服务器会在内存中维护一个全局变量，每当需要为某个事务分配一个事务id时，就会把该变量的值当作事务id分配给该事务，并且把该变量自增 1。<br>
+每当这个变量的值为 256 的倍数时，就会将该变量的值刷新到系统表空间的页号为 5 的页面中一个称之为 Max Trx ID 的属性处，这个属性占用 8 个字节的存储空间。<br>
+当系统下一次重新启动时，会将上边提到的 Max Trx ID 属性加载到内存中，将该值加上 256 之后赋值给我们前边提到的全局变量（因为在上次关机时该全局变量的值可能大于 Max Trx ID 属性值）。<br>
+这样就可以保证整个系统中分配的事务id值是一个递增的数字。先被分配id的事务得到的是较小的事务id，后被分配id的事务得到的是较大的事务id。</p>
 </div>
 <h2 id="并发事务处理带来的问题">并发事务处理带来的问题</h2>
 <ul class="lvl-0">
@@ -112,7 +115,9 @@
 </li>
 </ul>
 <blockquote>
-<p>一个事务正在对一条记录做修改，在这个事务完成并提交前，这条记录的数据就处于不一致的状态；这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些“脏”数据，并据此作进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象的叫做“脏读”。一句话：事务A读取到了事务B已经修改但尚未提交的数据，还在这个数据基础上做了操作。此时，如果B事务回滚，A读取的数据无效，不符合一致性要求。</p>
+<p>一个事务正在对一条记录做修改，在这个事务完成并提交前，这条记录的数据就处于不一致的状态；<br>
+这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些“脏”数据，并据此作进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象的叫做“脏读”。<br>
+一句话：事务A读取到了事务B已经修改但尚未提交的数据，还在这个数据基础上做了操作。此时，如果B事务回滚，A读取的数据无效，不符合一致性要求。</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -120,7 +125,8 @@
 </li>
 </ul>
 <blockquote>
-<p>一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现其读出的数据已经发生了改变、或某些记录已经被删除了！这种现象就叫做“不可重复读”。一句话：事务A内部的相同查询语句在不同时刻读出的结果不一致，不符合隔离性</p>
+<p>一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现其读出的数据已经发生了改变、或某些记录已经被删除了！这种现象就叫做“不可重复读”。<br>
+一句话：事务A内部的相同查询语句在不同时刻读出的结果不一致，不符合隔离性</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -128,7 +134,8 @@
 </li>
 </ul>
 <blockquote>
-<p>一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为“幻读”。一句话：事务A读取到了事务B提交的新增数据，不符合隔离性</p>
+<p>一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为“幻读”。<br>
+一句话：事务A读取到了事务B提交的新增数据，不符合隔离性</p>
 </blockquote>
 <h2 id="事务隔离级别">事务隔离级别</h2>
 <ul class="lvl-0">
@@ -333,7 +340,8 @@ mysql后台有专门的线程每隔一段时间负责把脏页刷新到磁盘，
 <h3 id="多个Buffer-Pool实例">多个Buffer Pool实例</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>Buffer Pool本质是InnoDB向操作系统申请的一块连续的内存空间，在多线程环境下，访问Buffer Pool中的各种链表都需要加锁处理，在Buffer Pool特别大而且多线程并发访问特别高的情况下，单一的Buffer Pool可能会影响请求的处理速度。所以在Buffer Pool特别大的时候，我们可以把它们拆分成若干个小的Buffer Pool，每个Buffer Pool都称为一个实例，它们都是独立的，独立的去申请内存空间，独立的管理各种链表，所以在多线程并发访问时并不会相互影响，从而提高并发处理能力。</p>
+<p>Buffer Pool本质是InnoDB向操作系统申请的一块连续的内存空间，在多线程环境下，访问Buffer Pool中的各种链表都需要加锁处理，在Buffer Pool特别大而且多线程并发访问特别高的情况下，单一的Buffer Pool可能会影响请求的处理速度。<br>
+所以在Buffer Pool特别大的时候，我们可以把它们拆分成若干个小的Buffer Pool，每个Buffer Pool都称为一个实例，它们都是独立的，独立的去申请内存空间，独立的管理各种链表，所以在多线程并发访问时并不会相互影响，从而提高并发处理能力。</p>
 </li>
 <li class="lvl-2">
 <p>我们可以在服务器启动的时候通过设置<code>innodb_buffer_pool_instances</code>的值来修改Buffer Pool实例的个数，默认8，最大值是64。</p>
@@ -364,7 +372,8 @@ Free buffers：代表当前Buffer Pool还有多少空闲缓存页，也就是fre
 Database pages：代表LRU链表中的页的数量，包含young和old两个区域的节点数量。<br>
 Old database pages：代表LRU链表old区域的节点数量。<br>
 Modified db pages：代表脏页数量，也就是flush链表中节点的数量。<br>
-Pending reads：正在等待从磁盘上加载到Buffer Pool中的页面数量。当准备从磁盘中加载某个页面时，会先为这个页面在Buffer Pool中分配一个缓存页以及它对应的控制块，然后把这个控制块添加到LRU的old区域的头部，但是这个时候真正的磁盘页并没有被加载进来，Pending reads的值会跟着加1。<br>
+Pending reads：正在等待从磁盘上加载到Buffer Pool中的页面数量。<br>
+当准备从磁盘中加载某个页面时，会先为这个页面在Buffer Pool中分配一个缓存页以及它对应的控制块，然后把这个控制块添加到LRU的old区域的头部，但是这个时候真正的磁盘页并没有被加载进来，Pending reads的值会跟着加1。<br>
 Pending writes LRU：即将从LRU链表中刷新到磁盘中的页面数量。<br>
 Pending writes flush list：即将从flush链表中刷新到磁盘中的页面数量。<br>
 Pending writes single page：即将以单个页面的形式刷新到磁盘中的页面数量。<br>
@@ -408,9 +417,12 @@ I/O unzip cur：正在解压的页面数量。</p>
 </li>
 </ul>
 <h2 id="InnoDB记录存储结构和索引页结构">InnoDB记录存储结构和索引页结构</h2>
-<p>InnoDB是一个将表中的数据存储到磁盘上的存储引擎，而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。<br>而我们知道读写磁盘的速度非常慢，和内存读写差了几个数量级，所以当我们想从表中获取某些记录时，InnoDB存储引擎需要一条一条的把记录从磁盘上读出来么？<br>
-InnoDB采取的方式是：将数据划分为若干个页，以页作为磁盘和内存之间交互的基本单位，InnoDB中页的大小一般为16KB。也就是在一般情况下，一次最少从磁盘中读取16KB的内容到内存中，一次最少把内存中的16KB内容刷新到磁盘中。<br>我们平时是以记录为单位来向表中插入数据的，这些记录在磁盘上的存放方式也被称为行格式或者记录格式。<br>
-InnoDB存储引擎设计了4种不同类型的行格式，分别是Compact、Redundant、Dynamic和Compressed行格式，MySQL5.7以后的默认行格式是Dynamic。<br>我们可以在创建或修改表的语句中指定行格式： <code>CREATE TABLE 表名 (列的信息) ROW_FORMAT=行格式名称</code><br>
+<p>InnoDB是一个将表中的数据存储到磁盘上的存储引擎，而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。<br><br>
+而我们知道读写磁盘的速度非常慢，和内存读写差了几个数量级，所以当我们想从表中获取某些记录时，InnoDB存储引擎需要一条一条的把记录从磁盘上读出来么？<br>
+InnoDB采取的方式是：将数据划分为若干个页，以页作为磁盘和内存之间交互的基本单位，InnoDB中页的大小一般为16KB。也就是在一般情况下，一次最少从磁盘中读取16KB的内容到内存中，一次最少把内存中的16KB内容刷新到磁盘中。<br><br>
+我们平时是以记录为单位来向表中插入数据的，这些记录在磁盘上的存放方式也被称为行格式或者记录格式。<br>
+InnoDB存储引擎设计了4种不同类型的行格式，分别是Compact、Redundant、Dynamic和Compressed行格式，MySQL5.7以后的默认行格式是Dynamic。<br><br>
+我们可以在创建或修改表的语句中指定行格式： <code>CREATE TABLE 表名 (列的信息) ROW_FORMAT=行格式名称</code><br>
 查看行格式<code>SHOW TABLE STATUS LIKE 'table_name'\G</code></p>
 <h3 id="记录行格式">记录行格式</h3>
 <ul class="lvl-0">
@@ -458,7 +470,11 @@ InnoDB存储引擎设计了4种不同类型的行格式，分别是Compact、Red
 </li>
 </ul>
 <div class="note success"><h3 id="数据溢出">数据溢出</h3>
-<p>如果我们定义一个表，表中只有一个VARCHAR字段，如下： CREATE TABLE test_varchar( c VARCHAR(60000) ) 然后往这个字段插入60000个字符，会发生什么？<br>前边说过，MySQL中磁盘和内存交互的基本单位是页，也就是说MySQL是以页为基本单位来管理存储空间的，我们的记录都会被分配到某个页中存储。<br>而一个页的大小一般是16KB，也就是16384字节，而一个VARCHAR(M)类型的列就最多可以存储65532个字节，这样就可能造成一个页存放不了一条记录的情况。<br>在Compact和Redundant行格式中，对于占用存储空间非常大的列，在记录的真实数据处只会存储该列的该列的前768个字节的数据，然后把剩余的数据分散存储在几个其他的页中，<br>记录的真实数据处用20个字节存储指向这些页的地址。这个过程也叫做行溢出，存储超出768字节的那些页面也被称为溢出页。<br>
+<p>如果我们定义一个表，表中只有一个VARCHAR字段，如下： CREATE TABLE test_varchar( c VARCHAR(60000) ) 然后往这个字段插入60000个字符，会发生什么？<br><br>
+前边说过，MySQL中磁盘和内存交互的基本单位是页，也就是说MySQL是以页为基本单位来管理存储空间的，我们的记录都会被分配到某个页中存储。<br><br>
+而一个页的大小一般是16KB，也就是16384字节，而一个VARCHAR(M)类型的列就最多可以存储65532个字节，这样就可能造成一个页存放不了一条记录的情况。<br><br>
+在Compact和Redundant行格式中，对于占用存储空间非常大的列，在记录的真实数据处只会存储该列的该列的前768个字节的数据，然后把剩余的数据分散存储在几个其他的页中，<br><br>
+记录的真实数据处用20个字节存储指向这些页的地址。这个过程也叫做行溢出，存储超出768字节的那些页面也被称为溢出页。<br>
 Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真实数据的前768个字节，而是把所有的字节都存储到其他页面中，只在记录的真实数据处存储其他页面的地址。</p>
 </div>
 <h3 id="索引页格式">索引页格式</h3>
@@ -773,7 +789,9 @@ Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真
 <div class="tips">
 <p><em><strong><code>redo log</code>的作用</strong></em><br>
 我们知道，InnoDB的增删改查都是在<code>Buffer Pool</code>完成的，如果我们只在内存的 Buffer Pool 中修改了页面，假设在事务提交后突然发生了某个故障，导致内存中的数据都失效了，那么这个已经提交了的事务对数据库中所做的更改也就跟着丢失了，这是我们所不能忍受的。那么如何保证这个持久性呢？</p>
-<p>我们只是想让已经提交了的事务对数据库中数据所做的修改永久生效，即使后来系统崩溃，在重启后也能把这种修改恢复出来。所以我们其实没有必要在每次事务提交时就把该事务在内存中修改过的全部页面刷新到磁盘，因为这样做效率太低(还是那个原则，把随机写改为顺序写)，我们只需要把修改了哪些东西记录一下就好，比方说某个事务将系统表空间中的第 100号 页面中偏移量为 1000 处的那个字节的值 1 改成 2 ，我们只需要记录一下：<br>
+<p>我们只是想让已经提交了的事务对数据库中数据所做的修改永久生效，即使后来系统崩溃，在重启后也能把这种修改恢复出来。<br>
+所以我们其实没有必要在每次事务提交时就把该事务在内存中修改过的全部页面刷新到磁盘，因为这样做效率太低(还是那个原则，把随机写改为顺序写)，我们只需要把修改了哪些东西记录一下就好，<br>
+比方说某个事务将系统表空间中的第 100号 页面中偏移量为 1000 处的那个字节的值 1 改成 2 ，我们只需要记录一下：<br>
 <em><strong>将第 0 号表空间的 100 号页面的偏移量为 1000 处的值更新为 2。</strong></em><br>
 这样我们在事务提交时，把上述内容刷新到磁盘中，即使之后系统崩溃了，重启之后只要按照上述内容所记录的步骤重新更新一下数据页，那么该事务对数据库中所做的修改又可以被恢复出来，也就意味着满足持久性的要求。</p>
 <p>理论上，<strong>redo log</strong>的容量足够恢复因掉电等原因导致<code>Buffer Pool</code>没有及时刷入磁盘的内容。否则<strong>redo log</strong>因容量不够而被覆盖，而此时<code>Buffer Pool</code>尚未刷入磁盘，就不能保证事务的持久性了</p>
@@ -800,7 +818,9 @@ data：该条 redo 日志的具体内容。</p>
 </li>
 </ul>
 <h3 id="redo-log-buffer">redo log buffer</h3>
-<p>写入 redo 日志时也不能直接直接写到磁盘上，实际上在服务器启动时就向操作系统申请了一大片称之为 redo log buffer 的连续内存空间，翻译成中文就是 redo 日志缓冲区，我们也可以简称为 log buffer。</p>
+<p>写入 redo 日志时也不能直接直接写到磁盘上，<br>
+实际上在服务器启动时就向操作系统申请了一大片称之为 redo log buffer 的连续内存空间，翻译成中文就是 redo 日志缓冲区，<br>
+我们也可以简称为 log buffer。</p>
 <p>我们可以通过启动参数 <code>innodb_log_buffer_size</code> 来指定 log buffer 的大小，该启动参数的默认值为 16MB。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_log_buffer_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+----------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name          <span class="operator">|</span> <span class="keyword">Value</span>    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+----------+</span></span><br><span class="line"><span class="operator">|</span> innodb_log_buffer_size <span class="operator">|</span> <span class="number">16777216</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+----------+</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
@@ -867,13 +887,17 @@ data：该条 redo 日志的具体内容。</p>
 <p>崩溃后的恢复为什么不用 binlog？</p>
 <div class="tips">
 <p>1、这两者使用方式不一样<br>
-binlog 会记录表所有更改操作，包括更新删除数据，更改表结构等等，主要用于人工恢复数据，而 redo log 对于我们是不可见的，它是 InnoDB 用于保证crash-safe 能力的，也就是在事务提交后 MySQL 崩溃的话，可以保证事务的持久性，即事务提交后其更改是永久性的。一句话概括：binlog 是用作人工恢复数据，redo log 是 MySQL 自己使用，用于保证在数据库崩溃时的事务持久性。<br>
+binlog 会记录表所有更改操作，包括更新删除数据，更改表结构等等，主要用于人工恢复数据，而 redo log 对于我们是不可见的，它是 InnoDB 用于保证crash-safe 能力的，也就是在事务提交后 MySQL 崩溃的话，可以保证事务的持久性，即事务提交后其更改是永久性的。<br>
+一句话概括：binlog 是用作人工恢复数据，redo log 是 MySQL 自己使用，用于保证在数据库崩溃时的事务持久性。<br>
 2、redo log 是 InnoDB 引擎特有的，binlog 是 MySQL 的 Server 层实现的,所有引擎都可以使用。<br>
 3、redo log 是物理日志，记录的是“在某个数据页上做了什么修改”，恢复的速度更快；binlog 是逻辑日志，记录的是这个语句的原始逻辑，比如“给 ID=2这的 c 字段加 1 ” ；<br>
 4、redo log 是“循环写”的日志文件，redo log 只会记录未刷盘的日志，已经刷入磁盘的数据都会从 redo log 这个有限大小的日志文件里删除。binlog 是追加日志，保存的是全量的日志。<br>
-5、最重要的是，当数据库 crash 后，想要恢复未刷盘但已经写入 redo log 和 binlog 的数据到内存时，binlog 是无法恢复的。虽然 binlog 拥有全量的日志，但没有一个标志让 innoDB 判断哪些数据已经入表(写入磁盘)，哪些数据还没有。<br>比如，binlog 记录了两条日志：<br>给 ID=2 这一行的 c 字段加 1<br>
+5、最重要的是，当数据库 crash 后，想要恢复未刷盘但已经写入 redo log 和 binlog 的数据到内存时，binlog 是无法恢复的。虽然 binlog 拥有全量的日志，但没有一个标志让 innoDB 判断哪些数据已经入表(写入磁盘)，哪些数据还没有。<br><br>
+比如，binlog 记录了两条日志：<br><br>
 给 ID=2 这一行的 c 字段加 1<br>
-在记录 1 入表后，记录 2 未入表时，数据库 crash。重启后，只通过 binlog 数据库无法判断这两条记录哪条已经写入磁盘，哪条没有写入磁盘，不管是两条都恢复至内存，还是都不恢复，对 ID=2 这行数据来说，都不对。<br>但 redo log 不一样，只要刷入磁盘的数据，都会从 redo log 中抹掉，数据库重启后，直接把 redo log 中的数据都恢复至内存就可以了。</p>
+给 ID=2 这一行的 c 字段加 1<br>
+在记录 1 入表后，记录 2 未入表时，数据库 crash。重启后，只通过 binlog 数据库无法判断这两条记录哪条已经写入磁盘，哪条没有写入磁盘，不管是两条都恢复至内存，还是都不恢复，对 ID=2 这行数据来说，都不对。<br><br>
+但 redo log 不一样，只要刷入磁盘的数据，都会从 redo log 中抹掉，数据库重启后，直接把 redo log 中的数据都恢复至内存就可以了。</p>
 </div>
 </li>
 </ul>
@@ -921,11 +945,13 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 </li>
 </ul>
 <blockquote>
-<p>读锁（共享锁，S锁[Shared]）：针对同一份数据，多个读操作可以同时进行而不会互相影响。读锁可以认为没有加锁，可读但不可写，当写锁锁住数据时，读锁也会不可获取。写锁（排它锁，X锁[eXclusive]）：当前写操作没有完成前，它会阻断其他写锁和读锁</p>
+<p>读锁（共享锁，S锁[Shared]）：针对同一份数据，多个读操作可以同时进行而不会互相影响。读锁可以认为没有加锁，可读但不可写，当写锁锁住数据时，读锁也会不可获取。<br>
+写锁（排它锁，X锁[eXclusive]）：当前写操作没有完成前，它会阻断其他写锁和读锁</p>
 </blockquote>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 给表加读锁</span><br><span class="line"># 当前session和其他session都可以读该表,当前session中插入或者更新锁定的表都会报错，其他session插入或更新则会等待</span><br><span class="line">mysql<span class="operator">&gt;</span> lock <span class="keyword">table</span> actor read;</span><br><span class="line"></span><br><span class="line"># 给表加写锁</span><br><span class="line"># 当前session对该表的增删改查都没有问题，其他session对该表的所有操作被阻塞</span><br><span class="line">mysql<span class="operator">&gt;</span> lock <span class="keyword">table</span> actor write;</span><br><span class="line"></span><br><span class="line"># 查看哪些表上加了锁</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">open</span> tables;</span><br><span class="line"># 查看指定表</span><br><span class="line"># In_use<span class="operator">=</span><span class="number">1</span>表示被加了写锁</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">open</span> tables <span class="keyword">like</span> <span class="string">&#x27;actor&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> Database <span class="operator">|</span> <span class="keyword">Table</span> <span class="operator">|</span> In_use <span class="operator">|</span> Name_locked <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> test     <span class="operator">|</span> actor <span class="operator">|</span>      <span class="number">1</span> <span class="operator">|</span>           <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"></span><br><span class="line"># 解锁</span><br><span class="line">mysql<span class="operator">&gt;</span> unlock tables;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>对MyISAM表的读操作(加读锁) ,不会阻寒其他进程对同一表的读请求,但会阻赛对同一表的写请求。只有当读锁释放后,才会执行其它进程的写操作。对MylSAM表的写操作(加写锁) ,会阻塞其他进程对同一表的读和写操作,只有当写锁释放后,才会执行其它进程的读写操作</p>
+<p>对MyISAM表的读操作(加读锁) ,不会阻寒其他进程对同一表的读请求,但会阻赛对同一表的写请求。只有当读锁释放后,才会执行其它进程的写操作。<br>
+对MylSAM表的写操作(加写锁) ,会阻塞其他进程对同一表的读和写操作,只有当写锁释放后,才会执行其它进程的读写操作</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -934,7 +960,10 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 行锁<span class="keyword">for</span> <span class="keyword">update</span>，这样其他session只能读这行数据，修改则会被阻塞，直到锁定行的session提交</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> actor <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">10</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>注意行锁的查询条件必须走索引，否则会升级为表锁尽可能让所有数据检索都通过索引来完成，避免无索引行锁升级为表锁合理设计索引，尽量缩小锁的范围尽量控制事务大小，减少锁定资源量和时间长度，涉及事务加锁的sql尽量放在事务最后执行</p>
+<p>注意行锁的查询条件必须走索引，否则会升级为表锁<br>
+尽可能让所有数据检索都通过索引来完成，避免无索引行锁升级为表锁<br>
+合理设计索引，尽量缩小锁的范围<br>
+尽量控制事务大小，减少锁定资源量和时间长度，涉及事务加锁的sql尽量放在事务最后执行</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -960,8 +989,11 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 </li>
 </ul>
 <blockquote>
-<p>如account表的主键id是不连续的（1，2，3，10，20），那么间隙就有id为 (3,10)，(10,20)，(20,正无穷) 这三个区间在Session_1下面执行 <code>update account set age = 10 where id &gt; 8 and id &lt;18;</code><br>
-则其他Session没法在这个范围所包含的所有行记录(包括间隙行记录)以及行记录所在的间隙里插入或修改任何数据，即id在 (3,20]区间都无法修改数据，注意最后那个20也是包含在内的。注意这里锁住的最后一条记录不是id=18，而是18所在的间隙区间都会锁住。尽可能减少检索条件范围，避免间隙锁</p>
+<p>如account表的主键id是不连续的（1，2，3，10，20），那么间隙就有id为 (3,10)，(10,20)，(20,正无穷) 这三个区间<br>
+在Session_1下面执行 <code>update account set age = 10 where id &gt; 8 and id &lt;18;</code><br>
+则其他Session没法在这个范围所包含的所有行记录(包括间隙行记录)以及行记录所在的间隙里插入或修改任何数据，即id在 (3,20]区间都无法修改数据，注意最后那个20也是包含在内的。<br>
+注意这里锁住的最后一条记录不是id=18，而是18所在的间隙区间都会锁住。<br>
+尽可能减少检索条件范围，避免间隙锁</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -975,7 +1007,8 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 <h2 id="慢查询">慢查询</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>什么是慢查询慢查询日志，顾名思义，就是查询花费大量时间的日志，是指mysql记录所有执行超过<code>long_query_time</code>参数设定的时间阈值的SQL语句的日志。该日志能为SQL语句的优化带来很好的帮助。默认情况下，慢查询日志是关闭的，要使用慢查询日志功能，首先要开启慢查询日志功能。</p>
+<p>什么是慢查询<br>
+慢查询日志，顾名思义，就是查询花费大量时间的日志，是指mysql记录所有执行超过<code>long_query_time</code>参数设定的时间阈值的SQL语句的日志。该日志能为SQL语句的优化带来很好的帮助。默认情况下，慢查询日志是关闭的，要使用慢查询日志功能，首先要开启慢查询日志功能。</p>
 </li>
 <li class="lvl-2">
 <p>开启慢查询</p>
@@ -1036,10 +1069,16 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 <h2 id="执行计划相关">执行计划相关</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>什么是执行计划一条查询语句在经过MySQL查询优化器的各种基于成本和规则的优化会后生成一个所谓的执行计划，这个执行计划展示了接下来具体执行查询的方式，比如多表连接的顺序是什么，对于每个表采用什么访问方法来具体执行查询等等。<code>EXPLAIN</code>语句来帮助我们查看某个查询语句的具体执行计划，我们需要搞懂<code>EXPLAIN</code>的各个输出项都是干嘛使的，从而可以有针对性的提升我们查询语句的性能。通过使用<code>EXPLAIN</code>关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的，分析查询语句或是表结构的性能瓶颈。</p>
+<p><strong>什么是执行计划</strong></p>
 </li>
+</ul>
+<blockquote>
+<p>一条查询语句在经过MySQL查询优化器的各种基于成本和规则的优化会后生成一个所谓的执行计划，这个执行计划展示了接下来具体执行查询的方式，比如多表连接的顺序是什么，对于每个表采用什么访问方法来具体执行查询等等。<code>EXPLAIN</code>语句来帮助我们查看某个查询语句的具体执行计划，我们需要搞懂<code>EXPLAIN</code>的各个输出项都是干嘛使的，从而可以有针对性的提升我们查询语句的性能。<br>
+通过使用<code>EXPLAIN</code>关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的，分析查询语句或是表结构的性能瓶颈。</p>
+</blockquote>
+<ul class="lvl-0">
 <li class="lvl-2">
-<p>通过<code>EXPLAIN</code>我们可以知道：<br>
+<p><strong>通过<code>EXPLAIN</code>我们可以知道：</strong><br>
 ⚫ 表的读取顺序<br>
 ⚫ 数据读取操作的操作类型<br>
 ⚫ 哪些索引可以使用<br>
@@ -1048,7 +1087,7 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 ⚫ 每张表有多少行被优化器查询</p>
 </li>
 <li class="lvl-2">
-<p>查看执行计划</p>
+<p><strong>查看执行计划</strong></p>
 </li>
 </ul>
 <blockquote>
@@ -1057,7 +1096,7 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> actor <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type <span class="operator">|</span> <span class="keyword">table</span> <span class="operator">|</span> partitions <span class="operator">|</span> type  <span class="operator">|</span> possible_keys <span class="operator">|</span> key     <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>   <span class="operator">|</span> <span class="keyword">rows</span> <span class="operator">|</span> filtered <span class="operator">|</span> Extra <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> SIMPLE      <span class="operator">|</span> actor <span class="operator">|</span> <span class="keyword">NULL</span>       <span class="operator">|</span> const <span class="operator">|</span> <span class="keyword">PRIMARY</span>       <span class="operator">|</span> <span class="keyword">PRIMARY</span> <span class="operator">|</span> <span class="number">4</span>       <span class="operator">|</span> const <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span>   <span class="number">100.00</span> <span class="operator">|</span> <span class="keyword">NULL</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>重点属性说明</p>
+<p><strong>重点属性说明</strong></p>
 </li>
 </ul>
 <blockquote>
@@ -1085,7 +1124,9 @@ id列越大执行优先级越高，id相同则从上往下执行，id为NULL最�
 <blockquote>
 <p>table</p>
 </blockquote>
-<div class="note success"><p>table列表示 explain 的一行正在访问哪个表。当 from 子句中有子查询时，table列是 <derivenN> 格式，表示当前查询依赖 id=N 的查询，于是先执行 id=N 的查 询。当有 union 时，UNION RESULT 的 table 列的值为&lt;union1,2&gt;，1和2表示参与 union 的 select 行id。</p>
+<div class="note success"><p>table列表示 explain 的一行正在访问哪个表。<br>
+当 from 子句中有子查询时，table列是 <derivenN> 格式，表示当前查询依赖 id=N 的查询，于是先执行 id=N 的查 询。<br>
+当有 union 时，UNION RESULT 的 table 列的值为&lt;union1,2&gt;，1和2表示参与 union 的 select 行id。</p>
 </div>
 <blockquote>
 <p>type</p>
@@ -1120,12 +1161,14 @@ NULL表示mysql能够在优化阶段分解查询语句，在执行阶段用不�
 <p>possible_keys</p>
 </blockquote>
 <div class="note success"><p>possible_keys列显示查询可能使用哪些索引来查找。<br>
-explain 时可能出现 possible_keys 有值，而 key 显示 NULL 的情况，这种情况是因为表中数据不多，mysql认为索引对此查询帮助不大，选择了全表查询。如果该列是NULL，则没有相关的索引。</p>
+explain 时可能出现 possible_keys 有值，而 key 显示 NULL 的情况，这种情况是因为表中数据不多，mysql认为索引对此查询帮助不大，选择了全表查询。<br>
+如果该列是NULL，则没有相关的索引。</p>
 </div>
 <blockquote>
 <p>key</p>
 </blockquote>
-<div class="note success"><p>key列显示mysql实际采用哪个索引来优化对该表的访问。如果没有使用索引，则该列是 NULL。</p>
+<div class="note success"><p>key列显示mysql实际采用哪个索引来优化对该表的访问。<br>
+如果没有使用索引，则该列是 NULL。</p>
 </div>
 <blockquote>
 <p>key_len</p>
@@ -1144,7 +1187,9 @@ bigint：8字节</li>
 <li class="lvl-3">时间类型<br>
 date：3字节<br>
 timestamp：4字节<br>
-datetime：8字节如果字段允许为 NULL，需要1字节记录是否为 NULL。索引最大长度是768字节，当字符串过长时，mysql会做一个类似左前缀索引的处理，将前半部分的字符提取出来做索引。</li>
+datetime：8字节<br>
+如果字段允许为 NULL，需要1字节记录是否为 NULL。<br>
+索引最大长度是768字节，当字符串过长时，mysql会做一个类似左前缀索引的处理，将前半部分的字符提取出来做索引。</li>
 </ol>
 </div>
 <blockquote>
@@ -1174,8 +1219,11 @@ datetime：8字节如果字段允许为 NULL，需要1字节记录是否为 NULL
 </li>
 </ul>
 <blockquote>
-<p>单路排序：是一次性取出满足条件行的所有字段，然后在sort buffer中进行排序；双路排序（又叫回表排序模式）：是首先根据相应的条件取出相应的排序字段和可以直接定位行数据的行ID，然后在 sort buffer 中进行排序，排序完后需要再次取回其它需要的字段；<br>
-MySQL通过比较系统变量 max_length_for_sort_data(默认1024字节)的大小和需要查询的字段总大小来判断使用哪种排序模式。如果字段的总长度小于max_length_for_sort_data ，那么使用单路排序模式；如果字段的总长度大于max_length_for_sort_data ，那么使用双路排序模式;<br>
+<p>单路排序：是一次性取出满足条件行的所有字段，然后在sort buffer中进行排序；<br>
+双路排序（又叫回表排序模式）：是首先根据相应的条件取出相应的排序字段和可以直接定位行数据的行ID，然后在 sort buffer 中进行排序，排序完后需要再次取回其它需要的字段；<br>
+MySQL通过比较系统变量 max_length_for_sort_data(默认1024字节)的大小和需要查询的字段总大小来判断使用哪种排序模式。<br>
+如果字段的总长度小于max_length_for_sort_data ，那么使用单路排序模式；<br>
+如果字段的总长度大于max_length_for_sort_data ，那么使用双路排序模式;<br>
 如果全部使用sort_buffer内存排序一般情况下效率会高于磁盘文件排序，但不能因为这个就随便增大sort_buffer(默认1M)，mysql很多参数设置都是做过优化的，不要轻易调整。</p>
 </blockquote>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># mysql8是<span class="number">4</span>k，mysql5是<span class="number">1</span>k</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;max_length_for_sort_data&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name            <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> max_length_for_sort_data <span class="operator">|</span> <span class="number">4096</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"></span><br><span class="line"># 这里设置的<span class="number">4</span>M</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;sort_buffer_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span>   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br><span class="line"><span class="operator">|</span> sort_buffer_size <span class="operator">|</span> <span class="number">4194304</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br></pre></td></tr></table></figure>
@@ -1261,18 +1309,32 @@ MySQL通过比较系统变量 max_length_for_sort_data(默认1024字节)的大�
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>聚集索引/聚簇索引/密集索引<br>
-InnoDB中使用了聚集索引，就是将表的主键用来构造一棵B+树，并且将整张表的行记录数据存放在该B+树的叶子节点中。也就是所谓的索引即数据，数据即索引。由于聚集索引是利用表的主键构建的，所以每张表只能拥有一个聚集索引。聚集索引的叶子节点就是数据页。换句话说，数据页上存放的是完整的每行记录。因此聚集索引的一个优点就是：通过聚集索引能获取完整的整行数据。另一个优点是：对于主键的排序查找和范围查找速度非常快。如果我们没有定义主键呢？MySQL会使用唯一性索引，没有唯一性索引，MySQL也会创建一个隐含列RowID来做主键，然后用这个主键来建立聚集索引。</p>
+InnoDB中使用了聚集索引，就是将表的主键用来构造一棵B+树，并且将整张表的行记录数据存放在该B+树的叶子节点中。也就是所谓的索引即数据，数据即索引。<br>
+由于聚集索引是利用表的主键构建的，所以每张表只能拥有一个聚集索引。<br>
+聚集索引的叶子节点就是数据页。换句话说，数据页上存放的是完整的每行记录。<br>
+因此聚集索引的一个优点就是：通过聚集索引能获取完整的整行数据。<br>
+另一个优点是：对于主键的排序查找和范围查找速度非常快。<br>
+如果我们没有定义主键呢？MySQL会使用唯一性索引，没有唯一性索引，MySQL也会创建一个隐含列RowID来做主键，然后用这个主键来建立聚集索引。</p>
 </li>
 <li class="lvl-2">
-<p>辅助索引/二级索引/非聚集索引/稀疏索引上边介绍的聚簇索引只能在搜索条件是主键值时才能发挥作用，因为B+树中的数据都是按照主键进行排序的,那如果我们想以别的列作为搜索条件怎么办？我们一般会建立多个索引，这些索引被称为辅助索引/二级索引，辅助索引也是一颗B+树。对于辅助索引(Secondary Index，也称二级索引、非聚集索引)，叶子节点并不包含行记录的全部数据。叶子节点除了包含键值以外，每个叶子节点中的索引行中还包含了相应行数据的聚集索引主键，用于回表查询。辅助索引的存在并不影响数据在聚集索引中的组织，因此每张表上可以有多个辅助索引，有几个辅助索引就会创建几颗B+树。<br>
+<p>辅助索引/二级索引/非聚集索引/稀疏索引<br>
+上边介绍的聚簇索引只能在搜索条件是主键值时才能发挥作用，因为B+树中的数据都是按照主键进行排序的,那如果我们想以别的列作为搜索条件怎么办？<br>
+我们一般会建立多个索引，这些索引被称为辅助索引/二级索引，辅助索引也是一颗B+树。<br>
+对于辅助索引(Secondary Index，也称二级索引、非聚集索引)，叶子节点并不包含行记录的全部数据。<br>
+叶子节点除了包含键值以外，每个叶子节点中的索引行中还包含了相应行数据的聚集索引主键，用于回表查询。<br>
+辅助索引的存在并不影响数据在聚集索引中的组织，因此每张表上可以有多个辅助索引，有几个辅助索引就会创建几颗B+树。<br>
 MyISAM存储引擎，不管是主键索引，唯一键索引还是普通索引都是非聚集索引。</p>
 </li>
 </ul>
-<div class="note success"><p>当通过辅助索引来寻找数据时，InnoDB存储引擎会遍历辅助索引并通过叶级别的指针获得指向主键索引的主键，然后再通过主键索引（聚集索引）来找到一个完整的行记录。这个过程也被称为回表。也就是根据辅助索引的值查询一条完整的用户记录需要使用到2棵B+树–一次辅助索引，一次聚集索引。</p>
+<div class="note success"><p>当通过辅助索引来寻找数据时，InnoDB存储引擎会遍历辅助索引并通过叶级别的指针获得指向主键索引的主键，然后再通过主键索引（聚集索引）来找到一个完整的行记录。这个过程也被称为回表。<br>
+也就是根据辅助索引的值查询一条完整的用户记录需要使用到2棵B+树–一次辅助索引，一次聚集索引。</p>
 </div>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>联合索引/复合索引前面我们对索引的描述，隐含了一个条件，那就是构建索引的字段只有一个，但实践工作中构建索引的完全可以是多个字段。所以，将表上的多个列组合起来进行索引我们称之为联合索引或者复合索引，比如index(a,b)就是将a,b两个列组合起来构成一个索引。联合索引只会建立1棵B+树。</p>
+<p>联合索引/复合索引<br>
+前面我们对索引的描述，隐含了一个条件，那就是构建索引的字段只有一个，但实践工作中构建索引的完全可以是多个字段。<br>
+所以，将表上的多个列组合起来进行索引我们称之为联合索引或者复合索引，比如index(a,b)就是将a,b两个列组合起来构成一个索引。<br>
+联合索引只会建立1棵B+树。</p>
 </li>
 <li class="lvl-2">
 <p>自适应哈希索引(Adaptive Hash Index,AHI)<br>
@@ -1286,7 +1348,10 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>全文检索之倒排索引(FULLTEXT)<br>
-数据类型为 char、varchar、text 及其系列才可以建全文索引。每张表只能有一个全文检索的索引不支持没有单词界定符(delimiter）的语言，如中文、日语、韩语等。由于mysql的全文索引功能很弱，这里不做详细介绍，推荐使用ES等专业的搜索引擎。</p>
+数据类型为 char、varchar、text 及其系列才可以建全文索引。<br>
+每张表只能有一个全文检索的索引<br>
+不支持没有单词界定符(delimiter）的语言，如中文、日语、韩语等。<br>
+由于mysql的全文索引功能很弱，这里不做详细介绍，推荐使用ES等专业的搜索引擎。</p>
 </li>
 </ul>
 <div class="note success"><h3 id="MySQL有哪些索引类型">MySQL有哪些索引类型?</h3>
@@ -1311,7 +1376,9 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 </li>
 </ul>
 <h3 id="前缀索引">前缀索引</h3>
-<p>如果索引的字段类型很长，如varchar(255)，此时创建的索引就会非常大，而且维护起来也非常慢，此时建议使用前缀索引，就是只对该字段的前面一些字符进行索引。阿里的Java编程规范中也提到，在varchar上建立索引时，必须指定索引长度，没必要对全字段建立索引，建议索引的长度不超过20。可以使用<code>select count(distinct left(列名, 索引长度))/count(*) from tableName</code>的区分度来确定，一般大于90%即可。</p>
+<p>如果索引的字段类型很长，如varchar(255)，此时创建的索引就会非常大，而且维护起来也非常慢，此时建议使用前缀索引，就是只对该字段的前面一些字符进行索引。<br>
+阿里的Java编程规范中也提到，在varchar上建立索引时，必须指定索引长度，没必要对全字段建立索引，建议索引的长度不超过20。<br>
+可以使用<code>select count(distinct left(列名, 索引长度))/count(*) from tableName</code>的区分度来确定，一般大于90%即可。</p>
 <h3 id="三星索引">三星索引</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1339,10 +1406,15 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <h3 id="索引的代价">索引的代价</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>空间上的代价这个是显而易见的，每建立一个索引都要为它建立一棵B+树，每一棵B+树的每一个节点都是一个数据页，一个页默认会占用16KB的存储空间，一棵很大的B+树由许多数据页组成会占据很多的存储空间。</p>
+<p>空间上的代价<br>
+这个是显而易见的，每建立一个索引都要为它建立一棵B+树，每一棵B+树的每一个节点都是一个数据页，一个页默认会占用16KB的存储空间，一棵很大的B+树由许多数据页组成会占据很多的存储空间。</p>
 </li>
 <li class="lvl-2">
-<p>时间上的代价每次对表中的数据进行增、删、改操作时，都需要去修改各个B+树索引。B+树每层节点都是按照索引列的值从小到大的顺序排序而组成了双向链表。不论是叶子节点中的记录，还是非叶子内节点中的记录都是按照索引列的值从小到大的顺序而形成了一个单向链表。而增、删、改操作可能会对节点和记录的排序造成破坏，所以存储引擎需要额外的时间进行一些记录移位，页面分裂、页面回收的操作来维护好节点和记录的排序。如果我们建了许多索引，每个索引对应的B+树都要进行相关的维护操作，这必然会对性能造成影响。</p>
+<p>时间上的代价<br>
+每次对表中的数据进行增、删、改操作时，都需要去修改各个B+树索引。B+树每层节点都是按照索引列的值从小到大的顺序排序而组成了双向链表。<br>
+不论是叶子节点中的记录，还是非叶子内节点中的记录都是按照索引列的值从小到大的顺序而形成了一个单向链表。<br>
+而增、删、改操作可能会对节点和记录的排序造成破坏，所以存储引擎需要额外的时间进行一些记录移位，页面分裂、页面回收的操作来维护好节点和记录的排序。<br>
+如果我们建了许多索引，每个索引对应的B+树都要进行相关的维护操作，这必然会对性能造成影响。</p>
 </li>
 </ul>
 <blockquote>
@@ -1460,7 +1532,9 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <h2 id="查看线程状态">查看线程状态</h2>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 会显示用户，客户端ip，访问的数据库，执行的命令及其状态等信息</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> processlist;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span> Id  <span class="operator">|</span> <span class="keyword">User</span>            <span class="operator">|</span> Host               <span class="operator">|</span> db       <span class="operator">|</span> Command <span class="operator">|</span> <span class="type">Time</span>   <span class="operator">|</span> State                  <span class="operator">|</span> Info             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">5</span> <span class="operator">|</span> event_scheduler <span class="operator">|</span> localhost          <span class="operator">|</span> <span class="keyword">NULL</span>     <span class="operator">|</span> Daemon  <span class="operator">|</span> <span class="number">628889</span> <span class="operator">|</span> Waiting <span class="keyword">on</span> <span class="keyword">empty</span> queue <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">438</span> <span class="operator">|</span> root            <span class="operator">|</span> localhost:<span class="number">56114</span>    <span class="operator">|</span> mysql    <span class="operator">|</span> Query   <span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span> init                   <span class="operator">|</span> <span class="keyword">show</span> processlist <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">439</span> <span class="operator">|</span> root            <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span>:<span class="number">53840</span> <span class="operator">|</span> novel_db <span class="operator">|</span> Sleep   <span class="operator">|</span>      <span class="number">5</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">440</span> <span class="operator">|</span> root            <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span>:<span class="number">53849</span> <span class="operator">|</span> <span class="keyword">NULL</span>     <span class="operator">|</span> Sleep   <span class="operator">|</span>      <span class="number">5</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-----------------+--------------------+----------+---------+--------+------------------------+------------------+</span></span><br><span class="line"># 或者，两者等价</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> information_schema.processlist;</span><br><span class="line"></span><br><span class="line"># 查看每个客户端连接数</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> id,client_ip,<span class="built_in">count</span>(client_ip) <span class="keyword">as</span> client_num <span class="keyword">from</span> (<span class="keyword">select</span> substring_index(host,<span class="string">&#x27;:&#x27;</span> ,<span class="number">1</span>) <span class="keyword">as</span> client_ip,id <span class="keyword">from</span> information_schema.processlist ) <span class="keyword">as</span> connect_info <span class="keyword">group</span> <span class="keyword">by</span> client_ip <span class="keyword">order</span> <span class="keyword">by</span> client_num <span class="keyword">desc</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> id  <span class="operator">|</span> client_ip    <span class="operator">|</span> client_num <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">440</span> <span class="operator">|</span> <span class="number">1.119</span><span class="number">.161</span><span class="number">.30</span> <span class="operator">|</span>          <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">5</span> <span class="operator">|</span> localhost    <span class="operator">|</span>          <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------------+------------+</span></span><br><span class="line"></span><br><span class="line"># 找出所有执行时间超过 <span class="number">5</span> 分钟的线程，拼凑出 kill 语句，方便后面查杀</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> concat(<span class="string">&#x27;kill &#x27;</span>, id, <span class="string">&#x27;;&#x27;</span>) <span class="keyword">from</span> information_schema.processlist <span class="keyword">where</span> Command <span class="operator">!=</span> <span class="string">&#x27;Sleep&#x27;</span> <span class="keyword">and</span> <span class="type">Time</span> <span class="operator">&gt;</span> <span class="number">300</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">Time</span> <span class="keyword">desc</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> concat(<span class="string">&#x27;kill &#x27;</span>, id, <span class="string">&#x27;;&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> kill <span class="number">5</span>;                  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"></span><br><span class="line"># 关闭连接，注意kill只能关闭当前正在执行DML的操作，DDL不能关闭</span><br><span class="line">mysql<span class="operator">&gt;</span> kill <span class="number">440</span>;</span><br></pre></td></tr></table></figure>
 <div class="note success"><p><strong>State说明</strong><br>
-通过<code>show processlist;</code>查看线程状态非常有用,这可以让我们很快地了解当前MySQL在进行的线程,包括线程的状态、是否锁表等，可以实时地查看SQL的执行情况，同时对一些锁表操作进行优化。在一个繁忙的服务器上，可能会看到大量的不正常的状态，例如statistics正占用大量的时间。这通常表示，某个地方有异常了。线程常见的状态有很多，比如:</p>
+通过<code>show processlist;</code>查看线程状态非常有用,这可以让我们很快地了解当前MySQL在进行的线程,包括线程的状态、是否锁表等，可以实时地查看SQL的执行情况，同时对一些锁表操作进行优化。<br>
+在一个繁忙的服务器上，可能会看到大量的不正常的状态，例如statistics正占用大量的时间。这通常表示，某个地方有异常了。<br>
+线程常见的状态有很多，比如:</p>
 <ul class="lvl-0">
 <li class="lvl-2">statistics: 服务器正在计算统计信息以研究一个查询执行计划。如果线程长时间处于此状态，则服 务器可能是磁盘绑定执行其他工作。</li>
 <li class="lvl-2">Creating tmp table: 该线程正在内存或磁盘上创建临时表。如果表在内存中创建但稍后转换为磁盘表，则该操作期间的状态将为 Copying to tmp table on disk</li>
@@ -1977,11 +2051,15 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <p>因为slave节点有可能升级为master节点，所以每个slave上也要需要拥有同步帐号，在每个slave上执行如下命令</p>
 </li>
 </ul>
-<div class="note danger"><p>注意：这个方式是错误的，会导致主从切换后，slave不能与新的master实现数据同步，因为此时两个从库的GTID事务和binlog记录的位置已经不一致了。这个错误的结果在下文&quot;11.测试 MHA 故障转移&quot;有说明。</p>
+<div class="note danger"><p>注意：<br>
+这个方式是错误的，会导致主从切换后，slave不能与新的master实现数据同步，<br>
+因为此时两个从库的GTID事务和binlog记录的位置已经不一致了。<br>
+这个错误的结果在下文&quot;11.测试 MHA 故障转移&quot;有说明。</p>
 <p>正确的做法是，将master的数据库导入到两个slave中，主从一旦建立，从库就不要写入任何数据。</p>
 </div>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 停止同步</span></span><br><span class="line">mysql&gt; stop slave;</span><br><span class="line"><span class="comment"># &#x27;10.250.%.%&#x27; 表示只能局域网段内的ip才能访问，如果不限制ip，可以配置为&#x27;%&#x27;</span></span><br><span class="line">mysql&gt; CREATE USER <span class="string">&#x27;vagrant&#x27;</span>@<span class="string">&#x27;10.250.%.%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;vagrant&#x27;</span>;</span><br><span class="line">mysql&gt; ALTER USER <span class="string">&#x27;vagrant&#x27;</span>@<span class="string">&#x27;10.250.%.%&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;vagrant&#x27;</span>;</span><br><span class="line">mysql&gt; GRANT REPLICATION SLAVE ON *.* TO <span class="string">&#x27;vagrant&#x27;</span>@<span class="string">&#x27;10.250.%.%&#x27;</span>;</span><br><span class="line">mysql&gt; FLUSH PRIVILEGES;</span><br><span class="line"><span class="comment"># 开启同步</span></span><br><span class="line">mysql&gt; start slave;</span><br></pre></td></tr></table></figure>
-<div class="note success"><p>正确的做法是，将master的数据库导入到两个slave中，然后在开启主从同步。注意：主从一旦建立，从库就不要写入任何数据。</p>
+<div class="note success"><p>正确的做法是，将master的数据库导入到两个slave中，然后在开启主从同步。<br>
+注意：主从一旦建立，从库就不要写入任何数据。</p>
 </div>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 两个从库中分别执行master数据库导出</span></span><br><span class="line">mysqldump -uroot --all-databases --triggers --routines --events -p -h node2 &gt; all_databases.sql</span><br><span class="line"><span class="comment"># 从库执行导入数据</span></span><br><span class="line">mysql -uroot -p &lt; all_databases.sql</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -2076,7 +2154,9 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysql&gt; select * from performance_schema.replication_applier_status_by_worker\G;</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">    CHANNEL_NAME:</span><br><span class="line">        WORKER_ID: 1</span><br><span class="line">        THREAD_ID: NULL</span><br><span class="line">    SERVICE_STATE: OFF</span><br><span class="line">LAST_ERROR_NUMBER: 1396</span><br><span class="line">LAST_ERROR_MESSAGE: Worker 1 failed executing transaction <span class="string">&#x27;6e9a571e-330e-11ed-a3f8-0a53e7cced43:1&#x27;</span> at master <span class="built_in">log</span> mysql-bin.000013, end_log_pos 1465; Error <span class="string">&#x27;Operation CREATE USER failed for &#x27;</span>vagrant<span class="string">&#x27;@&#x27;</span>10.250.%.%<span class="string">&#x27;&#x27;</span> on query. Default database: <span class="string">&#x27;mysql&#x27;</span>. Query: <span class="string">&#x27;CREATE USER &#x27;</span>vagrant<span class="string">&#x27;@&#x27;</span>10.250.%.%<span class="string">&#x27; IDENTIFIED WITH &#x27;</span>mysql_native_password<span class="string">&#x27; AS &#x27;</span>*04E6E1273D1783DF7D57DC5479FE01CFFDFD0058<span class="string">&#x27;&#x27;</span></span><br><span class="line">…………</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>这里提示的比较清楚，意思是从库在同步新的主库数据时，执行创建同步帐号的<code>CREATE USER</code>语句时报错思考我们的构建过程，从库创建同步帐号是分别创建在自己的数据库里的，所以两个从库GTID事务和binlog日志实际上数据并不一致，导致主从切换后，从库要从新的master同步数据时，就会同步这个创建帐号的语句，但是此时从库已经有这个帐号了，所以创建帐号失败，从而导致主从复制失败。此时的解决方法就是将master的数据库全量导入到slave中，然后重新建立主从，参照下文。</p>
+<p>这里提示的比较清楚，意思是从库在同步新的主库数据时，执行创建同步帐号的<code>CREATE USER</code>语句时报错<br>
+思考我们的构建过程，从库创建同步帐号是分别创建在自己的数据库里的，所以两个从库GTID事务和binlog日志实际上数据并不一致，导致主从切换后，从库要从新的master同步数据时，就会同步这个创建帐号的语句，但是此时从库已经有这个帐号了，所以创建帐号失败，从而导致主从复制失败。<br>
+此时的解决方法就是将master的数据库全量导入到slave中，然后重新建立主从，参照下文。</p>
 </blockquote>
 <h3 id="我们再按-5-从节点也要创建同步帐号-中的正确方式搭建好主从后进行测试">我们再按&quot;5.从节点也要创建同步帐号&quot;中的正确方式搭建好主从后进行测试</h3>
 <ul class="lvl-0">
@@ -2131,7 +2211,8 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">[root@ip-10-250-0-91 mha_master]<span class="comment"># masterha_check_repl --conf=/etc/mha_master/mha.cnf</span></span><br><span class="line">………………</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info] Checking replication health on 10.250.0.186..</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info]  ok.</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info] Checking replication health on 10.250.0.102..</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info]  ok.</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [warning] master_ip_failover_script is not defined.</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [warning] shutdown_script is not defined.</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info] Got <span class="built_in">exit</span> code 0 (Not master dead).</span><br><span class="line"></span><br><span class="line">MySQL Replication Health is OK.</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>这里有两个警告，<code>master_ip_failover_script is not defined.</code>和<code>shutdown_script is not defined.</code><code>shutdown_script</code>脚本用于指定故障发生后关闭故障主机的脚本，而<code>master_ip_failover_script</code>脚本用于指定故障转移时需要做的操作。</p>
+<p>这里有两个警告，<code>master_ip_failover_script is not defined.</code>和<code>shutdown_script is not defined.</code><br>
+<code>shutdown_script</code>脚本用于指定故障发生后关闭故障主机的脚本，而<code>master_ip_failover_script</code>脚本用于指定故障转移时需要做的操作。</p>
 </blockquote>
 <div class="note info"><blockquote>
 <p>实际上，MHA支持多种脚本扩展</p>
@@ -2190,7 +2271,8 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 </blockquote>
 <div class="note danger"><p>AWS不支持在EC2上开启VIP，需要使用其它解决方案，这个不在这里讨论。</p>
 </div>
-<div class="note info"><p>可以在MHA配置文件中配置<code>report_script</code>，其对应一个脚本文件，用于故障转移时发出告警信息。可以发送邮件，也可以调用企业微信或者钉钉的接口实现，这里不再赘述。</p>
+<div class="note info"><p>可以在MHA配置文件中配置<code>report_script</code>，其对应一个脚本文件，用于故障转移时发出告警信息。<br>
+可以发送邮件，也可以调用企业微信或者钉钉的接口实现，这里不再赘述。</p>
 </div>
 ]]></content>
       <categories>
@@ -2339,7 +2421,8 @@ MHA使用说明：<a href="https://github.com/yoshinorim/mha4mysql-manager/wiki"
 <h3 id="主库上配置主从信息">主库上配置主从信息</h3>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysql&gt; CHANGE MASTER TO MASTER_HOST=<span class="string">&#x27;10.250.0.82&#x27;</span>,</span><br><span class="line">    MASTER_PORT=3306,</span><br><span class="line">    MASTER_USER=<span class="string">&#x27;vagrant&#x27;</span>,</span><br><span class="line">    MASTER_PASSWORD=<span class="string">&#x27;vagrant&#x27;</span>,</span><br><span class="line">    MASTER_LOG_FILE=<span class="string">&#x27;mysql-bin.000014&#x27;</span>,</span><br><span class="line">    MASTER_LOG_POS=1183;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动复制线程</span></span><br><span class="line">mysql&gt; START slave;</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW slave status \G;</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">               Slave_IO_State: Waiting <span class="keyword">for</span> <span class="built_in">source</span> to send event</span><br><span class="line">                  Master_Host: 10.250.0.82</span><br><span class="line">                  Master_User: vagrant</span><br><span class="line">                  Master_Port: 3306</span><br><span class="line">                Connect_Retry: 60</span><br><span class="line">              Master_Log_File: mysql-bin.000014</span><br><span class="line">          Read_Master_Log_Pos: 1183</span><br><span class="line">               Relay_Log_File: slave-relay-bin.000002</span><br><span class="line">                Relay_Log_Pos: 326</span><br><span class="line">        Relay_Master_Log_File: mysql-bin.000014</span><br><span class="line">             Slave_IO_Running: Yes</span><br><span class="line">            Slave_SQL_Running: Yes</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>此时双主架构搭建完成。双主架构下，每个master还可以配置多个slave用于数据备份。</p>
+<p>此时双主架构搭建完成。<br>
+双主架构下，每个master还可以配置多个slave用于数据备份。</p>
 </blockquote>
 <h3 id="双主架构自增主键冲突问题解决方法">双主架构自增主键冲突问题解决方法</h3>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># master1</span></span><br><span class="line"><span class="comment"># auto_increment字段产生的数值是：1, 3, 5, 7, …等奇数ID了</span></span><br><span class="line">auto_increment_offset = 1</span><br><span class="line">auto_increment_increment = 2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># master2</span></span><br><span class="line"><span class="comment"># auto_increment字段产生的数值是：2, 4, 6, 8, …等偶数ID了</span></span><br><span class="line">auto_increment_offset = 2</span><br><span class="line">auto_increment_increment = 2</span><br></pre></td></tr></table></figure>
@@ -2978,11 +3061,13 @@ MHA使用说明：<a href="https://github.com/yoshinorim/mha4mysql-manager/wiki"
 <p>注意这里会进入两次编辑页面，一次是多个提交的处理方式，按提示进行修改即可，一般保留第一行的命令pick，后面的行命令修改为s，然后wq保存。</p>
 </li>
 <li class="lvl-2">
-<p>注意合并多个分支时如果包含已经发布过的分支，就要调整顺序，将已经发布的最后一个分支放到第一行，否则再次发布时会提示需要先执行<code>git pull</code>，这是因为按照上面的逻辑只有第一行的是提交操作，后面的不会产生新的提交，所以版本号就会落后于远端分支，但是即便调整顺序，也会提示版本偏离，还是要先执行<code>git pull</code>，待手工合并冲突后再次提交一个新的commit，所以，最好的方法就是不要包含已经发布过的分支，只针对未发布的分支进行合并。编辑后的：<br>
+<p>注意合并多个分支时如果包含已经发布过的分支，就要调整顺序，将已经发布的最后一个分支放到第一行，否则再次发布时会提示需要先执行<code>git pull</code>，这是因为按照上面的逻辑只有第一行的是提交操作，后面的不会产生新的提交，所以版本号就会落后于远端分支，但是即便调整顺序，也会提示版本偏离，还是要先执行<code>git pull</code>，待手工合并冲突后再次提交一个新的commit，所以，最好的方法就是不要包含已经发布过的分支，只针对未发布的分支进行合并。<br>
+编辑后的：<br>
 <img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/rebase3.png" alt=""></p>
 </li>
 <li class="lvl-2">
-<p>第二个页面是要求你编辑本次合并的log说明，此时每次的log都会显示在这个页面，去掉不需要的，重新编辑一下保存即可。<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/rebase4.png" alt=""><br>
+<p>第二个页面是要求你编辑本次合并的log说明，此时每次的log都会显示在这个页面，去掉不需要的，重新编辑一下保存即可。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/rebase4.png" alt=""><br>
 编辑后的：<br>
 <img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/rebase5.png" alt=""></p>
 </li>
@@ -3532,7 +3617,8 @@ MHA使用说明：<a href="https://github.com/yoshinorim/mha4mysql-manager/wiki"
 <h2 id="四、发布">四、发布</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>1.签名我是mac电脑，于是签名工具使用的是<a href="https://gpgtools.org">https://gpgtools.org</a>，gradle签名时需要使用到<code>.gpg</code>证书文件，这个工具不支持直接导出gpg，其导出的证书文件是<code>.asc</code>格式的，asc其实就是字符串，可以用记事本打开查看。</p>
+<p>1.签名<br>
+我是mac电脑，于是签名工具使用的是<a href="https://gpgtools.org">https://gpgtools.org</a>，gradle签名时需要使用到<code>.gpg</code>证书文件，这个工具不支持直接导出gpg，其导出的证书文件是<code>.asc</code>格式的，asc其实就是字符串，可以用记事本打开查看。</p>
 <p>使用如下命令导出gpg格式的私钥证书：</p>
   <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># qunfeng_han@126.com是创建证书时使用的邮箱，会要求你输入创建证书时的密码</span></span><br><span class="line">gpg --export-secret-keys qunfeng_han@126.com &gt; secret.gpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以使用创建证书的用户名，会要求你输入创建证书时的密码</span></span><br><span class="line">gpg --export-secret-keys hanqunfeng &gt; secret.gpg</span><br><span class="line"><span class="comment"># 导出私钥明文</span></span><br><span class="line">gpg --export-secret-keys --armor hanqunfeng &gt; secret.asc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出当前全部证书</span></span><br><span class="line">gpg -k</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导出公钥</span></span><br><span class="line">gpg --<span class="built_in">export</span> hanqunfeng &gt; public.gpg</span><br><span class="line"><span class="comment"># 导出公钥明文</span></span><br><span class="line">gpg --<span class="built_in">export</span> --armor hanqunfeng &gt; public.asc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入公钥或私钥，区别就是导入公钥不需要创建证书的密码</span></span><br><span class="line">gpg --import public.gpg</span><br><span class="line">gpg --import --armor secret.asc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>也可以使用windows系统下载的<a href="https://www.gpg4win.org/">https://www.gpg4win.org/</a>Kleopatra，将gpgtools导出的证书（勾选密码才是私钥证书，看生成文件的名称就可以，公开就是公钥，私密就是私钥）导入到Kleopatra中，然后右键选择–&gt;Backup secret keys,记得后缀一定是gpg，该工具支持三种格式，asc、gpg、pgp，默认也是acs，手工将文件后缀修改为gpg即可。</p>
@@ -3623,11 +3709,14 @@ MHA使用说明：<a href="https://github.com/yoshinorim/mha4mysql-manager/wiki"
 <li class="lvl-2">
 <p>1.准备签名</p>
 <ul class="lvl-2">
-<li class="lvl-6">可以使用工具创建密钥对需要下载一个签名工具，我是mac电脑，下载的是<a href="https://gpgtools.org">https://gpgtools.org</a>。安装后点击新建，按照提示创建一个密钥对即可，注意高级选项里有个过期时间，默认是3年。创建好后会主动提示你是否将公钥发布到key server，点击Upload Public key即可。也可以在创建后的证书列表页面邮件选择证书–&gt;Send Public Key To Key Server。</li>
+<li class="lvl-6">可以使用工具创建密钥对<br>
+需要下载一个签名工具，我是mac电脑，下载的是<a href="https://gpgtools.org">https://gpgtools.org</a>。<br>
+安装后点击新建，按照提示创建一个密钥对即可，注意高级选项里有个过期时间，默认是3年。创建好后会主动提示你是否将公钥发布到key server，点击Upload Public key即可。也可以在创建后的证书列表页面邮件选择证书–&gt;Send Public Key To Key Server。</li>
 </ul>
 <p>导出证书时，勾选密码并设置密码就是私钥和公钥证书，不勾选密码就是公钥，看生成文件的名称就可以，公开就是公钥，私密就是私钥，格式都是asc，其实就是字符串，可以用记事本打开查看。</p>
 <p>如果windows系统，可以下载<a href="https://www.gpg4win.org/">https://www.gpg4win.org/</a> ，使用方式差不多，最后点击“将公钥上传的目录服务”。</p>
-<p>公钥发布到key server后要稍微等一会，大约10分钟吧，因为key server有多个，同步需要一些时间。记住你创建密钥对时的密码，发布项目时要使用。</p>
+<p>公钥发布到key server后要稍微等一会，大约10分钟吧，因为key server有多个，同步需要一些时间。<br>
+记住你创建密钥对时的密码，发布项目时要使用。</p>
 <ul class="lvl-2">
 <li class="lvl-6">
 <p>也可以使用命令行创建密钥对，版本[gpg (GnuPG/MacGPG2) 2.2.24]</p>
@@ -3675,7 +3764,8 @@ MHA使用说明：<a href="https://github.com/yoshinorim/mha4mysql-manager/wiki"
 </code></pre>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>6.更新部署修改pom.xml中的版本号，重新执行mvn clean deploy即可。此时不会再收到sonatype发的邮件，依旧等待大约10分钟后你就可以将依赖添加到项目中进行下载了，同样search.maven.org检索到需要等待两个小时。</p>
+<p>6.更新部署<br>
+修改pom.xml中的版本号，重新执行mvn clean deploy即可。此时不会再收到sonatype发的邮件，依旧等待大约10分钟后你就可以将依赖添加到项目中进行下载了，同样search.maven.org检索到需要等待两个小时。</p>
 </li>
 </ul>
 ]]></content>
@@ -4563,21 +4653,24 @@ MHA使用说明：<a href="https://github.com/yoshinorim/mha4mysql-manager/wiki"
 <h2 id="参考答案，作者水平有限，仅供学习交流">参考答案，作者水平有限，仅供学习交流</h2>
 <div class="note info"><ol>
 <li class="lvl-3">
-<p>存在自增主键Id，与orderId序号一致，可以通过错位法计算不存在的Id值。运行时间基本符合要求。</p>
+<p>存在自增主键Id，与orderId序号一致，可以通过错位法计算不存在的Id值。<br>
+运行时间基本符合要求。</p>
 </li>
 </ol>
 </div>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> id<span class="number">-1</span> <span class="keyword">as</span> id_del <span class="keyword">from</span> test_order <span class="keyword">where</span> id <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">select</span> id<span class="operator">+</span><span class="number">1</span> <span class="keyword">from</span> test_order);</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> id_del <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">233490</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">943220</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span>  #这里去除<span class="number">0</span>号记录，因为不存在id为<span class="number">0</span>的记录</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="number">3</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">1.063</span> sec)</span><br></pre></td></tr></table></figure>
 <div class="note info"><ol start="2">
 <li class="lvl-3">
-<p>如果不存在自增主键ID，而是使用orderId作为主键，则也可以通过错位法计算不存在的Id值，主要比较时一定要用完整的orderId，否则不能使用索引。运行时间超过要求。</p>
+<p>如果不存在自增主键ID，而是使用orderId作为主键，则也可以通过错位法计算不存在的Id值，主要比较时一定要用完整的orderId，否则不能使用索引。<br>
+运行时间超过要求。</p>
 </li>
 </ol>
 </div>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">RIGHT</span>(orderId, <span class="number">7</span>) <span class="operator">-</span> <span class="number">1</span> <span class="keyword">AS</span> id_del <span class="keyword">FROM</span> test_order</span><br><span class="line">  <span class="keyword">WHERE</span> orderId <span class="keyword">NOT</span> <span class="keyword">in</span>(</span><br><span class="line">    <span class="keyword">SELECT</span> concat( <span class="keyword">left</span>(orderId, <span class="number">14</span>), LPAD( <span class="keyword">RIGHT</span>(orderId, <span class="number">7</span>) <span class="operator">+</span> <span class="number">1</span>, <span class="number">7</span>, <span class="number">0</span>))</span><br><span class="line">    <span class="keyword">FROM</span> test_order);</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> id_del <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span>   #这里去除<span class="number">0</span>号记录，因为不存在id为<span class="number">0</span>的记录</span><br><span class="line"><span class="operator">|</span> <span class="number">233490</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">943220</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="number">3</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">2.999</span> sec)</span><br></pre></td></tr></table></figure>
 <div class="note info"><ol start="3">
 <li class="lvl-3">
-<p>如果不存在自增主键ID，而是使用orderId作为主键，也可以比较orderId的序号与行号，获取到不一致的第一条记录，然后在从该记录开始继续比较获得下一条不一致的记录，也可以通过存储过程实现。运行时间符合要求。</p>
+<p>如果不存在自增主键ID，而是使用orderId作为主键，也可以比较orderId的序号与行号，获取到不一致的第一条记录，然后在从该记录开始继续比较获得下一条不一致的记录，也可以通过存储过程实现。<br>
+运行时间符合要求。</p>
 </li>
 </ol>
 </div>
@@ -4718,7 +4811,9 @@ show variables like “%table_size%”;</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">th:object</span>=<span class="string">&quot;$&#123;user&#125;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>firstName: <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;*&#123;firstName&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>lastName: <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;*&#123;lastName&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">相当于</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>firstName: <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;user.firstName&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>lastName: <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;user.lastName&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ol start="6">
 <li class="lvl-3">
-<p><code>~&#123;...&#125;</code> 代码块表达式，用于在html中复用相同的结构语法：<code>~&#123;templatename::fragmentname&#125;</code>示例：<br>
+<p><code>~&#123;...&#125;</code> 代码块表达式，用于在html中复用相同的结构<br>
+语法：<code>~&#123;templatename::fragmentname&#125;</code><br>
+示例：<br>
 common/model.html，<code>th:fragment=&quot;header&quot;</code>指定代码块名称</p>
 </li>
 </ol>
@@ -4792,7 +4887,8 @@ common/model.html，<code>th:fragment=&quot;header&quot;</code>指定代码块�
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns:th</span>=<span class="string">&quot;http://www.thymeleaf.org&quot;</span> <span class="attr">xmlns:sec</span>=<span class="string">&quot;http://www.thymeleaf.org/thymeleaf-extras-springsecurity4&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line">使用方式与jsp标签类似：</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/auth/systemLogger/edit.do&#125;&quot;</span> <span class="attr">class</span>=<span class="string">&quot;btn btn-success btn-xs no-hover&quot;</span> <span class="attr">th:text</span>=<span class="string">&quot;#&#123;common.create&#125;&quot;</span> <span class="attr">sec:authorize</span>=<span class="string">&quot;hasRole(&#x27;LOGGER_ADD&#x27;)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;btn btn-danger btn-xs&quot;</span> <span class="attr">id</span>=<span class="string">&quot;delete&quot;</span> <span class="attr">th:text</span>=<span class="string">&quot;#&#123;common.delete&#125;&quot;</span> <span class="attr">sec:authorize</span>=<span class="string">&quot;hasRole(&#x27;LOGGER_DELETE&#x27;)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="调用spring管理的bean的方法，以及获取HttpSession对象和HttpServletRequest对象">调用spring管理的bean的方法，以及获取HttpSession对象和HttpServletRequest对象</h2>
 <p>语法：${@beanName.methodName(param,…)}<br>
-说明：beanName就是注册时的名称示例：</p>
+说明：beanName就是注册时的名称<br>
+示例：</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">#httpSession就是javax.servlet.http.HttpSession对象，可以简写为session</span><br><span class="line">#httpServletRequest就是javax.servlet.http.HttpServletRequest对象，可以简写为request</span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;@commonService.clearSessionMessage(#httpServletRequest)&#125;&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display: none&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="调用类的静态方法">调用类的静态方法</h2>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">th:with</span>=<span class="string">&quot;authoritysString=$&#123;T(com.example.function.auth.util.AuthUtil).getAuthoritysHtmlString(dataObj.authorities)&#125;&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -4995,7 +5091,8 @@ common/model.html，<code>th:fragment=&quot;header&quot;</code>指定代码块�
 <h4 id="2-4为新加入的master添加slave">2.4为新加入的master添加slave</h4>
 <p>同样需要先加入集群</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./redis-cli --cluster add-node 10.211.55.16:6382 10.211.55.16:6380</span><br></pre></td></tr></table></figure>
-<p>之后不需要做分配和平衡槽的操作登录这个redis， <code>./redis-cli -h 10.211.55.16 -p 6382</code></p>
+<p>之后不需要做分配和平衡槽的操作<br>
+登录这个redis， <code>./redis-cli -h 10.211.55.16 -p 6382</code></p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">127.0.0.1:6382&gt; cluster replicate 316e068fd71ee228299198a271efd839d3493835 <span class="comment">#主节点的id</span></span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
 <h3 id="3-删除节点">3.删除节点</h3>
 <h4 id="3-1删除主节点">3.1删除主节点</h4>
@@ -5003,11 +5100,13 @@ common/model.html，<code>th:fragment=&quot;header&quot;</code>指定代码块�
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./redis-cli --cluster reshard 10.211.55.15:6382 <span class="comment">#集群中任意ip即可</span></span><br></pre></td></tr></table></figure>
 <p>1.问你是否从原有的1-16384个槽中分配多少到新的主节点我们这里分配4096，即该节点上的槽数<br>
 2：然后紧接着会询问你给id为谁的主节点分配，这里我们分配给10.211.55.16:6379，即15506850b235f4277306368533cacf4a5ec1bbd1<br>
-3：询问你是从所有的空间去给这个节点分配空间还是从某一个节点分配我这里输入要移出的节点ID ,即316e068fd71ee228299198a271efd839d3493835 回车继续 输入 done<br>
+3：询问你是从所有的空间去给这个节点分配空间还是从某一个节点分配<br>
+我这里输入要移出的节点ID ,即316e068fd71ee228299198a271efd839d3493835 回车继续 输入 done<br>
 4：然后会给你分配出一个分配计划，输入yes开始分配。完成ok</p>
 <p>执行删除节点命令</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./redis-cli --cluster del-node 10.211.55.16:6379 316e068fd71ee228299198a271efd839d3493835</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">&gt;&gt;&gt; Removing node 316e068fd71ee228299198a271efd839d3493835 from cluster 10.211.55.16:6379</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...</span><br><span class="line">&gt;&gt;&gt; SHUTDOWN the node.</span><br></pre></td></tr></table></figure>
-<p>说明：删除节点会自动关闭被移出的redis服务，此时，该主节点的从节点会自动转为其它主节点的从节点，而不会升级为主节点</p>
+<p>说明：<br>
+删除节点会自动关闭被移出的redis服务，此时，该主节点的从节点会自动转为其它主节点的从节点，而不会升级为主节点</p>
 <h4 id="3-2删除从节点">3.2删除从节点</h4>
 <p>直接执行节点删除命令</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./redis-cli --cluster del-node 10.211.55.16:6379 从节点ID</span><br></pre></td></tr></table></figure>
@@ -5059,7 +5158,8 @@ common/model.html，<code>th:fragment=&quot;header&quot;</code>指定代码块�
 Demo：<a href="https://github.com/hanqunfeng/DjangoHelloWorld">https://github.com/hanqunfeng/DjangoHelloWorld</a></p>
 </li>
 <li class="lvl-2">
-<p>参考资料：<a href="https://docs.djangoproject.com/en/2.0/">官方资料</a><br>
+<p>参考资料：<br>
+<a href="https://docs.djangoproject.com/en/2.0/">官方资料</a><br>
 <a href="https://yiyibooks.cn/xx/django_182/index.html">Django 1.8.2 文档</a><br>
 <a href="https://yiyibooks.cn/xx/Django_1.11.6/index.html">Django 1.11.6 文档</a><br>
 <a href="https://yiyibooks.cn/qy/django2/index.html">Django 2.0.2文档</a><br>
@@ -5084,7 +5184,8 @@ settings.py中加入新应用配置</p>
 sqlmigrate命令接收迁移文件的名字并返回它们的SQL语句：#只是打印出要执行的sql语句</p>
 <p><code>python manage.py sqlmigrate polls 0001</code>  # 这里迁移文件的后缀_initial.py不需要。</p>
 <h2 id="5-启动服务器">5.启动服务器</h2>
-<p>Django的管理后台站点是默认启用的。 让我们启动开发服务器，然后探索它。如果服务器没有运行，像下面这样启动它：</p>
+<p>Django的管理后台站点是默认启用的。 让我们启动开发服务器，然后探索它。<br>
+如果服务器没有运行，像下面这样启动它：</p>
 <p><code>python manage.py runserver</code></p>
 <p>现在，打开一个浏览器访问你本地域名中的 “/admin/” — 例如http://127.0.0.1:8000/admin/。</p>
 <p>启动：</p>
@@ -5109,7 +5210,8 @@ sqlmigrate命令接收迁移文件的名字并返回它们的SQL语句：#只是
 <p>需要提前创建好数据库<br>
 <a href="http://settings.py">settings.py</a>:</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;django&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;django&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;django&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;PORT&#x27;</span>: <span class="string">&#x27;3306&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>数据库更新：一般情况下，我们使用如下两个命令更新数据库</p>
+<p>数据库更新：<br>
+一般情况下，我们使用如下两个命令更新数据库</p>
 <p><code>python manage.py makemigrations</code> #生成数据库模型文件</p>
 <p><code>python manage.py migrate</code> #执行模型文件</p>
 <p>或者：<br>
@@ -5118,7 +5220,9 @@ sqlmigrate命令接收迁移文件的名字并返回它们的SQL语句：#只是
 <h2 id="9-多数据源配置">9.多数据源配置</h2>
 <p>django配置连接多个数据库，自定义表名称：<br>
 <a href="https://www.cnblogs.com/dreamer-fish/p/5469141.html">https://www.cnblogs.com/dreamer-fish/p/5469141.html</a></p>
-<p>使用models文件夹维护model时，一定要在其下的__init__.py中添加对model的引用，否则<code>python manage.py makemigrations</code> 命令不会创建出对应的迁移文件比如：</p>
+<p>使用models文件夹维护model时，一定要在其下的__init__.py中添加对model的引用，<br>
+否则<code>python manage.py makemigrations</code> 命令不会创建出对应的迁移文件<br>
+比如：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> .person <span class="keyword">import</span> Person</span><br><span class="line"><span class="keyword">from</span> .user <span class="keyword">import</span> User</span><br><span class="line"><span class="keyword">from</span> .identity_card <span class="keyword">import</span> IdentityCard</span><br><span class="line"><span class="keyword">from</span> .car <span class="keyword">import</span> Car</span><br></pre></td></tr></table></figure>
 <p>数据库路由:<br>
 <a href="http://settings.py">settings.py</a>:</p>
@@ -5214,16 +5318,20 @@ from django.shortcuts import render的render(request, ‘myapp/user/index.html�
 修改3个文件：<br>
 <strong>init</strong>.py，<br>
 <a href="http://tests.py">tests.py</a>，<br>
-x_user_defined.py，将：utf8 修改为 utf-8.<br>
+x_user_defined.py，<br>
+将：utf8 修改为 utf-8.<br>
 <a href="http://3.settings.py">3.settings.py</a></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">LANGUAGE_CODE = <span class="string">&#x27;zh-hans&#x27;</span>  <span class="comment"># 英文是en，这里是中文，注意这里必须配置为zh-hans，而下面创建和编译语言文件是要使用zh_hans</span></span><br><span class="line">USE_I18N = <span class="literal">True</span></span><br><span class="line">LOCALE_PATHS = (</span><br><span class="line">    os.path.join(BASE_DIR, <span class="string">&#x27;myapp/locale&#x27;</span>), <span class="comment"># 应用下的路径</span></span><br><span class="line">    os.path.join(BASE_DIR, <span class="string">&#x27;locale&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>注意：这里『locale』文件夹需要手工创建，默认就是项目根路径下的locale目录。这里需要注意一点，如果应用下面创建了locale并且配置到LOCALE_PATHS中，则后面执行创建命令时，无论是在项目根路径下执行还是在应用下执行，都只会将语言文件创建到应用下的locale中。如果应用下没用locale目录则需要在项目根路径下执行命令，并且创建到项目根路径下的locale目录中。</p>
-<p>4.在代码中加入一些多语言对应的内容代码中</p>
+<p>注意：这里『locale』文件夹需要手工创建，默认就是项目根路径下的locale目录。<br>
+这里需要注意一点，如果应用下面创建了locale并且配置到LOCALE_PATHS中，则后面执行创建命令时，无论是在项目根路径下执行还是在应用下执行，都只会将语言文件创建到应用下的locale中。如果应用下没用locale目录则需要在项目根路径下执行命令，并且创建到项目根路径下的locale目录中。</p>
+<p>4.在代码中加入一些多语言对应的内容<br>
+代码中</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> django.utils.translation <span class="keyword">import</span> ugettext <span class="keyword">as</span> _</span><br><span class="line"> output = _(<span class="string">&#x27;Today is %(month)s %(day)s.&#x27;</span>) % &#123;<span class="string">&#x27;month&#x27;</span>: m, <span class="string">&#x27;day&#x27;</span>: d&#125;</span><br></pre></td></tr></table></figure>
 <p>模板页面中可以直接使用下划线的别名形式</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;&#123; _(&#x27;Django site admin&#x27;) &#125;&#125;<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">&#123;&#123; _(&#x27;my test local&#x27;) &#125;&#125;<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">这里注意，如果要使用『trans』标签，必须在页面中加载 i18n</span><br><span class="line">&#123;% load i18n %&#125;</span><br><span class="line">&#123;% trans &quot;my test local&quot; %&#125;<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"></span><br><span class="line">&#123;#将翻译结果保存到变量中#&#125;</span><br><span class="line">&#123;% trans &quot;my test local&quot; as mylocal %&#125;</span><br><span class="line">&#123;&#123; mylocal &#125;&#125;<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"></span><br><span class="line">&#123;#设置局部显示的语言，下面的内容将显示对应的英文内容，但只在区块内有效#&#125;</span><br><span class="line">&#123;% language &#x27;en&#x27; %&#125;</span><br><span class="line">    &#123;% get_current_language as LANGUAGE_CODE %&#125;</span><br><span class="line">    Current language: &#123;&#123; LANGUAGE_CODE &#125;&#125; <span class="tag">&lt;<span class="name">br</span>&gt;</span>  #区块内显示en</span><br><span class="line">    &#123;&#123; _(&#x27;Django site admin&#x27;) &#125;&#125;<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">&#123;% endlanguage %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% get_current_language as LANGUAGE_CODE %&#125;</span><br><span class="line">    Current language: &#123;&#123; LANGUAGE_CODE &#125;&#125; <span class="tag">&lt;<span class="name">br</span>&gt;</span>  #区块外显示zh-hans</span><br></pre></td></tr></table></figure>
-<p>如果没有找到对应的key值，则会直接显示待翻译的key值字符串；如果对应的语言包下没有找到key值，而默认语言包下有对应的key值，则会显示默认的语言，如LANGUAGE_CODE = ‘zh-hans’</p>
+<p>如果没有找到对应的key值，则会直接显示待翻译的key值字符串；<br>
+如果对应的语言包下没有找到key值，而默认语言包下有对应的key值，则会显示默认的语言，如LANGUAGE_CODE = ‘zh-hans’</p>
 <p>PS:如果需要翻译的内容包含变量，比如_(‘Today is %(month)s %(day)s.’) ，最好在后台处理好后做为变量传递到模板页面上，目前暂不知道如何在模板中直接处理。</p>
 <p>5.创建或更新语言文件</p>
 <p><code>django-admin makemessages -l en</code> # 英文</p>
@@ -5248,7 +5356,8 @@ x_user_defined.py，将：utf8 修改为 utf-8.<br>
 <p>3）在模板页面中需要切换语言的地方加入如下代码：</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;&#123;% url &#x27;set_language&#x27; %&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span>&#123;% csrf_token %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;next&quot;</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&#123;&#123; redirect_to &#125;&#125;&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">name</span>=<span class="string">&quot;language&quot;</span>&gt;</span></span><br><span class="line">        &#123;% get_current_language as LANGUAGE_CODE %&#125;</span><br><span class="line">        &#123;% get_available_languages as LANGUAGES %&#125;</span><br><span class="line">        &#123;% get_language_info_list for LANGUAGES as languages %&#125;</span><br><span class="line">        &#123;% for language in languages %&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;&#123;&#123; language.code &#125;&#125;&quot;</span>&#123;% <span class="attr">if</span> <span class="attr">language.code</span> == <span class="string">LANGUAGE_CODE</span> %&#125; <span class="attr">selected</span>&#123;% <span class="attr">endif</span> %&#125;&gt;</span></span><br><span class="line">                &#123;&#123; language.name_local &#125;&#125; (&#123;&#123; language.code &#125;&#125;)</span><br><span class="line">            <span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Go&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>说明：<br>
-redirect_to：如果不设置就会返回当前页面，设置的话就会跳转到设置的页面这里get_available_languages会显示所有支持的语言，不过一般项目不会支持这么多的语言，所以可以在settings中增加配置来明确语言范围：</p>
+redirect_to：如果不设置就会返回当前页面，设置的话就会跳转到设置的页面<br>
+这里get_available_languages会显示所有支持的语言，不过一般项目不会支持这么多的语言，所以可以在settings中增加配置来明确语言范围：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">LANGUAGES = (</span><br><span class="line">    (<span class="string">&#x27;en&#x27;</span>, (<span class="string">&#x27;English&#x27;</span>)),</span><br><span class="line">    (<span class="string">&#x27;zh-hans&#x27;</span>, (<span class="string">&#x27;中文简体&#x27;</span>)),</span><br><span class="line">    (<span class="string">&#x27;zh-hant&#x27;</span>, (<span class="string">&#x27;中文繁體&#x27;</span>)),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <p>4）js中使用多语言<br>
 js需要单独处理，比如我们写了一个js文件，路径为project/myapp/static/myapp/js/test.js</p>
@@ -5263,7 +5372,8 @@ js需要单独处理，比如我们写了一个js文件，路径为project/myapp
 此时会在应用下的locale中生成djangojs.po文件（如果配置了应用locale，否则会在项目下的locale中创建）</p>
 <p><code>django-admin compilemessages --locale zh_hans</code><br>
 <a href="http://xn--djangojs-i31m808hr3wtoo.xn--podjangojs-zx2pp408bru8a.mo">此时会将djangojs.po编译为djangojs.mo</a></p>
-<p>如果直接将带翻译的js代码写在模板页面中，暂时不清楚要通过什么命令实现，不过可以有个折中的办法，就是创建一个js文件，然后将所有需要翻译的内容都加上，然后运行上面两个命令，这样django在运行模板中的js时同样可以完成翻译模板中：</p>
+<p>如果直接将带翻译的js代码写在模板页面中，暂时不清楚要通过什么命令实现，不过可以有个折中的办法，就是创建一个js文件，然后将所有需要翻译的内容都加上，然后运行上面两个命令，这样django在运行模板中的js时同样可以完成翻译<br>
+模板中：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="title function_">gettext</span>(<span class="string">&#x27;hello js&#x27;</span>))</span><br><span class="line">    <span class="title function_">alert</span>(<span class="title function_">gettext</span>(<span class="string">&#x27;o my god&#x27;</span>))</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 <p>js中：只要js代码中出现翻译方法的地方都会被加入翻译，这个js不需要被任何模板引入，也不需要被同步到静态文件夹中，仅仅是为生成翻译文件而存在</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">gettext</span>(<span class="string">&#x27;hello js&#x27;</span>)</span><br><span class="line"><span class="title function_">gettext</span>(<span class="string">&#x27;o my god&#x27;</span>)</span><br></pre></td></tr></table></figure>
@@ -5286,7 +5396,8 @@ js需要单独处理，比如我们写了一个js文件，路径为project/myapp
 <p>2.发送信号，发送信号时接收器就会被执行</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> signals.signals <span class="keyword">import</span> my_singal</span><br><span class="line">my_singal.send(sender=__name__, key1=<span class="string">&#x27;qqq&#x27;</span>, key2=<span class="number">10</span>, key3=<span class="number">100</span>) <span class="comment"># 实际上可以多发送一些参数</span></span><br></pre></td></tr></table></figure>
 <h2 id="22-Django管理后台简介">22.Django管理后台简介</h2>
-<p>首先，我们需要创建一个能够登录管理后台站点的用户。运行如下命令：</p>
+<p>首先，我们需要创建一个能够登录管理后台站点的用户。<br>
+运行如下命令：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python manage.py createsuperuser</span><br></pre></td></tr></table></figure>
 <p>键入你想要使用的用户名，然后按下回车键：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Username: admin</span><br></pre></td></tr></table></figure>
@@ -5405,7 +5516,9 @@ model中：</p>
 </ul>
 <span id="more"></span>
 <h2 id="项目中引入proto的依赖">项目中引入proto的依赖</h2>
-<p>【两种方法】：方法1、 <a href="https://github.com/google/protobuf/releases">官网下载对应的语言包</a>，这里下载<a href="https://github.com/google/protobuf/releases/download/v3.5.1/protobuf-python-3.5.1.tar.gz">protobuf-python-3.5.1.tar.gz</a>，解压后进入<code>python-protobuf-3.5.1/python</code>目录，执行<code>python3 setup.py install</code>方法2 、【推荐】命令行执行<code>pip3 install protobuf</code>，此时会下载最新的protobuf版本，如果下载的版本与本地安装的proto命令版本不一致，有可能导致异常，所以此时最好指定要下载的版本号：<code>pip3 install protobuf==3.5.1</code></p>
+<p>【两种方法】：<br>
+方法1、 <a href="https://github.com/google/protobuf/releases">官网下载对应的语言包</a>，这里下载<a href="https://github.com/google/protobuf/releases/download/v3.5.1/protobuf-python-3.5.1.tar.gz">protobuf-python-3.5.1.tar.gz</a>，解压后进入<code>python-protobuf-3.5.1/python</code>目录，执行<code>python3 setup.py install</code><br>
+方法2 、【推荐】命令行执行<code>pip3 install protobuf</code>，此时会下载最新的protobuf版本，如果下载的版本与本地安装的proto命令版本不一致，有可能导致异常，所以此时最好指定要下载的版本号：<code>pip3 install protobuf==3.5.1</code></p>
 <p>【注意】</p>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -5522,7 +5635,8 @@ model中：</p>
 <h2 id="java实现AES">java实现AES</h2>
 <h3 id="注意">注意</h3>
 <p>Java本身限制密钥的长度最多128位，而AES256需要的密钥长度是256位，因此需要到Java官网上下载一个<a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files</a>。在<a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java SE的下载页面</a>下面的Additional Resources那里会有下载链接。下载后打开压缩包，里面有两个jar文件:<br>
-<code>local_policy.jar </code>和<code>US_export_policy.jar</code>把这两个jar文件解压到JRE目录下的lib/security文件夹，覆盖原来的文件。这样Java就不再限制密钥的长度了，否则编译会报错：</p>
+<code>local_policy.jar </code>和<code>US_export_policy.jar</code><br>
+把这两个jar文件解压到JRE目录下的lib/security文件夹，覆盖原来的文件。这样Java就不再限制密钥的长度了，否则编译会报错：</p>
 <p><code>java.security.InvalidKeyException: Illegal key size</code></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.lang.StringUtils;</span><br><span class="line"><span class="keyword">import</span> sun.misc.BASE64Decoder;</span><br><span class="line"><span class="keyword">import</span> sun.misc.BASE64Encoder;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.Cipher;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.IvParameterSpec;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.SecretKeySpec;</span><br><span class="line"><span class="keyword">import</span> java.security.spec.AlgorithmParameterSpec;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EncodeUtil</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">//key是16进制，需要转换为bytes，转换后bytes长度为16，即aes128，如果bytes长度是32则是aes256</span></span><br><span class="line">        <span class="comment">//也就是说keybytes.length须满足16的整数倍</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key128</span> <span class="operator">=</span> <span class="string">&quot;c4b84456c1379bec99c4d1b7e9f13173&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key256</span> <span class="operator">=</span> <span class="string">&quot;c4b84456c1379bec99c4d1b7e9f13173c4b84456c1379bec99c4d1b7e9f13173&quot;</span>;</span><br><span class="line">        <span class="comment">//iv.length须满足16的整数倍</span></span><br><span class="line">        <span class="type">byte</span>[] iv = <span class="string">&quot;abcdefgh12345678&quot;</span>.getBytes(<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">content_str</span> <span class="operator">=</span> <span class="string">&quot;helloworld 你好&quot;</span>;</span><br><span class="line">        <span class="type">byte</span>[] contentbytes = content_str.getBytes(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//ecb128 bytes</span></span><br><span class="line">        <span class="type">byte</span>[] encryptbytes = EncodeUtil.aesEncryptToECB(contentbytes,key128);</span><br><span class="line">        <span class="type">byte</span>[] decryptbytes = EncodeUtil.aesDecryptToECB(encryptbytes,key128);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> <span class="title class_">String</span>(decryptbytes,<span class="string">&quot;utf-8&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//ecb256 bytes</span></span><br><span class="line">        encryptbytes = EncodeUtil.aesEncryptToECB(contentbytes,key256);</span><br><span class="line">        decryptbytes = EncodeUtil.aesDecryptToECB(encryptbytes,key256);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> <span class="title class_">String</span>(decryptbytes,<span class="string">&quot;utf-8&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//ecb128 String</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">encryptString</span> <span class="operator">=</span> EncodeUtil.aesEncryptToECB(content_str,key128);</span><br><span class="line">        <span class="type">String</span> <span class="variable">decryptString</span> <span class="operator">=</span> EncodeUtil.aesDecryptToECB(encryptString,key128);</span><br><span class="line">        System.out.println(decryptString);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//ecb256 String</span></span><br><span class="line">        encryptString = EncodeUtil.aesEncryptToECB(content_str,key256);</span><br><span class="line">        decryptString = EncodeUtil.aesDecryptToECB(encryptString,key256);</span><br><span class="line">        System.out.println(decryptString);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//cbc128 bytes</span></span><br><span class="line">        encryptbytes = EncodeUtil.aesEncryptToCBC(contentbytes,key128,iv);</span><br><span class="line">        decryptbytes = EncodeUtil.aesDecryptToCBC(encryptbytes,key128,iv);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> <span class="title class_">String</span>(decryptbytes,<span class="string">&quot;utf-8&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//cbc256 bytes</span></span><br><span class="line">        encryptbytes = EncodeUtil.aesEncryptToCBC(contentbytes,key256,iv);</span><br><span class="line">        decryptbytes = EncodeUtil.aesDecryptToCBC(encryptbytes,key256,iv);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> <span class="title class_">String</span>(decryptbytes,<span class="string">&quot;utf-8&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//cbc128 String</span></span><br><span class="line">        encryptString = EncodeUtil.aesEncryptToCBC(content_str,key128,iv);</span><br><span class="line">        decryptString = EncodeUtil.aesDecryptToCBC(encryptString,key128,iv);</span><br><span class="line">        System.out.println(decryptString);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//cbc256 String</span></span><br><span class="line">        encryptString = EncodeUtil.aesEncryptToCBC(content_str,key256,iv);</span><br><span class="line">        decryptString = EncodeUtil.aesDecryptToCBC(encryptString,key256,iv);</span><br><span class="line">        System.out.println(decryptString);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * base 64 encode</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> bytes 待编码的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 编码后的base 64 code</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">base64Encode</span><span class="params">(<span class="type">byte</span>[] bytes)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">BASE64Encoder</span>().encode(bytes);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * base 64 decode</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> base64Code 待解码的base 64 code</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解码后的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] base64Decode(String base64Code) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">return</span> StringUtils.isEmpty(base64Code) ? <span class="literal">null</span> : <span class="keyword">new</span> <span class="title class_">BASE64Decoder</span>().decodeBuffer(base64Code);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 验证密钥长度是否有效</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> key 密钥bytes</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">checkkey</span><span class="params">(<span class="type">byte</span>[] key)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(key.length != <span class="number">16</span> &amp;&amp; key.length != <span class="number">32</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Exception</span>(<span class="string">&quot;密钥长度错误，必须是16后者32位&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES加密 aes-128/256-ecb</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content    待加密的内容</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> encryptKey 加密密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 加密后的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] aesEncryptToECB(<span class="type">byte</span>[] content, String encryptKey) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">byte</span>[] key = org.apache.commons.codec.binary.Hex.decodeHex(encryptKey.toCharArray());</span><br><span class="line">        checkkey(key);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/ECB/PKCS5Padding&quot;</span>);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(content);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES加密 aes-128/256-ecb</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content    待加密的内容</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> encryptKey 加密密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 加密后的base64字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">aesEncryptToECB</span><span class="params">(String content, String encryptKey)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">byte</span>[] key = org.apache.commons.codec.binary.Hex.decodeHex(encryptKey.toCharArray());</span><br><span class="line">        checkkey(key);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/ECB/PKCS5Padding&quot;</span>);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> base64Encode(cipher.doFinal(content.getBytes(<span class="string">&quot;utf-8&quot;</span>)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES解密 aes-128/256-ecb</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 待解密的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> decryptKey   解密密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解密后的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] aesDecryptToECB(<span class="type">byte</span>[] content, String decryptKey) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">byte</span>[] key = org.apache.commons.codec.binary.Hex.decodeHex(decryptKey.toCharArray());</span><br><span class="line">        checkkey(key);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/ECB/PKCS5Padding&quot;</span>);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">        <span class="type">byte</span>[] decryptBytes = cipher.doFinal(content);</span><br><span class="line">        <span class="keyword">return</span> decryptBytes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES解密 aes-128/256-ecb</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 待解密的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> decryptKey   解密密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解密后的String</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">aesDecryptToECB</span><span class="params">(String content, String decryptKey)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">byte</span>[] key = org.apache.commons.codec.binary.Hex.decodeHex(decryptKey.toCharArray());</span><br><span class="line">        checkkey(key);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/ECB/PKCS5Padding&quot;</span>);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">        <span class="type">byte</span>[] decryptBytes = cipher.doFinal(base64Decode(content));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(decryptBytes,<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES加密 aes-128/256-cbc</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 待解密的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> encryptKey   加密密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> iv 偏移</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解密后的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] aesEncryptToCBC(<span class="type">byte</span>[] content, String encryptKey,<span class="type">byte</span>[] iv) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">byte</span>[] key = org.apache.commons.codec.binary.Hex.decodeHex(encryptKey.toCharArray());</span><br><span class="line">        checkkey(key);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/CBC/PKCS5Padding&quot;</span>);</span><br><span class="line">        <span class="comment">//算法参数</span></span><br><span class="line">        <span class="type">AlgorithmParameterSpec</span> <span class="variable">paramSpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IvParameterSpec</span>(iv);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, <span class="string">&quot;AES&quot;</span>),paramSpec);</span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(content);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES解密 aes-128/256-cbc</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 待解密的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> decryptKey   解密密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> iv 偏移</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解密后的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] aesDecryptToCBC(<span class="type">byte</span>[] content, String decryptKey,<span class="type">byte</span>[] iv) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">byte</span>[] key = org.apache.commons.codec.binary.Hex.decodeHex(decryptKey.toCharArray());</span><br><span class="line">        checkkey(key);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/CBC/PKCS5Padding&quot;</span>);</span><br><span class="line">        <span class="comment">//算法参数</span></span><br><span class="line">        <span class="type">AlgorithmParameterSpec</span> <span class="variable">paramSpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IvParameterSpec</span>(iv);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, <span class="string">&quot;AES&quot;</span>),paramSpec);</span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(content);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES加密 aes-128/256-cbc</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 待解密的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> encryptKey   加密密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> iv 偏移</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解密后的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">aesEncryptToCBC</span><span class="params">(String content, String encryptKey,<span class="type">byte</span>[] iv)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">byte</span>[] key = org.apache.commons.codec.binary.Hex.decodeHex(encryptKey.toCharArray());</span><br><span class="line">        checkkey(key);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/CBC/PKCS5Padding&quot;</span>);</span><br><span class="line">        <span class="comment">//算法参数</span></span><br><span class="line">        <span class="type">AlgorithmParameterSpec</span> <span class="variable">paramSpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IvParameterSpec</span>(iv);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, <span class="string">&quot;AES&quot;</span>),paramSpec);</span><br><span class="line">        <span class="keyword">return</span> base64Encode(cipher.doFinal(content.getBytes(<span class="string">&quot;utf-8&quot;</span>)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES解密 aes-128/256-cbc</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 待解密的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> decryptKey   解密密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> iv 偏移</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解密后的byte[]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">aesDecryptToCBC</span><span class="params">(String content, String decryptKey,<span class="type">byte</span>[] iv)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">byte</span>[] key = org.apache.commons.codec.binary.Hex.decodeHex(decryptKey.toCharArray());</span><br><span class="line">        checkkey(key);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/CBC/PKCS5Padding&quot;</span>);</span><br><span class="line">        <span class="comment">//算法参数</span></span><br><span class="line">        <span class="type">AlgorithmParameterSpec</span> <span class="variable">paramSpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IvParameterSpec</span>(iv);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, <span class="string">&quot;AES&quot;</span>),paramSpec);</span><br><span class="line">        <span class="type">byte</span>[] decryptBytes = cipher.doFinal(base64Decode(content));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(decryptBytes,<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="nodejs">nodejs</h2>
@@ -5550,7 +5664,8 @@ model中：</p>
     <title>Protocol Buffer学习笔记(Java&amp;NodeJS)</title>
     <url>/2018/02/26/protocol-buffer-study/</url>
     <content><![CDATA[<h2 id="什么是Protocol-Buffer">什么是Protocol Buffer</h2>
-<p>Protocol Buffers(也称protobuf)是Google公司出品的一种独立于开发语言，独立于平台的可扩展的结构化数据序列机制。通俗点来讲它跟xml和json是一类。是一种数据交互格式协议。主要优点是它是基于二进制的，所以比起结构化的xml协议来说，它的体积很少，数据在传输过程中会更快。另外它也支持c++、java、python、php、javascript等主流开发语言。</p>
+<p>Protocol Buffers(也称protobuf)是Google公司出品的一种独立于开发语言，独立于平台的可扩展的结构化数据序列机制。通俗点来讲它跟xml和json是一类。是一种数据交互格式协议。<br>
+主要优点是它是基于二进制的，所以比起结构化的xml协议来说，它的体积很少，数据在传输过程中会更快。另外它也支持c++、java、python、php、javascript等主流开发语言。</p>
 <p><a href="https://developers.google.com/protocol-buffers/">官网地址：https://developers.google.com/protocol-buffers/</a></p>
 <span id="more"></span>
 <h2 id="Proto3安装">Proto3安装</h2>
@@ -5792,14 +5907,16 @@ restify中接收proto数据比较简单，因为proto数据已经被封装到req
 <p>前面讲了很多Spring Boot数据访问方面的内容，在讲到自己扩展数据访问的时候，示例代码中给出的DataSource创建方式都是<strong>DriverManagerDataSource</strong>，比如：</p>
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment">#datasource</span></span><br><span class="line"><span class="string">spring.datasource.driver-class-name=com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="string">spring.datasource.url=jdbc:mysql://localhost:3306/springboot1?useUnicode=true&amp;characterEncoding=utf-8</span></span><br><span class="line"><span class="string">spring.datasource.username=root</span></span><br><span class="line"><span class="string">spring.datasource.password=newpwd</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Value(&quot;$&#123;spring.datasource.driver-class-name&#125;&quot;)</span></span><br><span class="line">String driverClass;</span><br><span class="line"><span class="meta">@Value(&quot;$&#123;spring.datasource.url&#125;&quot;)</span></span><br><span class="line">String url;</span><br><span class="line"><span class="meta">@Value(&quot;$&#123;spring.datasource.username&#125;&quot;)</span></span><br><span class="line">String userName;</span><br><span class="line"><span class="meta">@Value(&quot;$&#123;spring.datasource.password&#125;&quot;)</span></span><br><span class="line">String passWord;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean(name = &quot;dataSource&quot;)</span></span><br><span class="line"><span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">DriverManagerDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DriverManagerDataSource</span>();</span><br><span class="line">    dataSource.setDriverClassName(driverClass);</span><br><span class="line">    dataSource.setUrl(url);</span><br><span class="line">    dataSource.setUsername(userName);</span><br><span class="line">    dataSource.setPassword(passWord);</span><br><span class="line">    <span class="keyword">return</span> dataSource;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果有多个数据源，就再创建多个<strong>DriverManagerDataSource</strong>。一般生产项目中我们不会这样使用，通常可以使用<strong>org.apache.commons.dbcp.BasicDataSource</strong>。</p>
+<p>如果有多个数据源，就再创建多个<strong>DriverManagerDataSource</strong>。<br>
+一般生产项目中我们不会这样使用，通常可以使用<strong>org.apache.commons.dbcp.BasicDataSource</strong>。</p>
 <hr>
 <p>实际上Spring Boot为我们提供了简便的创建DataSource的方法：</p>
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment">#datasource</span></span><br><span class="line"><span class="comment">#需要执行数据源的类型</span></span><br><span class="line"><span class="string">spring.datasource.ds1.type=org.apache.tomcat.jdbc.pool.DataSource</span></span><br><span class="line"><span class="string">spring.datasource.ds1.driver-class-name=com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="string">spring.datasource.ds1.url=jdbc:mysql://localhost:3306/springboot1?useUnicode=true&amp;characterEncoding=utf-8</span></span><br><span class="line"><span class="string">spring.datasource.ds1.username=root</span></span><br><span class="line"><span class="string">spring.datasource.ds1.password=newpwd</span></span><br><span class="line"></span><br><span class="line"><span class="string">spring.datasource.ds2.type=org.apache.tomcat.jdbc.pool.DataSource</span></span><br><span class="line"><span class="string">spring.datasource.ds2.driver-class-name=com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="string">spring.datasource.ds2.url=jdbc:mysql://localhost:3306/springboot2?useUnicode=true&amp;characterEncoding=utf-8</span></span><br><span class="line"><span class="string">spring.datasource.ds2.username=root</span></span><br><span class="line"><span class="string">spring.datasource.ds2.password=newpwd</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean(name = &quot;dataSource1&quot;)</span></span><br><span class="line"><span class="comment">//application.properties中属性名称的前缀</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.ds1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> DataSource <span class="title function_">dataSource1</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> DataSourceBuilder.create().build();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean(name = &quot;dataSource2&quot;)</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.ds2&quot;)</span></span><br><span class="line"><span class="keyword">public</span> DataSource <span class="title function_">dataSource2</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> DataSourceBuilder.create().build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>目前，此种方式支持如下几种数据源类型：</p>
 <p>“org.apache.tomcat.jdbc.pool.DataSource”, “com.zaxxer.hikari.HikariDataSource”, “org.apache.commons.dbcp.BasicDataSource”, “org.apache.commons.dbcp2.BasicDataSource”</p>
-<p>使用哪种数据源类型，就要在项目中加入相应的jar依赖，比如<strong>org.apache.tomcat.jdbc.pool.DataSource</strong></p>
+<p>使用哪种数据源类型，就要在项目中加入相应的jar依赖，<br>
+比如<strong>org.apache.tomcat.jdbc.pool.DataSource</strong></p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.5.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>技术</category>
@@ -5827,7 +5944,8 @@ restify中接收proto数据比较简单，因为proto数据已经被封装到req
 <hr>
 <h2 id="前言">前言</h2>
 <p>JPA即Java Persistence API，是一个基于O/R映射的标准规范，该规范只负责定义规则的标准（注解或接口），而不需要提供具体实现，具体的实现交由软件提供商来实现，目前主要的JPA提供商为Hibernate，EclipseLink和OperJPA。</p>
-<p><a href="http://projects.spring.io/spring-data-jpa/">Spring Data JPA</a>是Spring Data的一个子项目，通过提供基于JPA的Repository来简化代码量。其提供了一个<strong>org.springframework.data.jpa.repository.JpaRepository</strong>，我们的Repository只要继承该JpaRepository，即可享受到JPA带来的好处。</p>
+<p><a href="http://projects.spring.io/spring-data-jpa/">Spring Data JPA</a>是Spring Data的一个子项目，通过提供基于JPA的Repository来简化代码量。<br>
+其提供了一个<strong>org.springframework.data.jpa.repository.JpaRepository</strong>，我们的Repository只要继承该JpaRepository，即可享受到JPA带来的好处。</p>
 <p>Spring Boot通过<strong>spring-boot-starter-data-jpa</strong>来提供对JPA的支持，Spring Boot默认的JPA实现者是Hibernate。</p>
 <hr>
 <p><strong>说明</strong><br>
@@ -5856,7 +5974,8 @@ HibernateJpaAutoConfiguration</p>
 <hr>
 <h2 id="Spring-Boot项目配置Spring-Data-JPA的方法">Spring Boot项目配置Spring Data JPA的方法</h2>
 <p>如果不想依赖于<strong>spring-boot-starter-data-jpa</strong>，我们依然可以通过配置类来实现Spring Boot对Spring Data JPA的支持。</p>
-<p><strong>pom</strong>替换依赖这里说明一下，实际上我们可以不用替换掉<strong>spring-boot-starter-data-jpa</strong>的依赖，替换掉的好处仅仅是减少对不需要的jar的依赖。</p>
+<p><strong>pom</strong>替换依赖<br>
+这里说明一下，实际上我们可以不用替换掉<strong>spring-boot-starter-data-jpa</strong>的依赖，替换掉的好处仅仅是减少对不需要的jar的依赖。</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.37<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.transaction<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jta<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.aspectj<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>aspectjweaver<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.8.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- hibernate --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.3.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-entitymanager<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.3.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-orm<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.3.3.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.data<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-data-jpa<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.10.5.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">&lt;dependency&gt;</span></span><br><span class="line"><span class="comment">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span></span><br><span class="line"><span class="comment">    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span></span><br><span class="line"><span class="comment">&lt;/dependency&gt;--&gt;</span></span><br></pre></td></tr></table></figure>
 <p>自定义配置类：<strong>DataSourceConfig</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.hibernate.jpa.HibernatePersistenceProvider;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.jpa.repository.config.EnableJpaRepositories;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.datasource.DriverManagerDataSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.JpaTransactionManager;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.JpaVendorAdapter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.vendor.Database;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.transaction.PlatformTransactionManager;</span><br><span class="line"><span class="keyword">import</span> org.springframework.transaction.annotation.EnableTransactionManagement;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableTransactionManagement(proxyTargetClass = true)</span></span><br><span class="line"><span class="comment">//开启Spring Data JPA的支持</span></span><br><span class="line"><span class="meta">@EnableJpaRepositories(basePackages = &quot;com.example.dao&quot;, entityManagerFactoryRef = &quot;entityManagerFactory&quot;, transactionManagerRef = &quot;transactionManager&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataSourceConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.driver-class-name&#125;&quot;)</span></span><br><span class="line">    String driverClass;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.url&#125;&quot;)</span></span><br><span class="line">    String url;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.username&#125;&quot;)</span></span><br><span class="line">    String userName;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.password&#125;&quot;)</span></span><br><span class="line">    String passWord;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;dataSource&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">DriverManagerDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DriverManagerDataSource</span>();</span><br><span class="line">        dataSource.setDriverClassName(driverClass);</span><br><span class="line">        dataSource.setUrl(url);</span><br><span class="line">        dataSource.setUsername(userName);</span><br><span class="line">        dataSource.setPassword(passWord);</span><br><span class="line">        <span class="keyword">return</span> dataSource;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//  jpa事务管理器</span></span><br><span class="line">    <span class="meta">@Bean(name = &quot;transactionManager&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> PlatformTransactionManager <span class="title function_">transactionManager</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">JpaTransactionManager</span> <span class="variable">jpaTransactionManager</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JpaTransactionManager</span>();</span><br><span class="line">        jpaTransactionManager.setDataSource(dataSource());</span><br><span class="line">        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());</span><br><span class="line">        <span class="keyword">return</span> jpaTransactionManager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> JpaVendorAdapter <span class="title function_">jpaVendorAdapter</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">HibernateJpaVendorAdapter</span> <span class="variable">adapter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HibernateJpaVendorAdapter</span>();</span><br><span class="line">        adapter.setShowSql(<span class="literal">true</span>);</span><br><span class="line">        adapter.setDatabase(Database.MYSQL);</span><br><span class="line">        adapter.setGenerateDdl(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> adapter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;entityManagerFactory&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> LocalContainerEntityManagerFactoryBean <span class="title function_">entityManagerFactory</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">LocalContainerEntityManagerFactoryBean</span> <span class="variable">entityManager</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LocalContainerEntityManagerFactoryBean</span>();</span><br><span class="line">        entityManager.setDataSource(dataSource());</span><br><span class="line">        entityManager.setJpaVendorAdapter(jpaVendorAdapter());</span><br><span class="line">        entityManager.setPackagesToScan(<span class="string">&quot;com.example.model&quot;</span>);<span class="comment">// entity package</span></span><br><span class="line">        entityManager.setPersistenceProviderClass(HibernatePersistenceProvider.class);</span><br><span class="line">        <span class="keyword">return</span> entityManager;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -5877,11 +5996,15 @@ HibernateJpaAutoConfiguration</p>
 hibernate.current_session_context_class<br>
 hibernate.transaction.factory_class</p>
 </blockquote>
-<p>后面我们配置LocalContainerEntityManagerFactoryBean的时候会看到相应的配置，这里要说的是，<code>hibernate.transaction.jta.platform</code>需要指定<code>org.hibernate.engine.transaction.jta.platform.spi.JtaPlatform</code>的实现类，其主要功能就是要绑定<strong>javax.transaction.TransactionManager</strong>和<strong>javax.transaction.UserTransaction</strong>。</p>
-<p>spring-data-jpa没有提供该实现类，但是hibernate提供了许多实现类，spring boot也提供了一个实现类–<strong>SpringJtaPlatform</strong>，但是这些实现类都是通过构造函数绑定<strong>javax.transaction.TransactionManager</strong>和<strong>javax.transaction.UserTransaction</strong>，而没有提供缺省的构造方法，这就导致通过属性指定<code>hibernate.transaction.jta.platform</code>时，spring不能初始化该实现类（可能是我还没有搞明白吧）。</p>
-<p>所以，可以自己创建一个实现类，并通过set方法来绑定<strong>javax.transaction.TransactionManager</strong>和<strong>javax.transaction.UserTransaction</strong>。这就是<strong>AtomikosJtaPlatfom</strong></p>
+<p>后面我们配置LocalContainerEntityManagerFactoryBean的时候会看到相应的配置，<br>
+这里要说的是，<code>hibernate.transaction.jta.platform</code>需要指定<code>org.hibernate.engine.transaction.jta.platform.spi.JtaPlatform</code>的实现类，其主要功能就是要绑定<strong>javax.transaction.TransactionManager</strong>和<strong>javax.transaction.UserTransaction</strong>。</p>
+<p>spring-data-jpa没有提供该实现类，但是hibernate提供了许多实现类，spring boot也提供了一个实现类–<strong>SpringJtaPlatform</strong>，<br>
+但是这些实现类都是通过构造函数绑定<strong>javax.transaction.TransactionManager</strong>和<strong>javax.transaction.UserTransaction</strong>，而没有提供缺省的构造方法，这就导致通过属性指定<code>hibernate.transaction.jta.platform</code>时，spring不能初始化该实现类（可能是我还没有搞明白吧）。</p>
+<p>所以，可以自己创建一个实现类，并通过set方法来绑定<strong>javax.transaction.TransactionManager</strong>和<strong>javax.transaction.UserTransaction</strong>。<br>
+这就是<strong>AtomikosJtaPlatfom</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.transaction.TransactionManager;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.UserTransaction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AtomikosJtaPlatfom</span> <span class="keyword">extends</span> <span class="title class_">AbstractJtaPlatform</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> UserTransaction ut;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> TransactionManager tm;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> TransactionManager <span class="title function_">locateTransactionManager</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> tm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> UserTransaction <span class="title function_">locateUserTransaction</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ut;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> UserTransaction <span class="title function_">getUt</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ut;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUt</span><span class="params">(UserTransaction ut)</span> &#123;</span><br><span class="line">        AtomikosJtaPlatfom.ut = ut;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> TransactionManager <span class="title function_">getTm</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> tm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTm</span><span class="params">(TransactionManager tm)</span> &#123;</span><br><span class="line">        AtomikosJtaPlatfom.tm = tm;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>接下来需要在配置类中注册<strong>LocalContainerEntityManagerFactoryBean</strong>，由于*@EnableJpaRepositories*注解不能在同一个配置类上声明两次，所以就按数据源进行分别设置：</p>
+<p>接下来需要在配置类中注册<strong>LocalContainerEntityManagerFactoryBean</strong>，<br>
+由于*@EnableJpaRepositories*注解不能在同一个配置类上声明两次，所以就按数据源进行分别设置：</p>
 <p><strong>JpaConfigDs1</strong>：数据源1</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.atomikos.jdbc.AtomikosDataSourceBean;</span><br><span class="line"><span class="keyword">import</span> com.mysql.jdbc.jdbc2.optional.MysqlXADataSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.DependsOn;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.jpa.repository.config.EnableJpaRepositories;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.JpaVendorAdapter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.vendor.Database;</span><br><span class="line"><span class="keyword">import</span> org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.transaction.annotation.EnableTransactionManagement;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableTransactionManagement(proxyTargetClass = true)</span></span><br><span class="line"><span class="comment">//指定数据源1的Repository路径，数据源1的entityManagerFactory，事务是公共事务</span></span><br><span class="line"><span class="meta">@EnableJpaRepositoryies(basePackages = &quot;com.example.dao.ds1&quot;, entityManagerFactoryRef = &quot;entityManagerFactory&quot;, transactionManagerRef = &quot;transactionManager&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JpaConfigDs1</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.driver-class-name&#125;&quot;)</span></span><br><span class="line">    String driverClass;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.url&#125;&quot;)</span></span><br><span class="line">    String url;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.username&#125;&quot;)</span></span><br><span class="line">    String userName;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.password&#125;&quot;)</span></span><br><span class="line">    String passWord;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;dataSource&quot;, initMethod = &quot;init&quot;, destroyMethod = &quot;close&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;dataSource init&quot;</span>);</span><br><span class="line">        <span class="type">MysqlXADataSource</span> <span class="variable">mysqlXaDataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MysqlXADataSource</span>();</span><br><span class="line">        mysqlXaDataSource.setUrl(url);</span><br><span class="line">        mysqlXaDataSource.setPassword(passWord);</span><br><span class="line">        mysqlXaDataSource.setUser(userName);</span><br><span class="line">        mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">AtomikosDataSourceBean</span> <span class="variable">xaDataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomikosDataSourceBean</span>();</span><br><span class="line">        xaDataSource.setXaDataSource(mysqlXaDataSource);</span><br><span class="line">        xaDataSource.setUniqueResourceName(<span class="string">&quot;dataSource&quot;</span>);</span><br><span class="line">        xaDataSource.setMinPoolSize(<span class="number">10</span>);</span><br><span class="line">        xaDataSource.setPoolSize(<span class="number">10</span>);</span><br><span class="line">        xaDataSource.setMaxPoolSize(<span class="number">30</span>);</span><br><span class="line">        xaDataSource.setBorrowConnectionTimeout(<span class="number">60</span>);</span><br><span class="line">        xaDataSource.setReapTimeout(<span class="number">20</span>);</span><br><span class="line">        xaDataSource.setMaxIdleTime(<span class="number">60</span>);</span><br><span class="line">        xaDataSource.setMaintenanceInterval(<span class="number">60</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> xaDataSource;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;jpaVendorAdapter&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> JpaVendorAdapter <span class="title function_">jpaVendorAdapter</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;jpaVendorAdapter init&quot;</span>);</span><br><span class="line">        <span class="type">HibernateJpaVendorAdapter</span> <span class="variable">adapter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HibernateJpaVendorAdapter</span>();</span><br><span class="line">        adapter.setShowSql(<span class="literal">true</span>);</span><br><span class="line">        adapter.setDatabase(Database.MYSQL);</span><br><span class="line">        adapter.setDatabasePlatform(<span class="string">&quot;org.hibernate.dialect.MySQLDialect&quot;</span>);</span><br><span class="line">        adapter.setGenerateDdl(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> adapter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;entityManagerFactory&quot;)</span></span><br><span class="line">    <span class="meta">@DependsOn(&#123;&quot;atomikosJtaPlatfom&quot;&#125;)</span> <span class="comment">//需要先注册atomikosJtaPlatfom</span></span><br><span class="line">    <span class="keyword">public</span> LocalContainerEntityManagerFactoryBean <span class="title function_">entityManagerFactory</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;entityManagerFactory init&quot;</span>);</span><br><span class="line">        <span class="type">LocalContainerEntityManagerFactoryBean</span> <span class="variable">entityManager</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LocalContainerEntityManagerFactoryBean</span>();</span><br><span class="line"></span><br><span class="line">        entityManager.setJpaVendorAdapter(jpaVendorAdapter());</span><br><span class="line">        <span class="comment">// entity package</span></span><br><span class="line">        entityManager.setPackagesToScan(<span class="string">&quot;com.example.model.ds1&quot;</span>);</span><br><span class="line">        entityManager.setJtaDataSource(dataSource());</span><br><span class="line"></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        properties.put(<span class="string">&quot;hibernate.dialect&quot;</span>, <span class="string">&quot;org.hibernate.dialect.MySQLDialect&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;hibernate.show_sql&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;hibernate.format_sql&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//jta设置</span></span><br><span class="line">        properties.put(<span class="string">&quot;hibernate.current_session_context_class&quot;</span>, <span class="string">&quot;jta&quot;</span>);</span><br><span class="line">        properties.put(<span class="string">&quot;hibernate.transaction.factory_class&quot;</span>, <span class="string">&quot;org.hibernate.engine.transaction.internal.jta.CMTTransactionFactory&quot;</span>);</span><br><span class="line">        <span class="comment">//这里指定我们自己创建的AtomikosJtaPlatfom</span></span><br><span class="line">        properties.put(<span class="string">&quot;hibernate.transaction.jta.platform&quot;</span>,<span class="string">&quot;com.example.AtomikosJtaPlatfom&quot;</span>);</span><br><span class="line">        entityManager.setJpaProperties(properties);</span><br><span class="line">        <span class="keyword">return</span> entityManager;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>JpaConfigDs2</strong>：数据源2</p>
@@ -6176,7 +6299,8 @@ Model:<strong>Person</strong></p>
 <p>PS：Headless参考资料：<a href="https://www.oschina.net/translate/using-headless-mode-in-java-se">在 Java SE 平台上使用 Headless 模式</a></p>
 <p>3.初始化相关对象和属性</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//3</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(Object[] sources)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(sources != <span class="literal">null</span> &amp;&amp; sources.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">this</span>.sources.addAll(Arrays.asList(sources));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//3.1判断是否是web运行环境，如果classpath中是否含有**WEB_ENVIRONMENT_CLASSES**指定的全部类，则返回true</span></span><br><span class="line">        <span class="built_in">this</span>.webEnvironment = <span class="built_in">this</span>.deduceWebEnvironment();</span><br><span class="line">        <span class="comment">//3.2找到*META-INF/spring.factories*中声明的所有ApplicationContextInitializer的实现类并将其实例化</span></span><br><span class="line">        <span class="built_in">this</span>.setInitializers(<span class="built_in">this</span>.getSpringFactoriesInstances(ApplicationContextInitializer.class));</span><br><span class="line">        <span class="comment">//3.3找到*META-INF/spring.factories*中声明的所有ApplicationListener的实现类并将其实例化</span></span><br><span class="line">        <span class="built_in">this</span>.setListeners(<span class="built_in">this</span>.getSpringFactoriesInstances(ApplicationListener.class));</span><br><span class="line">        <span class="comment">//3.4获得当前执行main方法的类对象，这里就是SpringBootWebDemoApplication的实例</span></span><br><span class="line">        <span class="built_in">this</span>.mainApplicationClass = <span class="built_in">this</span>.deduceMainApplicationClass();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>3.1 判断是否是web运行环境如果classpath中是否含有<strong>WEB_ENVIRONMENT_CLASSES</strong>指定的全部类，则返回true，用于创建指定类型的ApplicationContext对象。</p>
+<p>3.1 判断是否是web运行环境<br>
+如果classpath中是否含有<strong>WEB_ENVIRONMENT_CLASSES</strong>指定的全部类，则返回true，用于创建指定类型的ApplicationContext对象。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//3.1</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] WEB_ENVIRONMENT_CLASSES = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;javax.servlet.Servlet&quot;</span>, <span class="string">&quot;org.springframework.web.context.ConfigurableWebApplicationContext&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
 <p>3.2 大体的过程就是通过<em>SpringFactoriesLoader</em>检索<em>META-INF/spring.factories</em>，找到声明的所有ApplicationContextInitializer的实现类并将其实例化。<br>
 <strong>ApplicationContextInitializer</strong>是Spring框架中的接口，其作用可以理解为在ApplicationContext执行refresh之前，调用<em>ApplicationContextInitializer</em>的initialize()方法，对ApplicationContext做进一步的设置和处理。</p>
@@ -6355,7 +6479,8 @@ Model:<strong>Person</strong></p>
 </ul>
 <hr>
 <h2 id="接管SpringBoot的自动配置">接管SpringBoot的自动配置</h2>
-<p>我们介绍过**@SpringBootApplication<strong>这个注解，因其包含</strong>@EnableAutoConfiguration<strong>和</strong>@ComponentScan**注解，可以自动扫描相关的自动配置类，从而实现自动配置功能的。上面介绍默认情况下SpringBoot默认会初始化很多的自动配置，这些配置有些我们在项目中可能用不到，那要如何去掉呢？</p>
+<p>我们介绍过**@SpringBootApplication<strong>这个注解，因其包含</strong>@EnableAutoConfiguration<strong>和</strong>@ComponentScan**注解，可以自动扫描相关的自动配置类，从而实现自动配置功能的。<br>
+上面介绍默认情况下SpringBoot默认会初始化很多的自动配置，这些配置有些我们在项目中可能用不到，那要如何去掉呢？</p>
 <h3 id="去掉不需要的自动配置类">去掉不需要的自动配置类</h3>
 <p>比如我们不需要开启webSocket和JMX的自动配置，我们需要在**@SpringBootApplication<strong>这个注解中指定</strong>exclude**属性</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication(exclude = &#123;WebSocketAutoConfiguration.class,JmxAutoConfiguration.class&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringBootWebDemoApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(SpringBootWebDemoApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -6614,7 +6739,8 @@ Model:<strong>Person</strong></p>
 </li>
 </ul>
 <blockquote>
-<p>启动的自动配置<img src="/images_glob/spring-boot-study/conf1.png" alt=""><br>
+<p>启动的自动配置<br>
+<img src="/images_glob/spring-boot-study/conf1.png" alt=""><br>
 未启用的自动配置<br>
 <img src="/images_glob/spring-boot-study/conf2.png" alt=""></p>
 </blockquote>
@@ -6663,7 +6789,8 @@ Model:<strong>Person</strong></p>
 </li>
 </ul>
 <blockquote>
-<p>本例中表示<em>HttpEncodingProperties</em>是属性类，并使用@Autowired自动注入；属性类实际上是一个是注解了<code>@ConfigurationProperties</code>的JavaBean，SpringBoot将属性文件（application.properties）中的键值对与JavaBean的属性建立起一一对应关系:</p>
+<p>本例中表示<em>HttpEncodingProperties</em>是属性类，并使用@Autowired自动注入；<br>
+属性类实际上是一个是注解了<code>@ConfigurationProperties</code>的JavaBean，SpringBoot将属性文件（application.properties）中的键值对与JavaBean的属性建立起一一对应关系:</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties(</span></span><br><span class="line"><span class="meta">    prefix = &quot;spring.http.encoding&quot; //属性值的前缀</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">举例：application.properties中设置如下属性</span></span><br><span class="line"><span class="comment">spring.http.encoding.charset=UTF-8</span></span><br><span class="line"><span class="comment">spring.http.encoding.force=true</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HttpEncodingProperties</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Charset charset;</span><br><span class="line">    <span class="keyword">private</span> Boolean force;</span><br><span class="line">    <span class="comment">//....属性声明及set、get方法........</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <hr>
@@ -6770,7 +6897,9 @@ Model:<strong>Person</strong></p>
 <hr>
 <p>SpringBoot的属性可以通过多种方式指定，配置文件只是其中一种方式，常用的方式还有如下几种，按加载的优先级列出：</p>
 <blockquote>
-<p>命令行参数：<code>java -jar xx.jar --server.port=8081 --server.context-path=/demo</code>操作系统环境变量：有些OS不支持使用.这种名字，如server.port，可以使用SERVER_PORT来配置。项目中的配置文件：application.properties或者application.yml<br>
+<p>命令行参数：<code>java -jar xx.jar --server.port=8081 --server.context-path=/demo</code><br>
+操作系统环境变量：有些OS不支持使用.这种名字，如server.port，可以使用SERVER_PORT来配置。<br>
+项目中的配置文件：application.properties或者application.yml<br>
 项目依赖jar包中的配置文件：application.properties或者application.yml</p>
 </blockquote>
 <p><strong>关于SpringBoot支持的配置属性可以查看<a href="http://docs.spring.io/spring-boot/docs/1.4.2.RELEASE/reference/htmlsingle/#common-application-properties">官网地址1.4.2.RELEASE</a></strong></p>
@@ -6844,14 +6973,17 @@ Logback相关设置，可以在<code>application.properties</code>中进行如�
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>修改为log4j框架<br>
-pom中排除对<code>spring-boot-starter-logging</code>的依赖，并加入对<code>spring-boot-starter-log4j</code>的依赖目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j">1.3.8.RELEASE</a></p>
+pom中排除对<code>spring-boot-starter-logging</code>的依赖，并加入对<code>spring-boot-starter-log4j</code>的依赖<br>
+目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j">1.3.8.RELEASE</a></p>
 </li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.8.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>项目根路径下添加<code>log4j.properties</code></p>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>修改为log4j2框架与log4j类似，修改pom，增加<code>spring-boot-starter-log4j2</code>依赖目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2">1.4.2.RELEASE</a></p>
+<p>修改为log4j2框架<br>
+与log4j类似，修改pom，增加<code>spring-boot-starter-log4j2</code>依赖<br>
+目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2">1.4.2.RELEASE</a></p>
 </li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-log4j2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -6863,7 +6995,8 @@ pom中排除对<code>spring-boot-starter-logging</code>的依赖，并加入对<
 <h2 id="修改内置Tomcat为Jetty">修改内置Tomcat为Jetty</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>修改pom，去除<code>spring-boot-starter-tomcat</code>的依赖，增加<code>spring-boot-starter-jetty</code>依赖目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jetty">1.4.2.RELEASE</a></p>
+<p>修改pom，去除<code>spring-boot-starter-tomcat</code>的依赖，增加<code>spring-boot-starter-jetty</code>依赖<br>
+目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jetty">1.4.2.RELEASE</a></p>
 </li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jetty<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -6875,7 +7008,8 @@ pom中排除对<code>spring-boot-starter-logging</code>的依赖，并加入对<
 <h2 id="修改内置Tomcat为Undertow容器">修改内置Tomcat为Undertow容器</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>修改pom，去除<code>spring-boot-starter-tomcat</code>的依赖，增加<code>spring-boot-starter-undertow</code>依赖目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-undertow">1.4.2.RELEASE</a></p>
+<p>修改pom，去除<code>spring-boot-starter-tomcat</code>的依赖，增加<code>spring-boot-starter-undertow</code>依赖<br>
+目前maven中央仓库的最新版本是<a href="http://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-undertow">1.4.2.RELEASE</a></p>
 </li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-undertow<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -6905,7 +7039,8 @@ pom中排除对<code>spring-boot-starter-logging</code>的依赖，并加入对<
 <p>war项目目录结构<br>
 <img src="/images_glob/spring-boot-study/war2.png" alt=""></p>
 </blockquote>
-<p>2.将原打包方式为jar的项目修改为war形式与war项目对比发现，通过修改如下内容，可以将jar项目修改为war项目<br>
+<p>2.将原打包方式为jar的项目修改为war形式<br>
+与war项目对比发现，通过修改如下内容，可以将jar项目修改为war项目<br>
 2.1 pom中将<code>&lt;packaging&gt;jar&lt;/packaging&gt;</code>==&gt;<code>&lt;packaging&gt;war&lt;/packaging&gt;</code><br>
 2.2 pom中添加tomcat依赖，显示声明scope为provided，这样打包时就不会将tomcat的jar包打到war中</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -7505,12 +7640,15 @@ mvn clean package -Dmaven.test.skip=true</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>部署将生成的dubbo-monitor.war包部署到tomcat中，启动tomcat（端口8084）访问地址http://localhost:8084/dubbo-monitor<br>
+<p>部署<br>
+将生成的dubbo-monitor.war包部署到tomcat中，启动tomcat（端口8084）<br>
+访问地址http://localhost:8084/dubbo-monitor<br>
 <img src="/images_glob/dubbo-monitor.png" alt=""></p>
 </li>
 </ul>
 <hr>
-<p>最后说一下dubbo-admin，这个是dubbo官方提供的dubbo管理控制台官方说明：管理控制台为内部裁剪版本，开源部分主要包含：路由规则，动态配置，服务降级，访问控制，权重调整，负载均衡，等管理功能。</p>
+<p>最后说一下dubbo-admin，这个是dubbo官方提供的dubbo管理控制台<br>
+官方说明：管理控制台为内部裁剪版本，开源部分主要包含：路由规则，动态配置，服务降级，访问控制，权重调整，负载均衡，等管理功能。</p>
 <hr>
 <h2 id="dubbo-admin-管理控制台">dubbo-admin 管理控制台</h2>
 <p>dubbo项目源码中有一个模块叫做dubbo-admin</p>

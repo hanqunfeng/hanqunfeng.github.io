@@ -142,7 +142,9 @@
     padding: 0px 0px 0px 0px;
 }
 
-ul, ol, li {
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -906,11 +908,15 @@ ul, ol, li {
 <p>因为slave节点有可能升级为master节点，所以每个slave上也要需要拥有同步帐号，在每个slave上执行如下命令</p>
 </li>
 </ul>
-<div class="note danger"><p>注意：这个方式是错误的，会导致主从切换后，slave不能与新的master实现数据同步，因为此时两个从库的GTID事务和binlog记录的位置已经不一致了。这个错误的结果在下文&quot;11.测试 MHA 故障转移&quot;有说明。</p>
+<div class="note danger"><p>注意：<br>
+这个方式是错误的，会导致主从切换后，slave不能与新的master实现数据同步，<br>
+因为此时两个从库的GTID事务和binlog记录的位置已经不一致了。<br>
+这个错误的结果在下文&quot;11.测试 MHA 故障转移&quot;有说明。</p>
 <p>正确的做法是，将master的数据库导入到两个slave中，主从一旦建立，从库就不要写入任何数据。</p>
 </div>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停止同步</span></span><br><span class="line">mysql&gt; stop slave;</span><br><span class="line"><span class="comment"># &#x27;10.250.%.%&#x27; 表示只能局域网段内的ip才能访问，如果不限制ip，可以配置为&#x27;%&#x27;</span></span><br><span class="line">mysql&gt; CREATE USER <span class="string">&#x27;vagrant&#x27;</span>@<span class="string">&#x27;10.250.%.%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;vagrant&#x27;</span>;</span><br><span class="line">mysql&gt; ALTER USER <span class="string">&#x27;vagrant&#x27;</span>@<span class="string">&#x27;10.250.%.%&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;vagrant&#x27;</span>;</span><br><span class="line">mysql&gt; GRANT REPLICATION SLAVE ON *.* TO <span class="string">&#x27;vagrant&#x27;</span>@<span class="string">&#x27;10.250.%.%&#x27;</span>;</span><br><span class="line">mysql&gt; FLUSH PRIVILEGES;</span><br><span class="line"><span class="comment"># 开启同步</span></span><br><span class="line">mysql&gt; start slave;</span><br></pre></td></tr></table></figure>
-<div class="note success"><p>正确的做法是，将master的数据库导入到两个slave中，然后在开启主从同步。注意：主从一旦建立，从库就不要写入任何数据。</p>
+<div class="note success"><p>正确的做法是，将master的数据库导入到两个slave中，然后在开启主从同步。<br>
+注意：主从一旦建立，从库就不要写入任何数据。</p>
 </div>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 两个从库中分别执行master数据库导出</span></span><br><span class="line">mysqldump -uroot --all-databases --triggers --routines --events -p -h node2 &gt; all_databases.sql</span><br><span class="line"><span class="comment"># 从库执行导入数据</span></span><br><span class="line">mysql -uroot -p &lt; all_databases.sql</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -1005,7 +1011,9 @@ ul, ol, li {
 </ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from performance_schema.replication_applier_status_by_worker\G;</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">    CHANNEL_NAME:</span><br><span class="line">        WORKER_ID: 1</span><br><span class="line">        THREAD_ID: NULL</span><br><span class="line">    SERVICE_STATE: OFF</span><br><span class="line">LAST_ERROR_NUMBER: 1396</span><br><span class="line">LAST_ERROR_MESSAGE: Worker 1 failed executing transaction <span class="string">&#x27;6e9a571e-330e-11ed-a3f8-0a53e7cced43:1&#x27;</span> at master <span class="built_in">log</span> mysql-bin.000013, end_log_pos 1465; Error <span class="string">&#x27;Operation CREATE USER failed for &#x27;</span>vagrant<span class="string">&#x27;@&#x27;</span>10.250.%.%<span class="string">&#x27;&#x27;</span> on query. Default database: <span class="string">&#x27;mysql&#x27;</span>. Query: <span class="string">&#x27;CREATE USER &#x27;</span>vagrant<span class="string">&#x27;@&#x27;</span>10.250.%.%<span class="string">&#x27; IDENTIFIED WITH &#x27;</span>mysql_native_password<span class="string">&#x27; AS &#x27;</span>*04E6E1273D1783DF7D57DC5479FE01CFFDFD0058<span class="string">&#x27;&#x27;</span></span><br><span class="line">…………</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>这里提示的比较清楚，意思是从库在同步新的主库数据时，执行创建同步帐号的<code>CREATE USER</code>语句时报错思考我们的构建过程，从库创建同步帐号是分别创建在自己的数据库里的，所以两个从库GTID事务和binlog日志实际上数据并不一致，导致主从切换后，从库要从新的master同步数据时，就会同步这个创建帐号的语句，但是此时从库已经有这个帐号了，所以创建帐号失败，从而导致主从复制失败。此时的解决方法就是将master的数据库全量导入到slave中，然后重新建立主从，参照下文。</p>
+<p>这里提示的比较清楚，意思是从库在同步新的主库数据时，执行创建同步帐号的<code>CREATE USER</code>语句时报错<br>
+思考我们的构建过程，从库创建同步帐号是分别创建在自己的数据库里的，所以两个从库GTID事务和binlog日志实际上数据并不一致，导致主从切换后，从库要从新的master同步数据时，就会同步这个创建帐号的语句，但是此时从库已经有这个帐号了，所以创建帐号失败，从而导致主从复制失败。<br>
+此时的解决方法就是将master的数据库全量导入到slave中，然后重新建立主从，参照下文。</p>
 </blockquote>
 <h3 id="我们再按-5-从节点也要创建同步帐号-中的正确方式搭建好主从后进行测试">我们再按&quot;5.从节点也要创建同步帐号&quot;中的正确方式搭建好主从后进行测试</h3>
 <ul class="lvl-0">
@@ -1060,7 +1068,8 @@ ul, ol, li {
 </ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ip-10-250-0-91 mha_master]<span class="comment"># masterha_check_repl --conf=/etc/mha_master/mha.cnf</span></span><br><span class="line">………………</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info] Checking replication health on 10.250.0.186..</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info]  ok.</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info] Checking replication health on 10.250.0.102..</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info]  ok.</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [warning] master_ip_failover_script is not defined.</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [warning] shutdown_script is not defined.</span><br><span class="line">Thu Sep 15 10:16:36 2022 - [info] Got <span class="built_in">exit</span> code 0 (Not master dead).</span><br><span class="line"></span><br><span class="line">MySQL Replication Health is OK.</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>这里有两个警告，<code>master_ip_failover_script is not defined.</code>和<code>shutdown_script is not defined.</code><code>shutdown_script</code>脚本用于指定故障发生后关闭故障主机的脚本，而<code>master_ip_failover_script</code>脚本用于指定故障转移时需要做的操作。</p>
+<p>这里有两个警告，<code>master_ip_failover_script is not defined.</code>和<code>shutdown_script is not defined.</code><br>
+<code>shutdown_script</code>脚本用于指定故障发生后关闭故障主机的脚本，而<code>master_ip_failover_script</code>脚本用于指定故障转移时需要做的操作。</p>
 </blockquote>
 <div class="note info"><blockquote>
 <p>实际上，MHA支持多种脚本扩展</p>
@@ -1119,7 +1128,8 @@ ul, ol, li {
 </blockquote>
 <div class="note danger"><p>AWS不支持在EC2上开启VIP，需要使用其它解决方案，这个不在这里讨论。</p>
 </div>
-<div class="note info"><p>可以在MHA配置文件中配置<code>report_script</code>，其对应一个脚本文件，用于故障转移时发出告警信息。可以发送邮件，也可以调用企业微信或者钉钉的接口实现，这里不再赘述。</p>
+<div class="note info"><p>可以在MHA配置文件中配置<code>report_script</code>，其对应一个脚本文件，用于故障转移时发出告警信息。<br>
+可以发送邮件，也可以调用企业微信或者钉钉的接口实现，这里不再赘述。</p>
 </div>
 
     </div>

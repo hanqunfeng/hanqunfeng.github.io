@@ -142,7 +142,9 @@
     padding: 0px 0px 0px 0px;
 }
 
-ul, ol, li {
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -894,7 +896,8 @@ ul, ol, li {
 </ul>
 <hr>
 <h2 id="接管SpringBoot的自动配置">接管SpringBoot的自动配置</h2>
-<p>我们介绍过**@SpringBootApplication<strong>这个注解，因其包含</strong>@EnableAutoConfiguration<strong>和</strong>@ComponentScan**注解，可以自动扫描相关的自动配置类，从而实现自动配置功能的。上面介绍默认情况下SpringBoot默认会初始化很多的自动配置，这些配置有些我们在项目中可能用不到，那要如何去掉呢？</p>
+<p>我们介绍过**@SpringBootApplication<strong>这个注解，因其包含</strong>@EnableAutoConfiguration<strong>和</strong>@ComponentScan**注解，可以自动扫描相关的自动配置类，从而实现自动配置功能的。<br>
+上面介绍默认情况下SpringBoot默认会初始化很多的自动配置，这些配置有些我们在项目中可能用不到，那要如何去掉呢？</p>
 <h3 id="去掉不需要的自动配置类">去掉不需要的自动配置类</h3>
 <p>比如我们不需要开启webSocket和JMX的自动配置，我们需要在**@SpringBootApplication<strong>这个注解中指定</strong>exclude**属性</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication(exclude = &#123;WebSocketAutoConfiguration.class,JmxAutoConfiguration.class&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringBootWebDemoApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(SpringBootWebDemoApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

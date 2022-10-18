@@ -142,7 +142,9 @@
     padding: 0px 0px 0px 0px;
 }
 
-ul, ol, li {
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -829,7 +831,8 @@ ul, ol, li {
 <p>PS：Headless参考资料：<a target="_blank" rel="noopener" href="https://www.oschina.net/translate/using-headless-mode-in-java-se">在 Java SE 平台上使用 Headless 模式</a></p>
 <p>3.初始化相关对象和属性</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//3</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(Object[] sources)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(sources != <span class="literal">null</span> &amp;&amp; sources.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">this</span>.sources.addAll(Arrays.asList(sources));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//3.1判断是否是web运行环境，如果classpath中是否含有**WEB_ENVIRONMENT_CLASSES**指定的全部类，则返回true</span></span><br><span class="line">        <span class="built_in">this</span>.webEnvironment = <span class="built_in">this</span>.deduceWebEnvironment();</span><br><span class="line">        <span class="comment">//3.2找到*META-INF/spring.factories*中声明的所有ApplicationContextInitializer的实现类并将其实例化</span></span><br><span class="line">        <span class="built_in">this</span>.setInitializers(<span class="built_in">this</span>.getSpringFactoriesInstances(ApplicationContextInitializer.class));</span><br><span class="line">        <span class="comment">//3.3找到*META-INF/spring.factories*中声明的所有ApplicationListener的实现类并将其实例化</span></span><br><span class="line">        <span class="built_in">this</span>.setListeners(<span class="built_in">this</span>.getSpringFactoriesInstances(ApplicationListener.class));</span><br><span class="line">        <span class="comment">//3.4获得当前执行main方法的类对象，这里就是SpringBootWebDemoApplication的实例</span></span><br><span class="line">        <span class="built_in">this</span>.mainApplicationClass = <span class="built_in">this</span>.deduceMainApplicationClass();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>3.1 判断是否是web运行环境如果classpath中是否含有<strong>WEB_ENVIRONMENT_CLASSES</strong>指定的全部类，则返回true，用于创建指定类型的ApplicationContext对象。</p>
+<p>3.1 判断是否是web运行环境<br>
+如果classpath中是否含有<strong>WEB_ENVIRONMENT_CLASSES</strong>指定的全部类，则返回true，用于创建指定类型的ApplicationContext对象。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//3.1</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] WEB_ENVIRONMENT_CLASSES = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;javax.servlet.Servlet&quot;</span>, <span class="string">&quot;org.springframework.web.context.ConfigurableWebApplicationContext&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
 <p>3.2 大体的过程就是通过<em>SpringFactoriesLoader</em>检索<em>META-INF/spring.factories</em>，找到声明的所有ApplicationContextInitializer的实现类并将其实例化。<br>
 <strong>ApplicationContextInitializer</strong>是Spring框架中的接口，其作用可以理解为在ApplicationContext执行refresh之前，调用<em>ApplicationContextInitializer</em>的initialize()方法，对ApplicationContext做进一步的设置和处理。</p>

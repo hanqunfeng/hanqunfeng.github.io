@@ -152,7 +152,9 @@
     padding: 0px 0px 0px 0px;
 }
 
-ul, ol, li {
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -907,7 +909,10 @@ ul, ol, li {
 </ul>
 <div class="tips">
 <p><strong>事务Id分配策略</strong><br>
-服务器会在内存中维护一个全局变量，每当需要为某个事务分配一个事务id时，就会把该变量的值当作事务id分配给该事务，并且把该变量自增 1。每当这个变量的值为 256 的倍数时，就会将该变量的值刷新到系统表空间的页号为 5 的页面中一个称之为 Max Trx ID 的属性处，这个属性占用 8 个字节的存储空间。当系统下一次重新启动时，会将上边提到的 Max Trx ID 属性加载到内存中，将该值加上 256 之后赋值给我们前边提到的全局变量（因为在上次关机时该全局变量的值可能大于 Max Trx ID 属性值）。这样就可以保证整个系统中分配的事务id值是一个递增的数字。先被分配id的事务得到的是较小的事务id，后被分配id的事务得到的是较大的事务id。</p>
+服务器会在内存中维护一个全局变量，每当需要为某个事务分配一个事务id时，就会把该变量的值当作事务id分配给该事务，并且把该变量自增 1。<br>
+每当这个变量的值为 256 的倍数时，就会将该变量的值刷新到系统表空间的页号为 5 的页面中一个称之为 Max Trx ID 的属性处，这个属性占用 8 个字节的存储空间。<br>
+当系统下一次重新启动时，会将上边提到的 Max Trx ID 属性加载到内存中，将该值加上 256 之后赋值给我们前边提到的全局变量（因为在上次关机时该全局变量的值可能大于 Max Trx ID 属性值）。<br>
+这样就可以保证整个系统中分配的事务id值是一个递增的数字。先被分配id的事务得到的是较小的事务id，后被分配id的事务得到的是较大的事务id。</p>
 </div>
 <h2 id="并发事务处理带来的问题">并发事务处理带来的问题</h2>
 <ul class="lvl-0">
@@ -924,7 +929,9 @@ ul, ol, li {
 </li>
 </ul>
 <blockquote>
-<p>一个事务正在对一条记录做修改，在这个事务完成并提交前，这条记录的数据就处于不一致的状态；这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些“脏”数据，并据此作进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象的叫做“脏读”。一句话：事务A读取到了事务B已经修改但尚未提交的数据，还在这个数据基础上做了操作。此时，如果B事务回滚，A读取的数据无效，不符合一致性要求。</p>
+<p>一个事务正在对一条记录做修改，在这个事务完成并提交前，这条记录的数据就处于不一致的状态；<br>
+这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些“脏”数据，并据此作进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象的叫做“脏读”。<br>
+一句话：事务A读取到了事务B已经修改但尚未提交的数据，还在这个数据基础上做了操作。此时，如果B事务回滚，A读取的数据无效，不符合一致性要求。</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -932,7 +939,8 @@ ul, ol, li {
 </li>
 </ul>
 <blockquote>
-<p>一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现其读出的数据已经发生了改变、或某些记录已经被删除了！这种现象就叫做“不可重复读”。一句话：事务A内部的相同查询语句在不同时刻读出的结果不一致，不符合隔离性</p>
+<p>一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现其读出的数据已经发生了改变、或某些记录已经被删除了！这种现象就叫做“不可重复读”。<br>
+一句话：事务A内部的相同查询语句在不同时刻读出的结果不一致，不符合隔离性</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -940,7 +948,8 @@ ul, ol, li {
 </li>
 </ul>
 <blockquote>
-<p>一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为“幻读”。一句话：事务A读取到了事务B提交的新增数据，不符合隔离性</p>
+<p>一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为“幻读”。<br>
+一句话：事务A读取到了事务B提交的新增数据，不符合隔离性</p>
 </blockquote>
 <h2 id="事务隔离级别">事务隔离级别</h2>
 <ul class="lvl-0">
@@ -1145,7 +1154,8 @@ mysql后台有专门的线程每隔一段时间负责把脏页刷新到磁盘，
 <h3 id="多个Buffer-Pool实例">多个Buffer Pool实例</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>Buffer Pool本质是InnoDB向操作系统申请的一块连续的内存空间，在多线程环境下，访问Buffer Pool中的各种链表都需要加锁处理，在Buffer Pool特别大而且多线程并发访问特别高的情况下，单一的Buffer Pool可能会影响请求的处理速度。所以在Buffer Pool特别大的时候，我们可以把它们拆分成若干个小的Buffer Pool，每个Buffer Pool都称为一个实例，它们都是独立的，独立的去申请内存空间，独立的管理各种链表，所以在多线程并发访问时并不会相互影响，从而提高并发处理能力。</p>
+<p>Buffer Pool本质是InnoDB向操作系统申请的一块连续的内存空间，在多线程环境下，访问Buffer Pool中的各种链表都需要加锁处理，在Buffer Pool特别大而且多线程并发访问特别高的情况下，单一的Buffer Pool可能会影响请求的处理速度。<br>
+所以在Buffer Pool特别大的时候，我们可以把它们拆分成若干个小的Buffer Pool，每个Buffer Pool都称为一个实例，它们都是独立的，独立的去申请内存空间，独立的管理各种链表，所以在多线程并发访问时并不会相互影响，从而提高并发处理能力。</p>
 </li>
 <li class="lvl-2">
 <p>我们可以在服务器启动的时候通过设置<code>innodb_buffer_pool_instances</code>的值来修改Buffer Pool实例的个数，默认8，最大值是64。</p>
@@ -1176,7 +1186,8 @@ Free buffers：代表当前Buffer Pool还有多少空闲缓存页，也就是fre
 Database pages：代表LRU链表中的页的数量，包含young和old两个区域的节点数量。<br>
 Old database pages：代表LRU链表old区域的节点数量。<br>
 Modified db pages：代表脏页数量，也就是flush链表中节点的数量。<br>
-Pending reads：正在等待从磁盘上加载到Buffer Pool中的页面数量。当准备从磁盘中加载某个页面时，会先为这个页面在Buffer Pool中分配一个缓存页以及它对应的控制块，然后把这个控制块添加到LRU的old区域的头部，但是这个时候真正的磁盘页并没有被加载进来，Pending reads的值会跟着加1。<br>
+Pending reads：正在等待从磁盘上加载到Buffer Pool中的页面数量。<br>
+当准备从磁盘中加载某个页面时，会先为这个页面在Buffer Pool中分配一个缓存页以及它对应的控制块，然后把这个控制块添加到LRU的old区域的头部，但是这个时候真正的磁盘页并没有被加载进来，Pending reads的值会跟着加1。<br>
 Pending writes LRU：即将从LRU链表中刷新到磁盘中的页面数量。<br>
 Pending writes flush list：即将从flush链表中刷新到磁盘中的页面数量。<br>
 Pending writes single page：即将以单个页面的形式刷新到磁盘中的页面数量。<br>
@@ -1220,9 +1231,12 @@ I/O unzip cur：正在解压的页面数量。</p>
 </li>
 </ul>
 <h2 id="InnoDB记录存储结构和索引页结构">InnoDB记录存储结构和索引页结构</h2>
-<p>InnoDB是一个将表中的数据存储到磁盘上的存储引擎，而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。<br>而我们知道读写磁盘的速度非常慢，和内存读写差了几个数量级，所以当我们想从表中获取某些记录时，InnoDB存储引擎需要一条一条的把记录从磁盘上读出来么？<br>
-InnoDB采取的方式是：将数据划分为若干个页，以页作为磁盘和内存之间交互的基本单位，InnoDB中页的大小一般为16KB。也就是在一般情况下，一次最少从磁盘中读取16KB的内容到内存中，一次最少把内存中的16KB内容刷新到磁盘中。<br>我们平时是以记录为单位来向表中插入数据的，这些记录在磁盘上的存放方式也被称为行格式或者记录格式。<br>
-InnoDB存储引擎设计了4种不同类型的行格式，分别是Compact、Redundant、Dynamic和Compressed行格式，MySQL5.7以后的默认行格式是Dynamic。<br>我们可以在创建或修改表的语句中指定行格式： <code>CREATE TABLE 表名 (列的信息) ROW_FORMAT=行格式名称</code><br>
+<p>InnoDB是一个将表中的数据存储到磁盘上的存储引擎，而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。<br><br>
+而我们知道读写磁盘的速度非常慢，和内存读写差了几个数量级，所以当我们想从表中获取某些记录时，InnoDB存储引擎需要一条一条的把记录从磁盘上读出来么？<br>
+InnoDB采取的方式是：将数据划分为若干个页，以页作为磁盘和内存之间交互的基本单位，InnoDB中页的大小一般为16KB。也就是在一般情况下，一次最少从磁盘中读取16KB的内容到内存中，一次最少把内存中的16KB内容刷新到磁盘中。<br><br>
+我们平时是以记录为单位来向表中插入数据的，这些记录在磁盘上的存放方式也被称为行格式或者记录格式。<br>
+InnoDB存储引擎设计了4种不同类型的行格式，分别是Compact、Redundant、Dynamic和Compressed行格式，MySQL5.7以后的默认行格式是Dynamic。<br><br>
+我们可以在创建或修改表的语句中指定行格式： <code>CREATE TABLE 表名 (列的信息) ROW_FORMAT=行格式名称</code><br>
 查看行格式<code>SHOW TABLE STATUS LIKE 'table_name'\G</code></p>
 <h3 id="记录行格式">记录行格式</h3>
 <ul class="lvl-0">
@@ -1270,7 +1284,11 @@ InnoDB存储引擎设计了4种不同类型的行格式，分别是Compact、Red
 </li>
 </ul>
 <div class="note success"><h3 id="数据溢出">数据溢出</h3>
-<p>如果我们定义一个表，表中只有一个VARCHAR字段，如下： CREATE TABLE test_varchar( c VARCHAR(60000) ) 然后往这个字段插入60000个字符，会发生什么？<br>前边说过，MySQL中磁盘和内存交互的基本单位是页，也就是说MySQL是以页为基本单位来管理存储空间的，我们的记录都会被分配到某个页中存储。<br>而一个页的大小一般是16KB，也就是16384字节，而一个VARCHAR(M)类型的列就最多可以存储65532个字节，这样就可能造成一个页存放不了一条记录的情况。<br>在Compact和Redundant行格式中，对于占用存储空间非常大的列，在记录的真实数据处只会存储该列的该列的前768个字节的数据，然后把剩余的数据分散存储在几个其他的页中，<br>记录的真实数据处用20个字节存储指向这些页的地址。这个过程也叫做行溢出，存储超出768字节的那些页面也被称为溢出页。<br>
+<p>如果我们定义一个表，表中只有一个VARCHAR字段，如下： CREATE TABLE test_varchar( c VARCHAR(60000) ) 然后往这个字段插入60000个字符，会发生什么？<br><br>
+前边说过，MySQL中磁盘和内存交互的基本单位是页，也就是说MySQL是以页为基本单位来管理存储空间的，我们的记录都会被分配到某个页中存储。<br><br>
+而一个页的大小一般是16KB，也就是16384字节，而一个VARCHAR(M)类型的列就最多可以存储65532个字节，这样就可能造成一个页存放不了一条记录的情况。<br><br>
+在Compact和Redundant行格式中，对于占用存储空间非常大的列，在记录的真实数据处只会存储该列的该列的前768个字节的数据，然后把剩余的数据分散存储在几个其他的页中，<br><br>
+记录的真实数据处用20个字节存储指向这些页的地址。这个过程也叫做行溢出，存储超出768字节的那些页面也被称为溢出页。<br>
 Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真实数据的前768个字节，而是把所有的字节都存储到其他页面中，只在记录的真实数据处存储其他页面的地址。</p>
 </div>
 <h3 id="索引页格式">索引页格式</h3>
@@ -1585,7 +1603,9 @@ Dynamic和Compressed行格式，不会在记录的真实数据处存储字段真
 <div class="tips">
 <p><em><strong><code>redo log</code>的作用</strong></em><br>
 我们知道，InnoDB的增删改查都是在<code>Buffer Pool</code>完成的，如果我们只在内存的 Buffer Pool 中修改了页面，假设在事务提交后突然发生了某个故障，导致内存中的数据都失效了，那么这个已经提交了的事务对数据库中所做的更改也就跟着丢失了，这是我们所不能忍受的。那么如何保证这个持久性呢？</p>
-<p>我们只是想让已经提交了的事务对数据库中数据所做的修改永久生效，即使后来系统崩溃，在重启后也能把这种修改恢复出来。所以我们其实没有必要在每次事务提交时就把该事务在内存中修改过的全部页面刷新到磁盘，因为这样做效率太低(还是那个原则，把随机写改为顺序写)，我们只需要把修改了哪些东西记录一下就好，比方说某个事务将系统表空间中的第 100号 页面中偏移量为 1000 处的那个字节的值 1 改成 2 ，我们只需要记录一下：<br>
+<p>我们只是想让已经提交了的事务对数据库中数据所做的修改永久生效，即使后来系统崩溃，在重启后也能把这种修改恢复出来。<br>
+所以我们其实没有必要在每次事务提交时就把该事务在内存中修改过的全部页面刷新到磁盘，因为这样做效率太低(还是那个原则，把随机写改为顺序写)，我们只需要把修改了哪些东西记录一下就好，<br>
+比方说某个事务将系统表空间中的第 100号 页面中偏移量为 1000 处的那个字节的值 1 改成 2 ，我们只需要记录一下：<br>
 <em><strong>将第 0 号表空间的 100 号页面的偏移量为 1000 处的值更新为 2。</strong></em><br>
 这样我们在事务提交时，把上述内容刷新到磁盘中，即使之后系统崩溃了，重启之后只要按照上述内容所记录的步骤重新更新一下数据页，那么该事务对数据库中所做的修改又可以被恢复出来，也就意味着满足持久性的要求。</p>
 <p>理论上，<strong>redo log</strong>的容量足够恢复因掉电等原因导致<code>Buffer Pool</code>没有及时刷入磁盘的内容。否则<strong>redo log</strong>因容量不够而被覆盖，而此时<code>Buffer Pool</code>尚未刷入磁盘，就不能保证事务的持久性了</p>
@@ -1612,7 +1632,9 @@ data：该条 redo 日志的具体内容。</p>
 </li>
 </ul>
 <h3 id="redo-log-buffer">redo log buffer</h3>
-<p>写入 redo 日志时也不能直接直接写到磁盘上，实际上在服务器启动时就向操作系统申请了一大片称之为 redo log buffer 的连续内存空间，翻译成中文就是 redo 日志缓冲区，我们也可以简称为 log buffer。</p>
+<p>写入 redo 日志时也不能直接直接写到磁盘上，<br>
+实际上在服务器启动时就向操作系统申请了一大片称之为 redo log buffer 的连续内存空间，翻译成中文就是 redo 日志缓冲区，<br>
+我们也可以简称为 log buffer。</p>
 <p>我们可以通过启动参数 <code>innodb_log_buffer_size</code> 来指定 log buffer 的大小，该启动参数的默认值为 16MB。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_log_buffer_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+----------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name          <span class="operator">|</span> <span class="keyword">Value</span>    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+----------+</span></span><br><span class="line"><span class="operator">|</span> innodb_log_buffer_size <span class="operator">|</span> <span class="number">16777216</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+----------+</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
@@ -1679,13 +1701,17 @@ data：该条 redo 日志的具体内容。</p>
 <p>崩溃后的恢复为什么不用 binlog？</p>
 <div class="tips">
 <p>1、这两者使用方式不一样<br>
-binlog 会记录表所有更改操作，包括更新删除数据，更改表结构等等，主要用于人工恢复数据，而 redo log 对于我们是不可见的，它是 InnoDB 用于保证crash-safe 能力的，也就是在事务提交后 MySQL 崩溃的话，可以保证事务的持久性，即事务提交后其更改是永久性的。一句话概括：binlog 是用作人工恢复数据，redo log 是 MySQL 自己使用，用于保证在数据库崩溃时的事务持久性。<br>
+binlog 会记录表所有更改操作，包括更新删除数据，更改表结构等等，主要用于人工恢复数据，而 redo log 对于我们是不可见的，它是 InnoDB 用于保证crash-safe 能力的，也就是在事务提交后 MySQL 崩溃的话，可以保证事务的持久性，即事务提交后其更改是永久性的。<br>
+一句话概括：binlog 是用作人工恢复数据，redo log 是 MySQL 自己使用，用于保证在数据库崩溃时的事务持久性。<br>
 2、redo log 是 InnoDB 引擎特有的，binlog 是 MySQL 的 Server 层实现的,所有引擎都可以使用。<br>
 3、redo log 是物理日志，记录的是“在某个数据页上做了什么修改”，恢复的速度更快；binlog 是逻辑日志，记录的是这个语句的原始逻辑，比如“给 ID=2这的 c 字段加 1 ” ；<br>
 4、redo log 是“循环写”的日志文件，redo log 只会记录未刷盘的日志，已经刷入磁盘的数据都会从 redo log 这个有限大小的日志文件里删除。binlog 是追加日志，保存的是全量的日志。<br>
-5、最重要的是，当数据库 crash 后，想要恢复未刷盘但已经写入 redo log 和 binlog 的数据到内存时，binlog 是无法恢复的。虽然 binlog 拥有全量的日志，但没有一个标志让 innoDB 判断哪些数据已经入表(写入磁盘)，哪些数据还没有。<br>比如，binlog 记录了两条日志：<br>给 ID=2 这一行的 c 字段加 1<br>
+5、最重要的是，当数据库 crash 后，想要恢复未刷盘但已经写入 redo log 和 binlog 的数据到内存时，binlog 是无法恢复的。虽然 binlog 拥有全量的日志，但没有一个标志让 innoDB 判断哪些数据已经入表(写入磁盘)，哪些数据还没有。<br><br>
+比如，binlog 记录了两条日志：<br><br>
 给 ID=2 这一行的 c 字段加 1<br>
-在记录 1 入表后，记录 2 未入表时，数据库 crash。重启后，只通过 binlog 数据库无法判断这两条记录哪条已经写入磁盘，哪条没有写入磁盘，不管是两条都恢复至内存，还是都不恢复，对 ID=2 这行数据来说，都不对。<br>但 redo log 不一样，只要刷入磁盘的数据，都会从 redo log 中抹掉，数据库重启后，直接把 redo log 中的数据都恢复至内存就可以了。</p>
+给 ID=2 这一行的 c 字段加 1<br>
+在记录 1 入表后，记录 2 未入表时，数据库 crash。重启后，只通过 binlog 数据库无法判断这两条记录哪条已经写入磁盘，哪条没有写入磁盘，不管是两条都恢复至内存，还是都不恢复，对 ID=2 这行数据来说，都不对。<br><br>
+但 redo log 不一样，只要刷入磁盘的数据，都会从 redo log 中抹掉，数据库重启后，直接把 redo log 中的数据都恢复至内存就可以了。</p>
 </div>
 </li>
 </ul>
@@ -1733,11 +1759,13 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 </li>
 </ul>
 <blockquote>
-<p>读锁（共享锁，S锁[Shared]）：针对同一份数据，多个读操作可以同时进行而不会互相影响。读锁可以认为没有加锁，可读但不可写，当写锁锁住数据时，读锁也会不可获取。写锁（排它锁，X锁[eXclusive]）：当前写操作没有完成前，它会阻断其他写锁和读锁</p>
+<p>读锁（共享锁，S锁[Shared]）：针对同一份数据，多个读操作可以同时进行而不会互相影响。读锁可以认为没有加锁，可读但不可写，当写锁锁住数据时，读锁也会不可获取。<br>
+写锁（排它锁，X锁[eXclusive]）：当前写操作没有完成前，它会阻断其他写锁和读锁</p>
 </blockquote>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># 给表加读锁</span><br><span class="line"># 当前session和其他session都可以读该表,当前session中插入或者更新锁定的表都会报错，其他session插入或更新则会等待</span><br><span class="line">mysql<span class="operator">&gt;</span> lock <span class="keyword">table</span> actor read;</span><br><span class="line"></span><br><span class="line"># 给表加写锁</span><br><span class="line"># 当前session对该表的增删改查都没有问题，其他session对该表的所有操作被阻塞</span><br><span class="line">mysql<span class="operator">&gt;</span> lock <span class="keyword">table</span> actor write;</span><br><span class="line"></span><br><span class="line"># 查看哪些表上加了锁</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">open</span> tables;</span><br><span class="line"># 查看指定表</span><br><span class="line"># In_use<span class="operator">=</span><span class="number">1</span>表示被加了写锁</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">open</span> tables <span class="keyword">like</span> <span class="string">&#x27;actor&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> Database <span class="operator">|</span> <span class="keyword">Table</span> <span class="operator">|</span> In_use <span class="operator">|</span> Name_locked <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> test     <span class="operator">|</span> actor <span class="operator">|</span>      <span class="number">1</span> <span class="operator">|</span>           <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-------+--------+-------------+</span></span><br><span class="line"></span><br><span class="line"># 解锁</span><br><span class="line">mysql<span class="operator">&gt;</span> unlock tables;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>对MyISAM表的读操作(加读锁) ,不会阻寒其他进程对同一表的读请求,但会阻赛对同一表的写请求。只有当读锁释放后,才会执行其它进程的写操作。对MylSAM表的写操作(加写锁) ,会阻塞其他进程对同一表的读和写操作,只有当写锁释放后,才会执行其它进程的读写操作</p>
+<p>对MyISAM表的读操作(加读锁) ,不会阻寒其他进程对同一表的读请求,但会阻赛对同一表的写请求。只有当读锁释放后,才会执行其它进程的写操作。<br>
+对MylSAM表的写操作(加写锁) ,会阻塞其他进程对同一表的读和写操作,只有当写锁释放后,才会执行其它进程的读写操作</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1746,7 +1774,10 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 行锁<span class="keyword">for</span> <span class="keyword">update</span>，这样其他session只能读这行数据，修改则会被阻塞，直到锁定行的session提交</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> actor <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">10</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>注意行锁的查询条件必须走索引，否则会升级为表锁尽可能让所有数据检索都通过索引来完成，避免无索引行锁升级为表锁合理设计索引，尽量缩小锁的范围尽量控制事务大小，减少锁定资源量和时间长度，涉及事务加锁的sql尽量放在事务最后执行</p>
+<p>注意行锁的查询条件必须走索引，否则会升级为表锁<br>
+尽可能让所有数据检索都通过索引来完成，避免无索引行锁升级为表锁<br>
+合理设计索引，尽量缩小锁的范围<br>
+尽量控制事务大小，减少锁定资源量和时间长度，涉及事务加锁的sql尽量放在事务最后执行</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1772,8 +1803,11 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 </li>
 </ul>
 <blockquote>
-<p>如account表的主键id是不连续的（1，2，3，10，20），那么间隙就有id为 (3,10)，(10,20)，(20,正无穷) 这三个区间在Session_1下面执行 <code>update account set age = 10 where id &gt; 8 and id &lt;18;</code><br>
-则其他Session没法在这个范围所包含的所有行记录(包括间隙行记录)以及行记录所在的间隙里插入或修改任何数据，即id在 (3,20]区间都无法修改数据，注意最后那个20也是包含在内的。注意这里锁住的最后一条记录不是id=18，而是18所在的间隙区间都会锁住。尽可能减少检索条件范围，避免间隙锁</p>
+<p>如account表的主键id是不连续的（1，2，3，10，20），那么间隙就有id为 (3,10)，(10,20)，(20,正无穷) 这三个区间<br>
+在Session_1下面执行 <code>update account set age = 10 where id &gt; 8 and id &lt;18;</code><br>
+则其他Session没法在这个范围所包含的所有行记录(包括间隙行记录)以及行记录所在的间隙里插入或修改任何数据，即id在 (3,20]区间都无法修改数据，注意最后那个20也是包含在内的。<br>
+注意这里锁住的最后一条记录不是id=18，而是18所在的间隙区间都会锁住。<br>
+尽可能减少检索条件范围，避免间隙锁</p>
 </blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1787,7 +1821,8 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 <h2 id="慢查询">慢查询</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>什么是慢查询慢查询日志，顾名思义，就是查询花费大量时间的日志，是指mysql记录所有执行超过<code>long_query_time</code>参数设定的时间阈值的SQL语句的日志。该日志能为SQL语句的优化带来很好的帮助。默认情况下，慢查询日志是关闭的，要使用慢查询日志功能，首先要开启慢查询日志功能。</p>
+<p>什么是慢查询<br>
+慢查询日志，顾名思义，就是查询花费大量时间的日志，是指mysql记录所有执行超过<code>long_query_time</code>参数设定的时间阈值的SQL语句的日志。该日志能为SQL语句的优化带来很好的帮助。默认情况下，慢查询日志是关闭的，要使用慢查询日志功能，首先要开启慢查询日志功能。</p>
 </li>
 <li class="lvl-2">
 <p>开启慢查询</p>
