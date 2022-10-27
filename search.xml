@@ -1015,6 +1015,50 @@ year,quarter,month,week,day,hour,minute,second,microsecond,day_hour,day_minute,d
 </tbody>
 </table>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> AES_ENCRYPT(<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;abc&#x27;</span>),AES_DECRYPT(AES_ENCRYPT(<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;abc&#x27;</span>),<span class="string">&#x27;abc&#x27;</span>)</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------------+------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> AES_ENCRYPT(<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;abc&#x27;</span>)        <span class="operator">|</span> AES_DECRYPT(AES_ENCRYPT(<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;abc&#x27;</span>),<span class="string">&#x27;abc&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------------+------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">0xe46cef3cb055471402ea4dfb7249cb32</span> <span class="operator">|</span> <span class="number">123456</span>                                         <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------------+------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"># 不可逆</span><br><span class="line"><span class="keyword">select</span> MD5(<span class="string">&#x27;123456&#x27;</span>),SHA(<span class="string">&#x27;123456&#x27;</span>)</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------------+------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> MD5(<span class="string">&#x27;123456&#x27;</span>)                    <span class="operator">|</span> SHA(<span class="string">&#x27;123456&#x27;</span>)                            <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------------+------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> e10adc3949ba59abbe56e057f20f883e <span class="operator">|</span> <span class="number">7</span>c4a8d09ca3762af61e59520943dc26494f8941b <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------------+------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+<h3 id="信息函数">信息函数</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">USER(),SESSION_USER(),SYSTEM_USER()</td>
+<td style="text-align:left">客户端提供的用户名和主机名</td>
+</tr>
+<tr>
+<td style="text-align:left">CURRENT_USER(),CURRENT_USER</td>
+<td style="text-align:left">经过身份验证的用户名和主机名</td>
+</tr>
+<tr>
+<td style="text-align:left">DATABASE(),SCHEMA()</td>
+<td style="text-align:left">返回默认（当前）数据库名称</td>
+</tr>
+<tr>
+<td style="text-align:left">VERSION()</td>
+<td style="text-align:left">返回指示MySQL服务器版本的字符串</td>
+</tr>
+<tr>
+<td style="text-align:left">ICU_VERSION()</td>
+<td style="text-align:left">Unicode国际组件（ICU）库的版本,用于支持正则表达式操作</td>
+</tr>
+<tr>
+<td style="text-align:left">CONNECTION_ID()</td>
+<td style="text-align:left">返回连接的连接ID（线程ID）</td>
+</tr>
+<tr>
+<td style="text-align:left">CHARSET(x)</td>
+<td style="text-align:left">查询x的存储字符集</td>
+</tr>
+<tr>
+<td style="text-align:left">COLLATION(x)</td>
+<td style="text-align:left">查询x的排序字符集</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">user</span>(),<span class="built_in">SESSION_USER</span>(),<span class="built_in">SYSTEM_USER</span>(),<span class="built_in">CURRENT_USER</span>(),<span class="built_in">CURRENT_USER</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+-------------------+-------------------+----------------+--------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">user</span>()            <span class="operator">|</span> <span class="built_in">SESSION_USER</span>()    <span class="operator">|</span> <span class="built_in">SYSTEM_USER</span>()     <span class="operator">|</span> <span class="built_in">CURRENT_USER</span>() <span class="operator">|</span> <span class="built_in">CURRENT_USER</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+-------------------+-------------------+----------------+--------------+</span></span><br><span class="line"><span class="operator">|</span> root<span class="variable">@1</span><span class="number">.119</span><span class="number">.151</span><span class="number">.30</span> <span class="operator">|</span> root<span class="variable">@1</span><span class="number">.119</span><span class="number">.151</span><span class="number">.30</span> <span class="operator">|</span> root<span class="variable">@1</span><span class="number">.119</span><span class="number">.151</span><span class="number">.30</span> <span class="operator">|</span> root@<span class="operator">%</span>         <span class="operator">|</span> root@<span class="operator">%</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+-------------------+-------------------+----------------+--------------+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> version(),database(),schema(),ICU_VERSION(),CONNECTION_ID()</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+------------+----------+---------------+-----------------+</span></span><br><span class="line"><span class="operator">|</span> version() <span class="operator">|</span> database() <span class="operator">|</span> schema() <span class="operator">|</span> ICU_VERSION() <span class="operator">|</span> CONNECTION_ID() <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+------------+----------+---------------+-----------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">8.0</span><span class="number">.30</span>    <span class="operator">|</span> test       <span class="operator">|</span> test     <span class="operator">|</span> <span class="number">69.1</span>          <span class="operator">|</span> <span class="number">138</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+------------+----------+---------------+-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> CHARSET(<span class="string">&#x27;abc&#x27;</span>),CHARSET(<span class="number">1010</span>),CHARSET(<span class="number">0x1010</span>),<span class="keyword">COLLATION</span>(<span class="string">&#x27;abc&#x27;</span>),<span class="keyword">COLLATION</span>(<span class="number">1010</span>),<span class="keyword">COLLATION</span>(<span class="number">0x1010</span>)</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+---------------+-----------------+--------------------+-----------------+-------------------+</span></span><br><span class="line"><span class="operator">|</span> CHARSET(<span class="string">&#x27;abc&#x27;</span>) <span class="operator">|</span> CHARSET(<span class="number">1010</span>) <span class="operator">|</span> CHARSET(<span class="number">0x1010</span>) <span class="operator">|</span> <span class="keyword">COLLATION</span>(<span class="string">&#x27;abc&#x27;</span>)   <span class="operator">|</span> <span class="keyword">COLLATION</span>(<span class="number">1010</span>) <span class="operator">|</span> <span class="keyword">COLLATION</span>(<span class="number">0x1010</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+---------------+-----------------+--------------------+-----------------+-------------------+</span></span><br><span class="line"><span class="operator">|</span> utf8mb4        <span class="operator">|</span> <span class="type">binary</span>        <span class="operator">|</span> <span class="type">binary</span>          <span class="operator">|</span> utf8mb4_general_ci <span class="operator">|</span> <span class="type">binary</span>          <span class="operator">|</span> <span class="type">binary</span>            <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------+---------------+-----------------+--------------------+-----------------+-------------------+</span></span><br></pre></td></tr></table></figure>
 <h3 id="其它函数">其它函数</h3>
 <table>
 <thead>
@@ -1117,6 +1161,42 @@ year,quarter,month,week,day,hour,minute,second,microsecond,day_hour,day_minute,d
   <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> <span class="number">1</span><span class="operator">&gt;</span><span class="number">2</span> <span class="keyword">THEN</span> <span class="string">&#x27;stop&#x27;</span> <span class="keyword">WHEN</span> <span class="number">1</span><span class="operator">&lt;</span><span class="number">2</span> <span class="keyword">THEN</span> <span class="string">&#x27;go&#x27;</span> <span class="keyword">ELSE</span> <span class="string">&#x27;null&#x27;</span> <span class="keyword">END</span> <span class="keyword">as</span> <span class="keyword">result</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">result</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> go     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"></span><br><span class="line"># 统计每个部门年龄等于<span class="number">34</span>的人数</span><br><span class="line"><span class="keyword">select</span> depName,<span class="built_in">sum</span>(<span class="keyword">case</span> <span class="keyword">when</span> age<span class="operator">=</span><span class="number">34</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">end</span>),group_concat(age) <span class="keyword">from</span> tbl_employees <span class="keyword">group</span> <span class="keyword">by</span> depName</span><br><span class="line"><span class="operator">+</span><span class="comment">---------+------------------------------------------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> depName <span class="operator">|</span> <span class="built_in">sum</span>(<span class="keyword">case</span> <span class="keyword">when</span> age<span class="operator">=</span><span class="number">34</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">end</span> ) <span class="operator">|</span> group_concat(age)       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------+------------------------------------------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> 技术部  <span class="operator">|</span> <span class="number">2</span>                                        <span class="operator">|</span> <span class="number">22</span>,<span class="number">24</span>,<span class="number">26</span>,<span class="number">28</span>,<span class="number">34</span>,<span class="number">34</span>,<span class="number">36</span>,<span class="number">38</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> 运维部  <span class="operator">|</span> <span class="number">1</span>                                        <span class="operator">|</span> <span class="number">34</span>,<span class="number">24</span>,<span class="number">26</span>,<span class="number">38</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> 销售部  <span class="operator">|</span> <span class="number">0</span>                                        <span class="operator">|</span> <span class="number">44</span>,<span class="number">24</span>,<span class="number">46</span>,<span class="number">38</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------+------------------------------------------+-------------------------+</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<h2 id="算术运算符">算术运算符</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">+</td>
+<td style="text-align:left">加法</td>
+</tr>
+<tr>
+<td style="text-align:left">-</td>
+<td style="text-align:left">减法</td>
+</tr>
+<tr>
+<td style="text-align:left">*</td>
+<td style="text-align:left">乘法</td>
+</tr>
+<tr>
+<td style="text-align:left">/</td>
+<td style="text-align:left">除法</td>
+</tr>
+<tr>
+<td style="text-align:left">div</td>
+<td style="text-align:left">整除，只取整数部分</td>
+</tr>
+<tr>
+<td style="text-align:left">%，mod</td>
+<td style="text-align:left">模运算符，取余数</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 除法</span><br><span class="line"><span class="keyword">select</span> <span class="number">10</span><span class="operator">/</span><span class="number">4</span>,<span class="number">10</span> div <span class="number">4</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+----------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span><span class="operator">/</span><span class="number">4</span>   <span class="operator">|</span> <span class="number">10</span> div <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+----------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2.5000</span> <span class="operator">|</span> <span class="number">2</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+----------+</span></span><br><span class="line"></span><br><span class="line"># 取余数</span><br><span class="line"><span class="keyword">select</span> <span class="number">10</span> mod <span class="number">3</span>,<span class="built_in">mod</span>(<span class="number">10</span>,<span class="number">3</span>),<span class="number">10</span> <span class="operator">%</span> <span class="number">3</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----------+--------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span> mod <span class="number">3</span> <span class="operator">|</span> <span class="built_in">mod</span>(<span class="number">10</span>,<span class="number">3</span>) <span class="operator">|</span> <span class="number">10</span> <span class="operator">%</span> <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----------+--------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>        <span class="operator">|</span> <span class="number">1</span>         <span class="operator">|</span> <span class="number">1</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----------+--------+</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>技术</category>
