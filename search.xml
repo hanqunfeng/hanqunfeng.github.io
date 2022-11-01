@@ -2273,29 +2273,19 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 </ul>
 <span id="more"></span>
 <h2 id="执行计划相关">执行计划相关</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><strong>什么是执行计划</strong></p>
-</li>
-</ul>
+<h3 id="什么是执行计划">什么是执行计划</h3>
 <blockquote>
 <p>一条查询语句在经过MySQL查询优化器的各种基于成本和规则的优化会后生成一个所谓的执行计划，这个执行计划展示了接下来具体执行查询的方式，比如多表连接的顺序是什么，对于每个表采用什么访问方法来具体执行查询等等。<code>EXPLAIN</code>语句来帮助我们查看某个查询语句的具体执行计划，我们需要搞懂<code>EXPLAIN</code>的各个输出项都是干嘛使的，从而可以有针对性的提升我们查询语句的性能。<br>
-通过使用<code>EXPLAIN</code>关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的，分析查询语句或是表结构的性能瓶颈。</p>
-</blockquote>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><strong>通过<code>EXPLAIN</code>我们可以知道：</strong><br>
+通过使用<code>EXPLAIN</code>关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的，分析查询语句或是表结构的性能瓶颈。<br>
+<strong>通过<code>EXPLAIN</code>我们可以知道：</strong><br>
 ⚫ 表的读取顺序<br>
 ⚫ 数据读取操作的操作类型<br>
 ⚫ 哪些索引可以使用<br>
 ⚫ 哪些索引被实际使用<br>
 ⚫ 表之间的引用<br>
 ⚫ 每张表有多少行被优化器查询</p>
-</li>
-<li class="lvl-2">
-<p><strong>查看执行计划</strong></p>
-</li>
-</ul>
+</blockquote>
+<h3 id="查看执行计划">查看执行计划</h3>
 <blockquote>
 <p>执行计划的语法其实非常简单：在SQL查询的前面加上<code>EXPLAIN</code>关键字就行</p>
 </blockquote>
@@ -2306,20 +2296,12 @@ Shadow Paging 的大体思路是对数据的变动会写到硬盘的数据中，
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> employees\G</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span>[ <span class="number">1.</span> <span class="type">row</span> ]<span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line"><span class="keyword">Table</span>        <span class="operator">|</span> employees</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">Table</span> <span class="operator">|</span> <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `employees` (</span><br><span class="line">  `id` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">24</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;姓名&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  `position` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;职位&#x27;</span>,</span><br><span class="line">  `hire_time` <span class="type">timestamp</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="string">&#x27;入职时间&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_name_age_position` (`name`,`age`,`position`) <span class="keyword">USING</span> BTREE</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">100004</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb3 COMMENT<span class="operator">=</span><span class="string">&#x27;员工记录表&#x27;</span></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><strong>重点属性说明</strong></p>
-</li>
-</ul>
-<blockquote>
-<p>id</p>
-</blockquote>
+<h3 id="重点属性说明">重点属性说明</h3>
+<h4 id="id">id</h4>
 <div class="note success"><p>id列的编号是 select 的序列号，每个SELECT关键字都对应一个唯一的 id，有几个select就有几个id，并且id的顺序是按select出现的顺序增长的。<br>
 id列越大执行优先级越高，id相同则从上往下执行，id为NULL最后执行。</p>
 </div>
-<blockquote>
-<p>select_type</p>
-</blockquote>
+<h4 id="select-type">select_type</h4>
 <div class="note success"><p>select_type 查询的类型，表示对应行是简单还是复杂的查询。</p>
 <ul class="lvl-0">
 <li class="lvl-2">1）SIMPLE：简单查询。查询不包含子查询和union</li>
@@ -2345,7 +2327,7 @@ id列越大执行优先级越高，id相同则从上往下执行，id为NULL最�
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> (<span class="keyword">select</span> age,<span class="built_in">count</span>(<span class="operator">*</span>) countNum <span class="keyword">from</span> employees <span class="keyword">group</span> <span class="keyword">by</span> age) tmp <span class="keyword">where</span> countNum <span class="operator">&gt;</span> <span class="number">3</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+------------+------------+-------+-----------------------+-----------------------+---------+--------+-------+----------+------------------------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type <span class="operator">|</span> <span class="keyword">table</span>      <span class="operator">|</span> partitions <span class="operator">|</span> type  <span class="operator">|</span> possible_keys         <span class="operator">|</span> key                   <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>    <span class="operator">|</span> <span class="keyword">rows</span>  <span class="operator">|</span> filtered <span class="operator">|</span> Extra                        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+------------+------------+-------+-----------------------+-----------------------+---------+--------+-------+----------+------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>  <span class="operator">|</span> <span class="keyword">PRIMARY</span>     <span class="operator">|</span> <span class="operator">&lt;</span>derived2<span class="operator">&gt;</span> <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> <span class="keyword">ALL</span>   <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>                <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>                <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>  <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span> <span class="operator">|</span> <span class="number">92796</span> <span class="operator">|</span> <span class="number">100.0</span>    <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>                       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2</span>  <span class="operator">|</span> DERIVED     <span class="operator">|</span> employees  <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> index <span class="operator">|</span> idx_name_age_position <span class="operator">|</span> idx_name_age_position <span class="operator">|</span> <span class="number">140</span>     <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span> <span class="operator">|</span> <span class="number">92796</span> <span class="operator">|</span> <span class="number">100.0</span>    <span class="operator">|</span> <span class="keyword">Using</span> index; <span class="keyword">Using</span> temporary <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+------------+------------+-------+-----------------------+-----------------------+---------+--------+-------+----------+------------------------------+</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
-<li class="lvl-2">9）MATERIALIZED：物化子查询，子查询物化就是将子查询的结果缓存在内存或临时表中，<subquery2>表示就是物化后的表</li>
+<li class="lvl-2">9）MATERIALIZED：物化子查询，子查询物化就是将子查询的结果缓存在内存或临时表中，<code>&lt;subquery2&gt;</code>表示就是物化后的表</li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees <span class="keyword">where</span> name <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">select</span> name <span class="keyword">from</span> employees2)</span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------------+-------------+------------+--------+-----------------------+-----------------------+---------+---------------------+-------+----------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type  <span class="operator">|</span> <span class="keyword">table</span>       <span class="operator">|</span> partitions <span class="operator">|</span> type   <span class="operator">|</span> possible_keys         <span class="operator">|</span> key                   <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>                 <span class="operator">|</span> <span class="keyword">rows</span>  <span class="operator">|</span> filtered <span class="operator">|</span> Extra                   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------------+-------------+------------+--------+-----------------------+-----------------------+---------+---------------------+-------+----------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>  <span class="operator">|</span> SIMPLE       <span class="operator">|</span> employees   <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> <span class="keyword">ALL</span>    <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>                <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>                <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>  <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>              <span class="operator">|</span> <span class="number">92796</span> <span class="operator">|</span> <span class="number">100.0</span>    <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>                  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>  <span class="operator">|</span> SIMPLE       <span class="operator">|</span> <span class="operator">&lt;</span>subquery2<span class="operator">&gt;</span> <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> eq_ref <span class="operator">|</span> <span class="operator">&lt;</span>auto_distinct_key<span class="operator">&gt;</span>   <span class="operator">|</span> <span class="operator">&lt;</span>auto_distinct_key<span class="operator">&gt;</span>   <span class="operator">|</span> <span class="number">75</span>      <span class="operator">|</span> test.employees.name <span class="operator">|</span> <span class="number">1</span>     <span class="operator">|</span> <span class="number">100.0</span>    <span class="operator">|</span> <span class="keyword">Using</span> <span class="keyword">where</span>; <span class="keyword">Not</span> <span class="keyword">exists</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2</span>  <span class="operator">|</span> MATERIALIZED <span class="operator">|</span> employees2  <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> index  <span class="operator">|</span> idx_name_age_position <span class="operator">|</span> idx_name_age_position <span class="operator">|</span> <span class="number">140</span>     <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>              <span class="operator">|</span> <span class="number">10</span>    <span class="operator">|</span> <span class="number">100.0</span>    <span class="operator">|</span> <span class="keyword">Using</span> index             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------------+-------------+------------+--------+-----------------------+-----------------------+---------+---------------------+-------+----------+-------------------------+</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
@@ -2354,16 +2336,12 @@ id列越大执行优先级越高，id相同则从上往下执行，id为NULL最�
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees <span class="keyword">where</span> id <span class="operator">=</span> (<span class="keyword">select</span> id <span class="keyword">from</span> employees2 <span class="keyword">where</span> id<span class="operator">=</span> @<span class="variable">@sql</span>_log_bin)</span><br><span class="line"><span class="operator">+</span><span class="comment">----+----------------------+------------+------------+-------+---------------+---------+---------+-------+------+----------+-------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type          <span class="operator">|</span> <span class="keyword">table</span>      <span class="operator">|</span> partitions <span class="operator">|</span> type  <span class="operator">|</span> possible_keys <span class="operator">|</span> key     <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>   <span class="operator">|</span> <span class="keyword">rows</span> <span class="operator">|</span> filtered <span class="operator">|</span> Extra       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+----------------------+------------+------------+-------+---------------+---------+---------+-------+------+----------+-------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>  <span class="operator">|</span> <span class="keyword">PRIMARY</span>              <span class="operator">|</span> employees  <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> const <span class="operator">|</span> <span class="keyword">PRIMARY</span>       <span class="operator">|</span> <span class="keyword">PRIMARY</span> <span class="operator">|</span> <span class="number">4</span>       <span class="operator">|</span> const <span class="operator">|</span> <span class="number">1</span>    <span class="operator">|</span> <span class="number">100.0</span>    <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2</span>  <span class="operator">|</span> UNCACHEABLE SUBQUERY <span class="operator">|</span> employees2 <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> const <span class="operator">|</span> <span class="keyword">PRIMARY</span>       <span class="operator">|</span> <span class="keyword">PRIMARY</span> <span class="operator">|</span> <span class="number">4</span>       <span class="operator">|</span> const <span class="operator">|</span> <span class="number">1</span>    <span class="operator">|</span> <span class="number">100.0</span>    <span class="operator">|</span> <span class="keyword">Using</span> index <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+----------------------+------------+------------+-------+---------------+---------+---------+-------+------+----------+-------------+</span></span><br></pre></td></tr></table></figure>
 </div>
-<blockquote>
-<p>table</p>
-</blockquote>
+<h4 id="table">table</h4>
 <div class="note success"><p>table列表示 explain 的一行正在访问哪个表。<br>
 当 from 子句中有子查询时，table列是 <derivenN> 格式，表示当前查询依赖 id=N 的查询，于是先执行 id=N 的查 询。<br>
 当有 union 时，UNION RESULT 的 table 列的值为&lt;union1,2&gt;，1和2表示参与 union 的 select 行id。</p>
 </div>
-<blockquote>
-<p>type</p>
-</blockquote>
+<h4 id="type">type</h4>
 <div class="note success"><p>type表示关联类型或访问类型，从最优到最差分别为：<br>
 system &gt; const &gt; eq_ref &gt; ref &gt; fulltext &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; index &gt; ALL<br>
 出现比较多的是: system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL，一般来说，得保证查询达到range级别，最好达到ref。<br>
@@ -2416,22 +2394,18 @@ NULL表示mysql能够在优化阶段分解查询语句，在执行阶段用不�
 </li>
 </ul>
 </div>
-<blockquote>
-<p>possible_keys</p>
-</blockquote>
+<h4 id="possible-keys">possible_keys</h4>
 <div class="note success"><p>possible_keys列显示查询可能使用哪些索引来查找。<br>
 explain 时可能出现 possible_keys 有值，而 key 显示 NULL 的情况，这种情况是因为表中数据不多，mysql认为索引对此查询帮助不大，选择了全表查询。<br>
-如果该列是NULL，则没有相关的索引。</p>
+如果该列是NULL，则没有相关的索引。<br>
+某些情况下，比如类型是index时，可能会出现 possible_keys 列是空的，而 key 列展示的是实际使用到的索引，这是因为index的意思就是扫描二级索引。<br>
+possible keys 列中的值并不是越多越好，可能使用的索引越多，查询优化器计算查询成本时就得花费更长时间，所以如果可以的话，尽量删除那些用不到的索引。</p>
 </div>
-<blockquote>
-<p>key</p>
-</blockquote>
+<h4 id="key">key</h4>
 <div class="note success"><p>key列显示mysql实际采用哪个索引来优化对该表的访问。<br>
 如果没有使用索引，则该列是 NULL。</p>
 </div>
-<blockquote>
-<p>key_len</p>
-</blockquote>
+<h4 id="key-len">key_len</h4>
 <div class="note success"><p>这一列显示了mysql在索引里使用的字节数，通过这个值可以算出具体使用了索引中的哪些列。<br>
 key_len计算规则如下：</p>
 <ol>
@@ -2451,32 +2425,27 @@ datetime：8字节<br>
 索引最大长度是768字节，当字符串过长时，mysql会做一个类似左前缀索引的处理，将前半部分的字符提取出来做索引。</li>
 </ol>
 </div>
-<blockquote>
-<p>ref</p>
-</blockquote>
+<h4 id="ref">ref</h4>
 <div class="note success"><p>ref列显示了在key列记录的索引中，表查找值所用到的列或常量，常见的有：const（常量），字段名（例：<a href="http://film.id">film.id</a>）</p>
 </div>
-<blockquote>
-<p>rows</p>
-</blockquote>
-<div class="note success"><p>rows列是mysql估计要读取并检测的行数，注意这个不是结果集里的行数。</p>
+<h4 id="rows">rows</h4>
+<div class="note success"><p>rows列是mysql估计要读取并检测的行数，注意这个不是结果集里的行数。<br>
+如果查询优化器决定使用全表扫描的方式对某个表执行查询时，执行计划的 rows 列就代表预计需要扫描的行数。<br>
+如果使用索引来执行查询时，执行计划的 rows 列就代表预计扫描的索引记录行数。</p>
 </div>
-<blockquote>
-<p>Extra</p>
-</blockquote>
+<h4 id="filtered">filtered</h4>
+<div class="note success"><p>查询优化器预测有多少条记录满⾜其余的搜索条件,即基于全表扫描或索引扫描计算出要扫描的rows后，满足其余的查询条件的记录数在这些rows中所占的百分比，这也是一个预估值。比如下面这个查询计划：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 基于主键索引扫描的<span class="keyword">rows</span>是<span class="number">46398</span>，此时filtered<span class="operator">=</span><span class="number">100</span>，因为没有其它查询条件，此时表示过滤的记录占比总的扫描<span class="keyword">rows</span>是<span class="number">100</span><span class="operator">%</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees <span class="keyword">where</span> id <span class="operator">&gt;</span> <span class="number">10</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+---------------+---------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type <span class="operator">|</span> <span class="keyword">table</span>     <span class="operator">|</span> partitions <span class="operator">|</span> type  <span class="operator">|</span> possible_keys <span class="operator">|</span> key     <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>    <span class="operator">|</span> <span class="keyword">rows</span>  <span class="operator">|</span> filtered <span class="operator">|</span> Extra       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+---------------+---------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>  <span class="operator">|</span> SIMPLE      <span class="operator">|</span> employees <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> <span class="keyword">range</span> <span class="operator">|</span> <span class="keyword">PRIMARY</span>       <span class="operator">|</span> <span class="keyword">PRIMARY</span> <span class="operator">|</span> <span class="number">4</span>       <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span> <span class="operator">|</span> <span class="number">46398</span> <span class="operator">|</span> <span class="number">100.0</span>    <span class="operator">|</span> <span class="keyword">Using</span> <span class="keyword">where</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+---------------+---------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"></span><br><span class="line"># 如果在加一个条件 age <span class="operator">=</span> <span class="number">20</span>，此时表示该过滤条件占比 <span class="keyword">rows</span> 的百分比是 <span class="number">10</span><span class="operator">%</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees <span class="keyword">where</span> id <span class="operator">&gt;</span> <span class="number">10</span> <span class="keyword">and</span> age <span class="operator">=</span> <span class="number">20</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+---------------+---------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type <span class="operator">|</span> <span class="keyword">table</span>     <span class="operator">|</span> partitions <span class="operator">|</span> type  <span class="operator">|</span> possible_keys <span class="operator">|</span> key     <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>    <span class="operator">|</span> <span class="keyword">rows</span>  <span class="operator">|</span> filtered <span class="operator">|</span> Extra       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+---------------+---------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>  <span class="operator">|</span> SIMPLE      <span class="operator">|</span> employees <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> <span class="keyword">range</span> <span class="operator">|</span> <span class="keyword">PRIMARY</span>       <span class="operator">|</span> <span class="keyword">PRIMARY</span> <span class="operator">|</span> <span class="number">4</span>       <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span> <span class="operator">|</span> <span class="number">46398</span> <span class="operator">|</span> <span class="number">10.0</span>     <span class="operator">|</span> <span class="keyword">Using</span> <span class="keyword">where</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+---------------+---------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<h4 id="Extra">Extra</h4>
 <div class="note success"><p>Extra列展示的是额外信息，常见信息如下：<br>
 1）Using index：使用覆盖索引，索引排序<br>
-2）Using where：使用 where 语句来处理结果，并且查询的列未被索引覆盖<br>
+2）Using where：使用 where 语句来处理结果，并且查询的列未被索引覆盖，出现Using where 只是表示 MySQL 使用 where 子句中的条件对记录进行了过滤，并不表示当前sql没有使用索引，也不表示一定使用全表扫描<br>
 3）Using index condition：查询的列不完全被索引覆盖，where条件中是一个前导列的范围<br>
-4）Using temporary：mysql需要创建一张临时表来处理查询，比如去重、排序之类的，需要使用索引优化<br>
+4）Using temporary：mysql需要创建一张临时表来处理查询，比如去重、排序、分组、Union之类的，需要使用索引优化<br>
 5）Using filesort：将用外部排序而不是索引排序，数据较小时从内存排序，否则需要在磁盘完成排序，需要使用索引优化<br>
 6）Select tables optimized away：使用某些聚合函数（比如 max、min）来访问存在索引的某个字段</p>
 </div>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>filesort文件排序方式</p>
-</li>
-</ul>
+<h2 id="filesort文件排序方式">filesort文件排序方式</h2>
 <blockquote>
 <p>单路排序：是一次性取出满足条件行的所有字段，然后在sort buffer中进行排序；<br>
 双路排序（又叫回表排序模式）：是首先根据相应的条件取出相应的排序字段和可以直接定位行数据的行ID，然后在 sort buffer 中进行排序，排序完后需要再次取回其它需要的字段；<br>
@@ -2486,11 +2455,7 @@ MySQL通过比较系统变量 max_length_for_sort_data(默认1024字节)的大�
 如果全部使用sort_buffer内存排序一般情况下效率会高于磁盘文件排序，但不能因为这个就随便增大sort_buffer(默认1M)，mysql很多参数设置都是做过优化的，不要轻易调整。</p>
 </blockquote>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># mysql8是<span class="number">4</span>k，mysql5是<span class="number">1</span>k</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;max_length_for_sort_data&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name            <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> max_length_for_sort_data <span class="operator">|</span> <span class="number">4096</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"></span><br><span class="line"># 这里设置的<span class="number">4</span>M</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;sort_buffer_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span>   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br><span class="line"><span class="operator">|</span> sort_buffer_size <span class="operator">|</span> <span class="number">4194304</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------+</span></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>优化总结</p>
-</li>
-</ul>
+<h2 id="优化总结">优化总结</h2>
 <div class="note success"><p>1、MySQL支持两种方式的排序filesort和index，Using index是指MySQL扫描索引本身完成排序。index 效率高，filesort效率低。<br>
 2、order by满足两种情况会使用Using index:</p>
 <blockquote>
@@ -2504,11 +2469,7 @@ MySQL通过比较系统变量 max_length_for_sort_data(默认1024字节)的大�
 5、能用覆盖索引尽量用覆盖索引<br>
 6、group by与order by很类似，其实质是先排序后分组，遵照索引创建顺序的最左前缀法则。对于group by的优化如果不需要排序的可以加上order by null禁止排序。注意，where高于having，能写在where中 的限定条件就不要去having限定了。</p>
 </div>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>查看优化后的sql</p>
-</li>
-</ul>
+<h2 id="查看优化后的sql">查看优化后的sql</h2>
 <blockquote>
 <p>mysql8.0以前的版本需要explain extended select * from actor where id = 1;</p>
 </blockquote>
