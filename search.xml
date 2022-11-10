@@ -3140,7 +3140,14 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <h3 id="全量导出">全量导出</h3>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建库、建表和数据语句</span></span><br><span class="line">mysqldump -uroot --all-databases --triggers --routines --events -p &gt; all_databases.sql</span><br></pre></td></tr></table></figure>
 <h3 id="导出指定数据库">导出指定数据库</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建表和数据语句</span></span><br><span class="line">mysqldump -uroot -p DB1 &gt; DB1.sql</span><br><span class="line"></span><br><span class="line"><span class="comment"># 包含建库、建表和数据语句</span></span><br><span class="line">mysqldump -uroot -p --databases DB1 DB2 &gt; databases.sql</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建表和数据语句</span></span><br><span class="line">mysqldump -uroot -p DB1 &gt; DB1.sql</span><br><span class="line"></span><br><span class="line"><span class="comment"># 包含建库、建表和数据语句[推荐]</span></span><br><span class="line">mysqldump -uroot -p --databases DB1 DB2 &gt; databases.sql</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><strong>重要参数</strong><br>
+-B, --databases     Dump several databases. 备份多个数据库<br>
+-R, --routines      Dump stored routines (functions and procedures). 备份函数和存储过程<br>
+-E, --events        Dump events. 备份events<br>
+–triggers          Dump triggers for each dumped table.  备份每个表的触发器</p>
+</div>
 <h3 id="导出指定数据库的指定表">导出指定数据库的指定表</h3>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建表和数据语句</span></span><br><span class="line">mysqldump -uroot -p DB1 --tables table1 table2 &gt; tables.sql</span><br></pre></td></tr></table></figure>
 <h3 id="导出指定数据库时排除某些表">导出指定数据库时排除某些表</h3>
