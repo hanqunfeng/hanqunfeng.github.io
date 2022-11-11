@@ -1249,7 +1249,7 @@ year,quarter,month,week,day,hour,minute,second,microsecond,day_hour,day_minute,d
 <p>binlog数据恢复</p>
 </li>
 </ul>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 查看binlog日志，重点关注<span class="keyword">begin</span>和<span class="keyword">commit</span>之间的内容，</span><br><span class="line">mysqlbinlog ‐‐<span class="keyword">no</span>‐defaults <span class="operator">/</span>usr<span class="operator">/</span><span class="keyword">local</span><span class="operator">/</span>soft<span class="operator">/</span>mysql8<span class="operator">/</span>datas<span class="operator">/</span>mysql<span class="operator">/</span>mysql<span class="operator">-</span>bin<span class="number">.000001</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看binlog日志，重点关注begin和commit之间的内容，</span></span><br><span class="line">mysqlbinlog --no-defaults /usr/local/soft/mysql8/datas/mysql/mysql-bin.000001</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>如下为查看binlog日志的内容片段，<code>end_log_pos</code>后面的就是Position的值</p>
 </blockquote>
@@ -1257,7 +1257,53 @@ year,quarter,month,week,day,hour,minute,second,microsecond,day_hour,day_minute,d
 <blockquote>
 <p>常用的恢复方法</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 恢复全部数据</span><br><span class="line">mysqlbinlog ‐‐<span class="keyword">no</span>‐defaults mysql‐bin<span class="number">.000001</span> <span class="operator">|</span> mysql ‐uroot ‐p test(数据库名)</span><br><span class="line"></span><br><span class="line"># 恢复指定位置数据</span><br><span class="line">mysqlbinlog ‐‐<span class="keyword">no</span>‐defaults ‐‐<span class="keyword">start</span>‐position<span class="operator">=</span>&quot;367&quot; ‐‐stop‐position<span class="operator">=</span>&quot;443&quot; mysql‐bin<span class="number">.000001</span> <span class="operator">|</span> mysql ‐uroot ‐p test(数据库)</span><br><span class="line"></span><br><span class="line"># 恢复指定时间段数据</span><br><span class="line">mysqlbinlog ‐‐<span class="keyword">no</span>‐defaults ‐‐stop‐<span class="type">date</span><span class="operator">=</span> &quot;2022‐09‐28 08:22:15&quot; ‐‐<span class="keyword">start</span>‐<span class="type">date</span><span class="operator">=</span> &quot;2022‐09‐28 08:22:15&quot; mysql‐bin<span class="number">.000001</span> <span class="operator">|</span> mysql ‐uroot ‐p test(数据库)</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 恢复全部数据</span></span><br><span class="line">mysqlbinlog --no-defaults mysql-bin.000001 | mysql -uroot -p <span class="built_in">test</span>(数据库名)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复指定位置数据</span></span><br><span class="line">mysqlbinlog --no-defaults --start-position=<span class="string">&quot;367&quot;</span> --stop-position=<span class="string">&quot;443&quot;</span> mysql-bin.000001 | mysql -uroot -p <span class="built_in">test</span>(数据库)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复指定时间段数据</span></span><br><span class="line">mysqlbinlog --no-defaults --stop-date= <span class="string">&quot;2022‐09‐28 08:22:15&quot;</span> --start-date= <span class="string">&quot;2022‐09‐28 08:22:15&quot;</span> mysql-bin.000001 | mysql -uroot -p <span class="built_in">test</span>(数据库)</span><br></pre></td></tr></table></figure>
+<h3 id="一个数据恢复的小示例">一个数据恢复的小示例</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>假设数据库每天都有全量备份</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysqldump -uroot -ppassword -B dbName &gt; <span class="variable">$bakpath</span>/dbName_$(<span class="built_in">date</span> +%F).sql</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>突然某天数据库出现异常，比如关闭后无法重启，此时可以通过全量备份和binlog日志进行数据恢复</p>
+</li>
+<li class="lvl-2">
+<p>先将binlog日志备份</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> /usr/local/soft/mysql8/datas/mysql/mysql-bin.* <span class="variable">$bakpath</span>/</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>清空mysql的datadir目录</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /usr/local/soft/mysql8/datas/mysql/*</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>重新初始化数据库并启动</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysqld --user=mysql --initialize-insecure</span><br><span class="line">systemctl start mysqld</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>导入全量备份，假设查看备份完成时间是 <em><strong>2022-11-10 12:30:30</strong></em></p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql <span class="operator">&lt;</span> $bakpath<span class="operator">/</span>dbName_$(<span class="type">date</span> <span class="operator">+</span><span class="operator">%</span>F).<span class="keyword">sql</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>导入binlog数据</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 这里就从备份完成时间开始导入，实际上这个时间并不准确，因为备份文件中并没有记录最后的position，所以很难比较出准确的时间或者position</span></span><br><span class="line">mysqlbinlog --no-defaults --start-date=<span class="string">&quot;2022-11-10 12:30:30&quot;</span> <span class="variable">$bakpath</span>/mysql-bin.* | mysql dbName</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><strong>注意</strong><br>
+如果数据库开启了GTID，需要先关闭再导入binlog数据，否则不能导入binlog数据<br>
+临时关闭方式: 更改 GTID_MODE 状态顺序为 ON&lt;-&gt;ON_PERMISSIVE&lt;-&gt;OFF_PERMISSIVE&lt;-&gt;OFF ，需要按照顺序依次改变。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 查看 GTID_MODE 当前状态</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;gtid_mode&#x27;</span>;</span><br><span class="line"># 修改GTID_MODE 状态为 ON_PERMISSIVE</span><br><span class="line"><span class="keyword">set</span> @<span class="variable">@GLOBAL</span>.GTID_MODE<span class="operator">=</span>ON_PERMISSIVE;</span><br><span class="line"># 修改GTID_MODE 状态为 OFF_PERMISSIVE</span><br><span class="line"><span class="keyword">set</span> @<span class="variable">@GLOBAL</span>.GTID_MODE<span class="operator">=</span>OFF_PERMISSIVE;</span><br><span class="line"># 修改GTID_MODE 状态为 OFF</span><br><span class="line"><span class="keyword">set</span> @<span class="variable">@GLOBAL</span>.GTID_MODE<span class="operator">=</span>OFF;</span><br></pre></td></tr></table></figure>
+</div>
 <h2 id="事务及其ACID属性">事务及其ACID属性</h2>
 <p>事务是由一组SQL语句组成的逻辑处理单元,事务具有以下4个属性,通常简称为事务的ACID属性。</p>
 <ul class="lvl-0">
