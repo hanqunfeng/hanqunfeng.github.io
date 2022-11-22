@@ -1,6 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySql--sql语句优化</title>
+    <url>/2022/11/22/mysql-sql-optimization/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>sql语句优化</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>mysql-8.0.30</code>，<a href="https://dev.mysql.com/doc/refman/8.0/en/">https://dev.mysql.com/doc/refman/8.0/en/</a></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="分页查询优化">分页查询优化</h2>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees limit <span class="number">90000</span>,<span class="number">25</span>;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.根据自增且连续的主键排序的分页查询</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees <span class="keyword">where</span> id <span class="operator">&gt;</span> <span class="number">90000</span> limit <span class="number">25</span>;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.根据非主键字段排序的分页查询(这种方式更加灵活)</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees e <span class="keyword">inner</span> <span class="keyword">join</span> (<span class="keyword">select</span> id <span class="keyword">from</span> employees <span class="keyword">order</span> <span class="keyword">by</span> name limit <span class="number">90000</span>,<span class="number">25</span>) ed <span class="keyword">on</span> e.id <span class="operator">=</span> ed.id;</span><br></pre></td></tr></table></figure>
+<h2 id="in和exsits优化，小表驱动大表"><code>in</code>和<code>exsits</code>优化，小表驱动大表</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.当B表的数据集小于A表的数据集时，in优于exists</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> A <span class="keyword">where</span> id <span class="keyword">in</span> (<span class="keyword">select</span> id <span class="keyword">from</span> B);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.当A表的数据集小于B表的数据集时，exists优于in</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> A <span class="keyword">where</span> <span class="keyword">exists</span> (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> B <span class="keyword">where</span> B.id <span class="operator">=</span> A.id)</span><br></pre></td></tr></table></figure>
+<h2 id="count-查询优化"><code>count(*)</code>查询优化</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>count(*)≈count(1)&gt;count(索引字段)&gt;count(主键id)</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySql--sql语句与常用函数</title>
     <url>/2022/10/26/mysql-sql-function/</url>
     <content><![CDATA[<!--
@@ -2641,6 +2722,7 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <p>除了覆盖索引这个概念外，在索引优化的范围内，还有前缀索引、三星索引等。</p>
 </li>
 </ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> employees\G</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span>[ <span class="number">1.</span> <span class="type">row</span> ]<span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line"><span class="keyword">Table</span>        <span class="operator">|</span> employees</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">Table</span> <span class="operator">|</span> <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `employees` (</span><br><span class="line">  `id` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">24</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;姓名&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  `position` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;职位&#x27;</span>,</span><br><span class="line">  `hire_time` <span class="type">timestamp</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="string">&#x27;入职时间&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_name_age_position` (`name`,`age`,`position`) <span class="keyword">USING</span> BTREE</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">1</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb3 COMMENT<span class="operator">=</span><span class="string">&#x27;员工记录表&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="operator">&gt;</span> EXPLAIN <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> employees <span class="keyword">WHERE</span> name <span class="operator">&gt;</span> <span class="string">&#x27;LiLei&#x27;</span> <span class="keyword">AND</span> age <span class="operator">=</span> <span class="number">22</span> <span class="keyword">AND</span> position <span class="operator">=</span><span class="string">&#x27;manager&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+------+-----------------------+--------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type <span class="operator">|</span> <span class="keyword">table</span>     <span class="operator">|</span> partitions <span class="operator">|</span> type <span class="operator">|</span> possible_keys         <span class="operator">|</span> key    <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>    <span class="operator">|</span> <span class="keyword">rows</span>  <span class="operator">|</span> filtered <span class="operator">|</span> Extra       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+------+-----------------------+--------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>  <span class="operator">|</span> SIMPLE      <span class="operator">|</span> employees <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> <span class="keyword">ALL</span>  <span class="operator">|</span> idx_name_age_position <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span> <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>  <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span> <span class="operator">|</span> <span class="number">92796</span> <span class="operator">|</span> <span class="number">0.5</span>      <span class="operator">|</span> <span class="keyword">Using</span> <span class="keyword">where</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+------+-----------------------+--------+---------+--------+-------+----------+-------------+</span></span><br><span class="line"></span><br><span class="line"><span class="operator">&gt;</span> EXPLAIN <span class="keyword">SELECT</span> name,age,position <span class="keyword">FROM</span> employees <span class="keyword">WHERE</span> name <span class="operator">&gt;</span> <span class="string">&#x27;LiLei&#x27;</span> <span class="keyword">AND</span> age <span class="operator">=</span> <span class="number">22</span> <span class="keyword">AND</span> position <span class="operator">=</span><span class="string">&#x27;manager&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+-----------------------+-----------------------+---------+--------+-------+----------+--------------------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> select_type <span class="operator">|</span> <span class="keyword">table</span>     <span class="operator">|</span> partitions <span class="operator">|</span> type  <span class="operator">|</span> possible_keys         <span class="operator">|</span> key                   <span class="operator">|</span> key_len <span class="operator">|</span> <span class="keyword">ref</span>    <span class="operator">|</span> <span class="keyword">rows</span>  <span class="operator">|</span> filtered <span class="operator">|</span> Extra                    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+-----------------------+-----------------------+---------+--------+-------+----------+--------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span>  <span class="operator">|</span> SIMPLE      <span class="operator">|</span> employees <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span>     <span class="operator">|</span> <span class="keyword">range</span> <span class="operator">|</span> idx_name_age_position <span class="operator">|</span> idx_name_age_position <span class="operator">|</span> <span class="number">74</span>      <span class="operator">|</span> <span class="operator">&lt;</span><span class="keyword">null</span><span class="operator">&gt;</span> <span class="operator">|</span> <span class="number">46398</span> <span class="operator">|</span> <span class="number">1.0</span>      <span class="operator">|</span> <span class="keyword">Using</span> <span class="keyword">where</span>; <span class="keyword">Using</span> index <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+-----------+------------+-------+-----------------------+-----------------------+---------+--------+-------+----------+--------------------------+</span></span><br></pre></td></tr></table></figure>
 <h3 id="前缀索引">前缀索引</h3>
 <p>如果索引的字段类型很长，如varchar(255)，此时创建的索引就会非常大，而且维护起来也非常慢，此时建议使用前缀索引，就是只对该字段的前面一些字符进行索引。<br>
 阿里的Java编程规范中也提到，在varchar上建立索引时，必须指定索引长度，没必要对全字段建立索引，建议索引的长度不超过20。<br>
@@ -2787,6 +2869,45 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <li class="lvl-4">
 <p>3.Sort-Union合并: 先按照二级索引记录的主键值进行排序，之后按照Union索引合并方式执行的方式称之为Sort-Union索引合并，很显然，这种Sort-Union索引合并比单纯的Union索引合并多了一步对二级索引记录的主键值排序的过程</p>
 </li>
+</ul>
+</li>
+</ul>
+<h3 id="索引设计原则">索引设计原则</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>代码先行，索引后上</p>
+<ul class="lvl-2">
+<li class="lvl-4">一般应该等到主体业务功能开发完毕，把涉及到该表相关sql都要拿出来分析之后再建立索引</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>联合索引尽量覆盖条件</p>
+<ul class="lvl-2">
+<li class="lvl-4">比如可以设计一个或者两三个联合索引(尽量少建单值索引)，让每一个联合索引都尽量去包含sql语句里的 where、order by、group by的字段，还要确保这些联合索引的字段顺序尽量满足sql查询的最左前缀原则</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>不要在小基数字段上建立索引</p>
+<ul class="lvl-2">
+<li class="lvl-4">比如<code>性别</code>字段，其值不是男就是女，那么该字段的基数就是2，对这种小基数字段建立索引的话，还不如全表扫描</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>长字符串可以采用前缀索引</p>
+<ul class="lvl-2">
+<li class="lvl-4">但是要注意，<code>order by</code>和<code>group by</code>时没办法使用前缀索引</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><code>where</code>与<code>order by</code>冲突时优先<code>where</code></p>
+<ul class="lvl-2">
+<li class="lvl-4">where可以缩小查询范围，会使排序的成本会小很多</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>基于慢sql查询做优化</p>
+<ul class="lvl-2">
+<li class="lvl-4">线上系统一定要开启慢sql，然后定期对慢sql就行索引优化</li>
 </ul>
 </li>
 </ul>
