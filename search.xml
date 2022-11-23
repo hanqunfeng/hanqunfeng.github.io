@@ -39,11 +39,23 @@
 </li>
 </ul>
 <span id="more"></span>
+<h2 id="一般优化原则">一般优化原则</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查询类型要与字段类型匹配，否则不会使用索引</p>
+</li>
+<li class="lvl-2">
+<p>like '%xx%'不会使用索引，like 'xx%'会使用索引</p>
+</li>
+<li class="lvl-2">
+<p>in和or在表数据量比较大的情况会走索引，在表记录不多的情况下会选择全表扫描</p>
+</li>
+</ul>
 <h2 id="分页查询优化">分页查询优化</h2>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees limit <span class="number">90000</span>,<span class="number">25</span>;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>1.根据自增且连续的主键排序的分页查询</p>
+<p>1.根据自增且连续的主键排序的分页查询，要求主键自增且连续</p>
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees <span class="keyword">where</span> id <span class="operator">&gt;</span> <span class="number">90000</span> limit <span class="number">25</span>;</span><br></pre></td></tr></table></figure>
@@ -53,6 +65,18 @@
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employees e <span class="keyword">inner</span> <span class="keyword">join</span> (<span class="keyword">select</span> id <span class="keyword">from</span> employees <span class="keyword">order</span> <span class="keyword">by</span> name limit <span class="number">90000</span>,<span class="number">25</span>) ed <span class="keyword">on</span> e.id <span class="operator">=</span> ed.id;</span><br></pre></td></tr></table></figure>
+<h2 id="order-by-与-group-by-优化"><code>order by</code> 与 <code>group by</code> 优化</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>group by</code> 与``order by` 很类似，其实质是先排序后分组，遵照索引创建顺序的最左前缀法则</p>
+</li>
+<li class="lvl-2">
+<p><code>order by</code> 与 <code>group by</code> 字段尽量与 <code>select</code> 和 <code>where</code> 中的字段组合为联合索引，即覆盖索引，避免文件排序和回表</p>
+</li>
+<li class="lvl-2">
+<p><code>where</code> 高于 <code>having</code>，能写在 <code>where</code> 中的限定条件就不要去 <code>having</code> 限定了</p>
+</li>
+</ul>
 <h2 id="in和exsits优化，小表驱动大表"><code>in</code>和<code>exsits</code>优化，小表驱动大表</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -70,6 +94,24 @@
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>count(*)≈count(1)&gt;count(索引字段)&gt;count(主键id)</p>
+</li>
+</ul>
+<h2 id="多表关联语句优化">多表关联语句优化</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>不要超过3张表，关联表越多查询效率越低</p>
+</li>
+<li class="lvl-2">
+<p>mysql优化器一般会优先选择小表做驱动表，所以使用 <code>inner join</code> 时，排在前面的表并不一定就是驱动表。</p>
+</li>
+<li class="lvl-2">
+<p>当使用 <code>left join</code> 时，左表是驱动表，右表是被驱动表，当使用 <code>right join</code> 时，右表时驱动表，左表是被驱动表， 当使用 <code>join</code> 时，mysql会选择数据量比较小的表作为驱动表，大表作为被驱动表。</p>
+</li>
+<li class="lvl-2">
+<p>多表关联字段一定要创建索引</p>
+</li>
+<li class="lvl-2">
+<p>在决定哪个表做驱动表的时候，应该是两个表按照各自的条件过滤，过滤完成之后，计算参与 join 的各个字段的总数据量，数据量小的那个表，就是“小表”，应该作为驱动表。</p>
 </li>
 </ul>
 ]]></content>
@@ -3302,7 +3344,7 @@ AHI默认开启，由<code>innodb_adaptive_hash_index</code>变量控制，默�
 <blockquote>
 <p>优化建议</p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">字符串的长度相差较大用VARCHAR；字符串短，且所有值都接近一个长度用CHAR。</span><br><span class="line">CHAR和VARCHAR适用于包括人名、邮政编码、电话号码和不超过255个字符长度的任意字母数字组合。</span><br><span class="line">那些要用来计算的数字不要用VARCHAR类型保存，因为可能会导致一些与计算相关的问题。换句话说，可能影响到计算的准确性和完整性。</span><br><span class="line">尽量少用BLOB和TEXT，如果实在要用可以考虑将BLOB和TEXT字段单独存一张表，用id关联。</span><br><span class="line">BLOB系列存储二进制字符串，与字符集无关。TEXT系列存储非二进制字符串，与字符集相关。</span><br><span class="line">BLOB和TEXT都不能有默认值。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">字符串的长度相差较大用VARCHAR；字符串短，且所有值都接近一个长度用CHAR。</span><br><span class="line">CHAR和VARCHAR适用于包括人名、邮政编码、电话号码和不超过255个字符长度的任意字母数字组合。</span><br><span class="line">varchar 和 text 都可以存储变长字符串且字符串长度上限为65535字节，但是text不能设置默认值，且存储和查询速度慢、仅支持前缀索引。</span><br><span class="line">当varchar大于某些数值的时候，其会自动转换为text，大于varchar（255）变为 tinytext，大于varchar（500）变为 text，大于varchar（20000）变为 mediumtext。</span><br><span class="line">那些要用来计算的数字不要用VARCHAR类型保存，因为可能会导致一些与计算相关的问题。换句话说，可能影响到计算的准确性和完整性。</span><br><span class="line">尽量少用BLOB和TEXT，如果实在要用可以考虑将BLOB和TEXT字段单独存一张表，用id关联。</span><br><span class="line">BLOB系列存储二进制字符串，与字符集无关。TEXT系列存储非二进制字符串，与字符集相关。</span><br><span class="line">BLOB和TEXT都不能有默认值。</span><br></pre></td></tr></table></figure>
 <h2 id="数据库导出与导入">数据库导出与导入</h2>
 <h3 id="全量导出">全量导出</h3>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 包含建库、建表和数据语句</span></span><br><span class="line">mysqldump -uroot --all-databases --triggers --routines --events -p &gt; all_databases.sql</span><br></pre></td></tr></table></figure>
