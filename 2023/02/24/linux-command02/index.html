@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   网络相关命令，如ping,ifconfig,ssh,scp,netstat等等">
+    <meta name="description" content="摘要   网络相关命令，如ping、ifconfig、ssh、scp、netstat、curl、wget，以及查看DNS、检查域名和证书的到期时间等等">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux常用命令02--网络相关命令">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2023/02/24/linux-command02/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   网络相关命令，如ping,ifconfig,ssh,scp,netstat等等">
+<meta property="og:description" content="摘要   网络相关命令，如ping、ifconfig、ssh、scp、netstat、curl、wget，以及查看DNS、检查域名和证书的到期时间等等">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-24T13:30:05.000Z">
-<meta property="article:modified_time" content="2023-02-24T09:39:45.151Z">
+<meta property="article:modified_time" content="2023-02-28T09:31:34.843Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
@@ -41,7 +41,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/02/24/linux-command02/","path":"2023/02/24/linux-command02/","title":"Linux常用命令02--网络相关命令"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Linux常用命令02--网络相关命令 | 飘逸峰的博客</title><meta name="robots" content="noindex">
+<title>Linux常用命令02--网络相关命令 | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -58,6 +58,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
 
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
@@ -515,7 +516,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C%E8%BF%9E%E9%80%9A%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">1.测试网络连通性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE%E4%BF%A1%E6%81%AF"><span class="nav-number">3.</span> <span class="nav-text">2.查看网络设置信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-ssh%E7%99%BB%E5%BD%95%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">3.ssh登录：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-scp%E8%BF%9C%E7%A8%8B%E4%BC%A0%E8%BE%93"><span class="nav-number">5.</span> <span class="nav-text">4.scp远程传输</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E7%AB%AF%E5%8F%A3"><span class="nav-number">6.</span> <span class="nav-text">5.查看进程端口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-curl"><span class="nav-number">7.</span> <span class="nav-text">6.curl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-wget"><span class="nav-number">8.</span> <span class="nav-text">7.wget</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%9F%A5%E7%9C%8BDNS"><span class="nav-number">9.</span> <span class="nav-text">8.查看DNS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%A3%80%E6%9F%A5%E5%9F%9F%E5%90%8D%E5%88%B0%E6%9C%9F%E6%97%B6%E9%97%B4"><span class="nav-number">10.</span> <span class="nav-text">9.检查域名到期时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E6%A3%80%E6%9F%A5%E5%9F%9F%E5%90%8D%E7%BB%91%E5%AE%9A%E7%9A%84%E8%AF%81%E4%B9%A6%E5%88%B0%E6%9C%9F%E6%97%B6%E9%97%B4"><span class="nav-number">11.</span> <span class="nav-text">10.检查域名绑定的证书到期时间</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -530,7 +531,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-count">55</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -548,40 +549,16 @@
 </div>
   <div class="links-of-author animated">
       <span class="links-of-author-item">
-        <a href="mailto:hanqf2008@gmail.com" title="E-Mail → mailto:hanqf2008@gmail.com" rel="noopener me" target="_blank"><i class="fas fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/3006531213" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;3006531213" rel="noopener me" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://plus.google.com/114701878463320377633" title="Google → https:&#x2F;&#x2F;plus.google.com&#x2F;114701878463320377633" rel="noopener me" target="_blank"><i class="fab fa-google fa-fw"></i>Google</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://twitter.com/hanqf2" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;hanqf2" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.facebook.com/qunfeng.han" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;qunfeng.han" rel="noopener me" target="_blank"><i class="fab fa-facebook fa-fw"></i>FB Page</a>
-      </span>
-      <span class="links-of-author-item">
         <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.youtube.com/channel/UCSjdVGBKBlvvIP1T433NAAg" title="YouTube → https:&#x2F;&#x2F;www.youtube.com&#x2F;channel&#x2F;UCSjdVGBKBlvvIP1T433NAAg" rel="noopener me" target="_blank"><i class="fab fa-youtube fa-fw"></i>YouTube</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://instagram.com/hanqf2008" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;hanqf2008" rel="noopener me" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
       </span>
       <span class="links-of-author-item">
         <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="http://hanqunfeng.iteye.com/" title="Iteye → http:&#x2F;&#x2F;hanqunfeng.iteye.com" rel="noopener me" target="_blank"><i class="fas fa-bus fa-fw"></i>Iteye</a>
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fas fa-bus fa-fw"></i>Gitee</a>
       </span>
       <span class="links-of-author-item">
-        <a href="http://blog.csdn.net/hanqunfeng" title="CSDN → http:&#x2F;&#x2F;blog.csdn.net&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fas fa-car fa-fw"></i>CSDN</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="http://www.jianshu.com/users/763c53661578/latest_articles" title="简书 → http:&#x2F;&#x2F;www.jianshu.com&#x2F;users&#x2F;763c53661578&#x2F;latest_articles" rel="noopener me" target="_blank"><i class="fab fa-font-awesome fa-fw"></i>简书</a>
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fas fa-car fa-fw"></i>Coding</a>
       </span>
   </div>
   <div class="cc-license animated" itemprop="license">
@@ -687,16 +664,16 @@
               <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
             </li>
             <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
               <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
             </li>
             <li class="links-of-blogroll-item">
               <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
-            </li>
-            <li class="links-of-blogroll-item">
-              <a href="https://hanqunfeng.coding.net/" title="https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener" target="_blank">Coding</a>
-            </li>
-            <li class="links-of-blogroll-item">
-              <a href="https://www.dnspod.cn/" title="https:&#x2F;&#x2F;www.dnspod.cn" rel="noopener" target="_blank">Dnspod</a>
             </li>
             <li class="links-of-blogroll-item">
               <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
@@ -748,9 +725,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-02-24 21:30:05 / 修改时间：17:39:45" itemprop="dateCreated datePublished" datetime="2023-02-24T21:30:05+08:00">2023-02-24</time>
+      <time title="创建时间：2023-02-24 21:30:05" itemprop="dateCreated datePublished" datetime="2023-02-24T21:30:05+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-28 17:31:34" itemprop="dateModified" datetime="2023-02-28T17:31:34+08:00">2023-02-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -798,14 +781,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.3k</span>
+      <span>4.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>4 分钟</span>
     </span>
 
         </div>
@@ -844,128 +827,62 @@
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>网络相关命令，如ping,ifconfig,ssh,scp,netstat等等</p>
+<p>网络相关命令，如ping、ifconfig、ssh、scp、netstat、curl、wget，以及查看DNS、检查域名和证书的到期时间等等</p>
 </li>
 </ul>
 <span id="more"></span>
-<p>六.网络通信命令</p>
-<p>1.向已经登录系统的另一个用户发送即时消息</p>
-<p>write user</p>
-<p>Ctrl+D:退出</p>
-<p>2.向所有登录用户发送广播消息</p>
-<p>wall</p>
-<p>Ctrl+D:退出</p>
-<p>cat file | wall</p>
-<p>wall &lt; file</p>
-<p>3.测试网络连通性</p>
-<p>ping ip/domain</p>
-<p>ping 192.168.36.49 -c 3 :-c 测试次数</p>
-<p>ping 192.168.36.49 -c 3 -s 1000 :-s 发送icmp包的大小bytes</p>
-<p>4.查看网络设置信息</p>
-<p>ifconfig -a:查看所有网卡信息</p>
-<p>ip a:查看网卡信息</p>
-<p>七.系统关机与重启命令</p>
-<p>重启：</p>
-<p>shutdown -r:安全重启，会通知正在登录的用户</p>
-<p>shutdown -r now:马上重启</p>
-<p>reboot:马上重启，不通知登录用户</p>
-<p>init 6</p>
-<p>关机：</p>
-<p>shutdown -h:安全关机，会通知正在登录的用户</p>
-<p>shutdown -h now:马上关机</p>
-<p>init 0</p>
-<p>poweroff:直接断电，相当于按住电源键3秒钟</p>
-<p>echo b &gt; /proc/sysrq-trigger 立即重新计算机</p>
-<p>echo o &gt; /proc/sysrq-trigger 立即关闭计算机</p>
-<p>八.命令别名</p>
-<p>alias:查看所有系统定义的别名</p>
-<p>定义：</p>
-<p>alias copy=cp</p>
-<p>alias xrm=“rm -r”</p>
-<p>删除：unalias copy</p>
-<p>九.输入/输出重定向</p>
-<p>0:标准输入</p>
-<p>1:标准输出</p>
-<p>2:标准错误输出</p>
-<blockquote>
-<p>:输出重定向  date &gt; file</p>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>:增量输出重定向 date &gt;&gt; file</p>
-</blockquote>
-</blockquote>
-<p>&lt;:输入重定向 wall &lt; file</p>
-<p>例子：</p>
-<p>标准输出和错误输出分别定向到指定的文件</p>
-<p>ls 1&gt;/dev/null 2&gt;/dev/null</p>
-<p>标准输出和错误输出都定向到同一个文件</p>
-<p>ls &gt;/dev/null 2&gt;&amp;1  ===== ls &gt;&amp; /dev/null</p>
-<p>十.管道</p>
-<p>| : cat file | grep key | sort | uniq | wc -l</p>
-<p>十一.命令连接符</p>
-<p>; : 间隔命令</p>
-<p>&amp;&amp; :逻辑与，前面的命令成功，才会执行后面的命令</p>
-<p>|| :逻辑或，前面的命令失败，才会执行后面的命令</p>
-<p>十二.命令替换符</p>
-<p><code>command</code>：ls -l <code>which touch</code> 会优先执行替换符里面的命令，并将结果作为前面命令的参数</p>
-<p>十三.系统相关</p>
-<p>runlevel:查看当前的系统运行级别</p>
-<p>init 5:切换到5运行级别</p>
-<p>0:关机</p>
-<p>1:单用户安全模式</p>
-<p>2:多用户，类似于3，但不支持nfs</p>
-<p>3:多用户，完整模式</p>
-<p>4:未使用</p>
-<p>5:X window</p>
-<p>6:重启</p>
-<p>uname -a :查看系统类型</p>
-<p>十四.系统时间</p>
-<p>hwclock --hctosys:用主板时间设置软件时间</p>
-<p>hwclock --systohc:用软件时间设置主板时间</p>
-<p>hwclock --set --date=“9/22/96 16:45:05”</p>
-<p>date MMDDHHmmYYYY.ss:设置软件时间</p>
-<p>十五.网络命令</p>
-<p>1.ssh登录：</p>
-<p>ssh -p 2188 <a href="mailto:user@192.168.1.219">user@192.168.1.219</a>  //不同用户名</p>
-<p>ssh -p 2188 192.168.1.219  //相同用户名</p>
-<p>2.scp远程传输</p>
-<p>scp -P 2188 xxx.txt  <a href="mailto:user@192.168.1.219">user@192.168.1.219</a>:~/xxx.txt //不同用户名</p>
-<p>scp -P 2188 xxx.txt  192.168.1.219:~/xxx.txt //相同用户名</p>
-<p>十六.watch</p>
-<p>定期执行程序,全屏显示输出</p>
-<p>watch -n1 command</p>
-<p>-n[num]:间隔多少秒执行一次command</p>
-<p>例子:watch -n1 ls -al:每隔1秒，查看当前目录的变化,默认2秒</p>
-<p>十七.系统启动时关闭进度条，显示详细信息</p>
-<p>vi /boot/grub/grub.conf</p>
-<p>#将下面内容最后的rhgb去掉即可</p>
-<p>kernel /vmlinuz-2.6.32-431.el6.x86_64 ro root=/dev/mapper/VolGroup-lv_root rd_NO_LUKS LANG=en_US.UTF-8 rd_NO_MD rd_LVM_LV=VolGroup/lv_swap SYSFONT=latarcyrheb-sun16 crashkernel=auto rd_LVM_LV=VolGroup/lv_root  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet</p>
-<p>说明：</p>
-<p>其中&quot;rhgb&quot;表示&quot;redhat graphics boot&quot;，就是图形进度条模式。</p>
-<p>而&quot;quiet&quot;表示在启动过程中只显示重要启动信息，类似硬件自检之类的消息不会显示，可以有选择地选用。</p>
-<p>十八.查看centos版本号</p>
-<p>cat /etc/issue</p>
-<p>四.帮助命令</p>
-<p>1.获得帮助信息</p>
-<p>man ls:查看ls的命令帮助</p>
-<p>man services:查看配置文件services的帮助信息（/etc/services，配置文件都位于/etc下）</p>
-<p>man passwd:查看命令，或者man 1 passwd</p>
-<p>man 5 passwd:查看配置文件</p>
-<p>数字	说明<br>
-1	可执行程序或 Shell 命令<br>
-2	系统调用（内核提供的函数）<br>
-3	库调用<br>
-4	特殊文件（通常位于 /dev 目录）<br>
-5	文件格式和约定（比如 /etc/passwd）<br>
-6	游戏<br>
-7	杂项（包和一些约定）Miscellaneous (including macro packages and conventions), e.g. man(7), groff(7)<br>
-8	系统管理命令（通常是 root 用户执行的命令）<br>
-9	内核相关的文件 Kernel routines [Non standard]</p>
-<p>2.获得命令的简单说明</p>
-<p>makewhatis:建立索引数据库</p>
-<p>whatis ls</p>
-<!-- flag of hidden posts -->
+<h2 id="1-测试网络连通性">1.测试网络连通性</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ping ip/domain</span><br><span class="line"></span><br><span class="line">ping 192.168.36.49 -c 3 : -c 测试次数</span><br><span class="line"></span><br><span class="line">ping 192.168.36.49 -c 3 -s 1000 : -s 发送icmp包的大小bytes</span><br></pre></td></tr></table></figure>
+<h2 id="2-查看网络设置信息">2.查看网络设置信息</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ifconfig -a : 查看所有网卡信息</span><br><span class="line">ifconfig eth0 : 查看指定网卡信息</span><br><span class="line"></span><br><span class="line">ip a : 查看所有网卡信息</span><br></pre></td></tr></table></figure>
+<h2 id="3-ssh登录：">3.ssh登录：</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh user@192.168.1.219  : 默认连接22端口，不同用户名</span><br><span class="line">ssh -p 2188 user@192.168.1.219  : 不同用户名，指定其它端口</span><br><span class="line">ssh -p 2188 192.168.1.219  : 相同用户名</span><br></pre></td></tr></table></figure>
+<h2 id="4-scp远程传输">4.scp远程传输</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本地传输到远程</span></span><br><span class="line">scp xxx.txt user@192.168.1.219:~/xxx.txt : 默认连接22端口，不同用户名</span><br><span class="line">scp -P 2188 xxx.txt user@192.168.1.219:~/xxx.txt : 不同用户名，指定其它端口</span><br><span class="line">scp -P 2188 xxx.txt 192.168.1.219:~/xxx.txt : 相同用户名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 远程传输的本地</span></span><br><span class="line">scp -P 2188 user@192.168.1.219:~/xxx.txt xxx.txt</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>小贴士</strong></em><br>
+<em><strong>01.免密登录</strong></em><br>
+<strong>1、如果希望从ServerA免输入passwd就可以ssh到ServerB，先在ServerA上执行:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+<p>中间会让你确认生成目录，默认存放在 本地用户的 ~/.ssh目录下 回车就好<br>
+会生成：id_rsa（密钥） id_rsa.pub（公钥）</p>
+<p><strong>2、把id_rsa.pub（公钥）的内容保存到ServerB的用户目录下的.ssh目录下的authorized_keys文件中</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">方式一：</span><br><span class="line">ServerA命令行执行</span><br><span class="line">scp ~/.ssh/id_rsa.pub root@39.97.170.231:～/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line">方式二：</span><br><span class="line">ServerA命令行执行</span><br><span class="line">ssh-copy-id ~/.ssh/id_rsa.pub root@39.97.170.231</span><br><span class="line"></span><br><span class="line">方式三：</span><br><span class="line">打开ServerA上的~/.ssh/id_rsa.pub，复制里面内容，粘贴到ServerB的～/.ssh/authorized_keys文件中，保存退出</span><br></pre></td></tr></table></figure>
+<p><strong>注意：.ssh 目录的权限和 authorized_keys 的权限分别是 700 和 600</strong></p>
+<p>至此，再次从ServerA通过ssh或者scp连接到ServerB时就不会提示你输入密码啦</p>
+<p><em><strong>02.config配置登录信息</strong></em><br>
+<strong>1.在用户根目录下的.ssh文件内创建config文件，用于保存ssh登陆主机的相关信息，内容格式如下：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Host aliyun                       <span class="comment">#就是给服务器起一个别名，后面使用时就是使用这个别名，如 ssh &#123;name&#125;</span></span><br><span class="line">User root                         <span class="comment">#登录用户名称</span></span><br><span class="line">HostName 8.130.53.111             <span class="comment">#服务器ip地址</span></span><br><span class="line">Port 22                           <span class="comment">#服务器登录端口，默认22</span></span><br><span class="line">IdentityFile ~/.ssh/id_rsa        <span class="comment">#免密登录的私钥文件路径</span></span><br><span class="line">RemoteCommand sudo su &amp;&amp; <span class="built_in">cd</span>       <span class="comment">#登录后要执行的命令，这里表示切换到root用户</span></span><br><span class="line">RequestTTY <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通配符匹配</span></span><br><span class="line">Host 10.10.*                      <span class="comment">#支持通配符，这里表示所有10.10.开头的ip都会被匹配，此时不要配置HostName</span></span><br><span class="line">User root</span><br><span class="line">Port 22</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br><span class="line">ProxyCommand ssh aliyun -W %h:%p  <span class="comment">#通过上面配置的aliyun作为跳板机登录到其它服务器上去</span></span><br><span class="line">RemoteCommand sudo su &amp;&amp; <span class="built_in">cd</span></span><br><span class="line">RequestTTY <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局默认配置</span></span><br><span class="line">Host *</span><br><span class="line">User hanqf</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br><span class="line">Compression <span class="built_in">yes</span></span><br><span class="line">ServerAliveInterval 60</span><br><span class="line">ServerAliveCountMax 5</span><br><span class="line">ControlMaster auto</span><br><span class="line">ControlPath ~/.sockets/%r@%h-%p</span><br><span class="line">ControlPersist 4h</span><br><span class="line">StrictHostKeyChecking no</span><br><span class="line">UserKnownHostsFile /dev/null</span><br><span class="line">ConnectTimeout 15</span><br><span class="line">StrictHostKeyChecking no</span><br></pre></td></tr></table></figure>
+<p><strong>使用方法</strong><br>
+1）ssh 登录：<br>
+ssh aliyun<br>
+ssh 10.10.123.123<br>
+2）scp 传输文件<br>
+# 本地传输到远程<br>
+scp ./file aliyun:~/<br>
+scp ./file 10.10.123.123:~/<br>
+# 远程传输的本地<br>
+scp aliyun:~/file ./<br>
+scp 10.10.123.123:~/file ./</p>
+</div>
+<h2 id="5-查看进程端口">5.查看进程端口</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunpl : 查看端口是否启动，或者查看占用端口的进程</span><br><span class="line"></span><br><span class="line">-n 不显示别名，能显示数字的全部转化为数字</span><br><span class="line">-t 显示TCP协议的链接情况</span><br><span class="line">-l 仅理出有在Listen的服务状态</span><br><span class="line">-u 显示UDP协议的链接情况</span><br><span class="line">-p 显示建立相关链接的程序名</span><br><span class="line"></span><br><span class="line">Active Internet connections (only servers)</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name</span><br><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1158/sshd</span><br><span class="line">tcp6       0      0 :::3306                 :::*                    LISTEN      777/mysqld</span><br><span class="line">udp        0      0 172.19.230.128:68       0.0.0.0:*                           598/systemd-network</span><br><span class="line">udp        0      0 127.0.0.1:323           0.0.0.0:*                           569/chronyd</span><br><span class="line">udp6       0      0 :::546                  :::*                                598/systemd-network</span><br><span class="line">udp6       0      0 ::1:323                 :::*                                569/chronyd</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line">netstat -tunpl | grep sshd</span><br><span class="line">netstat -tunpl | grep 3306</span><br></pre></td></tr></table></figure>
+<h2 id="6-curl">6.curl</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看页面内容，默认GET请求</span></span><br><span class="line">curl url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 简单验证的页面登录方法</span></span><br><span class="line">curl -u user:passwd url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示下载进度条,-C断点续传，-o下载后的文件名称</span></span><br><span class="line">curl -C -<span class="comment"># -o fileName url</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -X指定请求协议,-H指定请求头，多个请求头就使用多个-H，-d指定请求数据</span></span><br><span class="line">curl url \</span><br><span class="line">  -X POST \</span><br><span class="line">  -d <span class="string">&quot;&#123;\&quot;data\&quot;:\&quot;content\&quot;&#125;&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;content-type: application/json&quot;</span></span><br><span class="line"></span><br><span class="line">curl url \</span><br><span class="line">  -X POST \</span><br><span class="line">  -d <span class="string">&quot;name=zhangsan&amp;age=30&quot;</span></span><br><span class="line">  -H <span class="string">&quot;content-type: application/x-www-form-urlencoded&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --data-urlencode参数等同于-d，发送 POST 请求的数据体，区别在于会自动将发送的数据进行 URL 编码</span></span><br><span class="line">curl --data-urlencode <span class="string">&#x27;name=张三&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发出一个 GET 请求，实际请求的 URL 为url?name=zhangsan&amp;age=30。如果省略-G，会发出一个 POST 请求。</span></span><br><span class="line">curl -G -d <span class="string">&#x27;name=zhangsan&#x27;</span> -d <span class="string">&#x27;age=30&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传文件，注意文件名称前面要加上@，后面跟本地文件路径，不指定type默认会把 MIME 类型设为application/octet-stream，不指定filename默认使用上传文件名称作为服务器端接收到的文件名称</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> -H <span class="string">&quot;Content-Type: multipart/form-data&quot;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过FTP进行下载，-O 将返回内容输出到当前目录下，和url中文件名相同的文件中（不含目录）</span></span><br><span class="line">curl -O ftp://user:pass@ip:port/file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过FTP进行上传，-T 指定上传文件</span></span><br><span class="line">curl -T file ftp://user:pass@ip:port/path </span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>关于curl的更多使用方法可以参考:<a target="_blank" rel="noopener" href="https://www.cnblogs.com/hls-code/p/16877803.html">https://www.cnblogs.com/hls-code/p/16877803.html</a></p>
+</li>
+</ul>
+<h2 id="7-wget">7.wget</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载到当前目录</span></span><br><span class="line">wget url</span><br><span class="line"><span class="comment"># 下载到指定文件中</span></span><br><span class="line">wget -O saveFile url</span><br><span class="line"><span class="comment"># 下载file.txt中的所有链接</span></span><br><span class="line">wget -i file.txt</span><br><span class="line"><span class="comment"># 断点续传，最多重试5次</span></span><br><span class="line">wget -c -t 5 url</span><br><span class="line"><span class="comment"># 递归下载整个网站,递归深度为5</span></span><br><span class="line">wget -r -l 5 url</span><br><span class="line"><span class="comment"># 只下载rar格式的文件</span></span><br><span class="line">wget -m --accept=rar url</span><br><span class="line"><span class="comment"># 不下载gif格式的文件</span></span><br><span class="line">wget -m --reject=gif url</span><br><span class="line"><span class="comment"># 不下载已经存在的文件,设置超时时间5s</span></span><br><span class="line">wget -nc -T 5 url</span><br><span class="line"><span class="comment"># 下载速度限制为1m/s，默认全速下载</span></span><br><span class="line">wget --limit-rate=1m url</span><br><span class="line"><span class="comment"># 使用需要用户名和密码认证的ftp下载</span></span><br><span class="line">wget --ftp-user=USERNAME --ftp-password=PASSWORD ftp://url</span><br></pre></td></tr></table></figure>
+<h2 id="8-查看DNS">8.查看DNS</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line">nslookup localhost</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3</span></span><br><span class="line">dig</span><br></pre></td></tr></table></figure>
+<h2 id="9-检查域名到期时间">9.检查域名到期时间</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whois baidu.com | grep -E <span class="string">&#x27;(Expiry Date|Expiration Time)&#x27;</span></span><br></pre></td></tr></table></figure>
+<h2 id="10-检查域名绑定的证书到期时间">10.检查域名绑定的证书到期时间</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> | openssl s_client  -connect  www.baidu.com:443 2&gt;/dev/null | openssl x509 -noout -dates | awk -F<span class="string">&#x27;=&#x27;</span> <span class="string">&#x27;NR==2&#123;print $2&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
     </div>
 
     
@@ -1032,16 +949,6 @@
       </div>
 
       <div class="social-item">
-          <a target="_blank" class="social-link" href="http://hanqunfeng.iteye.com">
-            <span class="icon">
-              <i class="fas fa-bus"></i>
-            </span>
-
-            <span class="label">Iteye</span>
-          </a>
-      </div>
-
-      <div class="social-item">
           <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
             <span class="icon">
               <i class="fas fa-car"></i>
@@ -1069,6 +976,18 @@
 
         
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/02/24/linux-command01/" rel="prev" title="Linux常用命令01--操作文件与目录">
+                  <i class="fa fa-chevron-left"></i> Linux常用命令01--操作文件与目录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/11/22/mysql-sql-optimization/" rel="next" title="MySql--sql语句优化">
+                  MySql--sql语句优化 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
   </article>
 </div>
@@ -1102,14 +1021,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">838k</span>
+    <span title="站点总字数">842k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">12:41</span>
+    <span title="站点阅读时长">12:45</span>
   </span>
 </div>
 <div class="busuanzi-count">
@@ -1130,6 +1049,8 @@
       </span>
     </span>
 </div>
+<span id="show_hidden">🇨🇳</span>
+
 <script type="text/javascript">
           jQuery(function ($) {
 
@@ -1141,7 +1062,6 @@
             });
           });
 </script>
-
 
 
     </div>
