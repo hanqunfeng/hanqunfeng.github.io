@@ -1,6 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux常用命令02--网络相关命令</title>
+    <url>/2023/02/28/linux-command02/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>网络相关命令，如ping、ifconfig、ssh、scp、netstat、curl、wget，以及查看DNS、检查域名和证书的到期时间等等</p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="1-测试网络连通性">1.测试网络连通性</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ping ip/domain</span><br><span class="line"></span><br><span class="line">ping 192.168.36.49 -c 3 : -c 测试次数</span><br><span class="line"></span><br><span class="line">ping 192.168.36.49 -c 3 -s 1000 : -s 发送icmp包的大小bytes</span><br></pre></td></tr></table></figure>
+<h2 id="2-查看网络设置信息">2.查看网络设置信息</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ifconfig -a : 查看所有网卡信息</span><br><span class="line">ifconfig eth0 : 查看指定网卡信息</span><br><span class="line"></span><br><span class="line">ip a : 查看所有网卡信息</span><br></pre></td></tr></table></figure>
+<h2 id="3-ssh登录：">3.ssh登录：</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh user@192.168.1.219  : 默认连接22端口，不同用户名</span><br><span class="line">ssh -p 2188 user@192.168.1.219  : 不同用户名，指定其它端口</span><br><span class="line">ssh -p 2188 192.168.1.219  : 相同用户名</span><br></pre></td></tr></table></figure>
+<h2 id="4-scp远程传输">4.scp远程传输</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 本地传输到远程</span></span><br><span class="line">scp xxx.txt user@192.168.1.219:~/xxx.txt : 默认连接22端口，不同用户名</span><br><span class="line">scp -P 2188 xxx.txt user@192.168.1.219:~/xxx.txt : 不同用户名，指定其它端口</span><br><span class="line">scp -P 2188 xxx.txt 192.168.1.219:~/xxx.txt : 相同用户名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 远程传输的本地</span></span><br><span class="line">scp -P 2188 user@192.168.1.219:~/xxx.txt xxx.txt</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>小贴士</strong></em><br>
+<em><strong>01.免密登录</strong></em><br>
+<strong>1、如果希望从ServerA免输入passwd就可以ssh到ServerB，先在ServerA上执行:</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+<p>中间会让你确认生成目录，默认存放在 本地用户的 ~/.ssh目录下 回车就好<br>
+会生成：id_rsa（密钥） id_rsa.pub（公钥）</p>
+<p><strong>2、把id_rsa.pub（公钥）的内容保存到ServerB的用户目录下的.ssh目录下的authorized_keys文件中</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">方式一：</span><br><span class="line">ServerA命令行执行</span><br><span class="line">scp ~/.ssh/id_rsa.pub root@39.97.170.231:～/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line">方式二：</span><br><span class="line">ServerA命令行执行</span><br><span class="line">ssh-copy-id ~/.ssh/id_rsa.pub root@39.97.170.231</span><br><span class="line"></span><br><span class="line">方式三：</span><br><span class="line">打开ServerA上的~/.ssh/id_rsa.pub，复制里面内容，粘贴到ServerB的～/.ssh/authorized_keys文件中，保存退出</span><br></pre></td></tr></table></figure>
+<p><strong>注意：.ssh 目录的权限和 authorized_keys 的权限分别是 700 和 600</strong></p>
+<p>至此，再次从ServerA通过ssh或者scp连接到ServerB时就不会提示你输入密码啦</p>
+<p><em><strong>02.config配置登录信息</strong></em><br>
+<strong>1.在用户根目录下的.ssh文件内创建config文件，用于保存ssh登陆主机的相关信息，内容格式如下：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Host aliyun                       <span class="comment">#就是给服务器起一个别名，后面使用时就是使用这个别名，如 ssh &#123;name&#125;</span></span><br><span class="line">User root                         <span class="comment">#登录用户名称</span></span><br><span class="line">HostName 8.130.53.111             <span class="comment">#服务器ip地址</span></span><br><span class="line">Port 22                           <span class="comment">#服务器登录端口，默认22</span></span><br><span class="line">IdentityFile ~/.ssh/id_rsa        <span class="comment">#免密登录的私钥文件路径</span></span><br><span class="line">RemoteCommand sudo su &amp;&amp; <span class="built_in">cd</span>       <span class="comment">#登录后要执行的命令，这里表示切换到root用户</span></span><br><span class="line">RequestTTY <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通配符匹配</span></span><br><span class="line">Host 10.10.*                      <span class="comment">#支持通配符，这里表示所有10.10.开头的ip都会被匹配，此时不要配置HostName</span></span><br><span class="line">User root</span><br><span class="line">Port 22</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br><span class="line">ProxyCommand ssh aliyun -W %h:%p  <span class="comment">#通过上面配置的aliyun作为跳板机登录到其它服务器上去</span></span><br><span class="line">RemoteCommand sudo su &amp;&amp; <span class="built_in">cd</span></span><br><span class="line">RequestTTY <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局默认配置</span></span><br><span class="line">Host *</span><br><span class="line">User hanqf</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br><span class="line">Compression <span class="built_in">yes</span></span><br><span class="line">ServerAliveInterval 60</span><br><span class="line">ServerAliveCountMax 5</span><br><span class="line">ControlMaster auto</span><br><span class="line">ControlPath ~/.sockets/%r@%h-%p</span><br><span class="line">ControlPersist 4h</span><br><span class="line">StrictHostKeyChecking no</span><br><span class="line">UserKnownHostsFile /dev/null</span><br><span class="line">ConnectTimeout 15</span><br><span class="line">StrictHostKeyChecking no</span><br></pre></td></tr></table></figure>
+<p><strong>使用方法</strong><br>
+1）ssh 登录：<br>
+ssh aliyun<br>
+ssh 10.10.123.123<br>
+2）scp 传输文件<br>
+# 本地传输到远程<br>
+scp ./file aliyun:~/<br>
+scp ./file 10.10.123.123:~/<br>
+# 远程传输的本地<br>
+scp aliyun:~/file ./<br>
+scp 10.10.123.123:~/file ./</p>
+</div>
+<h2 id="5-查看进程端口">5.查看进程端口</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">netstat -tunpl : 查看端口是否启动，或者查看占用端口的进程</span><br><span class="line"></span><br><span class="line">-n 不显示别名，能显示数字的全部转化为数字</span><br><span class="line">-t 显示TCP协议的链接情况</span><br><span class="line">-l 仅理出有在Listen的服务状态</span><br><span class="line">-u 显示UDP协议的链接情况</span><br><span class="line">-p 显示建立相关链接的程序名</span><br><span class="line"></span><br><span class="line">Active Internet connections (only servers)</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name</span><br><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1158/sshd</span><br><span class="line">tcp6       0      0 :::3306                 :::*                    LISTEN      777/mysqld</span><br><span class="line">udp        0      0 172.19.230.128:68       0.0.0.0:*                           598/systemd-network</span><br><span class="line">udp        0      0 127.0.0.1:323           0.0.0.0:*                           569/chronyd</span><br><span class="line">udp6       0      0 :::546                  :::*                                598/systemd-network</span><br><span class="line">udp6       0      0 ::1:323                 :::*                                569/chronyd</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line">netstat -tunpl | grep sshd</span><br><span class="line">netstat -tunpl | grep 3306</span><br></pre></td></tr></table></figure>
+<h2 id="6-curl">6.curl</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看页面内容，默认GET请求</span></span><br><span class="line">curl url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 简单验证的页面登录方法</span></span><br><span class="line">curl -u user:passwd url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示下载进度条,-C断点续传，-o下载后的文件名称</span></span><br><span class="line">curl -C -<span class="comment"># -o fileName url</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -X指定请求协议,-H指定请求头，多个请求头就使用多个-H，-d指定请求数据</span></span><br><span class="line">curl url \</span><br><span class="line">  -X POST \</span><br><span class="line">  -d <span class="string">&quot;&#123;\&quot;data\&quot;:\&quot;content\&quot;&#125;&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;content-type: application/json&quot;</span></span><br><span class="line"></span><br><span class="line">curl url \</span><br><span class="line">  -X POST \</span><br><span class="line">  -d <span class="string">&quot;name=zhangsan&amp;age=30&quot;</span></span><br><span class="line">  -H <span class="string">&quot;content-type: application/x-www-form-urlencoded&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --data-urlencode参数等同于-d，发送 POST 请求的数据体，区别在于会自动将发送的数据进行 URL 编码</span></span><br><span class="line">curl --data-urlencode <span class="string">&#x27;name=张三&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发出一个 GET 请求，实际请求的 URL 为url?name=zhangsan&amp;age=30。如果省略-G，会发出一个 POST 请求。</span></span><br><span class="line">curl -G -d <span class="string">&#x27;name=zhangsan&#x27;</span> -d <span class="string">&#x27;age=30&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传文件，注意文件名称前面要加上@，后面跟本地文件路径，不指定type默认会把 MIME 类型设为application/octet-stream，不指定filename默认使用上传文件名称作为服务器端接收到的文件名称</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> -H <span class="string">&quot;Content-Type: multipart/form-data&quot;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过FTP进行下载，-O 将返回内容输出到当前目录下，和url中文件名相同的文件中（不含目录）</span></span><br><span class="line">curl -O ftp://user:pass@ip:port/file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过FTP进行上传，-T 指定上传文件</span></span><br><span class="line">curl -T file ftp://user:pass@ip:port/path </span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>关于curl的更多使用方法可以参考:<a href="https://www.cnblogs.com/hls-code/p/16877803.html">https://www.cnblogs.com/hls-code/p/16877803.html</a></p>
+</li>
+</ul>
+<h2 id="7-wget">7.wget</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载到当前目录</span></span><br><span class="line">wget url</span><br><span class="line"><span class="comment"># 下载到指定文件中</span></span><br><span class="line">wget -O saveFile url</span><br><span class="line"><span class="comment"># 下载file.txt中的所有链接</span></span><br><span class="line">wget -i file.txt</span><br><span class="line"><span class="comment"># 断点续传，最多重试5次</span></span><br><span class="line">wget -c -t 5 url</span><br><span class="line"><span class="comment"># 递归下载整个网站,递归深度为5</span></span><br><span class="line">wget -r -l 5 url</span><br><span class="line"><span class="comment"># 只下载rar格式的文件</span></span><br><span class="line">wget -m --accept=rar url</span><br><span class="line"><span class="comment"># 不下载gif格式的文件</span></span><br><span class="line">wget -m --reject=gif url</span><br><span class="line"><span class="comment"># 不下载已经存在的文件,设置超时时间5s</span></span><br><span class="line">wget -nc -T 5 url</span><br><span class="line"><span class="comment"># 下载速度限制为1m/s，默认全速下载</span></span><br><span class="line">wget --limit-rate=1m url</span><br><span class="line"><span class="comment"># 使用需要用户名和密码认证的ftp下载</span></span><br><span class="line">wget --ftp-user=USERNAME --ftp-password=PASSWORD ftp://url</span><br></pre></td></tr></table></figure>
+<h2 id="8-查看DNS">8.查看DNS</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line">nslookup localhost</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3</span></span><br><span class="line">dig</span><br></pre></td></tr></table></figure>
+<h2 id="9-检查域名到期时间">9.检查域名到期时间</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">whois baidu.com | grep -E <span class="string">&#x27;(Expiry Date|Expiration Time)&#x27;</span></span><br></pre></td></tr></table></figure>
+<h2 id="10-检查域名绑定的证书到期时间">10.检查域名绑定的证书到期时间</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> | openssl s_client  -connect  www.baidu.com:443 2&gt;/dev/null | openssl x509 -noout -dates | awk -F<span class="string">&#x27;=&#x27;</span> <span class="string">&#x27;NR==2&#123;print $2&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux常用命令01--操作文件与目录</title>
     <url>/2023/02/24/linux-command01/</url>
     <content><![CDATA[<!--
@@ -109,102 +205,6 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip file.zip file : 压缩文件</span><br><span class="line"></span><br><span class="line">zip -r dir.zip <span class="built_in">dir</span> : 压缩目录</span><br><span class="line"></span><br><span class="line">unzip file.zip : 解压缩</span><br><span class="line"></span><br><span class="line">unzip -o file.zip : 解压后如果文件已经存在，则覆盖</span><br><span class="line"></span><br><span class="line">unzip -n file.zip : 解压后如果文件已经存在，则不覆盖</span><br></pre></td></tr></table></figure>
 <h3 id="4-格式：-bz2-只能压缩文件">4.格式：.bz2 只能压缩文件</h3>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bzip2 -k file : 压缩 file.bz2</span><br><span class="line"></span><br><span class="line">-k:压缩后保留原文件</span><br><span class="line"></span><br><span class="line">bunzip2 -k file.bz2 : 解压缩</span><br><span class="line"></span><br><span class="line">-k:解压后保留原文件</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux常用命令02--网络相关命令</title>
-    <url>/2023/02/24/linux-command02/</url>
-    <content><![CDATA[<!--
- **加粗**
- *斜体*
- ***加粗并斜体***
- ~~删除线~~
- ==突出显示==
- `突出显示(推荐)`
- ++下划线++
- ~下标~
- ^上标^
- 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
- 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
-
- +++ **点击折叠**
- 这是被隐藏的内容
- +++
-
-::: tips success warning danger
-这里是容器内的内容
-:::
-
-% note info % success warning danger
-这里是容器内的内容
-% endnote %
-
- -->
-<h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>网络相关命令，如ping、ifconfig、ssh、scp、netstat、curl、wget，以及查看DNS、检查域名和证书的到期时间等等</p>
-</li>
-</ul>
-<span id="more"></span>
-<h2 id="1-测试网络连通性">1.测试网络连通性</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ping ip/domain</span><br><span class="line"></span><br><span class="line">ping 192.168.36.49 -c 3 : -c 测试次数</span><br><span class="line"></span><br><span class="line">ping 192.168.36.49 -c 3 -s 1000 : -s 发送icmp包的大小bytes</span><br></pre></td></tr></table></figure>
-<h2 id="2-查看网络设置信息">2.查看网络设置信息</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ifconfig -a : 查看所有网卡信息</span><br><span class="line">ifconfig eth0 : 查看指定网卡信息</span><br><span class="line"></span><br><span class="line">ip a : 查看所有网卡信息</span><br></pre></td></tr></table></figure>
-<h2 id="3-ssh登录：">3.ssh登录：</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh user@192.168.1.219  : 默认连接22端口，不同用户名</span><br><span class="line">ssh -p 2188 user@192.168.1.219  : 不同用户名，指定其它端口</span><br><span class="line">ssh -p 2188 192.168.1.219  : 相同用户名</span><br></pre></td></tr></table></figure>
-<h2 id="4-scp远程传输">4.scp远程传输</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 本地传输到远程</span></span><br><span class="line">scp xxx.txt user@192.168.1.219:~/xxx.txt : 默认连接22端口，不同用户名</span><br><span class="line">scp -P 2188 xxx.txt user@192.168.1.219:~/xxx.txt : 不同用户名，指定其它端口</span><br><span class="line">scp -P 2188 xxx.txt 192.168.1.219:~/xxx.txt : 相同用户名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 远程传输的本地</span></span><br><span class="line">scp -P 2188 user@192.168.1.219:~/xxx.txt xxx.txt</span><br></pre></td></tr></table></figure>
-<div class="tips">
-<p><em><strong>小贴士</strong></em><br>
-<em><strong>01.免密登录</strong></em><br>
-<strong>1、如果希望从ServerA免输入passwd就可以ssh到ServerB，先在ServerA上执行:</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
-<p>中间会让你确认生成目录，默认存放在 本地用户的 ~/.ssh目录下 回车就好<br>
-会生成：id_rsa（密钥） id_rsa.pub（公钥）</p>
-<p><strong>2、把id_rsa.pub（公钥）的内容保存到ServerB的用户目录下的.ssh目录下的authorized_keys文件中</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">方式一：</span><br><span class="line">ServerA命令行执行</span><br><span class="line">scp ~/.ssh/id_rsa.pub root@39.97.170.231:～/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line">方式二：</span><br><span class="line">ServerA命令行执行</span><br><span class="line">ssh-copy-id ~/.ssh/id_rsa.pub root@39.97.170.231</span><br><span class="line"></span><br><span class="line">方式三：</span><br><span class="line">打开ServerA上的~/.ssh/id_rsa.pub，复制里面内容，粘贴到ServerB的～/.ssh/authorized_keys文件中，保存退出</span><br></pre></td></tr></table></figure>
-<p><strong>注意：.ssh 目录的权限和 authorized_keys 的权限分别是 700 和 600</strong></p>
-<p>至此，再次从ServerA通过ssh或者scp连接到ServerB时就不会提示你输入密码啦</p>
-<p><em><strong>02.config配置登录信息</strong></em><br>
-<strong>1.在用户根目录下的.ssh文件内创建config文件，用于保存ssh登陆主机的相关信息，内容格式如下：</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Host aliyun                       <span class="comment">#就是给服务器起一个别名，后面使用时就是使用这个别名，如 ssh &#123;name&#125;</span></span><br><span class="line">User root                         <span class="comment">#登录用户名称</span></span><br><span class="line">HostName 8.130.53.111             <span class="comment">#服务器ip地址</span></span><br><span class="line">Port 22                           <span class="comment">#服务器登录端口，默认22</span></span><br><span class="line">IdentityFile ~/.ssh/id_rsa        <span class="comment">#免密登录的私钥文件路径</span></span><br><span class="line">RemoteCommand sudo su &amp;&amp; <span class="built_in">cd</span>       <span class="comment">#登录后要执行的命令，这里表示切换到root用户</span></span><br><span class="line">RequestTTY <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通配符匹配</span></span><br><span class="line">Host 10.10.*                      <span class="comment">#支持通配符，这里表示所有10.10.开头的ip都会被匹配，此时不要配置HostName</span></span><br><span class="line">User root</span><br><span class="line">Port 22</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br><span class="line">ProxyCommand ssh aliyun -W %h:%p  <span class="comment">#通过上面配置的aliyun作为跳板机登录到其它服务器上去</span></span><br><span class="line">RemoteCommand sudo su &amp;&amp; <span class="built_in">cd</span></span><br><span class="line">RequestTTY <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局默认配置</span></span><br><span class="line">Host *</span><br><span class="line">User hanqf</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br><span class="line">Compression <span class="built_in">yes</span></span><br><span class="line">ServerAliveInterval 60</span><br><span class="line">ServerAliveCountMax 5</span><br><span class="line">ControlMaster auto</span><br><span class="line">ControlPath ~/.sockets/%r@%h-%p</span><br><span class="line">ControlPersist 4h</span><br><span class="line">StrictHostKeyChecking no</span><br><span class="line">UserKnownHostsFile /dev/null</span><br><span class="line">ConnectTimeout 15</span><br><span class="line">StrictHostKeyChecking no</span><br></pre></td></tr></table></figure>
-<p><strong>使用方法</strong><br>
-1）ssh 登录：<br>
-ssh aliyun<br>
-ssh 10.10.123.123<br>
-2）scp 传输文件<br>
-# 本地传输到远程<br>
-scp ./file aliyun:~/<br>
-scp ./file 10.10.123.123:~/<br>
-# 远程传输的本地<br>
-scp aliyun:~/file ./<br>
-scp 10.10.123.123:~/file ./</p>
-</div>
-<h2 id="5-查看进程端口">5.查看进程端口</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">netstat -tunpl : 查看端口是否启动，或者查看占用端口的进程</span><br><span class="line"></span><br><span class="line">-n 不显示别名，能显示数字的全部转化为数字</span><br><span class="line">-t 显示TCP协议的链接情况</span><br><span class="line">-l 仅理出有在Listen的服务状态</span><br><span class="line">-u 显示UDP协议的链接情况</span><br><span class="line">-p 显示建立相关链接的程序名</span><br><span class="line"></span><br><span class="line">Active Internet connections (only servers)</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name</span><br><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1158/sshd</span><br><span class="line">tcp6       0      0 :::3306                 :::*                    LISTEN      777/mysqld</span><br><span class="line">udp        0      0 172.19.230.128:68       0.0.0.0:*                           598/systemd-network</span><br><span class="line">udp        0      0 127.0.0.1:323           0.0.0.0:*                           569/chronyd</span><br><span class="line">udp6       0      0 :::546                  :::*                                598/systemd-network</span><br><span class="line">udp6       0      0 ::1:323                 :::*                                569/chronyd</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line">netstat -tunpl | grep sshd</span><br><span class="line">netstat -tunpl | grep 3306</span><br></pre></td></tr></table></figure>
-<h2 id="6-curl">6.curl</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看页面内容，默认GET请求</span></span><br><span class="line">curl url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 简单验证的页面登录方法</span></span><br><span class="line">curl -u user:passwd url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示下载进度条,-C断点续传，-o下载后的文件名称</span></span><br><span class="line">curl -C -<span class="comment"># -o fileName url</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -X指定请求协议,-H指定请求头，多个请求头就使用多个-H，-d指定请求数据</span></span><br><span class="line">curl url \</span><br><span class="line">  -X POST \</span><br><span class="line">  -d <span class="string">&quot;&#123;\&quot;data\&quot;:\&quot;content\&quot;&#125;&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;content-type: application/json&quot;</span></span><br><span class="line"></span><br><span class="line">curl url \</span><br><span class="line">  -X POST \</span><br><span class="line">  -d <span class="string">&quot;name=zhangsan&amp;age=30&quot;</span></span><br><span class="line">  -H <span class="string">&quot;content-type: application/x-www-form-urlencoded&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --data-urlencode参数等同于-d，发送 POST 请求的数据体，区别在于会自动将发送的数据进行 URL 编码</span></span><br><span class="line">curl --data-urlencode <span class="string">&#x27;name=张三&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发出一个 GET 请求，实际请求的 URL 为url?name=zhangsan&amp;age=30。如果省略-G，会发出一个 POST 请求。</span></span><br><span class="line">curl -G -d <span class="string">&#x27;name=zhangsan&#x27;</span> -d <span class="string">&#x27;age=30&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传文件，注意文件名称前面要加上@，后面跟本地文件路径，不指定type默认会把 MIME 类型设为application/octet-stream，不指定filename默认使用上传文件名称作为服务器端接收到的文件名称</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> -H <span class="string">&quot;Content-Type: multipart/form-data&quot;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过FTP进行下载，-O 将返回内容输出到当前目录下，和url中文件名相同的文件中（不含目录）</span></span><br><span class="line">curl -O ftp://user:pass@ip:port/file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过FTP进行上传，-T 指定上传文件</span></span><br><span class="line">curl -T file ftp://user:pass@ip:port/path </span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>关于curl的更多使用方法可以参考:<a href="https://www.cnblogs.com/hls-code/p/16877803.html">https://www.cnblogs.com/hls-code/p/16877803.html</a></p>
-</li>
-</ul>
-<h2 id="7-wget">7.wget</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载到当前目录</span></span><br><span class="line">wget url</span><br><span class="line"><span class="comment"># 下载到指定文件中</span></span><br><span class="line">wget -O saveFile url</span><br><span class="line"><span class="comment"># 下载file.txt中的所有链接</span></span><br><span class="line">wget -i file.txt</span><br><span class="line"><span class="comment"># 断点续传，最多重试5次</span></span><br><span class="line">wget -c -t 5 url</span><br><span class="line"><span class="comment"># 递归下载整个网站,递归深度为5</span></span><br><span class="line">wget -r -l 5 url</span><br><span class="line"><span class="comment"># 只下载rar格式的文件</span></span><br><span class="line">wget -m --accept=rar url</span><br><span class="line"><span class="comment"># 不下载gif格式的文件</span></span><br><span class="line">wget -m --reject=gif url</span><br><span class="line"><span class="comment"># 不下载已经存在的文件,设置超时时间5s</span></span><br><span class="line">wget -nc -T 5 url</span><br><span class="line"><span class="comment"># 下载速度限制为1m/s，默认全速下载</span></span><br><span class="line">wget --limit-rate=1m url</span><br><span class="line"><span class="comment"># 使用需要用户名和密码认证的ftp下载</span></span><br><span class="line">wget --ftp-user=USERNAME --ftp-password=PASSWORD ftp://url</span><br></pre></td></tr></table></figure>
-<h2 id="8-查看DNS">8.查看DNS</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line">nslookup localhost</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3</span></span><br><span class="line">dig</span><br></pre></td></tr></table></figure>
-<h2 id="9-检查域名到期时间">9.检查域名到期时间</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">whois baidu.com | grep -E <span class="string">&#x27;(Expiry Date|Expiration Time)&#x27;</span></span><br></pre></td></tr></table></figure>
-<h2 id="10-检查域名绑定的证书到期时间">10.检查域名绑定的证书到期时间</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> | openssl s_client  -connect  www.baidu.com:443 2&gt;/dev/null | openssl x509 -noout -dates | awk -F<span class="string">&#x27;=&#x27;</span> <span class="string">&#x27;NR==2&#123;print $2&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>技术</category>
