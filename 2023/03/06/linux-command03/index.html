@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   文本搜索、替换、分割等相关命令，如grep、egrep、sed、awk、tr、cut和split等等">
+    <meta name="description" content="摘要   文本搜索、替换、分割合并等相关命令，如grep、egrep、sed、awk、tr、cut、paste和split等等   在对文本进行处理时，我们还经常会使用到的排序、去重和统计行数等相关命令，如sort、uniq、wc等等">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux常用命令03--文本搜索、替换、分割相关命令">
+<meta property="og:title" content="Linux常用命令03--文本搜索、替换、分割、排序和去重相关命令">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2023/03/06/linux-command03/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   文本搜索、替换、分割等相关命令，如grep、egrep、sed、awk、tr、cut和split等等">
+<meta property="og:description" content="摘要   文本搜索、替换、分割合并等相关命令，如grep、egrep、sed、awk、tr、cut、paste和split等等   在对文本进行处理时，我们还经常会使用到的排序、去重和统计行数等相关命令，如sort、uniq、wc等等">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-03-06T13:30:05.000Z">
-<meta property="article:modified_time" content="2023-03-07T09:12:25.806Z">
+<meta property="article:modified_time" content="2023-03-08T10:02:46.478Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
@@ -38,10 +38,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/03/06/linux-command03/","path":"2023/03/06/linux-command03/","title":"Linux常用命令03--文本搜索、替换、分割相关命令"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/03/06/linux-command03/","path":"2023/03/06/linux-command03/","title":"Linux常用命令03--文本搜索、替换、分割、排序和去重相关命令"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Linux常用命令03--文本搜索、替换、分割相关命令 | 飘逸峰的博客</title>
+<title>Linux常用命令03--文本搜索、替换、分割、排序和去重相关命令 | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -516,7 +516,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grep"><span class="nav-number">2.</span> <span class="nav-text">grep</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#egrep"><span class="nav-number">3.</span> <span class="nav-text">egrep</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed"><span class="nav-number">4.</span> <span class="nav-text">sed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%A0%E9%99%A4%EF%BC%9Ad%E5%91%BD%E4%BB%A4"><span class="nav-number">4.1.</span> <span class="nav-text">1)删除：d命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9B%BF%E6%8D%A2%EF%BC%9As%E5%91%BD%E4%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text">2)替换：s命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%89%E5%AE%9A%E8%A1%8C%E7%9A%84%E8%8C%83%E5%9B%B4%EF%BC%9A%E9%80%97%E5%8F%B7"><span class="nav-number">4.3.</span> <span class="nav-text">3)选定行的范围：逗号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%A4%9A%E7%82%B9%E7%BC%96%E8%BE%91%EF%BC%9Ae%E5%91%BD%E4%BB%A4"><span class="nav-number">4.4.</span> <span class="nav-text">4)多点编辑：e命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%BF%BD%E5%8A%A0%E8%A1%8C%E6%88%96%E6%9B%BF%E6%8D%A2%E8%A1%8C%EF%BC%9Aa%E3%80%81i%E3%80%81c%E5%92%8Cr"><span class="nav-number">4.5.</span> <span class="nav-text">5)追加行或替换行：a、i、c和r</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%A4%84%E7%90%86%E5%8D%95%E4%B8%AA%E5%AD%97%E7%AC%A6%EF%BC%9Ay"><span class="nav-number">4.6.</span> <span class="nav-text">6)处理单个字符：y</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%8C%87%E5%AE%9A%E8%A1%8C%E5%8C%BA%E9%97%B4"><span class="nav-number">4.7.</span> <span class="nav-text">7)指定行区间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk"><span class="nav-number">5.</span> <span class="nav-text">awk</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#awk%E5%86%85%E7%BD%AE%E5%8F%98%E9%87%8F"><span class="nav-number">5.1.</span> <span class="nav-text">awk内置变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#awk%E7%BC%96%E7%A8%8B"><span class="nav-number">5.2.</span> <span class="nav-text">awk编程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AF%AD%E5%8F%A5"><span class="nav-number">5.2.1.</span> <span class="nav-text">基础语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5"><span class="nav-number">5.2.2.</span> <span class="nav-text">条件语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aws%E6%95%B0%E7%BB%84"><span class="nav-number">5.2.3.</span> <span class="nav-text">aws数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aws%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="nav-number">5.2.4.</span> <span class="nav-text">aws循环语句</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tr"><span class="nav-number">6.</span> <span class="nav-text">tr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cut"><span class="nav-number">7.</span> <span class="nav-text">cut</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#split"><span class="nav-number">8.</span> <span class="nav-text">split</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grep"><span class="nav-number">2.</span> <span class="nav-text">grep</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#egrep"><span class="nav-number">3.</span> <span class="nav-text">egrep</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed"><span class="nav-number">4.</span> <span class="nav-text">sed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%A0%E9%99%A4%EF%BC%9Ad%E5%91%BD%E4%BB%A4"><span class="nav-number">4.1.</span> <span class="nav-text">1)删除：d命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9B%BF%E6%8D%A2%EF%BC%9As%E5%91%BD%E4%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text">2)替换：s命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%89%E5%AE%9A%E8%A1%8C%E7%9A%84%E8%8C%83%E5%9B%B4%EF%BC%9A%E9%80%97%E5%8F%B7"><span class="nav-number">4.3.</span> <span class="nav-text">3)选定行的范围：逗号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%A4%9A%E7%82%B9%E7%BC%96%E8%BE%91%EF%BC%9Ae%E5%91%BD%E4%BB%A4"><span class="nav-number">4.4.</span> <span class="nav-text">4)多点编辑：e命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%BF%BD%E5%8A%A0%E8%A1%8C%E6%88%96%E6%9B%BF%E6%8D%A2%E8%A1%8C%EF%BC%9Aa%E3%80%81i%E3%80%81c%E5%92%8Cr"><span class="nav-number">4.5.</span> <span class="nav-text">5)追加行或替换行：a、i、c和r</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%A4%84%E7%90%86%E5%8D%95%E4%B8%AA%E5%AD%97%E7%AC%A6%EF%BC%9Ay"><span class="nav-number">4.6.</span> <span class="nav-text">6)处理单个字符：y</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%8C%87%E5%AE%9A%E8%A1%8C%E5%8C%BA%E9%97%B4"><span class="nav-number">4.7.</span> <span class="nav-text">7)指定行区间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk"><span class="nav-number">5.</span> <span class="nav-text">awk</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#awk%E5%86%85%E7%BD%AE%E5%8F%98%E9%87%8F"><span class="nav-number">5.1.</span> <span class="nav-text">awk内置变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#awk%E7%BC%96%E7%A8%8B"><span class="nav-number">5.2.</span> <span class="nav-text">awk编程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AF%AD%E5%8F%A5"><span class="nav-number">5.2.1.</span> <span class="nav-text">基础语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5"><span class="nav-number">5.2.2.</span> <span class="nav-text">条件语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aws%E6%95%B0%E7%BB%84"><span class="nav-number">5.2.3.</span> <span class="nav-text">aws数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aws%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="nav-number">5.2.4.</span> <span class="nav-text">aws循环语句</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tr"><span class="nav-number">6.</span> <span class="nav-text">tr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cut"><span class="nav-number">7.</span> <span class="nav-text">cut</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#paste"><span class="nav-number">8.</span> <span class="nav-text">paste</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#split"><span class="nav-number">9.</span> <span class="nav-text">split</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sort"><span class="nav-number">10.</span> <span class="nav-text">sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sort%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-number">10.1.</span> <span class="nav-text">sort基本用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sort%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95"><span class="nav-number">10.2.</span> <span class="nav-text">sort高级用法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uniq"><span class="nav-number">11.</span> <span class="nav-text">uniq</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wc"><span class="nav-number">12.</span> <span class="nav-text">wc</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -710,12 +710,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Linux常用命令03--文本搜索、替换、分割相关命令 | 飘逸峰的博客">
+      <meta itemprop="name" content="Linux常用命令03--文本搜索、替换、分割、排序和去重相关命令 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Linux常用命令03--文本搜索、替换、分割相关命令
+          Linux常用命令03--文本搜索、替换、分割、排序和去重相关命令
         </h1>
 
         <div class="post-meta-container">
@@ -733,7 +733,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-03-07 17:12:25" itemprop="dateModified" datetime="2023-03-07T17:12:25+08:00">2023-03-07</time>
+      <time title="修改时间：2023-03-08 18:02:46" itemprop="dateModified" datetime="2023-03-08T18:02:46+08:00">2023-03-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -769,7 +769,7 @@
 </div>
 
 
-    <span id="/2023/03/06/linux-command03/" class="leancloud_visitors" data-flag-title="Linux常用命令03--文本搜索、替换、分割相关命令" title="阅读次数">
+    <span id="/2023/03/06/linux-command03/" class="leancloud_visitors" data-flag-title="Linux常用命令03--文本搜索、替换、分割、排序和去重相关命令" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -781,14 +781,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>12k</span>
+      <span>17k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
+      <span>15 分钟</span>
     </span>
 
         </div>
@@ -827,7 +827,10 @@
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>文本搜索、替换、分割等相关命令，如grep、egrep、sed、awk、tr、cut和split等等</p>
+<p>文本搜索、替换、分割合并等相关命令，如grep、egrep、sed、awk、tr、cut、paste和split等等</p>
+</li>
+<li class="lvl-2">
+<p>在对文本进行处理时，我们还经常会使用到的排序、去重和统计行数等相关命令，如sort、uniq、wc等等</p>
 </li>
 </ul>
 <span id="more"></span>
@@ -965,6 +968,13 @@ $2 代表文本行中的第 2 个数据字段；<br>
 $n 代表文本行中的第 n 个数据字段。</p>
 </blockquote>
 </li>
+</ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em><br>
+<code>awk</code>是一种编程语言，它有好几种实现(解释器)，常见的如<code>awk</code>、<code>nawk</code>、<code>mawk</code>、<code>gawk</code>，<br>
+CentOS、Ubuntu等常用的Linux系统下awk的默认实现就是<code>gawk</code>。</p>
+</div>
+<ul class="lvl-0">
 <li class="lvl-2">
 <p>示例</p>
 </li>
@@ -1041,7 +1051,14 @@ $n 代表文本行中的第 n 个数据字段。</p>
 <p>示例</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以空格作为分隔符，打印第一组</span></span><br><span class="line"><span class="built_in">cut</span> -d <span class="string">&quot; &quot;</span> -f1 file</span><br><span class="line">    -d：分隔符，按照指定分隔符分割列。与 -f 一起使用</span><br><span class="line">    -f：依据 -d 的分隔字符将一段信息分割成为数段，用 -f 取出第几段的意思（列号，提取第几列）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以;作为分隔符，打印第二组和第三组，注意打印多组时，分隔符也会打印</span></span><br><span class="line"><span class="built_in">cut</span> -d <span class="string">&quot;;&quot;</span> -f2,3 file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从file文件中取出每行的第5~8个字符</span></span><br><span class="line"><span class="built_in">cut</span> -c 5-8 file</span><br><span class="line">    -c : 以字符 (characters) 的单位取出固定字符区间，可以用来分割中文</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从file文件中取出每行的第2,4,6个字节</span></span><br><span class="line"><span class="built_in">cut</span> -b 2,4,6 file</span><br><span class="line">    -b : 以字节为单位进行分割</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从file文件中取出每行的第6个字节之前的内容</span></span><br><span class="line"><span class="built_in">cut</span> -b -6 file</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以空格作为分隔符，打印第一组</span></span><br><span class="line"><span class="built_in">cut</span> -d <span class="string">&quot; &quot;</span> -f1 file</span><br><span class="line">    -d：分隔符，按照指定分隔符分割列。与 -f 一起使用</span><br><span class="line">    -f：依据 -d 的分隔字符将一段信息分割成为数段，用 -f 取出第几段的意思（列号，提取第几列）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以;作为分隔符，打印第二组和第三组，注意打印多组时，分隔符也会打印</span></span><br><span class="line"><span class="built_in">cut</span> -d <span class="string">&quot;;&quot;</span> -f2,3 file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从file文件中取出每行的第5~8个字符</span></span><br><span class="line"><span class="built_in">cut</span> -c 5-8 file</span><br><span class="line">    -c : 以字符 (characters) 的单位取出固定字符区间，可以用来分割中文</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从file文件中取出每行的第2,4,6个字节</span></span><br><span class="line"><span class="built_in">cut</span> -b 2,4,6 file</span><br><span class="line">    -b : 以字节为单位进行分割</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从file文件中取出每行的第6个字节之前的内容</span></span><br><span class="line"><span class="built_in">cut</span> -b -6 file</span><br><span class="line"><span class="comment"># 从file文件中取出每行的第3，第4、第5和第8个字节，数字定位的顺序必须由小到大</span></span><br><span class="line"><span class="built_in">cut</span> -b 3-5,8 file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果使用-b提取中文，如果提取到的不是一个完整的中文字符所占的字节，就会出现乱码</span></span><br><span class="line"><span class="comment"># 比如在utf8编码下，一个中文占3个字节</span></span><br><span class="line"><span class="built_in">cut</span> -b 1 file : 此时中文字符会出现乱码</span><br><span class="line"><span class="comment"># 如果希望中文也能完整的提取，可以加上 -n</span></span><br><span class="line"><span class="built_in">cut</span> -nb 1 file</span><br></pre></td></tr></table></figure>
+<h2 id="paste">paste</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将多个文件的相应行用制表符连接起来，并输出到标准输出</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> p1.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">$ <span class="built_in">cat</span> p2.txt</span><br><span class="line">zhangsan</span><br><span class="line">lisi</span><br><span class="line">wangwu</span><br><span class="line"></span><br><span class="line"><span class="comment"># 默认分隔符为制表符</span></span><br><span class="line">$ <span class="built_in">paste</span> p1.txt p2.txt</span><br><span class="line">1	zhangsan</span><br><span class="line">2	lisi</span><br><span class="line">3	wangwu</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定逗号为分隔符</span></span><br><span class="line">$ <span class="built_in">paste</span> -d <span class="string">&quot;,&quot;</span> p1.txt p2.txt</span><br><span class="line">1,zhangsan</span><br><span class="line">2,lisi</span><br><span class="line">3,wangwu</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每个文件的内容作为一行</span></span><br><span class="line">$ <span class="built_in">paste</span> -s -d <span class="string">&quot;,&quot;</span> p1.txt p2.txt</span><br><span class="line">1,2,3</span><br><span class="line">zhangsan,lisi,wangwu</span><br></pre></td></tr></table></figure>
 <h2 id="split">split</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1057,7 +1074,75 @@ $n 代表文本行中的第 n 个数据字段。</p>
 <p>示例</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分割为1000行的小文件，文件名格式xaa,xab...</span></span><br><span class="line"><span class="built_in">split</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分割为指定行数的文件，如100行</span></span><br><span class="line"><span class="built_in">split</span> -l 100 file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分割为500M大小的文件</span></span><br><span class="line"><span class="built_in">split</span> -b 500M file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定分割后小文件名后缀长度</span></span><br><span class="line"><span class="built_in">split</span> --additional-suffix=.<span class="built_in">log</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用数字代替字符文件名，分割后的文件名为x00,x01...的数字形式</span></span><br><span class="line"><span class="built_in">split</span> -d file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定分割后小文件名后缀长度，默认长度为2，文件名格式xaaa,xaab...</span></span><br><span class="line"><span class="built_in">split</span> -a 3 file</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分割为1000行的小文件，文件名格式xaa,xab...</span></span><br><span class="line"><span class="built_in">split</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment">#prefix指定分割后的文件前缀，默认为x</span></span><br><span class="line"><span class="built_in">split</span> file prefix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分割为指定行数的文件，如100行</span></span><br><span class="line"><span class="built_in">split</span> -l 100 file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分割为500M大小的文件</span></span><br><span class="line"><span class="built_in">split</span> -b 500M file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定分割后小文件名后缀</span></span><br><span class="line"><span class="built_in">split</span> --additional-suffix=.<span class="built_in">log</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用数字代替字符文件名，分割后的文件名为x00,x01...的数字形式</span></span><br><span class="line"><span class="built_in">split</span> -d file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定分割后小文件名前缀后跟的文件名长度(不含前缀和后缀)，默认长度为2，这里文件名格式为xaaa.log,xaab.log...</span></span><br><span class="line"><span class="comment"># 当分割后文件的数量大于文件名能表达的最大文件数时，会报错</span></span><br><span class="line"><span class="built_in">split</span> -a 3 --additional-suffix=.<span class="built_in">log</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将分割后的文件合并，如文件名格式为xaaa.log,xaab.log</span></span><br><span class="line"><span class="built_in">cat</span> x*.<span class="built_in">log</span> &gt; newfile</span><br></pre></td></tr></table></figure>
+<h2 id="sort">sort</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>sort将文件的每一行作为一个单位，相互比较，比较原则是从首字符向后，依次按ASCII码值进行比较，最后将他们排序输出，默认升序。</p>
+</li>
+</ul>
+<h3 id="sort基本用法">sort基本用法</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件内容按ASCII码值进行比较后升序输出</span></span><br><span class="line"><span class="built_in">sort</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略大小写</span></span><br><span class="line"><span class="built_in">sort</span> -f file</span><br><span class="line"></span><br><span class="line"><span class="comment"># -u去重</span></span><br><span class="line"><span class="built_in">sort</span> -u file</span><br><span class="line"></span><br><span class="line"><span class="comment"># -r降序</span></span><br><span class="line"><span class="built_in">sort</span> -r file</span><br><span class="line"></span><br><span class="line"><span class="comment"># -o结果输出到文件，类似于重定向 &gt; ，但是比重定向强的一点是可以输出到源文件</span></span><br><span class="line"><span class="built_in">sort</span> file -o newfile</span><br><span class="line"></span><br><span class="line"><span class="comment"># -n 按数字大小排序，默认按字符比较，所以10比2小，此时可以加上 -n 来告诉sort要以数值来排序</span></span><br><span class="line"><span class="built_in">sort</span> -n file</span><br><span class="line"></span><br><span class="line"><span class="comment"># -M 会以月份来排序，比如JAN小于FEB</span></span><br><span class="line"><span class="built_in">sort</span> -M file</span><br><span class="line"></span><br><span class="line"><span class="comment"># -b 会忽略每一行前面的所有空白部分，从第一个可见字符开始比较</span></span><br><span class="line"><span class="built_in">sort</span> -b file</span><br><span class="line"></span><br><span class="line"><span class="comment"># -c 检查文件是否已经排好序，如果乱序，则输出第一个乱序的行的相关信息，$?值为1</span></span><br><span class="line"><span class="built_in">sort</span> -c file</span><br><span class="line"></span><br><span class="line"><span class="comment"># -C 检查文件是否已经排好序，如果乱序，则不输出任何内容，$?值为1</span></span><br><span class="line"><span class="built_in">sort</span> -C file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 还有一些其它参数</span></span><br><span class="line">-d 只考虑空白区域和字母字</span><br><span class="line">-i 只针对可打印字符进行排序，有些ASCII就是不可打印字符，比如\n是换行，\r是回车等等</span><br></pre></td></tr></table></figure>
+<h3 id="sort高级用法">sort高级用法</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>上面结束的sort用法都是从每行的第一个字符开始比较，如果文本可以被分隔为一列一列的内容，我们想按某一列进行排序该如何处理呢？</p>
+</li>
+<li class="lvl-2">
+<p>为了说明这个用法，我准备了一份文件</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> file</span><br><span class="line">tom,68,9.1</span><br><span class="line">jack,71,18.7</span><br><span class="line">alex,68,9.8</span><br><span class="line">bar,100,30.6</span><br><span class="line">foo,20,1.2</span><br><span class="line">rucy,100,20.5</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>以第二列进行排序，并按数字大小排序</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -t 分隔符，-k 排序的列号</span></span><br><span class="line">$ <span class="built_in">sort</span> -n -t <span class="string">&quot;,&quot;</span> -k 2 file</span><br><span class="line">foo,20,1.2</span><br><span class="line">tom,68,9.1</span><br><span class="line">alex,68,9.8</span><br><span class="line">jack,71,18.7</span><br><span class="line">rucy,100,20.5</span><br><span class="line">bar,100,30.6</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里 -n 可以写到 -k中</span></span><br><span class="line"><span class="built_in">sort</span> -t <span class="string">&quot;,&quot;</span> -k 2n file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以将 -r 写到 -k中</span></span><br><span class="line"><span class="built_in">sort</span> -t <span class="string">&quot;,&quot;</span> -k 2nr file</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>以第一列的第二个字符进行排序</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里 -k 1.2，表示按第一列的第二个字符排序</span></span><br><span class="line">$ <span class="built_in">sort</span> -t <span class="string">&quot;,&quot;</span> -k 1.2 file</span><br><span class="line">jack,71,18.7</span><br><span class="line">bar,100,30.6</span><br><span class="line">alex,68,9.8</span><br><span class="line">tom,68,9.1</span><br><span class="line">foo,20,1.2</span><br><span class="line">rucy,100,20.5</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>小贴士</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2"><code>-k</code> 的语法格式为<code>[ FStart [ .CStart ] ] [ Modifier ] [ , [ FEnd [ .CEnd ] ][ Modifier ] ]</code></li>
+<li class="lvl-2">这个语法格式可以被其中的逗号（“，”）分为两大部分，Start部分和End部分。</li>
+<li class="lvl-2">Start部分也由三部分组成，其中的Modifier部分就是我们之前说过的类似n和r的选项部分，比如<code>-k 2nr</code>，<code>b、d、f、i、n 或 r</code>都可以用在Modifier部分。</li>
+<li class="lvl-2">FStart就是表示使用的域，而CStart则表示在FStart域中从第几个字符开始算“排序首字符”，CStart也是可以省略的，省略的话就表示从本域的开头部分开始。</li>
+<li class="lvl-2">之前例子中的 <code>-k 2</code> 就是省略了CStart而只有FStart，而<code>-k 1.2</code>其中的 <code>1</code> 就是FStart，<code>.2</code> 就是CStart。</li>
+<li class="lvl-2">End的部分的组成同Start。</li>
+<li class="lvl-2">Start用于表示从第几个域的第几个字符开始，End用于表示到第几个域的第几个字符结束，如果不设定End部分，那么就认为End被设定为行尾。</li>
+</ul>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>先按第二列升序排序，第二列相同则按第三列降序排序</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 看了上面的小贴士，应该可以理解这里的含义</span></span><br><span class="line"><span class="comment"># -k 2,2n 表示从第二个域开始到第二个域结束并按数字升序排序，</span></span><br><span class="line"><span class="comment"># -k 3,3nr 表示从第三个域开始到第三个域结束并按数字降序排序，</span></span><br><span class="line">$ <span class="built_in">sort</span> -t <span class="string">&quot;,&quot;</span> -k 2,2n -k 3,3nr file</span><br><span class="line">foo,20,1.2</span><br><span class="line">alex,68,9.8</span><br><span class="line">tom,68,9.1</span><br><span class="line">jack,71,18.7</span><br><span class="line">bar,100,30.6</span><br><span class="line">rucy,100,20.5</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>-k</code> 和 <code>-u</code> 同时使用要注意，<code>-u</code> 去重时比较的是 <code>-k</code> 指定的区域</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此时比较的是从第二个域到行尾是否重复，所以没有可以去掉的行</span></span><br><span class="line">$ <span class="built_in">sort</span> -t <span class="string">&quot;,&quot;</span> -k 2n -u file</span><br><span class="line">foo,20,1.2</span><br><span class="line">tom,68,9.1</span><br><span class="line">alex,68,9.8</span><br><span class="line">jack,71,18.7</span><br><span class="line">rucy,100,20.5</span><br><span class="line">bar,100,30.6</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时比较的仅仅是第二个域，所以第二列重复的行会被去重</span></span><br><span class="line">$ <span class="built_in">sort</span> -t <span class="string">&quot;,&quot;</span> -k 2,2n -u file</span><br><span class="line">foo,20,1.2</span><br><span class="line">tom,68,9.1</span><br><span class="line">jack,71,18.7</span><br><span class="line">bar,100,30.6</span><br></pre></td></tr></table></figure>
+<h2 id="uniq">uniq</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>uniq命令用于报告或忽略文件中的重复行，一般与sort命令结合使用</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> file</span><br><span class="line">alex; 68; 98</span><br><span class="line">barr;hello; <span class="built_in">test</span></span><br><span class="line">barr;hello; <span class="built_in">test</span></span><br><span class="line">fooo;loveable;s</span><br><span class="line">jack; 71; 87</span><br><span class="line">jack; 71; 87</span><br><span class="line">mytest; Mark; Percent</span><br><span class="line">tom; 69; 91</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">sort</span> file | <span class="built_in">uniq</span></span><br><span class="line">alex; 68; 98</span><br><span class="line">barr;hello; <span class="built_in">test</span></span><br><span class="line">fooo;loveable;s</span><br><span class="line">jack; 71; 87</span><br><span class="line">mytest; Mark; Percent</span><br><span class="line">tom; 69; 91</span><br><span class="line"></span><br><span class="line"><span class="comment"># -c,--count：在每列旁边显示该行重复出现的次数</span></span><br><span class="line">$ <span class="built_in">sort</span> file | <span class="built_in">uniq</span> -c</span><br><span class="line">1 alex; 68; 98</span><br><span class="line">2 barr;hello; <span class="built_in">test</span></span><br><span class="line">1 fooo;loveable;s</span><br><span class="line">2 jack; 71; 87</span><br><span class="line">1 mytest; Mark; Percent</span><br><span class="line">1 tom; 69; 91</span><br><span class="line"></span><br><span class="line"><span class="comment"># -d,--repeated：仅显示重复出现的行</span></span><br><span class="line">$ <span class="built_in">sort</span> file | <span class="built_in">uniq</span> -d</span><br><span class="line">barr;hello; <span class="built_in">test</span></span><br><span class="line">jack; 71; 87</span><br><span class="line"></span><br><span class="line"><span class="comment"># -D, --all-repeated[=delimit-method]，打印重复行的所有行。</span></span><br><span class="line"><span class="comment"># 其中 delimit-method 表示对重复行集合的分隔方式，有三种取值，分别为none、prepend和separate。</span></span><br><span class="line"><span class="comment"># 其中none表示不进行分隔，为默认选项，uniq -D等同于uniq --all-repeated=none；prepend表示在每一个重复行集合前面插入一个空行；separate表示在每个重复行集合间插入一个空行。</span></span><br><span class="line">$ <span class="built_in">sort</span> file | <span class="built_in">uniq</span> -D</span><br><span class="line">barr;hello; <span class="built_in">test</span></span><br><span class="line">barr;hello; <span class="built_in">test</span></span><br><span class="line">jack; 71; 87</span><br><span class="line">jack; 71; 87</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">sort</span> file | <span class="built_in">uniq</span> --all-repeated=separate</span><br><span class="line">barr;hello; <span class="built_in">test</span></span><br><span class="line">barr;hello; <span class="built_in">test</span></span><br><span class="line"></span><br><span class="line">jack; 71; 87</span><br><span class="line">jack; 71; 87</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># -u,--unique：只显示唯一的行，即出现次数等于1的行</span></span><br><span class="line">$ <span class="built_in">sort</span> file | <span class="built_in">uniq</span> -u</span><br><span class="line">alex; 68; 98</span><br><span class="line">fooo;loveable;s</span><br><span class="line">mytest; Mark; Percent</span><br><span class="line">tom; 69; 91</span><br><span class="line"></span><br><span class="line"><span class="comment"># 其它参数</span></span><br><span class="line">-f, --skip-fields=N</span><br><span class="line">	忽略前N个字段。字段由空白字符（空格符、Tab）分隔。如果您的文档的行被编号，并且您希望比较行中除行号之外的所有内容。如果指定了选项 -f 1，那么下面相邻的两行：</span><br><span class="line">	1 这是一条线</span><br><span class="line">	2 这是一条线</span><br><span class="line">	将被认为是相同的。如果没有指定 -f 1 选项，它们将被认为是不同的。</span><br><span class="line">-i, --ignore-case</span><br><span class="line">	忽略大小写字符的不同。</span><br><span class="line">-s, --skip-chars=N</span><br><span class="line">	跳过前面N个字符不比较。</span><br><span class="line">-w, --check-chars=N</span><br><span class="line">	指定每行要比较的前N个字符数。</span><br></pre></td></tr></table></figure>
+<h2 id="wc">wc</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>wc（word count）命令用于统计文件字节、字符、单词与行的数量</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -l, --lines 统计行数，在统计记录数时，很常用</span></span><br><span class="line">$ <span class="built_in">wc</span> -l /etc/passwd</span><br><span class="line">29 /etc/passwd</span><br><span class="line"></span><br><span class="line"><span class="comment"># -w, --words 统计单词出现次数</span></span><br><span class="line">$ <span class="built_in">wc</span> -w /etc/passwd</span><br><span class="line">48 /etc/passwd</span><br><span class="line"></span><br><span class="line"><span class="comment"># -c, --bytes 统计文件的字节数</span></span><br><span class="line">$ <span class="built_in">wc</span> -c /etc/passwd</span><br><span class="line">1387</span><br><span class="line"></span><br><span class="line"><span class="comment"># -m, --chars 统计文件的字符数，如果是 ASCII、Latin-1 等单字节编码的字符，字符数等于字节数</span></span><br><span class="line">$ <span class="built_in">wc</span> -m /etc/passwd</span><br><span class="line">1387</span><br><span class="line"></span><br><span class="line"><span class="comment"># -L, --max-line-length 显示文件中最长行的字符数</span></span><br><span class="line">$ <span class="built_in">wc</span> -L /etc/passwd</span><br><span class="line">85 /etc/passwd</span><br><span class="line"></span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -1100,7 +1185,7 @@ $n 代表文本行中的第 n 个数据字段。</p>
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2023/03/06/linux-command03/" title="Linux常用命令03--文本搜索、替换、分割相关命令">https://blog.hanqunfeng.com/2023/03/06/linux-command03/</a>
+      <a href="https://blog.hanqunfeng.com/2023/03/06/linux-command03/" title="Linux常用命令03--文本搜索、替换、分割、排序和去重相关命令">https://blog.hanqunfeng.com/2023/03/06/linux-command03/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1193,14 +1278,14 @@ $n 代表文本行中的第 n 个数据字段。</p>
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">864k</span>
+    <span title="站点总字数">869k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">13:06</span>
+    <span title="站点阅读时长">13:10</span>
   </span>
 </div>
 <div class="busuanzi-count">
