@@ -1,6 +1,542 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux常用命令05--vim编辑器</title>
+    <url>/2023/03/11/linux-command05/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍vim编辑器的使用方法。</p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="vim操作模式">vim操作模式</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>vim支持很多种操作模式，常用的有三种操作模式，分别是命令(正常、普通)模式<code>(Command Mode)</code>、插入模式<code>(Insert Mode)</code>和底行模式<code>(Last Line Mode)</code>。</p>
+</li>
+<li class="lvl-2">
+<p>命令(正常、普通)模式<code>(Command Mode)</code></p>
+<blockquote>
+<p>进入vim之后，就处于<code>(Command Mode)</code>之中，在该模式下可以控制屏幕光标的移动，字符、字或行的删除，移动复制某区段以及进入<code>(Insert Mode)</code>或<code>(Last Line Mode)</code></p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>插入模式<code>(Insert Mode)</code></p>
+<blockquote>
+<p>在命令模式下输入如下字符即可切换至插入模式<br>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a:在光标后   A:在本行末</span><br><span class="line">i:在光标前   I:在本行开始</span><br><span class="line">o:在光标下新开一行   O:在光标上新开一行</span><br><span class="line">此时就可以在光标所在处输入字符了</span><br></pre></td></tr></table></figure><br>
+只有在<code>(Insert Mode)</code>下，才可以做文字输入，按 <code>ESC</code> 键可回到<code>(Command Mode)</code>，该模式是我们用到的最频繁的模式</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>底行(末行)模式<code>(Last Line Mode)</code></p>
+<blockquote>
+<p>在<code>(Command Mode)</code>下，输入<code>shift + :</code>，其实就是输入 <code>:</code> 即可进入<code>(Last Line Mode)</code><br>
+在<code>(Last Line Mode)</code>下，输入命令并回车即可执行相应的操作，无论输入的命令是否执行成功都会退出<code>(Last Line Mode)</code>并切换回<code>(Command Mode)</code>，<br>
+或者输入命令后不想执行，此时可以连按两次<code>Esc</code>键即可切换回<code>(Command Mode)</code>，或者按退格键直到取消<code>:</code>也会回到<code>(Command Mode)</code><br>
+在<code>(Last Line Mode)</code>下，可以进行文件保存或退出，也可以进行文件替换，找字符串，列出行号等操作</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>要查看vim的所有操作模式，可以在命令行输入<code>vim</code>，然后在底行模式中输入<code>help vim-modes</code>命令即可。</p>
+</li>
+</ul>
+<h2 id="vim语法">vim语法</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># fileName不存在则创建</span></span><br><span class="line">vim fileName</span><br><span class="line"><span class="comment"># 也可以不加fileName直接打开vim编辑器，此时需要在保存时指定fileName</span></span><br><span class="line">vim</span><br></pre></td></tr></table></figure>
+<h2 id="命令-正常、普通-模式-Command-Mode-相关指令">命令(正常、普通)模式<code>(Command Mode)</code>相关指令</h2>
+<h3 id="移动光标">移动光标</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>vim可以直接用键盘上的上下左右键来移动光标，但正规的vim是用小写英文字母 <code>h 、 j 、 k 、 l</code> ，分别控制光标左、下、上、右移一格</p>
+</li>
+<li class="lvl-2">
+<p><code>gg</code> :光标移动到第一行开始处</p>
+</li>
+<li class="lvl-2">
+<p><code>G</code> :光标移动到最后一行开始处</p>
+</li>
+<li class="lvl-2">
+<p><code>#G</code> : 例如，15G ，表示移动光标至第15行行首</p>
+</li>
+<li class="lvl-2">
+<p><code>H</code> : 光标移动到当前屏幕中的第一行开始处</p>
+</li>
+<li class="lvl-2">
+<p><code>L</code> : 光标移动到当前屏幕中的最后一行开始处</p>
+</li>
+<li class="lvl-2">
+<p><code>M</code> : 光标移动到当前屏幕中的最中间一行开始处</p>
+</li>
+<li class="lvl-2">
+<p><code>$</code> :移动到光标所在行的行尾</p>
+</li>
+<li class="lvl-2">
+<p><code>^ (0)</code> :移动到光标所在行的行首</p>
+</li>
+<li class="lvl-2">
+<p><code>w</code> :光标跳到下个字的开头</p>
+</li>
+<li class="lvl-2">
+<p><code>e</code> :光标跳到下个字的字尾</p>
+</li>
+<li class="lvl-2">
+<p><code>b</code> :光标回到上个字的开头</p>
+</li>
+<li class="lvl-2">
+<p><code>#l</code> :光标移到相对当前光标所在处后的第#个位置，如:当前光标在本行第3个字符处，则5l表示移动到本行第8个字符处</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + b</code> :屏幕往后移动一页</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + f</code> :屏幕往前移动一页</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + u</code> :屏幕往后移动半页</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + d</code> :屏幕往前移动半页</p>
+</li>
+</ul>
+<h3 id="删除文字">删除文字</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>x</code> :每按一次，删除光标所在位置的一个字符</p>
+</li>
+<li class="lvl-2">
+<p><code>#x</code> :例如，6x 表示删除光标所在位置的后面（包含自己在内）6个字符</p>
+</li>
+<li class="lvl-2">
+<p><code>X</code> :大写的X，每按一次，删除光标所在位置的前面一个字符</p>
+</li>
+<li class="lvl-2">
+<p><code>#X</code> :例如，20X 表示删除光标所在位置的前面20个字符</p>
+</li>
+<li class="lvl-2">
+<p><code>dd</code> :删除光标所在行</p>
+</li>
+<li class="lvl-2">
+<p><code>#dd</code> :从光标所在行开始删除#行</p>
+</li>
+<li class="lvl-2">
+<p><code>dG</code> :删除光标所在行到末尾的内容</p>
+</li>
+<li class="lvl-2">
+<p><code>D</code> :删除光标所在处到行尾</p>
+</li>
+</ul>
+<h3 id="复制">复制</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>yw</code> :将光标所在之处到字尾的字符复制到缓冲区中</p>
+</li>
+<li class="lvl-2">
+<p><code>#yw</code> :复制#个字到缓冲区</p>
+</li>
+<li class="lvl-2">
+<p><code>yy</code> :复制光标所在行到缓冲区。</p>
+</li>
+<li class="lvl-2">
+<p><code>#yy</code> :例如，6yy 表示拷贝从光标所在的该行往下数6行文字</p>
+</li>
+<li class="lvl-2">
+<p><code>p</code>:将缓冲区内的字符贴到光标所在位置。注意:所有与 <code>y</code> 有关的复制命令都必须与 <code>p</code> 配合才能完成复制与粘贴功能</p>
+</li>
+</ul>
+<h3 id="替换">替换</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>r</code> :替换光标所在处的字符，一次只能替换一个字符</p>
+</li>
+<li class="lvl-2">
+<p><code>R</code> :替换光标所到之处的字符，直到按下 <code>ESC</code> 键为止</p>
+</li>
+</ul>
+<h3 id="更改">更改</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>cw</code> :更改光标所在处的字到字尾处，标点符号或空格分隔，此时进入<code>(Insert Mode)</code></p>
+</li>
+<li class="lvl-2">
+<p><code>c#w</code> :例如，c3w 表示更改3个字，标点符号或空格分隔，此时进入<code>(Insert Mode)</code></p>
+</li>
+</ul>
+<h3 id="撤销或恢复上一次操作">撤销或恢复上一次操作</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>u</code> : 如果您误执行一个命令，可以马上按下 <code>u</code> ，回到上一个操作，按多次<code>u</code>可以执行多次恢复。</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + r</code> : 撤销恢复，多次执行<code>ctrl + r</code>，可以多次撤销</p>
+</li>
+</ul>
+<h2 id="底行-末行-模式-Last-Line-Mode-相关指令">底行(末行)模式<code>(Last Line Mode)</code>相关指令</h2>
+<h3 id="列出或取消行号">列出或取消行号</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>set nu</code> : 输入 <code>set nu</code> 后，会在文件中的每一行前面列出行号</p>
+</li>
+<li class="lvl-2">
+<p><code>set nonu</code> : 输入 <code>set nonu</code> 后，会取消文件中的每一行前面列出的行号</p>
+</li>
+</ul>
+<h3 id="跳到文件中的某一行">跳到文件中的某一行</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>#</code> : <code>#</code> 号表示一个数字，再冒号后输入一个数字，再按回车键就会跳到该行</p>
+</li>
+</ul>
+<h3 id="查找字符">查找字符</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>/ + key</code> : 先按 <code>/</code> 键，再输入您想寻找的字符，如果第一次找的关键字不是您想要的，可以一直按 <code>n</code> 会往后寻找到您要的内容为止。</p>
+</li>
+<li class="lvl-2">
+<p><code>? + key1 : 先按 </code>?<code>键，再输入您想寻找的字符，如果第一次找的关键字不是您想要的，可以一直按</code>n` 会往前寻找到您要的内容为止。</p>
+</li>
+<li class="lvl-2">
+<p><code>set ic</code> :搜索时忽略大小写</p>
+</li>
+</ul>
+<h3 id="替换-2">替换</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>%s/source/target/g</code> :全文替换，将整个文档中的source替换为target</p>
+</li>
+<li class="lvl-2">
+<p><code>n1,n2s/source/target/g</code> :n1,n2代表行号，在n1行到n2行范围内替换指定内容</p>
+</li>
+<li class="lvl-2">
+<p>示例</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">连续行注释：</span><br><span class="line">n1,n2s/^/#/g :添加注释#</span><br><span class="line">n1,n2s/^#//g :去除注释#</span><br><span class="line">n1,n2s/^\/\///g :去除注释//</span><br></pre></td></tr></table></figure>
+<h3 id="删除">删除</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>n1,n2d</code> :n1,n2代表行号，删除指定范围的行</p>
+</li>
+</ul>
+<h3 id="保存和退出">保存和退出</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>w</code> :保存修改，不退出</p>
+</li>
+<li class="lvl-2">
+<p><code>w new_filename</code> :另存为，新的文件名称为new_filename</p>
+</li>
+<li class="lvl-2">
+<p><code>wq</code> :保存退出</p>
+</li>
+<li class="lvl-2">
+<p><code>q!</code> :不保存修改退出</p>
+</li>
+<li class="lvl-2">
+<p><code>wq!</code> :强制保存修改并退出，文件是只读的时候可以使用该命令强制保存（文件所有者）</p>
+</li>
+</ul>
+<h3 id="定义快捷键">定义快捷键</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>我们可以自己定义快捷键，以定制化一个操作，比如在当前行行首添加<code>#</code></p>
+</li>
+<li class="lvl-2">
+<p>语法为：<code>map ^P I#&lt;ESC&gt;</code> : 定义<code>ctrl + p</code>，其含义为 输入大写字母<code>I</code>进入插入模式,输入<code>#</code>字符后按<code>Esc</code>切换回命令模式，注意，这里定义map时填写的<code>&lt;ESC&gt;</code>是一个字符一个字符写上的，而不是去按一次Esc按键</p>
+<blockquote>
+<p><code>^P</code> 的 输入方法为: <code>ctrl+v+p</code></p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>此时在当前vim的命令模式下，输入<code>ctrl + p</code>会在光标所在行的行首添加<code>#</code></p>
+</li>
+<li class="lvl-2">
+<p><code>unmap ^P</code> :取消该快捷键</p>
+</li>
+<li class="lvl-2">
+<p>在底行模式下定义快捷键只对本次vim有效，退出vim就失效了，如要永久生效，可以配置到<code>~/.vimrc</code>中</p>
+</li>
+</ul>
+<h3 id="ab替换">ab替换</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>ab替换可以让我们在使用vim的插入模式编辑内容时，输入指定的字符，vim会自动帮我们替换为指定的内容</p>
+</li>
+<li class="lvl-2">
+<p>语法为：<code>ab key1 key2</code>，此时我们输入key1,会自动被vim替换为key2</p>
+<blockquote>
+<p>如：<code>ab myemali hanqunfeng@xxx.com</code>，当输入myemail+空格后，会自动替换为hanqunfeng@xxx.com</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p><code>unab myemail</code> :取消</p>
+</li>
+<li class="lvl-2">
+<p>在底行模式下定义ab替换只对本次vim有效，退出vim就失效了，如要永久生效，可以配置到<code>~/.vimrc</code>中</p>
+</li>
+</ul>
+<h2 id="vim配置">vim配置</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>配置文件的位置</p>
+<blockquote>
+<p>在目录 <code>/etc</code>目录下面，有个名为<code>vimrc</code>的文件，这是系统中公共的vim配置文件，对所有用户都有效。<br>
+而在每个用户的home目录下，都可以自己建立私有的配置文件，命名为：<code>.vimrc</code><br>
+私有配置会覆盖公共配置中相同的内容，通常我们只修改私有配置文件</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>常用配置</p>
+<blockquote>
+<p>设置语法高亮： syntax on<br>
+显示行号： set  nu<br>
+设置缩进的空格数为4： set shiftwidth = 4<br>
+自定义快捷键：map ^P I#<ESC><br>
+自定义ab替换：ab myemali <a href="mailto:hanqunfeng@xxx.com">hanqunfeng@xxx.com</a></p>
+</blockquote>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux常用命令04--命令行快捷键</title>
+    <url>/2023/03/10/linux-command04/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍常用的命令行快捷键</p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="最最常用的快捷键">最最常用的快捷键</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>tab (ctrl + i)</code> : 命令补全</p>
+<blockquote>
+<p>有些命令如果想不起来怎么拼写了，可以只输入前面几个字符，然后按一次tab键，就会自动补全以输入前缀开头的命令<br>
+按两次tab键，就会显示以输入前缀开头的全部命令</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + c</code> : 停止正在执行的任务 或者 取消当前命令行编辑(删除整行)</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + l</code> : 清除屏幕上所有内容，并开始新的一行，相当于执行<code>clear</code>命令</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + a</code> : 光标回到命令行首</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + e</code> : 光标回到命令行末</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + insert</code> : 复制选中内容，mac下是 <code>command + c</code></p>
+</li>
+<li class="lvl-2">
+<p><code>alt + insert</code> : 粘贴刚才复制的内容到当前光标处，mac下是 <code>command + v</code></p>
+</li>
+<li class="lvl-2">
+<p>↑<code>(ctrl + p)</code> : 显示上一条历史命令</p>
+</li>
+<li class="lvl-2">
+<p>↓<code>(ctrl + n )</code> : 显示下一条历史命令</p>
+</li>
+<li class="lvl-2">
+<p><code>!!</code> : 执行上一条命令，相当于 ↑ + <code>Enter</code></p>
+</li>
+<li class="lvl-2">
+<p><code>!key</code>  : 执行上一条以<code>key</code>开头的命令</p>
+</li>
+<li class="lvl-2">
+<p><code>backspace (ctrl + h)</code> : 删除光标前一个字符，mac下是 <code>delete</code>键</p>
+</li>
+</ul>
+<div class="success">
+<p>记住上面的的这些快捷键，基本上日常操作就没啥问题了，下面的快捷键可以使我们的命令行操作更加高效和便捷，能记多少就记多少吧。</p>
+</div>
+<h2 id="剪切和删除">剪切和删除</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ctrl + k</code> : 剪切光标处到行尾处的字符（有删除的作用）</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + u</code> : 剪切光标处到行首处的字符（有删除的作用）</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + w</code> : 剪切光标前的一个单词（有删除的作用）</p>
+</li>
+<li class="lvl-2">
+<p><code>alt + d</code> : 剪切光标后的一个单词（有删除的作用），mac下是 <code>Esc + d</code></p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + y</code> : 粘贴<code>ctrl + k</code>、<code>ctrl + u</code>、<code>ctrl + w</code>、<code>alt + d</code> 剪切/删除的文本</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + d</code> : 删除光标所在处字符</p>
+</li>
+</ul>
+<h2 id="搜索历史命令">搜索历史命令</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ctrl + r</code> : 搜索历史命令中的命令记录，输入一些关键字，会自动给出匹配到的结果，连续按<code>ctrl + r</code>，给出下一条匹配结果</p>
+<blockquote>
+<p>类似于 <code>history | grep key</code>，但是<code>ctrl + r</code>给出的结果会去重</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p><code>Enter (ctrl + o) (ctrl + m)</code> : 执行匹配结果中的命令</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + g</code> : 从正在执行<code>ctrl + r</code>的搜索中退出，<code>ctrl + c</code>也行</p>
+</li>
+<li class="lvl-2">
+<p>-&gt;<code>(Esc) (ctrl + j)</code> : 将<code>ctrl + r</code>的搜索中的匹配结果粘贴到命令行，其实好多快捷键都可以达到该效果，随便记住一个吧</p>
+</li>
+</ul>
+<h2 id="前台进程转到后台运行">前台进程转到后台运行</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>假设你发现前台运行的一个进程需要很长的时间，但是你需要干其他的事情，你就可以将当前进程转到后台运行</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + z</code> : 暂停正在运行行中的进程</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[1]+ Stopped /root/bin/rsync.sh  <span class="comment"># [1] 表示的是 jobnumber</span></span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p><code>bg</code> : 将暂停中的进程转到后台运行</p>
+<blockquote>
+<p>把当前进程暂停后，可以输入使用<code>bg</code>将该程序转到后台运行<br>
+如果有多个暂停中的程序，可以输入<code>bg + jobnumber</code>将指定序号的程序转到后台运行</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p><code>jobs</code> : 显示后台运行的进程信息</p>
+</li>
+<li class="lvl-2">
+<p><code>fg</code> : 将后台运行的进程转到前台运行</p>
+<blockquote>
+<p>把后台运行的进程转到前台运行，可以输入使用<code>fg</code>将该程序转到前台运行<br>
+如果有多个后台运行中的程序，可以输入<code>fg + jobnumber</code>将指定序号的程序转到前台运行</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>要将一个进程在运行时就直接放到后台运行，可以在命令最后增加 <code>&amp;</code> 符号，但这个仅在当前会话中有效，一旦会话关闭，当前进程就会中断执行</p>
+</li>
+<li class="lvl-2">
+<p>可以在命令最前面加上<code>nohup</code>命令，这样进程就会一直在后台运行直到程序运行结束，而不会因为会话关闭而中断</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">nohup</span> sh test.sh &amp;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="屏幕锁定、-解锁">屏幕锁定、 解锁</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ctrl + s</code> : 锁定界面，停止屏幕打印内容，使终端发呆，静止，可以使快速输出的终端屏幕停下来</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + q</code> : 解开<code>ctrl + s</code> 的锁定界面，继续屏幕打印</p>
+</li>
+</ul>
+<h2 id="光标移动">光标移动</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>Esc + .</code> : 获取上一条命令的最后部分（空格分隔）</p>
+</li>
+<li class="lvl-2">
+<p><code>Esc + b</code> : 移动到当前单词的开头</p>
+</li>
+<li class="lvl-2">
+<p><code>Esc + f</code> : 移动到当前单词的结尾</p>
+</li>
+<li class="lvl-2">
+<p>-&gt;<code>(ctrl + f)</code> : 光标向右移动一个字符</p>
+</li>
+<li class="lvl-2">
+<p>&lt;-<code>(ctrl + b)</code> : 光标向左移动一个字符</p>
+</li>
+<li class="lvl-2">
+<p><code>ctrl + t</code> : 交换光标位置前的两个字符</p>
+</li>
+</ul>
+<h2 id="其它">其它</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>!$</code> : 显示最近的一个参数</p>
+<blockquote>
+<p>比如我先用 <code>cat /etc/sysconfig/network-scripts/ifcfg-eth0</code>，然后我想用 vim 编辑。<br>
+一般的做法是先用 ↑ 显示最后一条命令，然后用 <code>ctrl + a</code> 移动到命令最前，删除 cat，然后再输入 vim 命令。<br>
+其实完全可以用 <code>vim !$</code>来代替。</p>
+</blockquote>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux常用命令03--文本搜索、替换、分割、排序和去重相关命令</title>
     <url>/2023/03/06/linux-command03/</url>
     <content><![CDATA[<!--
@@ -777,7 +1313,7 @@ A类IP地址的默认子网掩码为255.0.0.0，由于255相当于二进制的8�
 <h3 id="9-文件和目录删除">9.文件和目录删除</h3>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f file : 删除文件</span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> -rf <span class="built_in">dir</span> : 删除目录</span><br></pre></td></tr></table></figure>
 <h3 id="10-显示文件内容相关">10.显示文件内容相关</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1) <span class="built_in">cat</span> file : 显示文件所有内容</span><br><span class="line"></span><br><span class="line">2) more file : 分页显示文件内容</span><br><span class="line">下一页: 空格</span><br><span class="line">下一行: 回车</span><br><span class="line">退出 : q</span><br><span class="line"></span><br><span class="line">选项	含义</span><br><span class="line">-f	计算行数时，以实际的行数，而不是自动换行过后的行数。</span><br><span class="line">-p	不以卷动的方式显示每一页，而是先清除屏幕后再显示内容。</span><br><span class="line">-c	跟 -p 选项相似，不同的是先显示内容再清除其他旧资料。</span><br><span class="line">-s	当遇到有连续两行以上的空白行时，就替换为一行的空白行。</span><br><span class="line">-u	不显示下引号（根据环境变量 TERM 指定的终端而有所不同）。</span><br><span class="line">+n	从第 n 行开始显示文件内容，n 代表数字。</span><br><span class="line">-n	一次显示的行数，n 代表数字。</span><br><span class="line"></span><br><span class="line">3) <span class="built_in">head</span> -20 file : 显示文件前20行，默认是10行</span><br><span class="line"></span><br><span class="line">4) <span class="built_in">tail</span> -20 file : 显示文件最后20行，默认是10行</span><br><span class="line"></span><br><span class="line">   <span class="built_in">tail</span> -f file -n 100 : 动态显示文件内容，先显示最后100行内容，用于查看日志</span><br><span class="line"></span><br><span class="line">5) less file : 与more类似，不过less更加高效，推荐使用</span><br><span class="line"></span><br><span class="line">选项	选项含义</span><br><span class="line">-N	显示每行的行号。</span><br><span class="line">-S	行过长时将超出部分舍弃。</span><br><span class="line">-e	当文件显示结束后，自动离开。</span><br><span class="line">-g	只标志最后搜索到的关键同。</span><br><span class="line">-Q	不使用警告音。</span><br><span class="line">-i	忽略搜索时的大小写。</span><br><span class="line">-m	显示类似 more 命令的百分比。</span><br><span class="line">-f	强迫打开特殊文件，比如外围设备代号、目录和二进制文件。</span><br><span class="line">-s	显示连续空行为一行。</span><br><span class="line">-b &lt;缓冲区大小&gt;	设置缓冲区的大小。</span><br><span class="line">-o &lt;文件名&gt;	将 less 输出的内容保存到指定文件中。</span><br><span class="line">-x &lt;数字&gt;	将【Tab】键显示为规定的数字空格。</span><br><span class="line"></span><br><span class="line">more 和 less的区别:</span><br><span class="line">1、less可以按键盘上下方向键显示上下内容，而more不能通过上下方向键控制显示</span><br><span class="line">2、less不必读整个文件，加载速度会比more更快</span><br><span class="line">3、less退出后shell不会留下刚显示的内容，而more退出后会在shell上留下刚显示的内容</span><br><span class="line">4、阅读到文件结束时，less不会退出，而more会</span><br><span class="line">5、less可用行号或百分比作为书签浏览文件，而more不行</span><br><span class="line">6、相比more，less提供更加友好的检索、高亮显示等操作</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1) <span class="built_in">cat</span> file : 显示文件所有内容</span><br><span class="line"></span><br><span class="line">2) more file : 分页显示文件内容</span><br><span class="line">下一页: 空格</span><br><span class="line">下一行: 回车</span><br><span class="line">退出 : q</span><br><span class="line"></span><br><span class="line">选项	含义</span><br><span class="line">-f	计算行数时，以实际的行数，而不是自动换行过后的行数。</span><br><span class="line">-p	不以卷动的方式显示每一页，而是先清除屏幕后再显示内容。</span><br><span class="line">-c	跟 -p 选项相似，不同的是先显示内容再清除其他旧资料。</span><br><span class="line">-s	当遇到有连续两行以上的空白行时，就替换为一行的空白行。</span><br><span class="line">-u	不显示下引号（根据环境变量 TERM 指定的终端而有所不同）。</span><br><span class="line">+n	从第 n 行开始显示文件内容，n 代表数字。</span><br><span class="line">-n	一次显示的行数，n 代表数字。</span><br><span class="line"></span><br><span class="line">3) <span class="built_in">head</span> -20 file : 显示文件前20行，默认是10行</span><br><span class="line"></span><br><span class="line">4) <span class="built_in">tail</span> -20 file : 显示文件最后20行，默认是10行</span><br><span class="line"></span><br><span class="line">   <span class="built_in">tail</span> -f file -n 100 : 动态显示文件内容，先显示最后100行内容，用于查看日志</span><br><span class="line"></span><br><span class="line">   <span class="built_in">tail</span> -f file | grep key : 动态显示文件内容，配合grep使用，只显示关心的内容</span><br><span class="line"></span><br><span class="line">5) less file : 与more类似，不过less更加高效，推荐使用</span><br><span class="line"></span><br><span class="line">选项	选项含义</span><br><span class="line">-N	显示每行的行号。</span><br><span class="line">-S	行过长时将超出部分舍弃。</span><br><span class="line">-e	当文件显示结束后，自动离开。</span><br><span class="line">-g	只标志最后搜索到的关键同。</span><br><span class="line">-Q	不使用警告音。</span><br><span class="line">-i	忽略搜索时的大小写。</span><br><span class="line">-m	显示类似 more 命令的百分比。</span><br><span class="line">-f	强迫打开特殊文件，比如外围设备代号、目录和二进制文件。</span><br><span class="line">-s	显示连续空行为一行。</span><br><span class="line">-b &lt;缓冲区大小&gt;	设置缓冲区的大小。</span><br><span class="line">-o &lt;文件名&gt;	将 less 输出的内容保存到指定文件中。</span><br><span class="line">-x &lt;数字&gt;	将【Tab】键显示为规定的数字空格。</span><br><span class="line"></span><br><span class="line">more 和 less的区别:</span><br><span class="line">1、less可以按键盘上下方向键显示上下内容，而more不能通过上下方向键控制显示</span><br><span class="line">2、less不必读整个文件，加载速度会比more更快</span><br><span class="line">3、less退出后shell不会留下刚显示的内容，而more退出后会在shell上留下刚显示的内容</span><br><span class="line">4、阅读到文件结束时，less不会退出，而more会</span><br><span class="line">5、less可用行号或百分比作为书签浏览文件，而more不行</span><br><span class="line">6、相比more，less提供更加友好的检索、高亮显示等操作</span><br></pre></td></tr></table></figure>
 <h3 id="11-软链接与硬连接">11.软链接与硬连接</h3>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s file/dir file/dir : 软连接</span><br><span class="line"><span class="built_in">ln</span> file file : 硬连接</span><br></pre></td></tr></table></figure>
 <div class="tips">
