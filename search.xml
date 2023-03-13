@@ -251,23 +251,38 @@
 <p><code>set noic</code> :搜索时区分大小写</p>
 </li>
 </ul>
-<h3 id="替换-2">替换</h3>
+<h3 id="替换，语法类似于sed的s替换">替换，语法类似于sed的s替换</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>%s/source/target/g</code> :全文替换，将整个文档中的source替换为target</p>
+<p><code>n1s/source/target/</code> :<code>n1</code>代表行号，替换第n1行首次出现的source为target</p>
 </li>
 <li class="lvl-2">
-<p><code>n1,n2s/source/target/g</code> :n1,n2代表行号，在n1行到n2行范围内替换指定内容</p>
+<p><code>n1s/source/target/i</code> :<code>n1</code>代表行号，替换第n1行首次出现的source为target，<code>i</code>表示不区分大小写</p>
+</li>
+<li class="lvl-2">
+<p><code>n1s/source/target/g</code> :<code>n1</code>代表行号，替换第n行出现的全部source为target</p>
+</li>
+<li class="lvl-2">
+<p><code>%s/source/target/g</code> :<code>%</code>代表所有行，配合<code>g</code>表示全文替换，将整个文档中的source替换为target</p>
+</li>
+<li class="lvl-2">
+<p><code>n1,n2s/source/target/ig</code> :<code>n1,n2</code>代表行号，在n1行到n2行范围内替换指定内容，不区分大小写</p>
 </li>
 <li class="lvl-2">
 <p>示例</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">连续行注释：</span><br><span class="line">n1,n2s/^/#/g :添加注释#</span><br><span class="line">n1,n2s/^#//g :去除注释#</span><br><span class="line">n1,n2s/^\/\///g :去除注释//</span><br></pre></td></tr></table></figure>
-<h3 id="删除">删除</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">n1,n2s/^/#/ :行首添加#</span><br><span class="line">n1,n2s/^#// :去除行首#</span><br><span class="line">n1,n2s/^/\/\// :行首添加//</span><br><span class="line">n1,n2s/^\/\/// :去除行首//</span><br></pre></td></tr></table></figure>
+<h3 id="删除，语法类似于sed的d删除">删除，语法类似于sed的d删除</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
+<p><code>n1d</code> :n1代表行号，删除指定的行</p>
+</li>
+<li class="lvl-2">
 <p><code>n1,n2d</code> :n1,n2代表行号，删除指定范围的行</p>
+</li>
+<li class="lvl-2">
+<p><code>1,$d</code> :删除所有行的全部内容</p>
 </li>
 </ul>
 <h3 id="保存和退出">保存和退出</h3>
@@ -285,7 +300,7 @@
 <p><code>q!</code> :不保存修改退出</p>
 </li>
 <li class="lvl-2">
-<p><code>wq!</code> :强制保存修改并退出，文件是只读的时候可以使用该命令强制保存（文件所有者）</p>
+<p><code>wq!</code> :强制保存修改并退出，文件是只读的时候可以使用该命令强制保存（只有文件所有者有权限这样做）</p>
 </li>
 </ul>
 <h3 id="定义快捷键">定义快捷键</h3>
