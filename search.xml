@@ -478,7 +478,7 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux常用命令07--管道符&quot;|&quot;与&quot;xargs&quot;</title>
+    <title>Linux常用命令07--管道符&quot;|&quot;、&quot;xargs&quot;、文件描述符与重定向</title>
     <url>/2023/03/15/linux-command07/</url>
     <content><![CDATA[<!--
  **加粗**
@@ -837,8 +837,19 @@
 </blockquote>
 <h3 id="数组">数组</h3>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#使用小括号定义数组，(元素之间用空格分隔)</span></span><br><span class="line">array=(Zero One Two Three)</span><br><span class="line"><span class="comment"># 打印数组长度</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;#array[@]&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 遍历数组</span></span><br><span class="line"><span class="comment"># while遍历</span></span><br><span class="line">i=0</span><br><span class="line"><span class="keyword">while</span> [ <span class="variable">$i</span> -lt <span class="variable">$&#123;#array[@]&#125;</span> ];<span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;array[$i]&#125;</span></span><br><span class="line">    <span class="built_in">let</span> i=i+1</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># for遍历</span></span><br><span class="line"><span class="keyword">for</span>((i=0;i&lt;<span class="variable">$&#123;#array[@]&#125;</span>;i++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;array[i]&#125;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<h3 id="从键盘设置变量">从键盘设置变量</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">read</span> a <span class="comment"># 此时会等待用户键入变量值，比如此时输入: 3</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$a</span> <span class="comment"># 3</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">read</span> a b c <span class="comment"># 可以设置多个变量，比如此时输入: 1 2 3</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;a&#125;</span>_<span class="variable">$&#123;b&#125;</span>_<span class="variable">$&#123;c&#125;</span>&quot;</span> <span class="comment"># 1_2_3</span></span><br></pre></td></tr></table></figure>
+<h3 id="从键盘设置变量-read">从键盘设置变量:read</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>read命令格式</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">read</span> [选项] [变量名]</span><br><span class="line">    选项：</span><br><span class="line">    -p “提示信息”：在等待<span class="built_in">read</span>输入时，输出提示信息</span><br><span class="line">    -t “秒数”： <span class="built_in">read</span>命令会一致等待用户输入，使用此选项可以指定等待时间</span><br><span class="line">    -n “字符数”： <span class="built_in">read</span>命令只接受指定的字符数，就会执行</span><br><span class="line">    -s： 隐藏输入的数据，适用于机密信息的输入</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">read</span> a <span class="comment"># 此时会等待用户键入变量值，比如此时输入: 3</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$a</span> <span class="comment"># 3</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">read</span> -t 30 -p <span class="string">&quot;Please input your username:&quot;</span> username</span><br><span class="line"><span class="built_in">read</span> -s -t 30 -p <span class="string">&quot;Please input your passsword:&quot;</span> password</span><br><span class="line"></span><br><span class="line"><span class="built_in">read</span> a b c <span class="comment"># 可以设置多个变量，比如此时输入: 1 2 3</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;a&#125;</span>_<span class="variable">$&#123;b&#125;</span>_<span class="variable">$&#123;c&#125;</span>&quot;</span> <span class="comment"># 1_2_3</span></span><br></pre></td></tr></table></figure>
 <h2 id="test命令"><code>test</code>命令</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
