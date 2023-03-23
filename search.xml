@@ -39,6 +39,9 @@
 <li class="lvl-2">
 <p>本文以源代码安装nginx为例说明如何通过源代码安装软件。</p>
 </li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
+</li>
 </ul>
 <span id="more"></span>
 <h2 id="安装nginx">安装nginx</h2>
@@ -513,6 +516,9 @@
 <li class="lvl-2">
 <p>以及文件描述符与重定向操作符的使用方法。</p>
 </li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
+</li>
 </ul>
 <span id="more"></span>
 <h2 id="管道符">管道符&quot;|&quot;</h2>
@@ -613,6 +619,37 @@
 </ul>
 </li>
 </ul>
+<h3 id="设置文件描述符上限">设置文件描述符上限</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>文件描述符上限设置分为三个限制级别：系统限制、用户限制、会话限制，最终的上限是这三个限制级别中最小的值</p>
+</li>
+<li class="lvl-2">
+<p>查看及设置系统上限</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line"><span class="built_in">cat</span> /proc/sys/fs/file-max</span><br><span class="line">或者</span><br><span class="line">sysctl fs.file-max</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置</span></span><br><span class="line"><span class="built_in">echo</span> fs.file-max=65535 &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p <span class="comment"># 立即生效</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看及设置用户上限</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line"><span class="built_in">cat</span> /etc/security/limits.conf</span><br><span class="line"><span class="comment"># 设置格式为：</span></span><br><span class="line">　　　　　　username|@groupname <span class="built_in">type</span> resource <span class="built_in">limit</span></span><br><span class="line">　　　　　　username|@groupname：设置需要被限制的用户名，组名前面加@和用户名区别。也可以用通配符*来做所有用户的限制。</span><br><span class="line">　　　　　　<span class="built_in">type</span>：有 soft，hard 和 -，soft 指的是当前系统生效的设置值。hard 表明系统中所能设定的最大值。soft 的限制不能比hard 限制高。用 - 就表明同时设置了 soft 和 hard 的值</span><br><span class="line">　　　　　　resource: 为资源类型有多种。 nofile为最大打开文件数。</span><br><span class="line">　　　　　　例如：* -  nofile 65535  将所有用户的最大打开文件数的soft和hard都设为65535</span><br><span class="line"><span class="comment"># 对/etc/security/limit.conf的修改会在新的会话期中生效</span></span><br><span class="line"><span class="comment"># 设置时一般在文件最后添加如下内容</span></span><br><span class="line">root soft nofile 65535</span><br><span class="line">root hard nofile 65535</span><br><span class="line">* soft nofile 65535</span><br><span class="line">* hard nofile 65535</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看及设置会话上限 :默认继承自用户限制级别</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line"><span class="built_in">ulimit</span> -Sn :查看会话期最大文件描述符soft限制</span><br><span class="line"><span class="built_in">ulimit</span> -Hn :查看会话期最大文件描述符hard限制，hard限制是soft的上限。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置</span></span><br><span class="line"><span class="comment"># 用ulimit所做的修改在会话期结束后都将失效</span></span><br><span class="line"><span class="built_in">ulimit</span> -Sn 2046 :限制当前会话期内能打开的文件数为2046（如果其中一个进程打开了2046个，其他进程再打文件都将失败）</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>文件描述符使用上限最大能设置多大呢？当然你可以把它往大了设，但是同时打开的文件描述符越多，内存开销就越大。那怎样设置一个合理的上限呢？一个经验算法是 256个fd 需4M内存。例如8G内存，<code>8*1024/4*256=524288</code>。</p>
+</li>
+<li class="lvl-2">
+<p>如果我们在一台机器上部署了自己的网络服务，我们只需按下面步骤修改就可以了：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">　　1. 计算 fdmax = 物理内存大小(m为单位) / 4 * 256  ,假设内存为8G,fdmax=524288</span><br><span class="line">　　2. 执行命令: <span class="built_in">echo</span> fs.file-max=524288 &gt;&gt; /etc/sysctl.conf</span><br><span class="line">　　3. 执行命令: sysctl -p</span><br><span class="line">　　4. 执行命令: <span class="built_in">echo</span>  * soft nofile  524286 &gt;&gt; /etc/security/limits.conf</span><br><span class="line">　　5. 执行命令: <span class="built_in">echo</span>  * hard nofile 524287 &gt;&gt; /etc/security/limits.conf</span><br><span class="line">　　6. 结束当前会话期</span><br><span class="line">　　7. 启动新的会话</span><br><span class="line">　　8. 启动我们的服务</span><br></pre></td></tr></table></figure>
 <h2 id="重定向操作符">重定向操作符</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -686,6 +723,9 @@
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>本文介绍shell编程的语法规则。</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
 </li>
 </ul>
 <span id="more"></span>
@@ -1050,6 +1090,9 @@
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>本文介绍vim编辑器的使用方法。</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
 </li>
 </ul>
 <span id="more"></span>
@@ -1420,6 +1463,9 @@
 <li class="lvl-2">
 <p>本文介绍常用的命令行快捷键</p>
 </li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
+</li>
 </ul>
 <span id="more"></span>
 <h2 id="最最常用的快捷键">最最常用的快捷键</h2>
@@ -1627,6 +1673,9 @@
 </li>
 <li class="lvl-2">
 <p>在对文本进行处理时，我们还经常会使用到的排序、去重和统计行数等相关命令，如sort、uniq、wc等等</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
 </li>
 </ul>
 <span id="more"></span>
@@ -2024,6 +2073,9 @@ CentOS、Ubuntu等常用的Linux系统下awk的默认实现就是<code>gawk</cod
 <li class="lvl-2">
 <p>网络相关命令，如ping、ifconfig、ssh、scp、netstat、curl、wget，以及查看DNS、检查域名和证书的到期时间等等</p>
 </li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
+</li>
 </ul>
 <span id="more"></span>
 <h2 id="1-测试网络和服务的连通性">1.测试网络和服务的连通性</h2>
@@ -2352,6 +2404,9 @@ A类IP地址的默认子网掩码为255.0.0.0，由于255相当于二进制的8�
 <li class="lvl-2">
 <p>文件与目录的查看、创建、修改、删除、检索、压缩以及授权(ACL)等相关命令</p>
 </li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
+</li>
 </ul>
 <span id="more"></span>
 <h2 id="一-文件与目录的基本操作">一.文件与目录的基本操作</h2>
@@ -2403,7 +2458,7 @@ A类IP地址的默认子网掩码为255.0.0.0，由于255相当于二进制的8�
 <h3 id="7-文件和目录复制">7.文件和目录复制</h3>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> sourcefile todir :复制到指定目录，保持原文件名</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> file1 file2 todir :同时复制多个文件到指定目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> sourcefile todir/newfile :复制到指定目录，并重命名文件</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> -R sourcedir todir :如果todir不存在，则将sourcedir下的内容复制到todir目录下，如果todir已经存在，则将sourcedir复制到todir目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> sourcedir/* todir :复制目录下的文件到指定目录，不含sourcedir</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> -n sourcefile todir :如文件已经存在，则不覆盖</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> -f sourcefile todir :如文件已经存在，则强制覆盖</span><br></pre></td></tr></table></figure>
 <h3 id="8-移动文件、重命名">8.移动文件、重命名</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> file1 file2 :重命名file1为file2</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> file todir :将文件移动到指定目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> <span class="built_in">dir</span> todir :如果todir不存在，则将<span class="built_in">dir</span>重命名为todir，如果todir已经存在，则将<span class="built_in">dir</span>移动到todir目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> <span class="built_in">dir</span> todir/ :如果todir不存在，则将<span class="built_in">dir</span>重命名为todir，如果todir已经存在，则将<span class="built_in">dir</span>移动到todir目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> -n file todir :如有重复，则不覆盖</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> -f file todir :如有重复，则强制覆盖</span><br><span class="line"></span><br><span class="line"><span class="comment"># rename命令的功能是用于批量修改文件名称。与mv命令一次只能修改一个文件名不同，rename命令能够基于正则表达式对文件名进行批量修改</span></span><br><span class="line"><span class="comment"># 批量重命名，把/etc/yum.repos.d/*.repo指定的所有文件，文件名称中的‘.repo’替换为‘.repo.bak’</span></span><br><span class="line">rename <span class="string">&#x27;.repo&#x27;</span> <span class="string">&#x27;.repo.bak&#x27;</span> /etc/yum.repos.d/*.repo</span><br><span class="line"></span><br><span class="line">    rename命令的参数有三项：</span><br><span class="line">    其一是当前文件名中要被修改的字符;</span><br><span class="line">    其二是其要被修改为的新字符;</span><br><span class="line">    其三是要被执行的对象文件列表，可以用正则表达式确定范围</span><br><span class="line"></span><br><span class="line"><span class="comment"># 后缀替换，当前路径下的所有.txt文件替换为.php</span></span><br><span class="line">rename .txt .php *</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> file1 file2 :重命名file1为file2</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> file todir :将文件移动到指定目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> <span class="built_in">dir</span> todir :如果todir不存在，则将<span class="built_in">dir</span>重命名为todir，如果todir已经存在，则将<span class="built_in">dir</span>移动到todir目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> <span class="built_in">dir</span> todir/ :如果todir不存在，则将<span class="built_in">dir</span>重命名为todir，如果todir已经存在，则将<span class="built_in">dir</span>移动到todir目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> -n file todir :如有重复，则不覆盖</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> -f file todir :如有重复，则强制覆盖</span><br><span class="line"></span><br><span class="line"><span class="comment"># rename命令的功能是用于批量修改文件名称。与mv命令一次只能修改一个文件名不同，rename命令能够基于正则表达式对文件名进行批量修改</span></span><br><span class="line"><span class="comment"># 注意rename命令在centos和ubuntu下语法是不同的</span></span><br><span class="line"><span class="comment"># centos : rename &lt;from&gt; &lt;to&gt; *.txt</span></span><br><span class="line"><span class="comment"># 批量重命名，把/etc/yum.repos.d/*.repo指定的所有文件，文件名称中的‘.repo’替换为‘.repo.bak’</span></span><br><span class="line">rename <span class="string">&#x27;.repo&#x27;</span> <span class="string">&#x27;.repo.bak&#x27;</span> /etc/yum.repos.d/*.repo</span><br><span class="line"></span><br><span class="line">    rename命令的参数有三项：</span><br><span class="line">    其一是当前文件名中要被修改的字符;</span><br><span class="line">    其二是其要被修改为的新字符;</span><br><span class="line">    其三是要被执行的对象文件列表，可以用正则表达式确定范围</span><br><span class="line"></span><br><span class="line"><span class="comment"># 后缀替换，当前路径下的所有.txt文件替换为.php</span></span><br><span class="line">rename .txt .php *</span><br><span class="line"></span><br><span class="line"><span class="comment"># ubuntu :  rename &#x27;s/from/to/&#x27; *.txt</span></span><br><span class="line">rename <span class="string">&#x27;s/x0*/new/&#x27;</span> *</span><br></pre></td></tr></table></figure>
 <div class="success">
 <p><em><strong>小贴士</strong></em><br>
 进行<code>cp</code>或<code>mv</code>操作时，非重命名操作最好都先通过<code>mkdir</code>创建好目标目录</p>
