@@ -28,7 +28,7 @@
 <meta property="og:description" content="摘要   firewalld的基本使用介绍   本文基于CentOS8(x86_64)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-28T13:35:05.000Z">
-<meta property="article:modified_time" content="2023-03-24T02:38:18.554Z">
+<meta property="article:modified_time" content="2023-03-24T05:51:56.478Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux常用命令">
 <meta name="twitter:card" content="summary">
@@ -531,7 +531,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-count">74</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -733,7 +733,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-03-24 10:38:18" itemprop="dateModified" datetime="2023-03-24T10:38:18+08:00">2023-03-24</time>
+      <time title="修改时间：2023-03-24 13:51:56" itemprop="dateModified" datetime="2023-03-24T13:51:56+08:00">2023-03-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -785,14 +785,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.1k</span>
+      <span>2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
+      <span>2 分钟</span>
     </span>
 
         </div>
@@ -851,188 +851,6 @@
 <p>云服务器都是基于<code>安全组</code>的规则进行配置，其<code>firewalld</code>、<code>iptables</code>和<code>SELinux</code>都是关闭的</p>
 </li>
 </ul>
-<div class="tips">
-<p><em><strong>小贴士</strong></em><br>
-<strong>子网掩码</strong><br>
-上面提到的10.8.1.0/24表示为从10.8.1.0这个IP开始，24代表子网掩码为255.255.255.0，共包含256个地址，即从0-255共256个IP，即10.8.1.0~10.8.1.255。<br>
-这里<code>/24</code>代表子网掩码，即前面由多少个1组成，举例如下：<br>
-A类IP地址的默认子网掩码为255.0.0.0，由于255相当于二进制的8位1，所以也缩写成“/8”，表示网络号占了8位，/12表示网络号占了12位，即有12个1，以此类推。<br>
-具体的设置规则可参考下表:</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>IP总数</th>
-<th>子网掩码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>/24</td>
-<td>256</td>
-<td>255.255.255.0</td>
-</tr>
-<tr>
-<td>/20</td>
-<td>4096</td>
-<td>255.255.240.0</td>
-</tr>
-<tr>
-<td>/16</td>
-<td>65536</td>
-<td>255.255.0.0</td>
-</tr>
-<tr>
-<td>/12</td>
-<td>1048576</td>
-<td>255.240.0.0</td>
-</tr>
-<tr>
-<td>/8</td>
-<td>16777216</td>
-<td>255.0.0.0</td>
-</tr>
-</tbody>
-</table>
-<p><code>子网掩码</code>是用来判断任意两台计算机的IP地址是否属于同一子网络的根据。<br>
-最为简单的理解就是两台计算机各自的IP地址与子网掩码进行<code>与</code>运算后，得出的结果是相同的，则说明这两台计算机是处于同一个子网络上的，可以进行直接的通讯。<br>
-比如：<br>
-网段：10.8.1.0/24<br>
-网络地址：10.8.1.0<br>
-子网掩码：255.255.255.0<br>
-主机地址：10.8.1.1~10.8.1.254<br>
-广播地址：10.8.1.255<br>
-主机地址+网络地址+广播地址：256</p>
-<p>计算规则：</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>10进制</th>
-<th>二进制</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>主机地址</td>
-<td>10.8.1.1</td>
-<td><code>00001010.00001000.00000001.00000001</code></td>
-<td>10.8.1.1~10.8.1.254，这些ip和子网掩码<code>与</code>后的结果都相同</td>
-</tr>
-<tr>
-<td>子网掩码</td>
-<td>255.255.255.0</td>
-<td><code>11111111.11111111.11111111.00000000</code></td>
-<td>/24，即24个1</td>
-</tr>
-<tr>
-<td>网络地址</td>
-<td>10.8.1.0</td>
-<td><code>00001010.00001000.00000001.00000000</code></td>
-<td>主机地址和子网掩码<code>与</code>运算后的结果就得到了网络地址，同一个物理网络上的所有主机都使用同一个网络地址</td>
-</tr>
-<tr>
-<td>广播地址</td>
-<td>10.8.1.255</td>
-<td><code>00001010.00001000.00000001.11111111</code></td>
-<td>网络地址最后的0全部变为1就得到了广播地址</td>
-</tr>
-</tbody>
-</table>
-<p>以172.16.0.0/12为例，其子网掩码是255.240.0.0，<br>
-则172.16.0.0是网络地址，172.31.255.255是广播地址，网络地址相同的ip可以互相通信</p>
-<p>IP地址分为五类，A类保留给政府机构，B类分配给中等规模的公司，C类分配给任何需要的人，D类用于组播，E类用于实验，各类可容纳的地址数目不同。<br>
-其中A类、B类、和C类这三类地址用于TCP/IP节点，其它两类D类和E类被用于特殊用途。</p>
-<p><code>A、B、C三类IP地址的特征</code>：当将IP地址写成二进制形式时，A类地址的第一位总是O，B类地址的前两位总是10，C类地址的前三位总是110。</p>
-<table>
-<thead>
-<tr>
-<th>地址类型</th>
-<th>二进制</th>
-<th>十进制</th>
-<th>地址范围</th>
-<th>私有地址</th>
-<th>保留地址</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>A类</td>
-<td>0000000.00000000.00000000.00000000</td>
-<td>0.0.0.0</td>
-<td>1.0.0.1~126.155.255.254</td>
-<td>10.X.X.X</td>
-<td>127.X.X.X</td>
-<td>第1字节为网络地址，其它3个字节为主机地址，第1个字节的第一位固定为0，注意数字0和127不作为A类地址</td>
-</tr>
-<tr>
-<td>B类</td>
-<td>10000000.00000000.00000000.00000000</td>
-<td>128.0.0.0</td>
-<td>128.0.0.1~191.255.255.254</td>
-<td>172.16.0.0~172.31.255.255</td>
-<td>169.254.X.X</td>
-<td>第1字节和第2字节为网络地址，其它2个字节为主机地址，第1个字节的前两位固定为10</td>
-</tr>
-<tr>
-<td>C类</td>
-<td>11000000.00000000.00000000.00000000</td>
-<td>192.0.0.0</td>
-<td>192.0.0.1~223.255.255.254</td>
-<td>192.168.X.X</td>
-<td></td>
-<td>第1字节、第2字节和第3个字节为网络地址，第4个个字节为主机地址，第1个字节的前三位固定为110</td>
-</tr>
-<tr>
-<td>D类</td>
-<td>11100000.00000000.00000000.00000000</td>
-<td>224.0.0.0</td>
-<td>224.0.0.1~239.255.255.254</td>
-<td></td>
-<td></td>
-<td>不分网络地址和主机地址，第1个字节的前四位固定为1110，这一类地址被用在多点广播（Multicast）中</td>
-</tr>
-<tr>
-<td>E类</td>
-<td>11110000.00000000.00000000.00000000</td>
-<td>240.0.0.0</td>
-<td>240.0.0.1~255.255.255.254</td>
-<td></td>
-<td></td>
-<td>第1个字节的前五位固定为11110，为将来使用保留</td>
-</tr>
-</tbody>
-</table>
-<p><code>私有网络地址</code>（以下简称私网地址）是指内部网络或者主机的IP地址，IANA（互联网数字分配机构）规定将下列的IP地址保留用作私网地址，不在Internet上被分配，可在一个单位或公司内部使用。RFC918中规定私有地址如下:</p>
-<table>
-<thead>
-<tr>
-<th>私有地址类别</th>
-<th>地址范围</th>
-<th>网段</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>A类私有地址</td>
-<td>10.0.0.0 ~ 10.255.255.255</td>
-<td>10.0.0.0/8</td>
-</tr>
-<tr>
-<td>B类私有地址</td>
-<td>172.16.0.0 ~ 172.31.255.255</td>
-<td>172.16.0.0/12</td>
-</tr>
-<tr>
-<td>C类私有地址</td>
-<td>192.168.0.0 ~ 192.168.255.255</td>
-<td>192.168.0.0/16</td>
-</tr>
-</tbody>
-</table>
-</div>
 
     </div>
 
@@ -1129,12 +947,12 @@ A类IP地址的默认子网掩码为255.0.0.0，由于255相当于二进制的8�
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/02/28/linux-command02-curl-wget/" rel="prev" title="Linux常用命令--curl与wget">
-                  <i class="fa fa-chevron-left"></i> Linux常用命令--curl与wget
+                <a href="/2023/02/28/linux-command02-netmask/" rel="prev" title="Linux常用命令--子网掩码">
+                  <i class="fa fa-chevron-left"></i> Linux常用命令--子网掩码
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/02/28/linux-command02/" rel="next" title="Linux常用命令--网络相关命令">
+                <a href="/2023/02/28/linux-command02-net/" rel="next" title="Linux常用命令--网络相关命令">
                   Linux常用命令--网络相关命令 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
@@ -1172,14 +990,14 @@ A类IP地址的默认子网掩码为255.0.0.0，由于255相当于二进制的8�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">935k</span>
+    <span title="站点总字数">936k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">14:10</span>
+    <span title="站点阅读时长">14:11</span>
   </span>
 </div>
 <div class="busuanzi-count">

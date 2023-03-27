@@ -20,28 +20,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍vim编辑器的使用方法。   本文基于CentOS8(x86_64)">
+    <meta name="description" content="摘要   本文介绍管道符&quot;|&quot;与&quot;xargs&quot;的使用方法。   以及文件描述符与重定向操作符的使用方法。   本文基于CentOS8(x86_64)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux常用命令--vim编辑器">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2023/03/11/linux-command05/index.html">
+<meta property="og:title" content="Linux常用命令--管道符&quot;|&quot;、&quot;xargs&quot;、文件描述符与重定向">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2023/03/15/linux-command07-xargs/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍vim编辑器的使用方法。   本文基于CentOS8(x86_64)">
+<meta property="og:description" content="摘要   本文介绍管道符&quot;|&quot;与&quot;xargs&quot;的使用方法。   以及文件描述符与重定向操作符的使用方法。   本文基于CentOS8(x86_64)">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-03-11T13:30:05.000Z">
-<meta property="article:modified_time" content="2023-03-24T02:37:21.092Z">
+<meta property="article:published_time" content="2023-03-15T13:30:05.000Z">
+<meta property="article:modified_time" content="2023-03-24T02:37:03.029Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux常用命令">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2023/03/11/linux-command05/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2023/03/15/linux-command07-xargs/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/03/11/linux-command05/","path":"2023/03/11/linux-command05/","title":"Linux常用命令--vim编辑器"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/03/15/linux-command07-xargs/","path":"2023/03/15/linux-command07-xargs/","title":"Linux常用命令--管道符\"|\"、\"xargs\"、文件描述符与重定向"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Linux常用命令--vim编辑器 | 飘逸峰的博客</title>
+<title>Linux常用命令--管道符"|"、"xargs"、文件描述符与重定向 | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -516,7 +516,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim%E6%93%8D%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">vim操作模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim%E8%AF%AD%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">vim语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4-%E6%AD%A3%E5%B8%B8%E3%80%81%E6%99%AE%E9%80%9A-%E6%A8%A1%E5%BC%8F-Command-Mode-%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">命令(正常、普通)模式(Command Mode)相关指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E5%85%89%E6%A0%87"><span class="nav-number">4.1.</span> <span class="nav-text">移动光标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E5%AD%97"><span class="nav-number">4.2.</span> <span class="nav-text">删除文字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6"><span class="nav-number">4.3.</span> <span class="nav-text">复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2"><span class="nav-number">4.4.</span> <span class="nav-text">替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%94%B9"><span class="nav-number">4.5.</span> <span class="nav-text">更改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%92%A4%E9%94%80%E6%88%96%E6%81%A2%E5%A4%8D%E4%B8%8A%E4%B8%80%E6%AC%A1%E6%93%8D%E4%BD%9C"><span class="nav-number">4.6.</span> <span class="nav-text">撤销或恢复上一次操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E8%A1%8C-%E6%9C%AB%E8%A1%8C-%E6%A8%A1%E5%BC%8F-Last-Line-Mode-%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">底行(末行)模式(Last Line Mode)相关指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E5%87%BA%E6%88%96%E5%8F%96%E6%B6%88%E8%A1%8C%E5%8F%B7"><span class="nav-number">5.1.</span> <span class="nav-text">列出或取消行号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E5%88%B0%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E6%9F%90%E4%B8%80%E8%A1%8C"><span class="nav-number">5.2.</span> <span class="nav-text">跳到文件中的某一行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%AD%97%E7%AC%A6"><span class="nav-number">5.3.</span> <span class="nav-text">查找字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%EF%BC%8C%E8%AF%AD%E6%B3%95%E7%B1%BB%E4%BC%BC%E4%BA%8Esed%E7%9A%84s%E6%9B%BF%E6%8D%A2"><span class="nav-number">5.4.</span> <span class="nav-text">替换，语法类似于sed的s替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%EF%BC%8C%E8%AF%AD%E6%B3%95%E7%B1%BB%E4%BC%BC%E4%BA%8Esed%E7%9A%84d%E5%88%A0%E9%99%A4"><span class="nav-number">5.5.</span> <span class="nav-text">删除，语法类似于sed的d删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E5%92%8C%E9%80%80%E5%87%BA"><span class="nav-number">5.6.</span> <span class="nav-text">保存和退出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">5.7.</span> <span class="nav-text">定义快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ab%E6%9B%BF%E6%8D%A2"><span class="nav-number">5.8.</span> <span class="nav-text">ab替换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">vim配置</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%AC%A6"><span class="nav-number">2.</span> <span class="nav-text">管道符&quot;|&quot;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xargs"><span class="nav-number">3.</span> <span class="nav-text">xargs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">4.</span> <span class="nav-text">文件描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%8A%E9%99%90"><span class="nav-number">4.1.</span> <span class="nav-text">设置文件描述符上限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-number">5.</span> <span class="nav-text">重定向操作符</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -531,7 +531,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-count">74</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -697,7 +697,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/03/11/linux-command05/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/03/15/linux-command07-xargs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -710,12 +710,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Linux常用命令--vim编辑器 | 飘逸峰的博客">
+      <meta itemprop="name" content="Linux常用命令--管道符"|"、"xargs"、文件描述符与重定向 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Linux常用命令--vim编辑器
+          Linux常用命令--管道符"|"、"xargs"、文件描述符与重定向
         </h1>
 
         <div class="post-meta-container">
@@ -726,14 +726,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-03-11 21:30:05" itemprop="dateCreated datePublished" datetime="2023-03-11T21:30:05+08:00">2023-03-11</time>
+      <time title="创建时间：2023-03-15 21:30:05" itemprop="dateCreated datePublished" datetime="2023-03-15T21:30:05+08:00">2023-03-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-03-24 10:37:21" itemprop="dateModified" datetime="2023-03-24T10:37:21+08:00">2023-03-24</time>
+      <time title="修改时间：2023-03-24 10:37:03" itemprop="dateModified" datetime="2023-03-24T10:37:03+08:00">2023-03-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -773,7 +773,7 @@
 </div>
 
 
-    <span id="/2023/03/11/linux-command05/" class="leancloud_visitors" data-flag-title="Linux常用命令--vim编辑器" title="阅读次数">
+    <span id="/2023/03/15/linux-command07-xargs/" class="leancloud_visitors" data-flag-title="Linux常用命令--管道符"|"、"xargs"、文件描述符与重定向" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -785,14 +785,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.6k</span>
+      <span>4.8k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
+      <span>4 分钟</span>
     </span>
 
         </div>
@@ -833,335 +833,172 @@
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>本文介绍vim编辑器的使用方法。</p>
+<p>本文介绍管道符&quot;|&quot;与&quot;xargs&quot;的使用方法。</p>
+</li>
+<li class="lvl-2">
+<p>以及文件描述符与重定向操作符的使用方法。</p>
 </li>
 <li class="lvl-2">
 <p>本文基于<code>CentOS8(x86_64)</code></p>
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="vim操作模式">vim操作模式</h2>
+<h2 id="管道符">管道符&quot;|&quot;</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>vim支持很多种操作模式，常用的有三种操作模式，分别是命令(正常、普通)模式<code>(Command Mode)</code>、插入模式<code>(Insert Mode)</code>和底行模式<code>(Last Line Mode)</code>。</p>
+<p>管道符主要用于多重命令处理，前面命令的输出结果作为后面命令的输入</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该命令的作用就是查看文本后排序，然后再去重，最后过滤出含有hello的行并输出</span></span><br><span class="line"><span class="built_in">cat</span> test.txt | <span class="built_in">sort</span> | <span class="built_in">uniq</span> | grep <span class="string">&quot;hello&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>以上的cat、sort、uniq、grep等命令均支持管道符，一般情况下，处理文本的命令，例如sort、uniq、grep、awk、sed等命令均支持管道，是因为这些命令均可从标准输入中读取要处理的文本（即从标准输入中读取参数）</p>
 </li>
 <li class="lvl-2">
-<p>命令(正常、普通)模式<code>(Command Mode)</code></p>
+<p>而对于不是处理文本的命令，例如ls、rm、kill等则不支持从标准输入中读取参数，只支持从命令行中读取参数，而要使其也能从标准输入中读取参数则需要使用<code>xargs</code></p>
+</li>
+<li class="lvl-2">
+<p>命令行参数优先于标准输入即管道符，如<code>cat a.txt | sort b.txt</code>，此时<code>sort</code>仅仅会处理<code>b.txt</code></p>
+</li>
+<li class="lvl-2">
+<p><code>- </code> 表示标准输入，例如 <code>cat a.txt | sort b.txt -</code>，相当于 <code>sort a.txt b.txt</code></p>
+</li>
+</ul>
+<div class="tips">
+<p><em><strong>命令行参数和标准输入的区别</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2">命令行参数
 <blockquote>
-<p>进入vim之后，就处于<code>(Command Mode)</code>之中，在该模式下可以控制屏幕光标的移动，字符、字或行的删除，移动复制某区段以及进入<code>(Insert Mode)</code>或<code>(Last Line Mode)</code></p>
+<p>命令行参数就是命令后面的参数<br>
+例如<code>rm test.sh</code>，<code>rm</code>是命令，<code>test.sh</code>就是命令行参数</p>
 </blockquote>
 </li>
-<li class="lvl-2">
-<p>插入模式<code>(Insert Mode)</code></p>
+<li class="lvl-2">标准输入
 <blockquote>
-<p>在命令模式下输入如下字符即可切换至插入模式<br>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a:在光标后   A:在本行末</span><br><span class="line">i:在光标前   I:在本行开始</span><br><span class="line">o:在光标下新开一行   O:在光标上新开一行</span><br><span class="line">此时就可以在光标所在处输入字符了</span><br></pre></td></tr></table></figure><br>
-只有在<code>(Insert Mode)</code>下，才可以做文字输入，按 <code>ESC</code> 键可回到<code>(Command Mode)</code>，该模式是我们用到的最频繁的模式</p>
+<p>标准输入一般指的是键盘输入，也可用于表示管道符之前命令的输出结果（即打印在屏幕的文本）作为之后命令的标准输入</p>
 </blockquote>
 </li>
-<li class="lvl-2">
-<p>底行(末行)模式<code>(Last Line Mode)</code></p>
-<blockquote>
-<p>在<code>(Command Mode)</code>下，输入<code>shift + :</code>，其实就是输入 <code>:</code> 即可进入<code>(Last Line Mode)</code><br>
-在<code>(Last Line Mode)</code>下，输入命令并回车即可执行相应的操作，无论输入的命令是否执行成功都会退出<code>(Last Line Mode)</code>并切换回<code>(Command Mode)</code>，<br>
-或者输入命令后不想执行，此时可以连按两次<code>Esc</code>键即可切换回<code>(Command Mode)</code>，或者按退格键直到取消<code>:</code>也会回到<code>(Command Mode)</code><br>
-在<code>(Last Line Mode)</code>下，可以进行文件保存或退出，也可以进行文件替换，找字符串，列出行号等操作</p>
-</blockquote>
-</li>
-<li class="lvl-2">
-<p>要查看vim的所有操作模式，可以在命令行输入<code>vim</code>，然后在底行模式中输入<code>help vim-modes</code>命令即可。</p>
-</li>
 </ul>
-<h2 id="vim语法">vim语法</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fileName不存在则创建</span></span><br><span class="line">vim fileName</span><br><span class="line"><span class="comment"># 也可以不加fileName直接打开vim编辑器，此时需要在保存时指定fileName</span></span><br><span class="line">vim</span><br></pre></td></tr></table></figure>
-<h2 id="命令-正常、普通-模式-Command-Mode-相关指令">命令(正常、普通)模式<code>(Command Mode)</code>相关指令</h2>
-<h3 id="移动光标">移动光标</h3>
+</div>
+<h2 id="xargs">xargs</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>vim可以直接用键盘上的上下左右键来移动光标，但正规的vim是用小写英文字母 <code>h 、 j 、 k 、 l</code> ，分别控制光标左、下、上、右移一格</p>
+<p><code>xargs</code>的作用是接收管道符前面命令的输出进行处理后作为命令行参数传递给后续命令，而并不是作为标准输入传递给后续命令。</p>
 </li>
 <li class="lvl-2">
-<p><code>gg</code> :光标移动到第一行开始处</p>
+<p><code>xargs</code>以空白字符（空格，tap，换行符均算空白字符）分隔从管道接收的文本，并且将分隔后文本均作为参数</p>
 </li>
 <li class="lvl-2">
-<p><code>G</code> :光标移动到最后一行开始处</p>
-</li>
-<li class="lvl-2">
-<p><code>#G</code> : 例如，15G ，表示移动光标至第15行行首</p>
-</li>
-<li class="lvl-2">
-<p><code>$</code> :移动到光标所在行的行尾</p>
-</li>
-<li class="lvl-2">
-<p><code>^ (0)</code> :移动到光标所在行的行首</p>
+<p><code>xargs</code>常用选项</p>
 </li>
 </ul>
-<blockquote>
-<p>上面的比较常用</p>
-</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">参数	    解释</span><br><span class="line">-d	    指定分隔符，不指定默认为空白字符</span><br><span class="line">-p	    先打印即将执行的命令并询问是否执行</span><br><span class="line">-n	    指定每次传输给后续命令的参数个数，不指定则全部传递</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
-<li class="lvl-2">
-<p><code>H</code> : 光标移动到当前屏幕中的第一行开始处</p>
-</li>
-<li class="lvl-2">
-<p><code>L</code> : 光标移动到当前屏幕中的最后一行开始处</p>
-</li>
-<li class="lvl-2">
-<p><code>M</code> : 光标移动到当前屏幕中的最中间一行开始处</p>
-</li>
-<li class="lvl-2">
-<p><code>w</code> :光标跳到下个字的开头</p>
-</li>
-<li class="lvl-2">
-<p><code>e</code> :光标跳到下个字的字尾</p>
-</li>
-<li class="lvl-2">
-<p><code>b</code> :光标回到上个字的开头</p>
-</li>
-<li class="lvl-2">
-<p><code>#l</code> :光标移到相对当前光标所在处后的第#个位置，如:当前光标在本行第3个字符处，则5l表示移动到本行第8个字符处</p>
-</li>
-<li class="lvl-2">
-<p><code>ctrl + b</code> :屏幕往后移动一页</p>
-</li>
-<li class="lvl-2">
-<p><code>ctrl + f</code> :屏幕往前移动一页</p>
-</li>
-<li class="lvl-2">
-<p><code>ctrl + u</code> :屏幕往后移动半页</p>
-</li>
-<li class="lvl-2">
-<p><code>ctrl + d</code> :屏幕往前移动半页</p>
-</li>
-</ul>
-<h3 id="删除文字">删除文字</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>x</code> :每按一次，删除光标所在位置的一个字符</p>
-</li>
-<li class="lvl-2">
-<p><code>dd</code> :删除光标所在行</p>
-</li>
-<li class="lvl-2">
-<p><code>#dd</code> :从光标所在行开始删除#行</p>
-</li>
-</ul>
-<blockquote>
-<p>上面的比较常用</p>
-</blockquote>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>#x</code> :例如，6x 表示删除光标所在位置的后面（包含自己在内）6个字符</p>
-</li>
-<li class="lvl-2">
-<p><code>X</code> :大写的X，每按一次，删除光标所在位置的前面一个字符</p>
-</li>
-<li class="lvl-2">
-<p><code>#X</code> :例如，20X 表示删除光标所在位置的前面20个字符</p>
-</li>
-<li class="lvl-2">
-<p><code>dG</code> :删除光标所在行到末尾的内容</p>
-</li>
-<li class="lvl-2">
-<p><code>D</code> :删除光标所在处到行尾</p>
-</li>
-</ul>
-<h3 id="复制">复制</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>yy</code> :复制光标所在行到缓冲区。</p>
-</li>
-<li class="lvl-2">
-<p><code>#yy</code> :例如，6yy 表示拷贝从光标所在的该行往下数6行文字</p>
-</li>
-<li class="lvl-2">
-<p><code>p</code>:将缓冲区内的字符贴到光标所在位置。注意:所有与 <code>y</code> 有关的复制命令都必须与 <code>p</code> 配合才能完成复制与粘贴功能</p>
-</li>
-</ul>
-<blockquote>
-<p>上面的比较常用</p>
-</blockquote>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>yw</code> :将光标所在之处到字尾的字符复制到缓冲区中</p>
-</li>
-<li class="lvl-2">
-<p><code>#yw</code> :复制#个字到缓冲区</p>
-</li>
-</ul>
-<h3 id="替换">替换</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>r</code> :替换光标所在处的字符，一次只能替换一个字符</p>
-</li>
-<li class="lvl-2">
-<p><code>R</code> :替换光标所到之处的字符，直到按下 <code>ESC</code> 键为止</p>
-</li>
-</ul>
-<blockquote>
-<p>不常用，直接进入插入模式修改就行</p>
-</blockquote>
-<h3 id="更改">更改</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>cw</code> :更改光标所在处的字到字尾处，标点符号或空格分隔，此时进入<code>(Insert Mode)</code></p>
-</li>
-<li class="lvl-2">
-<p><code>c#w</code> :例如，c3w 表示更改3个字，标点符号或空格分隔，此时进入<code>(Insert Mode)</code></p>
-</li>
-</ul>
-<blockquote>
-<p>不常用，直接进入插入模式修改就行</p>
-</blockquote>
-<h3 id="撤销或恢复上一次操作">撤销或恢复上一次操作</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>u</code> : 如果您误执行一个命令，可以马上按下 <code>u</code> ，回到上一个操作，按多次<code>u</code>可以执行多次恢复。</p>
-</li>
-<li class="lvl-2">
-<p><code>ctrl + r</code> : 撤销恢复，多次执行<code>ctrl + r</code>，可以多次撤销</p>
-</li>
-</ul>
-<h2 id="底行-末行-模式-Last-Line-Mode-相关指令">底行(末行)模式<code>(Last Line Mode)</code>相关指令</h2>
-<h3 id="列出或取消行号">列出或取消行号</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>set nu</code> : 输入 <code>set nu</code> 后，会在文件中的每一行前面列出行号</p>
-</li>
-<li class="lvl-2">
-<p><code>set nonu</code> : 输入 <code>set nonu</code> 后，会取消文件中的每一行前面列出的行号</p>
-</li>
-</ul>
-<h3 id="跳到文件中的某一行">跳到文件中的某一行</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>#</code> : <code>#</code> 号表示一个数字，再冒号后输入一个数字，再按回车键就会跳到该行</p>
-</li>
-</ul>
-<h3 id="查找字符">查找字符</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>/ + key</code> : 先按 <code>/</code> 键，再输入您想寻找的字符，如果第一次找的关键字不是您想要的，可以一直按 <code>n</code> 会往 <em><strong>后</strong></em> 寻找到您要的内容，循环往复。</p>
-</li>
-<li class="lvl-2">
-<p><code>? + key1</code> : 先按 <code>?</code> 键，再输入您想寻找的字符，如果第一次找的关键字不是您想要的，可以一直按 <code>n</code> 会往 <em><strong>前</strong></em> 寻找到您要的内容，循环往复。</p>
-</li>
-<li class="lvl-2">
-<p><code>set ic</code> :搜索时忽略大小写</p>
-</li>
-<li class="lvl-2">
-<p><code>set noic</code> :搜索时区分大小写</p>
-</li>
-</ul>
-<h3 id="替换，语法类似于sed的s替换">替换，语法类似于sed的s替换</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>n1s/source/target/</code> :<code>n1</code>代表行号，替换第n1行首次出现的source为target</p>
-</li>
-<li class="lvl-2">
-<p><code>n1s/source/target/i</code> :<code>n1</code>代表行号，替换第n1行首次出现的source为target，<code>i</code>表示不区分大小写</p>
-</li>
-<li class="lvl-2">
-<p><code>n1s/source/target/g</code> :<code>n1</code>代表行号，替换第n行出现的全部source为target</p>
-</li>
-<li class="lvl-2">
-<p><code>%s/source/target/g</code> :<code>%</code>代表所有行，配合<code>g</code>表示全文替换，将整个文档中的source替换为target</p>
-</li>
-<li class="lvl-2">
-<p><code>n1,n2s/source/target/ig</code> :<code>n1,n2</code>代表行号，在n1行到n2行范围内替换指定内容，不区分大小写</p>
-</li>
 <li class="lvl-2">
 <p>示例</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n1,n2s/^/#/ :行首添加#</span><br><span class="line">n1,n2s/^#// :去除行首#</span><br><span class="line">n1,n2s/^/\/\// :行首添加//</span><br><span class="line">n1,n2s/^\/\/// :去除行首//</span><br></pre></td></tr></table></figure>
-<h3 id="删除，语法类似于sed的d删除">删除，语法类似于sed的d删除</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设当前目录下有a.txt和b.txt，则该命令的含义就是 cat a.txt b.txt</span></span><br><span class="line"><span class="built_in">ls</span> *.txt | xargs <span class="built_in">cat</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 等价于 按顺序执行 cat a.txt 和 cat b.txt</span></span><br><span class="line"><span class="built_in">ls</span> *.txt | xargs -n 1 <span class="built_in">cat</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除文件，执行前先打印命令并询问是否执行，输入y回车后可以执行，仅仅回车不执行</span></span><br><span class="line"><span class="built_in">ls</span> *.txt | xargs -p <span class="built_in">rm</span> -rf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 杀掉进程</span></span><br><span class="line">ps -ef | grep <span class="string">&#x27;test.sh&#x27;</span> | grep -v <span class="string">&#x27;grep&#x27;</span>| awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | xargs <span class="built_in">kill</span></span><br></pre></td></tr></table></figure>
+<h2 id="文件描述符">文件描述符</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>n1d</code> :n1代表行号，删除指定的行</p>
+<p>在 Linux 系统中，进程通过文件描述符来管理文件，文件描述符就是一个数字以及与之相关联的一堆数据</p>
 </li>
 <li class="lvl-2">
-<p><code>n1,n2d</code> :n1,n2代表行号，删除指定范围的行</p>
+<p>一个进程打开一个文件，就会创建一个新的文件描述符，这个数字一般是自增的，进程如果关闭文件，这个描述符是可以重复利用的</p>
 </li>
 <li class="lvl-2">
-<p><code>1,$d</code> :删除所有行的全部内容</p>
+<p>查看进程关联的文件描述符</p>
 </li>
 </ul>
-<h3 id="保存和退出">保存和退出</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 比如查看`mysqld`的文件描述符</span></span><br><span class="line"><span class="comment"># 先获得mysqld的PID，这里是823</span></span><br><span class="line">$ ps aux | grep mysqld | grep -v <span class="string">&quot;grep&quot;</span></span><br><span class="line">mysql      823  0.0  7.0 1653908 64080 ?       Ssl  3月01   7:50 /usr/sbin/mysqld</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入如下目录</span></span><br><span class="line">$ <span class="built_in">cd</span> /proc/823/fd</span><br><span class="line"><span class="comment"># 列出PID为823的进程关联的文件描述符</span></span><br><span class="line">$ <span class="built_in">ls</span></span><br><span class="line">0   12  16  2   23  27  30  34  38  41  45  49  52  56  6   63  67  70  9</span><br><span class="line">1   13  17  20  24  28  31  35  39  42  46  5   53  57  60  64  68  71</span><br><span class="line">10  14  18  21  25  29  32  36  4   43  47  50  54  58  61  65  69  72</span><br><span class="line">11  15  19  22  26  3   33  37  40  44  48  51  55  59  62  66  7   8</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过ls -l可以查看到实际关联的文件，这里对文件描述符按数字大小做了排序</span></span><br><span class="line">$ <span class="built_in">ls</span> -l | grep <span class="string">&quot;^l&quot;</span> | <span class="built_in">sort</span> -k 9n | <span class="built_in">head</span> -n 5</span><br><span class="line">lr-x------ 1 mysql mysql 64 3月  13 04:06 0 -&gt; /dev/null</span><br><span class="line">lrwx------ 1 mysql mysql 64 3月  13 04:06 1 -&gt; socket:[16837]</span><br><span class="line">lrwx------ 1 mysql mysql 64 3月  13 04:06 2 -&gt; socket:[16837]</span><br><span class="line">lrwx------ 1 mysql mysql 64 3月  13 04:06 3 -&gt; /var/lib/mysql/aria_log_control</span><br><span class="line">lr-x------ 1 mysql mysql 64 3月  13 04:06 4 -&gt; /var/lib/mysql</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>w</code> :保存修改，不退出</p>
-</li>
-<li class="lvl-2">
-<p><code>w new_filename</code> :另存为，新的文件名称为new_filename</p>
-</li>
-<li class="lvl-2">
-<p><code>wq</code> :保存退出</p>
-</li>
-<li class="lvl-2">
-<p><code>q!</code> :不保存修改退出</p>
-</li>
-<li class="lvl-2">
-<p><code>wq!</code> :强制保存修改并退出，文件是只读的时候可以使用该命令强制保存（只有文件所有者有权限这样做）</p>
+<p>每一个进程启动的时候，都会默认打开三个文件，用<code>0,1,2</code>来当做他们的描述符</p>
 </li>
 </ul>
-<h3 id="定义快捷键">定义快捷键</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 : 标准输入文件(stdin)，代表标准输入，默认指键盘输入</span><br><span class="line">1 : 标准输出文件(stdout)，代表标准输出，标准输出就是命令的输出，默认指向终端屏幕</span><br><span class="line">2 : 标准错误文件(stderr)，代表错误输出，标准错误是命令错误信息的输出，默认指向终端屏幕</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>我们可以自己定义快捷键，以定制化一个操作，比如在当前行行首添加<code>#</code></p>
+<p>进程操作所有文件的过程都是一样的，都是先打开一个文件，给他一个文件描述符，然后针对这个描述符进行读或者写</p>
 </li>
 <li class="lvl-2">
-<p>语法为：<code>map ^P I#&lt;ESC&gt;</code> : 定义<code>ctrl + p</code>，其含义为 输入大写字母<code>I</code>进入插入模式,输入<code>#</code>字符后按<code>Esc</code>切换回命令模式，注意，这里定义map时填写的<code>&lt;ESC&gt;</code>是一个字符一个字符写上的，而不是去按一次Esc按键</p>
-<blockquote>
-<p><code>^P</code> 的 输入方法为: <code>ctrl+v+p</code></p>
-</blockquote>
+<p>在Linux里，键盘输入这种操作会变成一个文件操作，就类似普通的文件那样，这就是Linux的设计，一切皆是文件</p>
 </li>
 <li class="lvl-2">
-<p>此时在当前vim的命令模式下，输入<code>ctrl + p</code>会在光标所在行的行首添加<code>#</code></p>
+<p>不仅仅键盘操作和屏幕打印是文件操作，网络连接读取数据等等，也都是文件操作，这些也都会产生文件描述符</p>
 </li>
 <li class="lvl-2">
-<p><code>unmap ^P</code> :取消该快捷键</p>
+<p>一个进程同时拥有的文件描述符是有上限的，这个上限可以设置。</p>
 </li>
 <li class="lvl-2">
-<p>在底行模式下定义快捷键只对本次vim有效，退出vim就失效了，如要永久生效，可以配置到<code>~/.vimrc</code>中</p>
+<p>我们来解读下面这个命令的执行过程</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.txt | grep <span class="string">&quot;hello&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">1.<code>cat</code>这个程序打开了test.txt这个文件，将其内容写入 <code>1</code> 这个文件(标准输出)，也就是屏幕上</li>
+<li class="lvl-6">2.管道符<code>|</code>的作用就是将前一个程序的 <code>1</code> (标准输出)绑定到后一个程序的<code>0</code>(标准输入)，这里就是将<code>cat</code>的<code>1</code>绑定到<code>grep</code>的<code>0</code></li>
+<li class="lvl-6">3.然后<code>grep</code> 这个程序就试图从 <code>0</code> 这个文件(标准输入)中读取数据，然后找到包含<code>hello</code>的行，然后把找到的行写入到 <code>1</code> 这个文件(标准输出)中，也就是屏幕上</li>
+</ul>
 </li>
 </ul>
-<h3 id="ab替换">ab替换</h3>
+<h3 id="设置文件描述符上限">设置文件描述符上限</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>ab替换可以让我们在使用vim的插入模式编辑内容时，输入指定的字符，vim会自动帮我们替换为指定的内容</p>
+<p>文件描述符上限设置分为三个限制级别：系统限制、用户限制、会话限制，最终的上限是这三个限制级别中最小的值</p>
 </li>
 <li class="lvl-2">
-<p>语法为：<code>ab key1 key2</code>，此时我们输入key1,会自动被vim替换为key2</p>
-<blockquote>
-<p>如：<code>ab myemali hanqunfeng@xxx.com</code>，当输入myemail+空格后，会自动替换为hanqunfeng@xxx.com</p>
-</blockquote>
-</li>
-<li class="lvl-2">
-<p><code>unab myemail</code> :取消</p>
-</li>
-<li class="lvl-2">
-<p>在底行模式下定义ab替换只对本次vim有效，退出vim就失效了，如要永久生效，可以配置到<code>~/.vimrc</code>中</p>
+<p>查看及设置系统上限</p>
 </li>
 </ul>
-<h2 id="vim配置">vim配置</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line"><span class="built_in">cat</span> /proc/sys/fs/file-max</span><br><span class="line">或者</span><br><span class="line">sysctl fs.file-max</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置</span></span><br><span class="line"><span class="built_in">echo</span> fs.file-max=65535 &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p <span class="comment"># 立即生效</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>配置文件的位置</p>
-<blockquote>
-<p>在目录 <code>/etc</code>目录下面，有个名为<code>vimrc</code>的文件，这是系统中公共的vim配置文件，对所有用户都有效。<br>
-而在每个用户的home目录下，都可以自己建立私有的配置文件，命名为：<code>.vimrc</code><br>
-私有配置会覆盖公共配置中相同的内容，通常我们只修改私有配置文件</p>
-</blockquote>
-</li>
-<li class="lvl-2">
-<p>常用配置，注释是行首双引号</p>
+<p>查看及设置用户上限</p>
 </li>
 </ul>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&quot; 快捷键</span></span><br><span class="line"><span class="keyword">map</span> ^<span class="keyword">P</span> I#<span class="symbol">&lt;ESC&gt;</span></span><br><span class="line"><span class="comment">&quot; ab替换</span></span><br><span class="line"><span class="keyword">ab</span> myemali hanqunfeng@xxx.<span class="keyword">com</span></span><br><span class="line"><span class="comment">&quot; 显示行号</span></span><br><span class="line"><span class="keyword">set</span>  <span class="keyword">nu</span></span><br><span class="line"><span class="comment">&quot; 语法高亮</span></span><br><span class="line"><span class="keyword">syntax</span> <span class="keyword">on</span></span><br><span class="line"><span class="comment">&quot; 缩进为4</span></span><br><span class="line"><span class="keyword">set</span> <span class="built_in">shiftwidth</span>=<span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; 括号和引号的自动补全</span></span><br><span class="line"><span class="keyword">inoremap</span> ( ()<span class="symbol">&lt;ESC&gt;</span>i</span><br><span class="line"><span class="keyword">inoremap</span> [ []<span class="symbol">&lt;ESC&gt;</span>i</span><br><span class="line"><span class="keyword">inoremap</span> &#123; &#123;&#125;<span class="symbol">&lt;ESC&gt;</span>i</span><br><span class="line"><span class="keyword">inoremap</span> <span class="string">&#x27; &#x27;</span><span class="string">&#x27;&lt;ESC&gt;i</span></span><br><span class="line"><span class="string">inoremap &quot; &quot;&quot;&lt;ESC&gt;i</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line"><span class="built_in">cat</span> /etc/security/limits.conf</span><br><span class="line"><span class="comment"># 设置格式为：</span></span><br><span class="line">　　　　　　username|@groupname <span class="built_in">type</span> resource <span class="built_in">limit</span></span><br><span class="line">　　　　　　username|@groupname：设置需要被限制的用户名，组名前面加@和用户名区别。也可以用通配符*来做所有用户的限制。</span><br><span class="line">　　　　　　<span class="built_in">type</span>：有 soft，hard 和 -，soft 指的是当前系统生效的设置值。hard 表明系统中所能设定的最大值。soft 的限制不能比hard 限制高。用 - 就表明同时设置了 soft 和 hard 的值</span><br><span class="line">　　　　　　resource: 为资源类型有多种。 nofile为最大打开文件数。</span><br><span class="line">　　　　　　例如：* -  nofile 65535  将所有用户的最大打开文件数的soft和hard都设为65535</span><br><span class="line"><span class="comment"># 对/etc/security/limit.conf的修改会在新的会话期中生效</span></span><br><span class="line"><span class="comment"># 设置时一般在文件最后添加如下内容</span></span><br><span class="line">root soft nofile 65535</span><br><span class="line">root hard nofile 65535</span><br><span class="line">* soft nofile 65535</span><br><span class="line">* hard nofile 65535</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>关于vim更为详细的配置请参考 <a href="/2021/01/23/vimrc/" title="vim配置">vim配置</a></p>
+<p>查看及设置会话上限 :默认继承自用户限制级别</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line"><span class="built_in">ulimit</span> -Sn :查看会话期最大文件描述符soft限制</span><br><span class="line"><span class="built_in">ulimit</span> -Hn :查看会话期最大文件描述符hard限制，hard限制是soft的上限。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置</span></span><br><span class="line"><span class="comment"># 用ulimit所做的修改在会话期结束后都将失效</span></span><br><span class="line"><span class="built_in">ulimit</span> -Sn 2046 :限制当前会话期内能打开的文件数为2046（如果其中一个进程打开了2046个，其他进程再打文件都将失败）</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>文件描述符使用上限最大能设置多大呢？当然你可以把它往大了设，但是同时打开的文件描述符越多，内存开销就越大。那怎样设置一个合理的上限呢？一个经验算法是 256个fd 需4M内存。例如8G内存，<code>8*1024/4*256=524288</code>。</p>
+</li>
+<li class="lvl-2">
+<p>如果我们在一台机器上部署了自己的网络服务，我们只需按下面步骤修改就可以了：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">　　1. 计算 fdmax = 物理内存大小(m为单位) / 4 * 256  ,假设内存为8G,fdmax=524288</span><br><span class="line">　　2. 执行命令: <span class="built_in">echo</span> fs.file-max=524288 &gt;&gt; /etc/sysctl.conf</span><br><span class="line">　　3. 执行命令: sysctl -p</span><br><span class="line">　　4. 执行命令: <span class="built_in">echo</span>  * soft nofile  524286 &gt;&gt; /etc/security/limits.conf</span><br><span class="line">　　5. 执行命令: <span class="built_in">echo</span>  * hard nofile 524287 &gt;&gt; /etc/security/limits.conf</span><br><span class="line">　　6. 结束当前会话期</span><br><span class="line">　　7. 启动新的会话</span><br><span class="line">　　8. 启动我们的服务</span><br></pre></td></tr></table></figure>
+<h2 id="重定向操作符">重定向操作符</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>所谓重定向，其含义就是将不同的文件描述符重新定向到其它文件描述符</p>
+</li>
+<li class="lvl-2">
+<p>常用的重定向操作符有如下几种:</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>&lt;</code> :将文件作为命令的标准输入</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt; test.txt</span><br><span class="line">mysql -uroot -p &lt; databases.sql</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6"><code>&gt;</code> :将命令的输出结果输出到指定文件中，就是将标准输出重定向，且覆盖原文件内容</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以下两个命令的作用是一样的，都是将标准输出重定向到文件</span></span><br><span class="line"><span class="built_in">cat</span> test.txt | grep <span class="string">&quot;hello&quot;</span> &gt; result.txt</span><br><span class="line"><span class="built_in">cat</span> test.txt | grep <span class="string">&quot;hello&quot;</span> 1&gt; result.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准输出与标准错误都重定向到文件</span></span><br><span class="line">sh test.sh 1&gt; run.log 2&gt; error.log</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6"><code>&gt;&gt;</code> :将命令的输出结果以 <em><strong>追加</strong></em> 的方式输出到指定文件中</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以下两个命令的作用是一样的，都是将标准输出重定向到文件</span></span><br><span class="line"><span class="built_in">cat</span> test.txt | grep <span class="string">&quot;hello&quot;</span> &gt;&gt; result.txt</span><br><span class="line"><span class="built_in">cat</span> test.txt | grep <span class="string">&quot;hello&quot;</span> 1&gt;&gt; result.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准输出与标准错误都重定向到文件</span></span><br><span class="line">sh test.sh &gt;&gt; run.log 2&gt;&gt; error.log</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6"><code>&gt;&amp;</code> :将命令的输出结果或者一个文件描述符重新定向到另一个文件描述符</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以下两个命令的作用是一样的，都是将标准输出重定向到文件，标准错误重定向且等同于标准输出</span></span><br><span class="line"><span class="built_in">cat</span> test.txt | grep <span class="string">&quot;hello&quot;</span> &gt; result.txt 2&gt;&amp;1</span><br><span class="line"><span class="built_in">cat</span> test.txt | grep <span class="string">&quot;hello&quot;</span> 1&gt; result.txt 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准输出重定向到文件，标准错误重定向且等同于标准输出</span></span><br><span class="line">sh test.sh &gt;&gt; run.log 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准输出重定向到空设备文件，也就是不输出也不显示任何信息，标准错误重定向且等同于标准输出，也就是标准错误也重定向到空设备中</span></span><br><span class="line">sh test.sh 1&gt;/dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p>使用重定向操作符时的注意事项</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.标准输入0、标准输出1、标准错误2 需要分别重定向，一个重定向只能改变它们其中一个。</span><br><span class="line">2.文件描述符在重定向符号左侧时可以省略。</span><br><span class="line">3.文件描述符与重定向符号之间不能有空格。</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 
@@ -1207,7 +1044,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2023/03/11/linux-command05/" title="Linux常用命令--vim编辑器">https://blog.hanqunfeng.com/2023/03/11/linux-command05/</a>
+      <a href="https://blog.hanqunfeng.com/2023/03/15/linux-command07-xargs/" title="Linux常用命令--管道符&quot;|&quot;、&quot;xargs&quot;、文件描述符与重定向">https://blog.hanqunfeng.com/2023/03/15/linux-command07-xargs/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1260,13 +1097,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/03/13/linux-command06/" rel="prev" title="Linux常用命令--shell编程">
-                  <i class="fa fa-chevron-left"></i> Linux常用命令--shell编程
+                <a href="/2023/03/17/linux-command08-rpm-yum/" rel="prev" title="Linux常用命令--rpm与yum">
+                  <i class="fa fa-chevron-left"></i> Linux常用命令--rpm与yum
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/03/10/linux-command04/" rel="next" title="Linux常用命令--命令行快捷键">
-                  Linux常用命令--命令行快捷键 <i class="fa fa-chevron-right"></i>
+                <a href="/2023/03/13/linux-command06-$/" rel="next" title="Linux常用命令--各种符号">
+                  Linux常用命令--各种符号 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -1303,14 +1140,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">935k</span>
+    <span title="站点总字数">936k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">14:10</span>
+    <span title="站点阅读时长">14:11</span>
   </span>
 </div>
 <div class="busuanzi-count">

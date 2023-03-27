@@ -20,28 +20,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   文件与目录的查看、创建、修改、删除等相关命令   本文基于CentOS8(x86_64)">
+    <meta name="description" content="摘要   本文介绍子网掩码的作用   本文基于CentOS8(x86_64)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux常用命令--文件与目录的基本操作">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2023/02/24/linux-command01/index.html">
+<meta property="og:title" content="Linux常用命令--子网掩码">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2023/02/28/linux-command02-netmask/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   文件与目录的查看、创建、修改、删除等相关命令   本文基于CentOS8(x86_64)">
+<meta property="og:description" content="摘要   本文介绍子网掩码的作用   本文基于CentOS8(x86_64)">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-02-24T13:30:05.000Z">
-<meta property="article:modified_time" content="2023-03-24T02:38:42.566Z">
+<meta property="article:published_time" content="2023-02-28T13:36:05.000Z">
+<meta property="article:modified_time" content="2023-03-24T05:50:36.862Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux常用命令">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2023/02/24/linux-command01/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2023/02/28/linux-command02-netmask/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/02/24/linux-command01/","path":"2023/02/24/linux-command01/","title":"Linux常用命令--文件与目录的基本操作"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/02/28/linux-command02-netmask/","path":"2023/02/28/linux-command02-netmask/","title":"Linux常用命令--子网掩码"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Linux常用命令--文件与目录的基本操作 | 飘逸峰的博客</title>
+<title>Linux常用命令--子网掩码 | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -58,7 +58,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="/js-expand/httpToHttps.js"></script>
-<meta name="keywords" content="linux,shell,hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
 
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
@@ -516,7 +516,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">文件与目录的基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9F%A5%E7%9C%8B%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">1.查看目录下的内容：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9F%A5%E7%9C%8B%E7%9B%AE%E5%BD%95%E6%88%96%E6%96%87%E4%BB%B6%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">2.查看目录或文件的属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%87%E6%8D%A2%E7%9B%AE%E5%BD%95"><span class="nav-number">2.3.</span> <span class="nav-text">3.切换目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E8%B7%AF%E5%BE%84"><span class="nav-number">2.4.</span> <span class="nav-text">4.查看当前路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%88%9B%E5%BB%BA%E7%A9%BA%E6%96%87%E4%BB%B6"><span class="nav-number">2.5.</span> <span class="nav-text">5.创建空文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%88%9B%E5%BB%BA%E7%9B%AE%E5%BD%95"><span class="nav-number">2.6.</span> <span class="nav-text">6.创建目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E5%A4%8D%E5%88%B6"><span class="nav-number">2.7.</span> <span class="nav-text">7.文件和目录复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E7%A7%BB%E5%8A%A8%E6%96%87%E4%BB%B6%E3%80%81%E9%87%8D%E5%91%BD%E5%90%8D"><span class="nav-number">2.8.</span> <span class="nav-text">8.移动文件、重命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E5%88%A0%E9%99%A4"><span class="nav-number">2.9.</span> <span class="nav-text">9.文件和目录删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E6%98%BE%E7%A4%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E7%9B%B8%E5%85%B3"><span class="nav-number">2.10.</span> <span class="nav-text">10.显示文件内容相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E8%BD%AF%E9%93%BE%E6%8E%A5%E4%B8%8E%E7%A1%AC%E8%BF%9E%E6%8E%A5"><span class="nav-number">2.11.</span> <span class="nav-text">11.软链接与硬连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="nav-number">2.12.</span> <span class="nav-text">12.查看文件或目录的大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E3%80%81%E7%9B%AE%E5%BD%95%E8%AF%A6%E7%BB%86%E6%97%B6%E9%97%B4%E5%8F%82%E6%95%B0"><span class="nav-number">2.13.</span> <span class="nav-text">13.查看文件、目录详细时间参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E7%9A%84MD5%E6%88%96SHA%E5%80%BC"><span class="nav-number">2.14.</span> <span class="nav-text">14.查看文件的MD5或SHA值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-%E6%9F%A5%E7%9C%8B%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA%E6%83%85%E5%86%B5%E5%8F%8A%E5%85%B6%E6%8C%82%E8%BD%BD%E7%82%B9"><span class="nav-number">2.15.</span> <span class="nav-text">15.查看硬盘分区情况及其挂载点</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">子网掩码</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -531,7 +531,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-count">74</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -697,7 +697,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/02/24/linux-command01/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/02/28/linux-command02-netmask/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -710,12 +710,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Linux常用命令--文件与目录的基本操作 | 飘逸峰的博客">
+      <meta itemprop="name" content="Linux常用命令--子网掩码 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Linux常用命令--文件与目录的基本操作
+          Linux常用命令--子网掩码
         </h1>
 
         <div class="post-meta-container">
@@ -726,14 +726,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-24 21:30:05" itemprop="dateCreated datePublished" datetime="2023-02-24T21:30:05+08:00">2023-02-24</time>
+      <time title="创建时间：2023-02-28 21:36:05" itemprop="dateCreated datePublished" datetime="2023-02-28T21:36:05+08:00">2023-02-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-03-24 10:38:42" itemprop="dateModified" datetime="2023-03-24T10:38:42+08:00">2023-03-24</time>
+      <time title="修改时间：2023-03-24 13:50:36" itemprop="dateModified" datetime="2023-03-24T13:50:36+08:00">2023-03-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -773,7 +773,7 @@
 </div>
 
 
-    <span id="/2023/02/24/linux-command01/" class="leancloud_visitors" data-flag-title="Linux常用命令--文件与目录的基本操作" title="阅读次数">
+    <span id="/2023/02/28/linux-command02-netmask/" class="leancloud_visitors" data-flag-title="Linux常用命令--子网掩码" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -785,14 +785,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>5.7k</span>
+      <span>2.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
+      <span>2 分钟</span>
     </span>
 
         </div>
@@ -831,97 +831,198 @@
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>文件与目录的查看、创建、修改、删除等相关命令</p>
+<p>本文介绍子网掩码的作用</p>
 </li>
 <li class="lvl-2">
 <p>本文基于<code>CentOS8(x86_64)</code></p>
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="文件与目录的基本操作">文件与目录的基本操作</h2>
-<h3 id="1-查看目录下的内容：">1.查看目录下的内容：</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> .  : 查看当前路径下的文件，当前目录可以不加<span class="string">&#x27;.&#x27;</span></span><br><span class="line"><span class="built_in">ls</span> -1 : 注意这里是数字1，列表展示当前目录下的文件及目录的名称</span><br><span class="line"><span class="built_in">ls</span> -1 -c : 以更改时间(ctime)倒序，显示文件和目录，默认按字母排序</span><br><span class="line"><span class="built_in">ls</span> -l : -l以列表的形式显示详细信息，包括文件类型和权限、文件所属用户和用户组、最后修改时间等等</span><br><span class="line"><span class="built_in">ls</span> -al : -a显示所有文件包括隐藏文件以及当前目录(.)和上级目录(..)，如果不希望展示这两个路径可以使用-A</span><br><span class="line"><span class="built_in">ls</span> -lh : 以人类便于理解的方式展示文件大小，K、M等等</span><br><span class="line"><span class="built_in">ls</span> <span class="built_in">dir</span> : 查看指定目录下的文件</span><br><span class="line"><span class="built_in">ls</span> -l <span class="built_in">dir</span> : 查看指定目录下的文件,列表展示</span><br></pre></td></tr></table></figure>
+<h2 id="子网掩码">子网掩码</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>ls -l</code>的默认按文件名称排序，排序方式是alphabetically(字典序)，其规则大致为如下：<br>
-1.数字排在字母前面<br>
-2.忽视字母大小写<br>
-3.无视数字和英文字母之外的字符</p>
+<p>我们经常看到10.8.1.0/24这种ip表示方式，其表示为从10.8.1.0这个IP开始，24代表子网掩码为255.255.255.0，共包含256个地址，即从0-255共256个IP，即10.8.1.0~10.8.1.255。</p>
 </li>
 <li class="lvl-2">
-<p>按<code>文件大小</code>排序列出文件清单</p>
+<p>这里<code>/24</code>代表子网掩码，即前面由多少个1组成，举例如下：<br>
+A类IP地址的默认子网掩码为255.0.0.0，由于255相当于二进制的8位1，所以也缩写成“/8”，表示网络号占了8位，/12表示网络号占了12位，即有12个1，以此类推。<br>
+具体的设置规则可参考下表:</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意：只能排文件，目录大小默认4k，要连目录一块排序，请使用 du -sh * | sort -h</span></span><br><span class="line"><span class="built_in">ls</span> -lSh : 从大到小</span><br><span class="line"><span class="built_in">ls</span> -lShr : 从小到大</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>按<code>时间</code>排序列出文件清单</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -lt : 按mtime从大到小</span><br><span class="line"><span class="built_in">ls</span> -ltr : 按mtime从小到大</span><br><span class="line"></span><br><span class="line"><span class="built_in">ls</span> -ltc : 按ctime从大到小</span><br><span class="line"><span class="built_in">ls</span> -ltcr : 按ctime从小到大</span><br></pre></td></tr></table></figure>
-<div class="success">
-<p><em><strong>小贴士</strong></em></p>
-<ul class="lvl-1">
-<li class="lvl-2">为了方便，通常会使用别名<code>ll</code>替代<code>ls -l</code></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">which</span> ll</span><br><span class="line"><span class="built_in">alias</span> ll=<span class="string">&#x27;ls -l --color=auto&#x27;</span></span><br><span class="line">	/usr/bin/ls</span><br><span class="line"></span><br><span class="line">$ ll</span><br><span class="line">drwxr-xr-x 6 root root    4096 7月  23 2021 apache-maven-3.8.1</span><br><span class="line">-rw-r--r-- 1 root root 9536838 3月  31 2021 apache-maven-3.8.1-bin.tar.gz</span><br><span class="line">lrwxrwxrwx 1 root root      18 7月  23 2021 maven -&gt; apache-maven-3.8.1</span><br></pre></td></tr></table></figure>
-<p>展示出来的信息可以分为7组,意思如下：<br>
-[1]:权限<br>
-[2]:连结<br>
-[3]:拥有者<br>
-[4]:群组<br>
-[5]:文件容量<br>
-[6]:修改日期<br>
-[7]:文件或目录名称</p>
-</div>
-<h3 id="2-查看目录或文件的属性">2.查看目录或文件的属性</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ll -d <span class="built_in">dir</span> :-d只显示目录信息</span><br><span class="line">ll file :查看指定文件信息</span><br></pre></td></tr></table></figure>
-<h3 id="3-切换目录">3.切换目录</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /  :切换到根目录</span><br><span class="line"><span class="built_in">cd</span> .. :回到上级目录</span><br><span class="line"><span class="built_in">cd</span> -  :返回到上一次访问的目录</span><br><span class="line"><span class="built_in">cd</span> <span class="built_in">dir</span>:切换到指定目录</span><br></pre></td></tr></table></figure>
-<h3 id="4-查看当前路径">4.查看当前路径</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">pwd</span></span><br></pre></td></tr></table></figure>
-<h3 id="5-创建空文件">5.创建空文件</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> filename :只创建不编辑</span><br></pre></td></tr></table></figure>
-<h3 id="6-创建目录">6.创建目录</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> <span class="built_in">dir</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="built_in">dir</span>/dir/dir :创建多级目录</span><br></pre></td></tr></table></figure>
-<h3 id="7-文件和目录复制">7.文件和目录复制</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> sourcefile todir :复制到指定目录，保持原文件名</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> file1 file2 todir :同时复制多个文件到指定目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> sourcefile todir/newfile :复制到指定目录，并重命名文件</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> -R sourcedir todir :如果todir不存在，则将sourcedir下的内容复制到todir目录下，如果todir已经存在，则将sourcedir复制到todir目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> sourcedir/* todir :复制目录下的文件到指定目录，不含sourcedir</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> -n sourcefile todir :如文件已经存在，则不覆盖</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> -f sourcefile todir :如文件已经存在，则强制覆盖</span><br></pre></td></tr></table></figure>
-<h3 id="8-移动文件、重命名">8.移动文件、重命名</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> file1 file2 :重命名file1为file2</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> file todir :将文件移动到指定目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> <span class="built_in">dir</span> todir :如果todir不存在，则将<span class="built_in">dir</span>重命名为todir，如果todir已经存在，则将<span class="built_in">dir</span>移动到todir目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> <span class="built_in">dir</span> todir/ :如果todir不存在，则将<span class="built_in">dir</span>重命名为todir，如果todir已经存在，则将<span class="built_in">dir</span>移动到todir目录下</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> -n file todir :如有重复，则不覆盖</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> -f file todir :如有重复，则强制覆盖</span><br><span class="line"></span><br><span class="line"><span class="comment"># rename命令的功能是用于批量修改文件名称。与mv命令一次只能修改一个文件名不同，rename命令能够基于正则表达式对文件名进行批量修改</span></span><br><span class="line"><span class="comment"># 注意rename命令在centos和ubuntu下语法是不同的</span></span><br><span class="line"><span class="comment"># centos : rename &lt;from&gt; &lt;to&gt; *.txt</span></span><br><span class="line"><span class="comment"># 批量重命名，把/etc/yum.repos.d/*.repo指定的所有文件，文件名称中的‘.repo’替换为‘.repo.bak’</span></span><br><span class="line">rename <span class="string">&#x27;.repo&#x27;</span> <span class="string">&#x27;.repo.bak&#x27;</span> /etc/yum.repos.d/*.repo</span><br><span class="line"></span><br><span class="line">    rename命令的参数有三项：</span><br><span class="line">    其一是当前文件名中要被修改的字符;</span><br><span class="line">    其二是其要被修改为的新字符;</span><br><span class="line">    其三是要被执行的对象文件列表，可以用正则表达式确定范围</span><br><span class="line"></span><br><span class="line"><span class="comment"># 后缀替换，当前路径下的所有.txt文件替换为.php</span></span><br><span class="line">rename .txt .php *</span><br><span class="line"></span><br><span class="line"><span class="comment"># ubuntu :  rename &#x27;s/from/to/&#x27; *.txt</span></span><br><span class="line">rename <span class="string">&#x27;s/x0*/new/&#x27;</span> *</span><br></pre></td></tr></table></figure>
-<div class="success">
-<p><em><strong>小贴士</strong></em><br>
-进行<code>cp</code>或<code>mv</code>操作时，非重命名操作最好都先通过<code>mkdir</code>创建好目标目录</p>
-</div>
-<h3 id="9-文件和目录删除">9.文件和目录删除</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f file : 删除文件</span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> -rf <span class="built_in">dir</span> : 删除目录</span><br></pre></td></tr></table></figure>
-<h3 id="10-显示文件内容相关">10.显示文件内容相关</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">1) <span class="built_in">cat</span> file : 显示文件所有内容</span><br><span class="line"></span><br><span class="line">2) more file : 分页显示文件内容</span><br><span class="line">下一页: 空格</span><br><span class="line">下一行: 回车</span><br><span class="line">退出 : q</span><br><span class="line"></span><br><span class="line">选项	含义</span><br><span class="line">-f	计算行数时，以实际的行数，而不是自动换行过后的行数。</span><br><span class="line">-p	不以卷动的方式显示每一页，而是先清除屏幕后再显示内容。</span><br><span class="line">-c	跟 -p 选项相似，不同的是先显示内容再清除其他旧资料。</span><br><span class="line">-s	当遇到有连续两行以上的空白行时，就替换为一行的空白行。</span><br><span class="line">-u	不显示下引号（根据环境变量 TERM 指定的终端而有所不同）。</span><br><span class="line">+n	从第 n 行开始显示文件内容，n 代表数字。</span><br><span class="line">-n	一次显示的行数，n 代表数字。</span><br><span class="line"></span><br><span class="line">3) <span class="built_in">head</span> -20 file : 显示文件前20行，默认是10行</span><br><span class="line"></span><br><span class="line">4) <span class="built_in">tail</span> -20 file : 显示文件最后20行，默认是10行</span><br><span class="line"></span><br><span class="line">   <span class="built_in">tail</span> -f file -n 100 : 动态显示文件内容，先显示最后100行内容，用于查看日志</span><br><span class="line"></span><br><span class="line">   <span class="built_in">tail</span> -f file | grep key : 动态显示文件内容，配合grep使用，只显示关心的内容</span><br><span class="line"></span><br><span class="line">5) less file : 与more类似，不过less更加高效，推荐使用</span><br><span class="line"></span><br><span class="line">选项	选项含义</span><br><span class="line">-N	显示每行的行号。</span><br><span class="line">-S	行过长时将超出部分舍弃。</span><br><span class="line">-e	当文件显示结束后，自动离开。</span><br><span class="line">-g	只标志最后搜索到的关键同。</span><br><span class="line">-Q	不使用警告音。</span><br><span class="line">-i	忽略搜索时的大小写。</span><br><span class="line">-m	显示类似 more 命令的百分比。</span><br><span class="line">-f	强迫打开特殊文件，比如外围设备代号、目录和二进制文件。</span><br><span class="line">-s	显示连续空行为一行。</span><br><span class="line">-b &lt;缓冲区大小&gt;	设置缓冲区的大小。</span><br><span class="line">-o &lt;文件名&gt;	将 less 输出的内容保存到指定文件中。</span><br><span class="line">-x &lt;数字&gt;	将【Tab】键显示为规定的数字空格。</span><br><span class="line"></span><br><span class="line">more 和 less的区别:</span><br><span class="line">1、less可以按键盘上下方向键显示上下内容，而more不能通过上下方向键控制显示</span><br><span class="line">2、less不必读整个文件，加载速度会比more更快</span><br><span class="line">3、less退出后shell不会留下刚显示的内容，而more退出后会在shell上留下刚显示的内容</span><br><span class="line">4、阅读到文件结束时，less不会退出，而more会</span><br><span class="line">5、less可用行号或百分比作为书签浏览文件，而more不行</span><br><span class="line">6、相比more，less提供更加友好的检索、高亮显示等操作</span><br></pre></td></tr></table></figure>
-<h3 id="11-软链接与硬连接">11.软链接与硬连接</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s file/dir file/dir : 软连接</span><br><span class="line"><span class="built_in">ln</span> file file : 硬连接</span><br></pre></td></tr></table></figure>
-<div class="tips">
-<p><em><strong>软链接 与 硬链接 的区别</strong></em><br>
-<code>软链接（soft link）</code>：也称为符号链接（Symbolic Link），类似于 Windows 操作系统中的快捷方式文件，该文件有自己的名称、inode 和 物理存储的文件数据（记录着另一文件的路径名指向），访问该文件会被重新定向到软链接所指的源文件名。</p>
-<p><code>硬链接（hard link）</code>：相当于为当前文件名对应的文件再创建一个文件别名，当前文件名与该文件别名对应的 inode 和 物理存储的文件数据 都是一样的，访问该文件别名同访问当前文件名一致。</p>
-<p>1.删除源文件，软链接 会失效(但不会被自动删除)，硬链接 不会失效(文件并没有被真正删除)；<br>
-2.软链接 可以为文件和目录(允许不存在)创建链接，硬链接 只可以为文件创建链接；<br>
-3.软链接 可以跨文件系统，硬链接 必须是同一个文件系统；<br>
-4.软链接 的文件权限 可以和源文件不一样，硬链接 的文件权限 一定和源文件一样；<br>
-5.软链接：作为可执行文件的快捷方式；<br>
-6.硬链接：备份重要文件。</p>
-</div>
-<h3 id="12-查看文件或目录的大小">12.查看文件或目录的大小</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">du</span> -h file : 查看文件大小</span><br><span class="line"></span><br><span class="line"><span class="built_in">du</span> -sh <span class="built_in">dir</span> : 查看目录大小</span><br><span class="line"></span><br><span class="line"><span class="built_in">du</span> -sh * : 查看当前目录下所有文件和目录的大小</span><br><span class="line"></span><br><span class="line"><span class="built_in">du</span> -sh * | <span class="built_in">sort</span> -h   : 正序</span><br><span class="line"><span class="built_in">du</span> -sh * | <span class="built_in">sort</span> -hr  : 倒序</span><br></pre></td></tr></table></figure>
-<h3 id="13-查看文件、目录详细时间参数">13.查看文件、目录详细时间参数</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">stat</span> file/dir : 列出访问时间，最后修改时间，等等</span><br><span class="line"><span class="comment"># 示例：</span></span><br><span class="line"><span class="built_in">stat</span> apache-maven-3.8.1-bin.tar.gz</span><br><span class="line">  文件：<span class="string">&quot;apache-maven-3.8.1-bin.tar.gz&quot;</span></span><br><span class="line">  大小：9536838   	块：18632      IO 块：4096   普通文件</span><br><span class="line">设备：fd01h/64769d	Inode：1078257     硬链接：1</span><br><span class="line">权限：(0644/-rw-r--r--)  Uid：(    0/    root)   Gid：(    0/    root)</span><br><span class="line">最近访问：2023-03-03 10:06:52.371937028 +0800</span><br><span class="line">最近更改：2021-03-31 01:41:19.000000000 +0800</span><br><span class="line">最近改动：2021-07-23 15:25:42.624723562 +0800</span><br><span class="line">创建时间：-</span><br><span class="line"></span><br><span class="line">1. 最近访问(Access Time) ：简写为atime，表示文件的访问时间。当文件内容被访问时，更新这个时间。</span><br><span class="line">2. 最近更改(Modify Time) ：简写为mtime，表示文件内容的修改时间，当文件的数据内容被修改时，更新这个时间。就是 <span class="built_in">ls</span> -l 里显示的时间。</span><br><span class="line">3. 最近改动(Change Time) ：简写为ctime，表示文件的状态时间，当文件的状态被修改时，更新这个时间，例如文件的链接数，大小，权限，Blocks数。</span><br></pre></td></tr></table></figure>
-<div class="tips">
-<p><em><strong>小贴士</strong></em><br>
-<strong>使用<code>touch</code>命令修改文件的时间戳</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">touch</span> --<span class="built_in">help</span></span><br><span class="line">用法：<span class="built_in">touch</span> [选项]... 文件...</span><br><span class="line">Update the access and modification <span class="built_in">times</span> of each FILE to the current time.</span><br><span class="line"></span><br><span class="line">A FILE argument that does not exist is created empty, unless -c or -h</span><br><span class="line">is supplied.</span><br><span class="line"></span><br><span class="line">A FILE argument string of - is handled specially and causes <span class="built_in">touch</span> to</span><br><span class="line">change the <span class="built_in">times</span> of the file associated with standard output.</span><br><span class="line">Mandatory arguments to long options are mandatory <span class="keyword">for</span> short options too.</span><br><span class="line">  -a			    只更改访问时间</span><br><span class="line">  -c, --no-create	不创建任何文件</span><br><span class="line">  -d, --<span class="built_in">date</span>=字符串	 使用指定字符串表示时间而非当前时间</span><br><span class="line">  -f			    (忽略)</span><br><span class="line">  -h, --no-dereference		会影响符号链接本身，而非符号链接所指示的目的地</span><br><span class="line">				            (当系统支持更改符号链接的所有者时，此选项才有用)</span><br><span class="line">  -m			    只更改修改时间</span><br><span class="line">  -r, --reference=FILE   use this file<span class="string">&#x27;s times instead of current time</span></span><br><span class="line"><span class="string">  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time</span></span><br><span class="line"><span class="string">      --time=WORD        change the specified time:</span></span><br><span class="line"><span class="string">                           WORD is access, atime, or use: equivalent to -a</span></span><br><span class="line"><span class="string">                           WORD is modify or mtime: equivalent to -m</span></span><br><span class="line"><span class="string">      --help		显示此帮助信息并退出</span></span><br><span class="line"><span class="string">      --version		显示版本信息并退出</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">请注意，-d 和-t 选项可接受不同的时间/日期格式。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 示例</span></span><br><span class="line"><span class="string"># 修改atime</span></span><br><span class="line"><span class="string">touch -a test : 修改为当前系统时间</span></span><br><span class="line"><span class="string">touch -a -d &quot;2023-03-02 11:37:08&quot; test.sh : 修改为指定的时间</span></span><br><span class="line"><span class="string">touch -a -t &quot;202303021137.08&quot; test.sh</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 修改mtime</span></span><br><span class="line"><span class="string">touch -m test : 修改为当前系统时间</span></span><br><span class="line"><span class="string">touch -m -d &quot;2023-03-02 11:37:08&quot; test.sh : 修改为指定的时间</span></span><br><span class="line"><span class="string">touch -m -t &quot;202303021137.08&quot; test.sh</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 注意，修改atime或mtime时，都会同时修改ctime，因为文件的状态发生了变化</span></span><br></pre></td></tr></table></figure>
-</div>
-<h3 id="14-查看文件的MD5或SHA值">14.查看文件的MD5或SHA值</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">md5sum</span> file</span><br><span class="line"></span><br><span class="line"><span class="built_in">sha256sum</span> file</span><br><span class="line"></span><br><span class="line"><span class="built_in">sha512sum</span> file</span><br></pre></td></tr></table></figure>
-<h3 id="15-查看硬盘分区情况及其挂载点">15.查看硬盘分区情况及其挂载点</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span> -h : 显示硬盘大小，自动使用最大的单位</span><br><span class="line"><span class="built_in">df</span> -Th : 同时显示分区类型</span><br><span class="line"></span><br><span class="line"><span class="built_in">df</span> -hl : 只显示本机的文件系统</span><br><span class="line"></span><br><span class="line"><span class="built_in">df</span>    : 分区容量全部使用单位K，等同于 <span class="built_in">df</span> -k</span><br><span class="line"><span class="built_in">df</span> -m : 分区容量全部使用单位M</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>IP总数</th>
+<th>子网掩码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/24</td>
+<td>256</td>
+<td>255.255.255.0</td>
+</tr>
+<tr>
+<td>/20</td>
+<td>4096</td>
+<td>255.255.240.0</td>
+</tr>
+<tr>
+<td>/16</td>
+<td>65536</td>
+<td>255.255.0.0</td>
+</tr>
+<tr>
+<td>/12</td>
+<td>1048576</td>
+<td>255.240.0.0</td>
+</tr>
+<tr>
+<td>/8</td>
+<td>16777216</td>
+<td>255.0.0.0</td>
+</tr>
+</tbody>
+</table>
+<p><code>子网掩码</code>是用来判断任意两台计算机的IP地址是否属于同一子网络的根据。<br>
+最为简单的理解就是两台计算机各自的IP地址与子网掩码进行<code>与</code>运算后，得出的结果是相同的，则说明这两台计算机是处于同一个子网络上的，可以进行直接的通讯。<br>
+比如：<br>
+网段：10.8.1.0/24<br>
+网络地址：10.8.1.0<br>
+子网掩码：255.255.255.0<br>
+主机地址：10.8.1.1~10.8.1.254<br>
+广播地址：10.8.1.255<br>
+主机地址+网络地址+广播地址：256</p>
+<p>计算规则：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>10进制</th>
+<th>二进制</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主机地址</td>
+<td>10.8.1.1</td>
+<td><code>00001010.00001000.00000001.00000001</code></td>
+<td>10.8.1.1~10.8.1.254，这些ip和子网掩码<code>与</code>后的结果都相同</td>
+</tr>
+<tr>
+<td>子网掩码</td>
+<td>255.255.255.0</td>
+<td><code>11111111.11111111.11111111.00000000</code></td>
+<td>/24，即24个1</td>
+</tr>
+<tr>
+<td>网络地址</td>
+<td>10.8.1.0</td>
+<td><code>00001010.00001000.00000001.00000000</code></td>
+<td>主机地址和子网掩码<code>与</code>运算后的结果就得到了网络地址，同一个物理网络上的所有主机都使用同一个网络地址</td>
+</tr>
+<tr>
+<td>广播地址</td>
+<td>10.8.1.255</td>
+<td><code>00001010.00001000.00000001.11111111</code></td>
+<td>网络地址最后的0全部变为1就得到了广播地址</td>
+</tr>
+</tbody>
+</table>
+<p>以172.16.0.0/12为例，其子网掩码是255.240.0.0，<br>
+则172.16.0.0是网络地址，172.31.255.255是广播地址，网络地址相同的ip可以互相通信</p>
+<p>IP地址分为五类，A类保留给政府机构，B类分配给中等规模的公司，C类分配给任何需要的人，D类用于组播，E类用于实验，各类可容纳的地址数目不同。<br>
+其中A类、B类、和C类这三类地址用于TCP/IP节点，其它两类D类和E类被用于特殊用途。</p>
+<p><code>A、B、C三类IP地址的特征</code>：当将IP地址写成二进制形式时，A类地址的第一位总是O，B类地址的前两位总是10，C类地址的前三位总是110。</p>
+<table>
+<thead>
+<tr>
+<th>地址类型</th>
+<th>二进制</th>
+<th>十进制</th>
+<th>地址范围</th>
+<th>私有地址</th>
+<th>保留地址</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A类</td>
+<td>0000000.00000000.00000000.00000000</td>
+<td>0.0.0.0</td>
+<td>1.0.0.1~126.155.255.254</td>
+<td>10.X.X.X</td>
+<td>127.X.X.X</td>
+<td>第1字节为网络地址，其它3个字节为主机地址，第1个字节的第一位固定为0，注意数字0和127不作为A类地址</td>
+</tr>
+<tr>
+<td>B类</td>
+<td>10000000.00000000.00000000.00000000</td>
+<td>128.0.0.0</td>
+<td>128.0.0.1~191.255.255.254</td>
+<td>172.16.0.0~172.31.255.255</td>
+<td>169.254.X.X</td>
+<td>第1字节和第2字节为网络地址，其它2个字节为主机地址，第1个字节的前两位固定为10</td>
+</tr>
+<tr>
+<td>C类</td>
+<td>11000000.00000000.00000000.00000000</td>
+<td>192.0.0.0</td>
+<td>192.0.0.1~223.255.255.254</td>
+<td>192.168.X.X</td>
+<td></td>
+<td>第1字节、第2字节和第3个字节为网络地址，第4个个字节为主机地址，第1个字节的前三位固定为110</td>
+</tr>
+<tr>
+<td>D类</td>
+<td>11100000.00000000.00000000.00000000</td>
+<td>224.0.0.0</td>
+<td>224.0.0.1~239.255.255.254</td>
+<td></td>
+<td></td>
+<td>不分网络地址和主机地址，第1个字节的前四位固定为1110，这一类地址被用在多点广播（Multicast）中</td>
+</tr>
+<tr>
+<td>E类</td>
+<td>11110000.00000000.00000000.00000000</td>
+<td>240.0.0.0</td>
+<td>240.0.0.1~255.255.255.254</td>
+<td></td>
+<td></td>
+<td>第1个字节的前五位固定为11110，为将来使用保留</td>
+</tr>
+</tbody>
+</table>
+<p><code>私有网络地址</code>（以下简称私网地址）是指内部网络或者主机的IP地址，IANA（互联网数字分配机构）规定将下列的IP地址保留用作私网地址，不在Internet上被分配，可在一个单位或公司内部使用。RFC918中规定私有地址如下:</p>
+<table>
+<thead>
+<tr>
+<th>私有地址类别</th>
+<th>地址范围</th>
+<th>网段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A类私有地址</td>
+<td>10.0.0.0 ~ 10.255.255.255</td>
+<td>10.0.0.0/8</td>
+</tr>
+<tr>
+<td>B类私有地址</td>
+<td>172.16.0.0 ~ 172.31.255.255</td>
+<td>172.16.0.0/12</td>
+</tr>
+<tr>
+<td>C类私有地址</td>
+<td>192.168.0.0 ~ 192.168.255.255</td>
+<td>192.168.0.0/16</td>
+</tr>
+</tbody>
+</table>
 
     </div>
 
@@ -965,7 +1066,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2023/02/24/linux-command01/" title="Linux常用命令--文件与目录的基本操作">https://blog.hanqunfeng.com/2023/02/24/linux-command01/</a>
+      <a href="https://blog.hanqunfeng.com/2023/02/28/linux-command02-netmask/" title="Linux常用命令--子网掩码">https://blog.hanqunfeng.com/2023/02/28/linux-command02-netmask/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1018,13 +1119,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/02/24/linux-command01-search/" rel="prev" title="Linux常用命令--搜索文件与目录">
-                  <i class="fa fa-chevron-left"></i> Linux常用命令--搜索文件与目录
+                <a href="/2023/02/28/linux-command02-curl-wget/" rel="prev" title="Linux常用命令--curl与wget">
+                  <i class="fa fa-chevron-left"></i> Linux常用命令--curl与wget
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2022/11/22/mysql-sql-optimization/" rel="next" title="MySql--sql语句优化">
-                  MySql--sql语句优化 <i class="fa fa-chevron-right"></i>
+                <a href="/2023/02/28/linux-command02-firewall/" rel="next" title="Linux常用命令--防火墙firewalld">
+                  Linux常用命令--防火墙firewalld <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -1061,14 +1162,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">935k</span>
+    <span title="站点总字数">936k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">14:10</span>
+    <span title="站点阅读时长">14:11</span>
   </span>
 </div>
 <div class="busuanzi-count">
