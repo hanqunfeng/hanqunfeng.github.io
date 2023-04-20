@@ -1,6 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux常用命令--用户管理</title>
+    <url>/2023/04/20/linux-command11-user/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>文本介绍linux中用户的维护及其相关命令</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="一-配置文件说明">一.配置文件说明</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1./etc/passwd :用户信息文件</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line"></span><br><span class="line">格式：用户名:密码位:UID:GID:注释:宿主目录:shell</span><br><span class="line"></span><br><span class="line">UID说明:</span><br><span class="line">root: UID=0</span><br><span class="line">伪用户: UID 1-499，比如ftp,sshd,mail,shutdown等等</span><br><span class="line">普通用户: UID 500-60000,新增用户</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2./etc/shadow :密码文件</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:*:18755:0:99999:7:::</span><br><span class="line">bin:*:18394:0:99999:7:::</span><br><span class="line"></span><br><span class="line">格式：用户名:密码:最后一次修改密码的天数:两次修改密码的最小天数间隔:密码保持有效的最多天数:密码失效前提前警告的天数:账号闲置时间:密码已经失效的天数:标志（一般不用）</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>3./etc/group  :用户组文件</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:x:0:</span><br><span class="line">bin:x:1:</span><br><span class="line"></span><br><span class="line">格式：组名:组密码位:GID:组内用户列表</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>4./etc/gshadow :组密码文件</p>
+</li>
+<li class="lvl-2">
+<p>5./etc/skel/* :新用户环境变量文件</p>
+</li>
+<li class="lvl-2">
+<p>6./etc/login.defs :使用useradd默认创建用户时的缺省配置，比如UID范围，GID范围，密码有效期，密码长度限制，等等</p>
+</li>
+<li class="lvl-2">
+<p>7./etc/default/useradd :使用useradd默认创建用户时的缺省配置,比如宿主目录位置，默认shell，默认使用的新用户环境变量文件位置（/etc/skel），等等</p>
+</li>
+</ul>
+<h2 id="二-添加、删除用户">二.添加、删除用户</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.通过命令创建</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">useradd 用户名</span><br><span class="line">    -u:指定UID</span><br><span class="line">    -g:指定所属用户组GID或组名称</span><br><span class="line">    -G:指定所属多个组名称，逗号分隔</span><br><span class="line">    -d:宿主目录，会自动创建，如果目录已经存在，则不会将环境变量文件拷贝到该目录，需要手工拷贝</span><br><span class="line">    -s:命令解释器shell</span><br><span class="line">    -c:描述信息</span><br><span class="line">    -e:指定失效时间</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子：</span></span><br><span class="line">useradd utest -u 600 -g 0 -G sys,adm -d /home/utest -s /bin/bash -c <span class="string">&quot;this is a testuser&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为用户设置密码</span></span><br><span class="line">passwd 用户名</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.通过编辑配置文件创建</p>
+<ul class="lvl-2">
+<li class="lvl-6">1）分别在/etc/passwd、/etc/group和/etc/shadow中增加一行记录<br>
+密码设置：<code>echo 123456 | sha512sum</code></li>
+<li class="lvl-6">2）创建宿主目录</li>
+<li class="lvl-6">3）拷贝默认的配置文件到宿主目录: <code>cp -rf /etc/skel/* dir</code></li>
+<li class="lvl-6">4）设置用户初始密码</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>3.删除用户</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">userdel -r 用户名</span><br><span class="line">    -r:删除用户宿主目录</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>4.修改用户</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将用户添加到组中</span></span><br><span class="line">usermod -G 组名称 用户名</span><br><span class="line"><span class="comment"># 将用户的登录名改为新用户名，并且加入到组中，同时修改宿主目录</span></span><br><span class="line">usermod -l 新用户名 -d <span class="built_in">dir</span> -g 组名称 用户名</span><br></pre></td></tr></table></figure>
+<h2 id="三-添加、删除组">三.添加、删除组</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.创建组</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">groupadd 组名</span><br><span class="line">    -g:指定GID</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.删除组</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">groupdel 组名</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>3.修改组名称</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">groupmod -n newname oldname</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>4.设置组密码</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">设置密码：gpasswd 组名</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>5.其它组命令</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将用户加入组</span></span><br><span class="line">gpasswd -a 用户名 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从组中删除用户</span></span><br><span class="line">gpasswd -d 用户名 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除组密码</span></span><br><span class="line">gpasswd -r 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁止用户添加到该组</span></span><br><span class="line">gpasswd -R 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置组管理员</span></span><br><span class="line">gpasswd -A 用户名 组名</span><br></pre></td></tr></table></figure>
+<h2 id="四-用户管理命令">四.用户管理命令</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">id</span> :查看当前用的UID，GID和组信息</span><br><span class="line">su - 用户名:切换用户，带环境变量，<span class="built_in">exit</span>退出</span><br><span class="line">finger :查看用户详细信息 安装：yum install finger -y</span><br><span class="line">passwd -S 用户名 :查看用户密码状态</span><br><span class="line">vipw :编辑/etc/passwd文件</span><br><span class="line"><span class="built_in">groups</span> 用户名 :查看用户隶属于哪些组</span><br><span class="line"><span class="built_in">chgrp</span> 组名 file/dir :修改文件所属组 目录加 -R</span><br><span class="line"><span class="built_in">chown</span> 用户名 file/dir :修改文件所属用户 目录加 -R</span><br><span class="line">    <span class="built_in">chown</span> -R 用户名.组名 file/dir</span><br><span class="line">vigr :编辑/etc/group文件</span><br><span class="line">newgrp 组名 :将当前用户加入到该组中，要求该组已经设置过密码</span><br><span class="line">pwck :检查/etc/passwd内容是否有效，比如宿主目录是否存在等等</span><br><span class="line">grpck :检查/etc/group内容是否有效</span><br><span class="line">chage -l 用户名：查看用户密码配置信息</span><br><span class="line"><span class="built_in">who</span> :显示用户登录时间和来源IP</span><br><span class="line">last :显示所有用户的登录时间和来源IP历史记录</span><br></pre></td></tr></table></figure>
+<h2 id="五-用户禁用与恢复">五.用户禁用与恢复</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>禁用：锁定用户，不能登录</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">usermod -L 用户名</span><br><span class="line">passwd -l 用户名</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>恢复：解锁</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">usermod -U 用户名</span><br><span class="line">passwd -u 用户名</span><br></pre></td></tr></table></figure>
+<h2 id="六-sudo">六.sudo</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>配置文件/etc/sudoers</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">格式：用户名（%组名） 主机地址=命令（绝对路径）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子：</span></span><br><span class="line">root    ALL=(ALL)       ALL</span><br><span class="line">wap     ALL=/usr/local/bin/redis-server</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>visudo :编辑/etc/sudoers</p>
+</li>
+<li class="lvl-2">
+<p>sudo command :执行命令，需要输入当前用户密码</p>
+</li>
+<li class="lvl-2">
+<p>sudo -l :查看当前用户可以使用sudo执行哪些命令</p>
+</li>
+</ul>
+<h2 id="七-批量添加用户，适用于少量添加，大量可以编写个脚步">七.批量添加用户，适用于少量添加，大量可以编写个脚步</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.编辑一个用户信息文件，比如user.info,格式与/etc/passwd相同</span><br><span class="line">2.newusers &lt; user.info :写入/etc/passwd，会自动创建宿主目录</span><br><span class="line">3.pwunconv :关闭shadow passwd功能</span><br><span class="line">4.创建一个密码文件，比如passwd.info,格式与/etc/shadow相同,但密码是明文</span><br><span class="line">5.chpasswd &lt; passwd.info :写入/etc/shadow</span><br><span class="line">6.pwconv :开启shadow passwd功能，写入password密文</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>linux</category>
+        <category>linux常用命令</category>
+      </categories>
+      <tags>
+        <tag>linux常用命令</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux常用命令--进程管理</title>
     <url>/2023/03/27/linux-command10-ps/</url>
     <content><![CDATA[<!--
@@ -3448,7 +3625,13 @@ other::r-x</li>
 <p>ACL权限删除后，对应文件或目录权限上的加号就会去掉</p>
 </li>
 </ul>
-]]></content>
+<h3 id="5-粘着位">5.粘着位</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果一个权限为777的目录被设置了粘着位，则每个用户都可以在该目录下创建文件，但只能删除自己创建的文件</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 设置:</span></span><br><span class="line"><span class="built_in">chmod</span> o+t <span class="built_in">dir</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="built_in">chmod</span> 1777 <span class="built_in">dir</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取消:</span></span><br><span class="line"><span class="built_in">chmod</span> o-t <span class="built_in">dir</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="built_in">chmod</span> 777 <span class="built_in">dir</span></span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>技术</category>
         <category>linux</category>
