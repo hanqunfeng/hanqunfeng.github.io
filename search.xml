@@ -42,43 +42,50 @@
 <h2 id="一-配置文件说明">一.配置文件说明</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>1./etc/passwd :用户信息文件</p>
+<p>1./etc/passwd :用户信息文件<br>
+<code>vipw</code> :编辑/etc/passwd文件<br>
+<code>pwck</code> :检查/etc/passwd内容是否有效，比如宿主目录是否存在等等</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line"></span><br><span class="line">格式：用户名:密码位:UID:GID:注释:宿主目录:shell</span><br><span class="line"></span><br><span class="line">UID说明:</span><br><span class="line">root: UID=0</span><br><span class="line">伪用户: UID 1-499，比如ftp,sshd,mail,shutdown等等</span><br><span class="line">普通用户: UID 500-60000,新增用户</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line"></span><br><span class="line">格式：用户名:密码位:UID:GID:注释:宿主目录:shell</span><br><span class="line"></span><br><span class="line">UID说明:</span><br><span class="line">root: UID=0</span><br><span class="line">伪用户: UID 1-499，比如ftp,sshd,mail,shutdown等等</span><br><span class="line">普通用户: UID 500-60000,新增用户</span><br><span class="line"></span><br><span class="line">shell说明:</span><br><span class="line">/bin/bash :登录后默认的shell</span><br><span class="line">/sbin/nologin :该用户禁止登录</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>2./etc/shadow :密码文件</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:*:18755:0:99999:7:::</span><br><span class="line">bin:*:18394:0:99999:7:::</span><br><span class="line"></span><br><span class="line">格式：用户名:密码:最后一次修改密码的天数:两次修改密码的最小天数间隔:密码保持有效的最多天数:密码失效前提前警告的天数:账号闲置时间:密码已经失效的天数:标志（一般不用）</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:!!:18755:0:99999:7:::</span><br><span class="line">bin:*:18394:0:99999:7:::</span><br><span class="line">nginx:$6$VJ6lIEAtIoLpbMmA<span class="variable">$GSIZfx5Ous2ih</span>/KHjZTuTT7hSk6PBd/3c/nanwtXh5BKFOtEQdRvp6hS2usZ.rle.InjoKW0tp6UNQrhRscUG/:19468:0:99999:7:::</span><br><span class="line"></span><br><span class="line">格式：用户名:密码:最后一次修改密码的天数:两次修改密码的最小天数间隔:密码保持有效的最多天数:密码失效前提前警告的天数:账号闲置时间:密码已经失效的天数:标志（一般不用）</span><br><span class="line"></span><br><span class="line">密码说明：</span><br><span class="line">!! :该用户不能通过密码登录</span><br><span class="line">* :禁止登录</span><br><span class="line">*，! 和 !! 的全部都是无效的哈希，均表示不可以通过密码登录</span><br><span class="line">上面nginx的密码就是一个有效的哈希值，如果对nginx用户设置了禁用，</span><br><span class="line">比如: `usermod -L nginx`</span><br><span class="line">此时就会在密码前面增加一个 `!`，使其变为无效的哈希值，这样就不能通过密码登录了</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>3./etc/group  :用户组文件</p>
+<p>3./etc/group  :用户组文件<br>
+<code>vigr</code> :编辑/etc/group文件<br>
+<code>grpck</code> :检查/etc/group内容是否有效</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:x:0:</span><br><span class="line">bin:x:1:</span><br><span class="line"></span><br><span class="line">格式：组名:组密码位:GID:组内用户列表</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:x:0:</span><br><span class="line">bin:x:1:</span><br><span class="line"></span><br><span class="line">格式：组名:组密码位:GID:组内用户列表(逗号分隔)</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>4./etc/gshadow :组密码文件</p>
 </li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root:::</span><br><span class="line">bin:::</span><br><span class="line">nginx:$6<span class="variable">$G0GIKwWPuT</span>/RMftY<span class="variable">$JYqudvqgbUw5jJFqqaNBggs1lHpu</span>.BXfqaHRCy2fNklc5zYG0yjh4HZ5t2r4mkeLGU9McigZa4FsBBDV9IcCR1::</span><br><span class="line">redis:!:redis:redis,centos</span><br><span class="line"></span><br><span class="line">格式：组名:组密码:组管理员:组内用户列表(逗号分隔)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 说明：</span></span><br><span class="line">1.一般情况下没必要设置组密码</span><br><span class="line">2.组管理员可以将用户添加到组或从组里删除用户</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
 <li class="lvl-2">
 <p>5./etc/skel/* :新用户环境变量文件</p>
 </li>
 <li class="lvl-2">
-<p>6./etc/login.defs :使用useradd默认创建用户时的缺省配置，比如UID范围，GID范围，密码有效期，密码长度限制，等等</p>
+<p>6./etc/login.defs :使用useradd默认创建用户时的缺省配置，比如UID范围，GID范围，密码有效期，密码长度限制，是否自动创建Home目录，密码加密方式等等</p>
 </li>
 <li class="lvl-2">
-<p>7./etc/default/useradd :使用useradd默认创建用户时的缺省配置,比如宿主目录位置，默认shell，默认使用的新用户环境变量文件位置（/etc/skel），等等</p>
+<p>7./etc/default/useradd :使用useradd默认创建用户时的缺省配置，比如Home目录位置，默认shell，默认使用的新用户环境变量文件位置（/etc/skel），等等</p>
 </li>
 </ul>
 <h2 id="二-添加、删除用户">二.添加、删除用户</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>1.通过命令创建</p>
+<p>1.通过<code>useradd</code>命令创建用户,并使用<code>passwd</code>设置用户密码</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">useradd 用户名</span><br><span class="line">    -u:指定UID</span><br><span class="line">    -g:指定所属用户组GID或组名称</span><br><span class="line">    -G:指定所属多个组名称，逗号分隔</span><br><span class="line">    -d:宿主目录，会自动创建，如果目录已经存在，则不会将环境变量文件拷贝到该目录，需要手工拷贝</span><br><span class="line">    -s:命令解释器shell</span><br><span class="line">    -c:描述信息</span><br><span class="line">    -e:指定失效时间</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子：</span></span><br><span class="line">useradd utest -u 600 -g 0 -G sys,adm -d /home/utest -s /bin/bash -c <span class="string">&quot;this is a testuser&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为用户设置密码</span></span><br><span class="line">passwd 用户名</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># root创建用户</span></span><br><span class="line">useradd 用户名</span><br><span class="line">    -u:指定UID</span><br><span class="line">    -g:指定所属用户初始组GID或组名称，用户创建文件时的默认组，可以通过 `newgrp 组名` 切换初始组</span><br><span class="line">    -G:指定所属多个附加组名称，逗号分隔，用户同时拥有这些组的权限</span><br><span class="line">    -d:宿主目录，会自动创建，如果目录已经存在，则不会将环境变量文件拷贝到该目录，需要手工拷贝</span><br><span class="line">    -s:命令解释器shell</span><br><span class="line">    -c:描述信息</span><br><span class="line">    -e:指定失效时间</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子：</span></span><br><span class="line">useradd utest -u 600 -g 0 -G sys,adm -d /home/utest -s /bin/bash -c <span class="string">&quot;this is a testuser&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 注意：</span></span><br><span class="line">useradd &lt;==&gt; adduser</span><br><span class="line"></span><br><span class="line"><span class="comment"># root为用户设置密码</span></span><br><span class="line">passwd 用户名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 非root用户修改自己的密码</span></span><br><span class="line">passwd</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>2.通过编辑配置文件创建</p>
@@ -100,7 +107,7 @@
 <p>4.修改用户</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将用户添加到组中</span></span><br><span class="line">usermod -G 组名称 用户名</span><br><span class="line"><span class="comment"># 将用户的登录名改为新用户名，并且加入到组中，同时修改宿主目录</span></span><br><span class="line">usermod -l 新用户名 -d <span class="built_in">dir</span> -g 组名称 用户名</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将用户添加到附加组中</span></span><br><span class="line">usermod -G 组名称 用户名</span><br><span class="line"><span class="comment"># 将用户的名改为新用户名，并且指定初始组，同时修改宿主目录</span></span><br><span class="line">usermod -l 新用户名 -d <span class="built_in">dir</span> -g 组名称 用户名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 说明，usermod仅root用户可以使用</span></span><br></pre></td></tr></table></figure>
 <h2 id="三-添加、删除组">三.添加、删除组</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -131,16 +138,16 @@
 <p>5.其它组命令</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将用户加入组</span></span><br><span class="line">gpasswd -a 用户名 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从组中删除用户</span></span><br><span class="line">gpasswd -d 用户名 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除组密码</span></span><br><span class="line">gpasswd -r 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁止用户添加到该组</span></span><br><span class="line">gpasswd -R 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置组管理员</span></span><br><span class="line">gpasswd -A 用户名 组名</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将用户加入组</span></span><br><span class="line">gpasswd -a 用户名 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从组中删除用户</span></span><br><span class="line">gpasswd -d 用户名 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除组密码</span></span><br><span class="line">gpasswd -r 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 让群组的密码失效</span></span><br><span class="line">gpasswd -R 组名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置组管理员</span></span><br><span class="line">gpasswd -A 用户名 组名</span><br></pre></td></tr></table></figure>
 <h2 id="四-用户管理命令">四.用户管理命令</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">id</span> :查看当前用的UID，GID和组信息</span><br><span class="line">su - 用户名:切换用户，带环境变量，<span class="built_in">exit</span>退出</span><br><span class="line">finger :查看用户详细信息 安装：yum install finger -y</span><br><span class="line">passwd -S 用户名 :查看用户密码状态</span><br><span class="line">vipw :编辑/etc/passwd文件</span><br><span class="line"><span class="built_in">groups</span> 用户名 :查看用户隶属于哪些组</span><br><span class="line"><span class="built_in">chgrp</span> 组名 file/dir :修改文件所属组 目录加 -R</span><br><span class="line"><span class="built_in">chown</span> 用户名 file/dir :修改文件所属用户 目录加 -R</span><br><span class="line">    <span class="built_in">chown</span> -R 用户名.组名 file/dir</span><br><span class="line">vigr :编辑/etc/group文件</span><br><span class="line">newgrp 组名 :将当前用户加入到该组中，要求该组已经设置过密码</span><br><span class="line">pwck :检查/etc/passwd内容是否有效，比如宿主目录是否存在等等</span><br><span class="line">grpck :检查/etc/group内容是否有效</span><br><span class="line">chage -l 用户名：查看用户密码配置信息</span><br><span class="line"><span class="built_in">who</span> :显示用户登录时间和来源IP</span><br><span class="line">last :显示所有用户的登录时间和来源IP历史记录</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">whoami</span> :显示当前用户名称</span><br><span class="line"><span class="built_in">id</span> :查看当前用的UID，GID和组信息</span><br><span class="line"><span class="built_in">who</span> :显示用户登录时间和来源IP</span><br><span class="line">last :显示所有用户的登录时间和来源IP历史记录</span><br><span class="line">su - 用户名 :切换用户，带环境变量，<span class="built_in">exit</span>退出</span><br><span class="line"></span><br><span class="line">passwd -S 用户名 :查看用户密码状态</span><br><span class="line">chage -l 用户名：查看用户密码配置信息</span><br><span class="line">vipw :编辑/etc/passwd文件</span><br><span class="line"></span><br><span class="line"><span class="built_in">groups</span> 用户名 :查看用户隶属于哪些组</span><br><span class="line"><span class="built_in">chgrp</span> 组名 file/dir :修改文件所属组 目录加 -R</span><br><span class="line"><span class="built_in">chown</span> 用户名 file/dir :修改文件所属用户 目录加 -R</span><br><span class="line">    <span class="built_in">chown</span> -R 用户名.组名 file/dir</span><br><span class="line">vigr :编辑/etc/group文件</span><br><span class="line">newgrp 组名 :临时切换当前用户的初始组。newgrp 命令每一次切换用户的初始组，该用户都会以另外一个 shell（新进程，也可以说是子进程）登陆，只不过在新 shell 上登陆的该用户，其初始组改变了而已。<span class="built_in">exit</span>退出。</span><br><span class="line"></span><br><span class="line">pwck :检查/etc/passwd内容是否有效，比如宿主目录是否存在等等</span><br><span class="line">grpck :检查/etc/group内容是否有效</span><br></pre></td></tr></table></figure>
 <h2 id="五-用户禁用与恢复">五.用户禁用与恢复</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>禁用：锁定用户，不能登录</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">usermod -L 用户名</span><br><span class="line">passwd -l 用户名</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">usermod -L 用户名  :/etc/shadow中对应的密码前面增加一个`!`</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">passwd -l 用户名  :/etc/shadow中对应的密码前面增加两个`!`</span><br><span class="line"></span><br><span class="line"><span class="comment"># 锁定的原理就是使密码变为无效的哈希值</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>恢复：解锁</p>
@@ -153,16 +160,16 @@
 <p>配置文件/etc/sudoers</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">格式：用户名（%组名） 主机地址=命令（绝对路径）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子：</span></span><br><span class="line">root    ALL=(ALL)       ALL</span><br><span class="line">wap     ALL=/usr/local/bin/redis-server</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">格式： A B = (C) D E</span><br><span class="line">且C与D是可以省略的</span><br><span class="line">A代表授权使用sudo的用户或者组</span><br><span class="line">B代表允许授权用户在哪些主机上使用这些权利，ALL表示任意主机</span><br><span class="line">C代表允许被授权用户提权到什么用户什么组级别的权限，ALL代表允许提权到任意用户级别，如果省略就表示提权到root级别</span><br><span class="line">D代表当被授权用户是否需要输入自身密码来使用特权，若省略则代表需要输入自身的密码，如果为NOPASSWD:则表示不需要</span><br><span class="line">E代表允许执行的命令，如果是ALL就代表允许执行所有命令，多个命令之间逗号分隔，必须为绝对路径</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子：</span></span><br><span class="line"><span class="comment"># A B = (C)  E</span></span><br><span class="line">root    ALL=(ALL)       ALL</span><br><span class="line"><span class="comment"># NOPASSWD: ALL 可以免密码以root身份执行所有命令</span></span><br><span class="line"><span class="comment"># A B = (C) D E</span></span><br><span class="line">centos  ALL=(ALL)       NOPASSWD: ALL</span><br><span class="line"><span class="comment"># A B = E</span></span><br><span class="line">wap     ALL=/bin/chown,/usr/sbin/useradd</span><br><span class="line"></span><br><span class="line"><span class="comment"># %wheel 表示 wheel 这个组下的所有用户</span></span><br><span class="line">%wheel  ALL=(ALL)       ALL</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>visudo :编辑/etc/sudoers</p>
+<p><code>visudo</code> :编辑/etc/sudoers</p>
 </li>
 <li class="lvl-2">
-<p>sudo command :执行命令，需要输入当前用户密码</p>
+<p><code>sudo command</code> :执行命令，需要输入当前用户密码</p>
 </li>
 <li class="lvl-2">
-<p>sudo -l :查看当前用户可以使用sudo执行哪些命令</p>
+<p><code>sudo -l</code> :查看当前用户可以使用sudo执行哪些命令</p>
 </li>
 </ul>
 <h2 id="七-批量添加用户，适用于少量添加，大量可以编写个脚步">七.批量添加用户，适用于少量添加，大量可以编写个脚步</h2>
