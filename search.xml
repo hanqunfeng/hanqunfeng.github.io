@@ -287,6 +287,23 @@ future.join();  不需要处理异常</p>
 <li class="lvl-2">
 <p>Long：<code>LongAdder</code>，加、减、求和等操作性能高于<code>AtomicLong</code></p>
 </li>
+</ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em><br>
+AtomicLong 是利用了底层的 CAS 操作来提供并发性的，调用了 Unsafe 类的getAndAddLong 方法，该方法是个 native 方法，它的逻辑是采用自旋的方式不断更新目标值，直到更新成功。<br>
+在并发量较低的环境下，线程冲突的概率比较小，自旋的次数不会很多。但是，高并发环境下，N 个线程同时进行自旋操作，会出现大量失败并不断自旋的情况，此时 AtomicLong 的自旋会成为瓶颈。<br>
+这就是 LongAdder 引入的初衷——解决高并发环境下 AtomicLong 的自旋瓶颈问题。</p>
+<p>AtomicLong 中有个内部变量 value 保存着实际的 long 值，所有的操作都是针对该变量进行。也就是说，高并发环境下，value 变量其实是一个热点，也就是 N 个线程竞争一个热点。<br>
+LongAdder 的基本思路就是分散热点，将 value 值分散到一个数组中，不同线程会命中到数组的不同槽中，各个线程只对自己槽中的那个值进行 CAS 操作，这样热点就被分散了，冲突的概率就小很多。<br>
+如果要获取真正的 long 值，只要将各个槽中的变量值累加返回。</p>
+<p>这种做法和 ConcurrentHashMap 中的“分段锁”其实就是类似的思路。<br>
+LongAdder 提供的 API 和 AtomicLong 比较接近，两者都能以原子的方式对long 型变量进行增减。</p>
+<p>但是 AtomicLong 提供的功能其实更丰富，尤其是 addAndGet、decrementAndGet、compareAndSet 这些方法。<br>
+addAndGet、decrementAndGet 除了单纯的做自增自减外，还可以立即获取增减后的值，而 LongAdder 则需要做同步控制才能精确获取增减后的值。如果业务需求需要精确的控制计数，做计数比较，AtomicLong 也更合适。</p>
+<p>另外，从空间方面考虑，LongAdder 其实是一种“空间换时间”的思想，从这一点来讲 AtomicLong 更适合。<br>
+总之，低并发、一般的业务场景下 AtomicLong 是足够了。如果并发量很多，存在大量写多读少的情况，那 LongAdder 可能更合适。</p>
+</div>
+<ul class="lvl-0">
 <li class="lvl-2">
 <p>Double：<code>DoubleAdder</code></p>
 </li>
@@ -297,6 +314,18 @@ future.join();  不需要处理异常</p>
 <p>对象：<code>AtomicStampedReference</code>：引入版本号，用于解决ABA问题</p>
 </li>
 </ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em><br>
+如果你想比较AtomicReference中存储的User对象，你需要确保User类正确实现了适当的equals()和hashCode()方法。<br>
+在Java中，对象的比较通常是通过equals()方法来实现的。equals()方法用于判断两个对象是否相等。当你使用AtomicReference进行比较时，它将使用equals()方法来比较存储在AtomicReference中的对象。<br>
+默认情况下，Object类的equals()方法比较的是对象的引用，而不是内容。因此，如果你想在AtomicReference中比较User对象的内容而不是引用，你需要在User类中重写equals()方法来进行内容比较。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 省略构造函数和其他方法</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span> == o) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="literal">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> (User) o;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (age != user.age) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> name != <span class="literal">null</span> ? name.equals(user.name) : user.name == <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> name != <span class="literal">null</span> ? name.hashCode() : <span class="number">0</span>;</span><br><span class="line">        result = <span class="number">31</span> * result + age;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述示例中，我们重写了equals()方法以比较User对象的name和age属性。我们使用了自动生成的hashCode()方法来生成哈希码，以保证在使用哈希表等数据结构时的正确性。<br>
+重写了equals()和hashCode()方法后，你可以使用AtomicReference<User>来比较User对象。例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">AtomicReference&lt;User&gt; atomicReference = <span class="keyword">new</span> <span class="title class_">AtomicReference</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;Alice&quot;</span>, <span class="number">25</span>));</span><br><span class="line"><span class="type">User</span> <span class="variable">expectedUser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;Alice&quot;</span>, <span class="number">25</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">updated</span> <span class="operator">=</span> atomicReference.compareAndSet(expectedUser, <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;Bob&quot;</span>, <span class="number">30</span>));</span><br></pre></td></tr></table></figure>
+<p>而AtomicStampedReference是为了解决ABA问题而设计的，并提供了对对象引用的比较以及对标记（stamp）的比较。<br>
+AtomicStampedReference通过引入一个标记（stamp）来解决ABA问题。它不仅比较对象引用，还比较对象的标记值。当对象和标记值都相等时，才认为对象相等。</p>
+</div>
 <h3 id="ABA">ABA</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
