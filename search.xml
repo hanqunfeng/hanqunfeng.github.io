@@ -1,6 +1,302 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java多线程</title>
+    <url>/2023/05/18/java-concurrency01/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍java多线程相关技术</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>jdk1.8</code></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="java多线程">java多线程</h2>
+<h3 id="并发与并行">并发与并行</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>并发 <code>Concurrent</code>：指应用能够交替执行不同的任务，比如单 CPU 核心下执行多线程并非是同时执行多个任务,如果你开两个线程执行,就是在你几乎不可能察觉到的速度不断去切换这两个任务,已达到&quot;同时执行效果&quot;,其实并不是的,只是计算机的速度太快,我们无法察觉到而已。</p>
+</li>
+<li class="lvl-2">
+<p>并行 <code>Parallel</code>：指应用能够同时在多个CPU核心下执行不同的任务，例:吃饭的时候可以边吃饭边打电话,这两件事情可以同时执行</p>
+</li>
+<li class="lvl-2">
+<p>两者区别：一个是单核交替执行,一个是多核同时执行。</p>
+</li>
+</ul>
+<h3 id="线程的状态-生命周期">线程的状态/生命周期</h3>
+<p>Java 中线程的状态分为 6 种：</p>
+<ol>
+<li class="lvl-3">
+<p>初始(<code>NEW</code>)：新创建了一个线程对象，但还没有调用 start()方法。</p>
+</li>
+<li class="lvl-3">
+<p>运行(<code>RUNNABLE</code>)：Java 线程中将就绪（ready）和运行中（running）两种状态笼统的称为“运行”。线程对象创建后，其他线程(比如 main 线程）调用了该对象的 start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获取 CPU 的使用权，此时处于就绪状态（ready）。就绪状态的线程在获得 CPU 时间片后变为运行中状态（running）。</p>
+</li>
+<li class="lvl-3">
+<p>阻塞(<code>BLOCKED</code>)：表示线程阻塞于锁。</p>
+</li>
+<li class="lvl-3">
+<p>等待(<code>WAITING</code>)：进入该状态的线程需要等待其他线程做出一些特定动作（通知或中断）。</p>
+</li>
+<li class="lvl-3">
+<p>超时等待(<code>TIMED_WAITING</code>)：该状态不同于 WAITING，它可以在指定的时间后自行返回。</p>
+</li>
+<li class="lvl-3">
+<p>终止(<code>TERMINATED</code>)：表示该线程已经执行完毕。</p>
+</li>
+</ol>
+<h3 id="Thread与Runnable">Thread与Runnable</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Thread 才是 Java 里对线程的唯一抽象，Runnable 只是对任务（业务逻辑）的抽象。Thread 可以接受任意一个 Runnable 的实例并执行。</p>
+</li>
+<li class="lvl-2">
+<p>官方说法是在 Java 中有两种方式创建一个线程用以执行，一种是派生自Thread 类，另一种是实现 Runnable 接口。当然本质上 Java 中实现线程只有一种方式，都是通过 new Thread()创建线程对象，调用 Thread#start 启动线程。至于基于 callable 接口的方式，因为最终是要把实现了 callable 接口的对象通过 FutureTask 包装成 Runnable，再交给 Thread 去执行，所以这个其实可以和实现 Runnable 接口看成同一类。</p>
+</li>
+<li class="lvl-2">
+<p>java的多线程最终是交由操作系统来维护和调度的。只有调用Thread对象的start方法才能启动一个线程，start方法不能多次调用，重复调用会抛出异常。Thread 的 start 方法中调用了 start0()方法，而start0()是个 native 方法，这就说明Thread#start 一定和操作系统是密切相关的。</p>
+</li>
+<li class="lvl-2">
+<p>创建并启动线程</p>
+<ul class="lvl-2">
+<li class="lvl-6">扩展自Thread类</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">UseThread</span> <span class="variable">useThread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UseThread</span>();</span><br><span class="line">useThread.start();</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">实现Runnable接口</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">UseRunnable</span> <span class="variable">useRunnable</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UseRunnable</span>();</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Thread</span>(useRunnable).start();</span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p>static方法</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>Thread.currentThread()</code>：获取当前线程对象</li>
+<li class="lvl-6"><code>Thread.sleep(10)</code> ：休眠10毫秒</li>
+<li class="lvl-6"><code>Thread.activeCount()</code> ：获取当前活动线程的数量，活动线程是指尚未终止的线程，包括正在运行、等待或阻塞的线程。包括守护线程和非守护线程</li>
+<li class="lvl-6"><code>Thread.yield()</code> : 暂停当前线程，给其他线程执行的机会
+<blockquote>
+<p>1.具体作用如下：提示调度器当前线程愿意放弃当前的 CPU 执行时间片，给其他具有相同优先级的线程执行的机会。不保证一定能让其他线程执行，只是给其他线程执行的机会更大。通常情况下，操作系统的线程调度器会按照一定的算法分配 CPU 时间给各个线程，而 yield() 方法可以用于向调度器发出提示，表明当前线程愿意让出 CPU 时间，让其他线程有更多的机会执行。<br>
+2.当一个线程调用 yield() 方法后，它会进入就绪状态，让出当前的 CPU 时间片，并允许其他线程有更大的机会获得 CPU 时间。然后，调度器会在众多就绪状态的线程中选择一个线程来运行，但选择哪个线程运行是由调度器决定的，可能会选择当前线程继续执行，也可能选择其他线程执行。所以，调用 yield() 方法后，当前线程可能会被立即重新调度并继续执行，也可能在稍后的时间被调度器重新选中并继续执行，也可能在一段时间内都没有被重新调度。</p>
+</blockquote>
+</li>
+<li class="lvl-6"><code>Thread.interrupted()</code> : 用于检查当前线程是否被中断，并返回一个布尔值。调用<code>interrupted()</code>方法会清除当前线程的中断状态。线程是中断状态时，则只有第一次调用<code>interrupted()</code>方法会返回 true。而Thread对象的<code>isInterrupted()</code>方法不会清除中断状态。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>守护线程：主线程结束，则守护线程立即停止</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 创建并启动线程：</span></span><br><span class="line"><span class="type">UseThread</span> <span class="variable">useThread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UseThread</span>();</span><br><span class="line">useThread.setDaemon(<span class="literal">true</span>); <span class="comment">//设置线程为守护线程，主线程结束，则守护线程立即停止</span></span><br><span class="line">useThread.start();</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>join()</code>: 将指定线程运行完成后再运行后面的代码</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建并启动线程：</span></span><br><span class="line"><span class="type">ThreadA</span> <span class="variable">threadA</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadA</span>();</span><br><span class="line">threadA.start();</span><br><span class="line"><span class="comment">//threadA要运行完成后再运行后面的代码：</span></span><br><span class="line">threadA.join();</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>setPriority()</code>：设置线程优先级</p>
+<blockquote>
+<p>1.优先级的范围从 1~10，其中1表示最低优先级，10表示最高优先级。默认优先级是 5，优先级高的线程分配时间片的数量要多于优先级低的线程。设置线程优先级时，针对频繁阻塞（休眠或者 I/O 操作）的线程需要设置较高优先级，而偏重计算（需要较多 CPU 时间或者偏运算）的线程则设置较低的优先级，确保处理器不会被独占。需要注意的是，线程优先级只是给操作系统提供一个建议，操作系统不保证严格按照优先级来调度线程。在不同的 JVM 以及操作系统上，线程规划会存在差异，有些操作系统甚至会忽略对线程优先级的设定。慎重使用。<br>
+2.Java 线程调度是抢占式调度的，而且 Java 中的线程优先级是通过映射到操作系统的原生线程上实现的，所以线程的调度最终取决于操作系统，操作系统中线程的优先级有时并不能和 Java 中的一一对应，所以Java 优先级并不是特别靠谱。</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>中断线程：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建并启动线程：</span></span><br><span class="line"><span class="type">ThreadA</span> <span class="variable">threadA</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadA</span>();</span><br><span class="line">threadA.start();</span><br><span class="line"><span class="comment">//中断线程：</span></span><br><span class="line">threadA.interrupt();</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程方法中判断是否被中断：</span></span><br><span class="line">Thread.currentThread().isInterrupted(); <span class="comment">//中断返回true</span></span><br><span class="line"><span class="comment">//注意：处于死锁状态的线程无法被中断</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>死锁（Deadlock）</p>
+<blockquote>
+<p>死锁（Deadlock）是指两个或多个线程被永久地阻塞，彼此互相等待对方释放资源，导致程序无法继续执行的状态。死锁通常发生在多个线程同时持有多个共享资源，并试图获取对方持有的资源时。</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p><code>synchronized</code>：可以作用在方法或代码块上</p>
+<ul class="lvl-2">
+<li class="lvl-6">方法: 当前对象锁，等价于 <code>synchronized (this)</code></li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">incCountMethod</span><span class="params">()</span>&#123;</span><br><span class="line">    count++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">方法: 当前类锁，等价于 <code>synchronized (Object.class)</code></li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">incCountMethod</span><span class="params">()</span>&#123;</span><br><span class="line">    count++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">代码块：</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//任意对象锁</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">incCountObj</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (obj)&#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//当前对象锁</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">incCountBlock</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>)&#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//类锁</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">incCountBlock</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (Object.class)&#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p><code>wait</code>与<code>notify</code>/<code>notifyAll</code>：等待唤醒机制</p>
+<ul class="lvl-2">
+<li class="lvl-6">一个线程：<code>synchronized (pool)；</code> <code>while(某种条件)</code> 线程等待：<code>pool.wait();</code> 另一个线程：<code>synchronized (pool);</code>  通知其他等待的线程：<code>pool.notifyAll();</code></li>
+<li class="lvl-6"><code>synchronized</code>作用在方法上时，就是当前对象，直接在方法内使用<code>wait();</code></li>
+<li class="lvl-6"><code>wait()</code> 和 <code>wait(long timeout)</code> 都是用于线程间进行协作和同步的方法，用于在对象上进行等待。<code>wait()</code> 方法是没有超时参数的形式，它使当前线程进入等待状态，直到其他线程调用相同对象上的 <code>notify()</code> 或 <code>notifyAll()</code> 方法来唤醒等待的线程，或者当前线程被中断（<code>InterruptedException</code>）。<code>wait(long timeout)</code> 方法是带有超时参数的形式，它使当前线程进入等待状态，但最多等待指定的时间（以毫秒为单位）。如果超过指定时间还未被唤醒，线程将自动唤醒并继续执行。这个方法可以防止线程永久地等待下去，即使没有其他线程调用相同对象上的 <code>notify()</code> 或 <code>notifyAll()</code> 方法。因此，<code>wait()</code> 方法是一直等待直到被唤醒或中断，而 <code>wait(long timeout)</code> 方法是等待一段时间后自动唤醒，或者在被唤醒之前超过了指定的等待时间。需要注意的是，这两个方法必须在同步代码块（<code>synchronized</code>）内部调用，并且在调用这些方法前，线程必须拥有对象的监视器（即获取了对象的锁）。否则，将会抛出 <code>IllegalMonitorStateException</code> 异常。</li>
+<li class="lvl-6">尽可能用 <code>notifyall()</code>，谨慎使用 <code>notify()</code>，因为 <code>notify()</code>只会唤醒一个线程，我们无法确保被唤醒的这个线程一定就是我们需要唤醒的线程</li>
+<li class="lvl-6"><code>yield()</code> 、<code>sleep()</code>被调用后，都不会释放当前线程所持有的锁。调用 <code>wait()</code>方法后，会释放当前线程持有的锁，而且当前被唤醒后，会重新去竞争锁，锁竞争到后才会执行 <code>wait()</code> 方法后面的代码。调用 <code>notify()</code>系列方法后，对锁无影响，线程只有在 <code>synchronized</code> 同步代码执行完后才会自然而然的释放锁，所以 <code>notify()</code>系列方法一般都是 <code>synchronized</code> 同步代码的最后一行。</li>
+<li class="lvl-6">为什么你应该在循环中检查等待条件?
+<blockquote>
+<p>处于等待状态的线程可能会收到错误警报和伪唤醒(被唤醒时不一定满足等待条件)，如果不在循环中检查等待条件，程序就会在没有满足结束条件的情况下退出。因此，当一个等待线程醒来时，不能认为它原来的等待状态仍然是有效的，在 <code>notify()</code>方法调用之后和等待线程醒来之前这段时间它可能会改变。这就是在循环中使用 <code>wait()</code>方法效果更好的原因。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><code>Callable&lt;T&gt;</code>、<code>Future&lt;T&gt;</code>与<code>FutureTask&lt;T&gt;</code>:</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>Callable</code> 位于 <code>java.util.concurrent</code> 包下，它也是一个接口，在它里面也只声明了一个方法，只不过这个方法叫做 <code>call()</code>，这是一个泛型接口，<code>call()</code>函数返回的类型就是传递进来的 <code>T</code> 类型。</li>
+<li class="lvl-6"><code>FutureTask</code> 类实现了 <code>RunnableFuture</code> 接口，<code>RunnableFuture</code> 继承了 <code>Runnable</code>接口和 <code>Future</code> 接口，而 <code>FutureTask</code> 实现了 <code>RunnableFuture</code> 接口。所以它既可以作为 <code>Runnable</code> 被线程执行，又可以作为 <code>Future</code> 得到 <code>Callable</code> 的返回值。</li>
+<li class="lvl-6">自定义<code>Callable&lt;T&gt;</code>的实现类，其有返回值，比如：<code>public class UseCallable implements Callable&lt;Integer&gt;</code></li>
+<li class="lvl-6">创建<code>FutureTask</code>：<code>FutureTask&lt;Integer&gt; futureTask = new FutureTask&lt;&gt;(new UseCallable());</code></li>
+<li class="lvl-6">启动线程：<code>new Thread(futureTask).start();</code></li>
+<li class="lvl-6">获取返回值：<code>futureTask.get();</code></li>
+<li class="lvl-6">中断线程：<code>futureTask.cancel(true);</code></li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><code>CompletableFuture&lt;T&gt;</code>：返回值的子线程，这里只罗列一些常用的方法</p>
+<ul class="lvl-2">
+<li class="lvl-6">创建：</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    <span class="comment">//子线程代码逻辑</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;str&quot;</span>; <span class="comment">//返回值</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">工厂方法：</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier,Executor executor)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable,Executor executor)</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Asynsc 表示异步,而 supplyAsync 与 runAsync 不同在于，supplyAsync 异步返回一个结果,runAsync 是 void。第二个函数第二个参数表示是用我们自己创建的线程池,否则采用默认的ForkJoinPool.commonPool()作为它的线程池</p>
+</blockquote>
+<ul class="lvl-2">
+<li class="lvl-6">获取返回值: <code>get</code>与<code>join</code>的区别
+<blockquote>
+<p>future.get(); 需要处理异常：InterruptedException，ExecutionException<br>
+future.join();  不需要处理异常</p>
+</blockquote>
+</li>
+<li class="lvl-6"><code>allOf</code>、<code>anyOf</code></li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture.allOf(future1,future2,future3).thenRun(()-&gt;&#123;</span><br><span class="line">    <span class="comment">//所有线程全部返回</span></span><br><span class="line">    System.out.println(<span class="string">&quot;All done!&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//接收返回最快的那个值</span></span><br><span class="line">CompletableFuture&lt;Object&gt; f = CompletableFuture.anyOf(future1,future2,future3);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">处理返回结果：</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//thenAccept :消费，没有返回值</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).thenAccept(s -&gt; System.out.println(s+<span class="string">&quot; world&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//thenApply ：变更返回结果(值或类型)</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).thenApply(s -&gt; s + <span class="string">&quot; world&quot;</span>).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//exceptionally ：捕获异常并返回结果</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).exceptionally(e -&gt; &#123;</span><br><span class="line">    System.out.println(e.getMessage());</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">&#125;).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//thenCompose ：第一个future的结果作为第二个future的参数</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="number">10</span>).thenCompose(i -&gt; CompletableFuture.supplyAsync(() -&gt; i+<span class="number">1</span>)).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//whenComplete：不修改返回值</span></span><br><span class="line"><span class="comment">//whenComplete()方法接收一个BiConsumer参数，当异步任务完成时，无论是否发生异常，都会执行该BiConsumer。如果任务发生异常，异常信息会被传递给BiConsumer，但whenComplete()方法无法修改异常或处理异常。</span></span><br><span class="line">    CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).whenComplete((s, t) -&gt; &#123;</span><br><span class="line">        System.out.println(s); <span class="comment">//s是返回值</span></span><br><span class="line">        System.out.println(t.getMessage()); <span class="comment">//t是异常对象</span></span><br><span class="line">    &#125;).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//handle ：会修改返回值</span></span><br><span class="line"><span class="comment">//handle()方法接收一个BiFunction参数，当异步任务完成时，可以对任务的结果进行处理。如果任务发生异常，异常信息会被传递给BiFunction，并允许你根据异常进行处理并返回一个结果。如果没有异常发生，BiFunction将使用任务的结果进行处理。</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).handle((s, t) -&gt; &#123;</span><br><span class="line">    System.out.println(s); <span class="comment">//s是返回值</span></span><br><span class="line">    System.out.println(t.getMessage()); <span class="comment">//t是异常对象return s;</span></span><br><span class="line">&#125;).join();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="volatile：最轻量的通信-同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见">volatile：最轻量的通信/同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="type">boolean</span> ready;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>volatile</code> 不能保证数据在多个线程下同时写时的线程安全</p>
+</li>
+<li class="lvl-2">
+<p><code>volatile</code> 最适用的场景：一个线程写，多个线程读。</p>
+</li>
+</ul>
+<h3 id="ThreadLocal-T-：保证线程变量独享">ThreadLocal<T> ：保证线程变量独享</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocal&lt;String&gt; threadLocal = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;&gt;();</span><br><span class="line">threadLocal.set(<span class="string">&quot;线程变量&quot;</span>);</span><br><span class="line"><span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> threadLocal.get();</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>为了避免内存泄露，ThreadLocal变量用完后要进行销毁：<code>threadLocal.remove();</code></p>
+</li>
+</ul>
+<h3 id="CAS">CAS</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>CAS 是 <code>Compare and Swap</code>（比较并交换）的缩写，是一种常见的并发编程技术，也是原子类实现线程安全的基础操作。CAS 操作包括三个参数：一个内存位置（通常是一个变量的内存地址）、期望的值和新值。CAS 操作会先比较内存位置的当前值与期望的值是否相等，如果相等，则将内存位置的值替换为新值，否则不进行任何操作。ßCAS 操作是原子的，即在进行比较和交换的过程中不会被其他线程干扰。</p>
+</li>
+</ul>
+<h3 id="原子类">原子类:</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Integer：AtomicInteger，AtomicIntegerArray</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">AtomicInteger</span> <span class="variable">ai</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">10</span>);</span><br><span class="line">ai.get(); <span class="comment">//获取当前值</span></span><br><span class="line">ai.set(<span class="number">10</span>); <span class="comment">//设置新值</span></span><br><span class="line">ai.getAndIncrement();  <span class="comment">//获取原值并自增，getAndDecrement()自减</span></span><br><span class="line">ai.incrementAndGet(); <span class="comment">//获取自增后的值，decrementAndGet()自减</span></span><br><span class="line">ai.compareAndSet(原值,新值); <span class="comment">//比较并设置新值，成功返回true</span></span><br><span class="line">ai.getAndAdd(<span class="number">24</span>); <span class="comment">//增加指定的值后返回原值</span></span><br><span class="line">ai.addAndGet(<span class="number">24</span>); <span class="comment">//增加指定的值后返回新值</span></span><br><span class="line"><span class="comment">//基于数组初始化</span></span><br><span class="line"><span class="type">AtomicIntegerArray</span> <span class="variable">ai</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicIntegerArray</span>(<span class="keyword">new</span> <span class="title class_">int</span>[] &#123; <span class="number">1</span>, <span class="number">2</span> &#125;);</span><br><span class="line"><span class="comment">//基于数组长度初始化</span></span><br><span class="line"><span class="type">AtomicIntegerArray</span> <span class="variable">ai</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicIntegerArray</span>(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Long：<code>AtomicLong</code>，<code>AtomicLongArray</code></p>
+</li>
+<li class="lvl-2">
+<p>Long：<code>LongAdder</code>，加、减、求和等操作性能高于<code>AtomicLong</code></p>
+</li>
+<li class="lvl-2">
+<p>Double：<code>DoubleAdder</code></p>
+</li>
+<li class="lvl-2">
+<p>对象：<code>AtomicReference</code>，<code>AtomicReferenceArray</code></p>
+</li>
+<li class="lvl-2">
+<p>对象：<code>AtomicStampedReference</code>：引入版本号，用于解决ABA问题</p>
+</li>
+</ul>
+<h3 id="ABA">ABA</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>ABA 问题指的是在并发环境下，某个线程对一个值进行比较并操作时，可能出现以下情况：</p>
+</li>
+</ul>
+<ol>
+<li class="lvl-3">
+<p>初始状态下，值为 A。</p>
+</li>
+<li class="lvl-3">
+<p>线程 1 将值从 A 修改为 B。</p>
+</li>
+<li class="lvl-3">
+<p>线程 1 又将值从 B 修改回 A。</p>
+</li>
+<li class="lvl-3">
+<p>线程 2 检查值，发现值仍然是 A，于是做出操作。<br>
+从线程 2 的角度来看，值似乎没有被修改过，但实际上经历了从 A 到 B 再到 A 的变化。这种情况可能会导致意外的结果或错误的判断。<br>
+ABA 问题的发生是因为 CAS 操作只关注当前值和期望值是否相等，而不考虑期间发生的其他变化。<br>
+在上述示例中，CAS 操作在进行比较时，发现当前值仍然是 A，与期望值相等，因此会执行操作，但它无法感知到值的中间变化。<br>
+ABA 问题可能会对某些并发算法和数据结构产生影响，例如自旋锁、无锁算法等。<br>
+为了解决 ABA 问题，可以使用一种称为 “版本号” 的技术，每次修改值时都会增加一个版本号，这样在进行 CAS 操作时除了比较值本身，还会比较版本号，从而避免了 ABA 问题的发生。<br>
+在Java中，<code>AtomicStampedReference</code>就是通过引入版本号（标记）来解决ABA问题的一种原子类。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>java</category>
+        <category>java多线程</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux常用命令--用户管理</title>
     <url>/2023/04/20/linux-command11-user/</url>
     <content><![CDATA[<!--
