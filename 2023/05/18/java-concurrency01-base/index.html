@@ -20,30 +20,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍java多线程相关技术   本文基于jdk1.8">
+    <meta name="description" content="摘要   本文介绍java并发编程相关技术   本文基于jdk1.8   并发编程是为了解决什么问题的？ 性能+线程安全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java多线程">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01/index.html">
+<meta property="og:title" content="Java并发编程--基本概念">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍java多线程相关技术   本文基于jdk1.8">
+<meta property="og:description" content="摘要   本文介绍java并发编程相关技术   本文基于jdk1.8   并发编程是为了解决什么问题的？ 性能+线程安全">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/3bVMls.png">
 <meta property="article:published_time" content="2023-05-18T14:30:05.000Z">
-<meta property="article:modified_time" content="2023-05-18T12:00:45.765Z">
+<meta property="article:modified_time" content="2023-05-19T07:55:47.559Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/3bVMls.png">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/05/18/java-concurrency01/","path":"2023/05/18/java-concurrency01/","title":"Java多线程"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/","path":"2023/05/18/java-concurrency01-base/","title":"Java并发编程--基本概念"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Java多线程 | 飘逸峰的博客</title>
+<title>Java并发编程--基本概念 | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -518,7 +518,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">java多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%B8%8E%E5%B9%B6%E8%A1%8C"><span class="nav-number">2.1.</span> <span class="nav-text">并发与并行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.2.</span> <span class="nav-text">线程的状态&#x2F;生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread%E4%B8%8ERunnable"><span class="nav-number">2.3.</span> <span class="nav-text">Thread与Runnable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%EF%BC%88Deadlock%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">死锁（Deadlock）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized%EF%BC%9A%E5%8F%AF%E4%BB%A5%E4%BD%9C%E7%94%A8%E5%9C%A8%E6%96%B9%E6%B3%95%E6%88%96%E4%BB%A3%E7%A0%81%E5%9D%97%E4%B8%8A"><span class="nav-number">2.5.</span> <span class="nav-text">synchronized：可以作用在方法或代码块上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wait%E4%B8%8Enotify-notifyAll%EF%BC%9A%E7%AD%89%E5%BE%85%E5%94%A4%E9%86%92%E6%9C%BA%E5%88%B6"><span class="nav-number">2.6.</span> <span class="nav-text">wait与notify&#x2F;notifyAll：等待唤醒机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Callable-T-%E3%80%81Future-T-%E4%B8%8EFutureTask-T"><span class="nav-number">2.7.</span> <span class="nav-text">Callable&lt;T&gt;、Future&lt;T&gt;与FutureTask&lt;T&gt;:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CompletableFuture-T-%EF%BC%9A%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%AD%90%E7%BA%BF%E7%A8%8B%EF%BC%8C%E8%BF%99%E9%87%8C%E5%8F%AA%E7%BD%97%E5%88%97%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.8.</span> <span class="nav-text">CompletableFuture&lt;T&gt;：返回值的子线程，这里只罗列一些常用的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile%EF%BC%9A%E6%9C%80%E8%BD%BB%E9%87%8F%E7%9A%84%E9%80%9A%E4%BF%A1-%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6%EF%BC%8C%E4%BF%9D%E8%AF%81%E5%8F%98%E9%87%8F%E5%9C%A8%E5%A4%9A%E4%B8%AA%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E5%8F%AF%E8%A7%81%E6%80%A7%EF%BC%8C%E5%8D%B3%E5%80%BC%E8%A2%AB%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E4%BF%AE%E6%94%B9%EF%BC%8C%E5%85%B6%E5%AE%83%E7%BA%BF%E7%A8%8B%E7%AB%8B%E5%88%BB%E5%8F%AF%E8%A7%81"><span class="nav-number">2.9.</span> <span class="nav-text">volatile：最轻量的通信&#x2F;同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadLocal-T-%EF%BC%9A%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%8B%AC%E4%BA%AB"><span class="nav-number">2.10.</span> <span class="nav-text">ThreadLocal ：保证线程变量独享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CAS"><span class="nav-number">2.11.</span> <span class="nav-text">CAS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E7%B1%BB"><span class="nav-number">2.12.</span> <span class="nav-text">原子类:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ABA"><span class="nav-number">2.13.</span> <span class="nav-text">ABA</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Java并发编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%B8%8E%E5%B9%B6%E8%A1%8C"><span class="nav-number">2.1.</span> <span class="nav-text">并发与并行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.2.</span> <span class="nav-text">线程的状态&#x2F;生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread%E4%B8%8ERunnable"><span class="nav-number">2.3.</span> <span class="nav-text">Thread与Runnable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%EF%BC%88Deadlock%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">死锁（Deadlock）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized%EF%BC%9A%E5%8F%AF%E4%BB%A5%E4%BD%9C%E7%94%A8%E5%9C%A8%E6%96%B9%E6%B3%95%E6%88%96%E4%BB%A3%E7%A0%81%E5%9D%97%E4%B8%8A"><span class="nav-number">2.5.</span> <span class="nav-text">synchronized：可以作用在方法或代码块上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wait%E4%B8%8Enotify-notifyAll%EF%BC%9A%E7%AD%89%E5%BE%85%E5%94%A4%E9%86%92%E6%9C%BA%E5%88%B6"><span class="nav-number">2.6.</span> <span class="nav-text">wait与notify&#x2F;notifyAll：等待唤醒机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Callable-T-%E3%80%81Future-T-%E4%B8%8EFutureTask-T"><span class="nav-number">2.7.</span> <span class="nav-text">Callable&lt;T&gt;、Future&lt;T&gt;与FutureTask&lt;T&gt;:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CompletableFuture-T-%EF%BC%9A%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%AD%90%E7%BA%BF%E7%A8%8B%EF%BC%8C%E8%BF%99%E9%87%8C%E5%8F%AA%E7%BD%97%E5%88%97%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.8.</span> <span class="nav-text">CompletableFuture&lt;T&gt;：返回值的子线程，这里只罗列一些常用的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile%EF%BC%9A%E6%9C%80%E8%BD%BB%E9%87%8F%E7%9A%84%E9%80%9A%E4%BF%A1-%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6%EF%BC%8C%E4%BF%9D%E8%AF%81%E5%8F%98%E9%87%8F%E5%9C%A8%E5%A4%9A%E4%B8%AA%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E5%8F%AF%E8%A7%81%E6%80%A7%EF%BC%8C%E5%8D%B3%E5%80%BC%E8%A2%AB%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E4%BF%AE%E6%94%B9%EF%BC%8C%E5%85%B6%E5%AE%83%E7%BA%BF%E7%A8%8B%E7%AB%8B%E5%88%BB%E5%8F%AF%E8%A7%81"><span class="nav-number">2.9.</span> <span class="nav-text">volatile：最轻量的通信&#x2F;同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadLocal-T-%EF%BC%9A%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%8B%AC%E4%BA%AB"><span class="nav-number">2.10.</span> <span class="nav-text">ThreadLocal ：保证线程变量独享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CAS"><span class="nav-number">2.11.</span> <span class="nav-text">CAS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%B1%BB"><span class="nav-number">2.12.</span> <span class="nav-text">原子操作类:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ABA"><span class="nav-number">2.13.</span> <span class="nav-text">ABA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="nav-number">2.14.</span> <span class="nav-text">重排序</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -533,7 +533,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">78</span>
+          <span class="site-state-item-count">84</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -699,7 +699,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -712,12 +712,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Java多线程 | 飘逸峰的博客">
+      <meta itemprop="name" content="Java并发编程--基本概念 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Java多线程
+          Java并发编程--基本概念
         </h1>
 
         <div class="post-meta-container">
@@ -727,9 +727,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-05-18 22:30:05 / 修改时间：20:00:45" itemprop="dateCreated datePublished" datetime="2023-05-18T22:30:05+08:00">2023-05-18</time>
+      <time title="创建时间：2023-05-18 22:30:05" itemprop="dateCreated datePublished" datetime="2023-05-18T22:30:05+08:00">2023-05-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-05-19 15:55:47" itemprop="dateModified" datetime="2023-05-19T15:55:47+08:00">2023-05-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -769,7 +775,7 @@
 </div>
 
 
-    <span id="/2023/05/18/java-concurrency01/" class="leancloud_visitors" data-flag-title="Java多线程" title="阅读次数">
+    <span id="/2023/05/18/java-concurrency01-base/" class="leancloud_visitors" data-flag-title="Java并发编程--基本概念" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -781,14 +787,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>11k</span>
+      <span>14k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>10 分钟</span>
+      <span>13 分钟</span>
     </span>
 
         </div>
@@ -827,14 +833,18 @@
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>本文介绍java多线程相关技术</p>
+<p>本文介绍java并发编程相关技术</p>
 </li>
 <li class="lvl-2">
 <p>本文基于<code>jdk1.8</code></p>
 </li>
+<li class="lvl-2">
+<p>并发编程是为了解决什么问题的？<br>
+<em><strong>性能+线程安全</strong></em></p>
+</li>
 </ul>
 <span id="more"></span>
-<h2 id="java多线程">java多线程</h2>
+<h2 id="Java并发编程">Java并发编程</h2>
 <h3 id="并发与并行">并发与并行</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -934,7 +944,55 @@
 <h3 id="死锁（Deadlock）">死锁（Deadlock）</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>死锁（Deadlock）是指两个或多个线程被永久地阻塞，彼此互相等待对方释放资源，导致程序无法继续执行的状态。死锁通常发生在多个线程同时持有多个共享资源，并试图获取对方持有的资源时。</p>
+<p>死锁（Deadlock）是指两个或多个线程在执行过程中，由于竞争资源或者由于彼此通信而造成的一种阻塞的现象，彼此互相等待对方释放资源，导致程序无法继续执行的状态。</p>
+</li>
+<li class="lvl-2">
+<p>死锁通常发生在多个线程同时持有多个共享资源，并试图获取对方持有的资源时。</p>
+</li>
+<li class="lvl-2">
+<p>死锁的发生必须具备以下四个必要条件:</p>
+<ul class="lvl-2">
+<li class="lvl-6">1）互斥条件：指进程对所分配到的资源进行排它性使用，即在一段时间内某资源只由一个进程占用。如果此时还有其它进程请求资源，则请求者只能等待，直至占有资源的进程用毕释放。</li>
+<li class="lvl-6">2）请求和保持条件：指进程已经保持至少一个资源，但又提出了新的资源请求，而该资源已被其它进程占有，此时请求进程阻塞，但又对自己已获得的其它资源保持不放。</li>
+<li class="lvl-6">3）不剥夺条件：指进程已获得的资源，在未使用完之前，不能被剥夺，只能在使用完时由自己释放。</li>
+<li class="lvl-6">4）环路等待条件：指在发生死锁时，必然存在一个进程–资源的环形链，即进程集合{P0，P1，P2，···，Pn}中的 P0 正在等待一个 P1 占用的资源；P1正在等待 P2 占用的资源，……，Pn 正在等待已被 P0 占用的资源。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>只要打破四个必要条件之一就能有效预防死锁的发生</p>
+<ul class="lvl-2">
+<li class="lvl-6">打破互斥条件：改造独占性资源为虚拟资源，大部分资源已无法改造。</li>
+<li class="lvl-6">打破不可抢占条件：当一进程占有一独占性资源后又申请一独占性资源而无法满足，则退出原占有的资源。</li>
+<li class="lvl-6">打破占有且申请条件：采用资源预先分配策略，即进程运行前申请全部资源，满足则运行，不然就等待，这样就不会占有且申请。</li>
+<li class="lvl-6">打破循环等待条件：实现资源有序分配策略，对所有设备实现分类编号，所有进程只能采用按序号递增的形式申请资源。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>死锁的危害</p>
+<ul class="lvl-2">
+<li class="lvl-6">1、线程不工作了，但是整个程序还是活着的</li>
+<li class="lvl-6">2、没有任何的异常信息可以供我们检查。</li>
+<li class="lvl-6">3、一旦程序发生了发生了死锁，是没有任何的办法恢复的，只能重启程序，对生产平台的程序来说，这是个很严重的问题。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>如何查看运行的程序是否有死锁线程</p>
+<ul class="lvl-2">
+<li class="lvl-6">通过 jps 查询应用的 id，再通过 jstack id 查看应用的锁的持有情况，进程状态为 BLOCKED 表示死锁</li>
+<li class="lvl-6">jdk1.8以后，jstack 专门给出了死锁的检查，一般在显示信息的最下方展示是否发现死锁信息</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>如何避免死锁</p>
+<ul class="lvl-2">
+<li class="lvl-6">1、内部通过顺序比较，确定拿锁的顺序；</li>
+<li class="lvl-6">2、采用尝试拿锁的机制。
+<blockquote>
+<p>尝试拿锁会存在<code>活锁</code>的问题，即多个线程在尝试拿锁的机制中，发生多个线程之间互相谦让，不断发生同一个线程总是拿到同一把锁，在尝试拿另一把锁时因为拿不到，而将本来已经持有的锁释放的过程。<br>
+解决办法：每个线程休眠随机数，错开拿锁的时间。</p>
+</blockquote>
+</li>
+</ul>
 </li>
 </ul>
 <h3 id="synchronized：可以作用在方法或代码块上"><code>synchronized</code>：可以作用在方法或代码块上</h3>
@@ -1067,8 +1125,29 @@ future.join();  不需要处理异常</p>
 <li class="lvl-2">
 <p>CAS 是 <code>Compare and Swap</code>（比较并交换）的缩写，是一种常见的并发编程技术，也是原子类实现线程安全的基础操作。CAS 操作包括三个参数：一个内存位置（通常是一个变量的内存地址）、期望的值和新值。CAS 操作会先比较内存位置的当前值与期望的值是否相等，如果相等，则将内存位置的值替换为新值，否则不进行任何操作。ßCAS 操作是原子的，即在进行比较和交换的过程中不会被其他线程干扰。</p>
 </li>
+<li class="lvl-2">
+<p>CAS 实现原子操作的三大问题</p>
+<ul class="lvl-2">
+<li class="lvl-6">ABA 问题
+<blockquote>
+<p>下文有对ABA问题的介绍</p>
+</blockquote>
+</li>
+<li class="lvl-6">循环时间长开销大
+<blockquote>
+<p>自旋 CAS 如果长时间不成功，会给 CPU 带来非常大的执行开销。</p>
+</blockquote>
+</li>
+<li class="lvl-6">只能保证一个共享变量的原子操作
+<blockquote>
+<p>当对一个共享变量执行操作时，我们可以使用循环 CAS 的方式来保证原子操作，但是对多个共享变量操作时，循环 CAS 就无法保证操作的原子性，这个时候就可以用锁。<br>
+从 Java 1.5开始，JDK 提供了 <code>AtomicReference</code> 类来保证引用对象之间的原子性，就可以把多个变量放在一个对象里来进行 CAS 操作。</p>
+</blockquote>
+</li>
 </ul>
-<h3 id="原子类">原子类:</h3>
+</li>
+</ul>
+<h3 id="原子操作类">原子操作类:</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>Integer：AtomicInteger，AtomicIntegerArray</p>
@@ -1147,6 +1226,54 @@ ABA 问题可能会对某些并发算法和数据结构产生影响，例如自�
 在Java中，<code>AtomicStampedReference</code>就是通过引入版本号（标记）来解决ABA问题的一种原子类。</p>
 </li>
 </ol>
+<h3 id="重排序">重排序</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在Java中，重排序是指编译器和处理器为了提高程序性能而对指令执行顺序进行重新排序的优化技术。重排序可以改变程序中指令的执行顺序，但不会改变程序的最终结果（即保持串行语义），因为这些重排序是在保持依赖关系的前提下进行的。</p>
+</li>
+<li class="lvl-2">
+<p>然而，重排序可能会导致并发安全问题。并发安全问题主要涉及到多线程的执行顺序和对共享数据的访问。</p>
+</li>
+<li class="lvl-2">
+<p>考虑以下示例代码：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>上述代码是一个经典的基于双重检查锁定的懒汉式单例模式。在单线程环境下，这段代码是没有问题的。但是在多线程环境下，由于重排序的存在会导致线程安全问题，为什么呢？</p>
+</li>
+<li class="lvl-2">
+<p>这是因为<code>instance = new Singleton();</code>虽然只有一行代码，但是其实在具体执行的时候有好几步操作：</p>
+<ul class="lvl-2">
+<li class="lvl-6">1、JVM 为 <code>Singleton</code> 的对象实例在内存中分配空间</li>
+<li class="lvl-6">2、进行对象初始化，完成 <code>new</code> 操作</li>
+<li class="lvl-6">3、JVM 把这个空间的地址赋给我们的引用 <code>instance</code></li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>因为 JVM 内部的实现原理会导致重排序，就会产生一种情况，第 3 步会在第 2 步之前执行。</p>
+</li>
+<li class="lvl-2">
+<p>于是在多线程下就会产生问题：</p>
+<ul class="lvl-2">
+<li class="lvl-6">A 线程正在 syn 同步块中执行 <code>instance = new Singleton();</code>，</li>
+<li class="lvl-6">此时 B 线程也来执行 <code>getInstance()</code>，进行了 <code>instance == null</code> 的检查，</li>
+<li class="lvl-6">因为第 3 步会在第 2 步之前执行，B 线程检查发现 <code>instance</code> 不为 <code>null</code>，会直接拿着 <code>instance</code> 实例使用，</li>
+<li class="lvl-6">但是这时 A 线程还在执行对象初始化，这就导致 B 线程拿到的 <code>instance</code> 实例可能只初始化了一半，B 线程访问 <code>instance</code> 实例中的对象域就很有可能出错。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>这些问题是由于编译器和处理器进行的重排序导致的，并发安全问题不会在单线程环境下出现，只有在多线程环境下才会显现。</p>
+</li>
+<li class="lvl-2">
+<p>另外，即使在同步块内部没有发生重排序，当一个线程在初始化实例时，由于处理器和内存之间的交互延迟，也可能存在可见性问题。</p>
+</li>
+<li class="lvl-2">
+<p>为了解决这些问题，可以使用<code>volatile</code>关键字来修饰<code>instance</code>，<code>volatile</code>会禁止编译器和处理器进行重排序，同时使用<code>volatile</code>修饰的变量时，会先清除当前线程的本地缓存再从主内存中重新加载数据，以确保可见性：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -1190,7 +1317,7 @@ ABA 问题可能会对某些并发算法和数据结构产生影响，例如自�
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01/" title="Java多线程">https://blog.hanqunfeng.com/2023/05/18/java-concurrency01/</a>
+      <a href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/" title="Java并发编程--基本概念">https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1243,6 +1370,9 @@ ABA 问题可能会对某些并发算法和数据结构产生影响，例如自�
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/2023/05/19/java-concurrency02-ReentrantLock/" rel="prev" title="Java并发编程--JUC并发工具类之ReentrantLock">
+                  <i class="fa fa-chevron-left"></i> Java并发编程--JUC并发工具类之ReentrantLock
+                </a>
             </div>
             <div class="post-nav-item">
                 <a href="/2023/04/20/linux-command11-user/" rel="next" title="Linux常用命令--用户管理">
@@ -1283,14 +1413,14 @@ ABA 问题可能会对某些并发算法和数据结构产生影响，例如自�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">975k</span>
+    <span title="站点总字数">996k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">14:46</span>
+    <span title="站点阅读时长">15:05</span>
   </span>
 </div>
 <div class="busuanzi-count">
