@@ -20,30 +20,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍Semaphore相关技术   本文基于jdk1.8">
+    <meta name="description" content="摘要   本文介绍线程池ForkJoinPool相关技术   本文基于jdk1.8">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发编程--JUC并发工具类之Semaphore">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2023/05/22/java-concurrency05-Semaphore/index.html">
+<meta property="og:title" content="Java并发编程--线程池之ForkJoinPool">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2023/05/29/java-concurrency12-ForkJoinPool/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍Semaphore相关技术   本文基于jdk1.8">
+<meta property="og:description" content="摘要   本文介绍线程池ForkJoinPool相关技术   本文基于jdk1.8">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/kcdir2.jpg">
-<meta property="article:published_time" content="2023-05-22T14:32:05.000Z">
-<meta property="article:modified_time" content="2023-05-22T09:29:21.262Z">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/1bBSl8.jpg">
+<meta property="article:published_time" content="2023-05-29T14:34:05.000Z">
+<meta property="article:modified_time" content="2023-05-29T11:22:18.800Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/kcdir2.jpg">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/1bBSl8.jpg">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2023/05/22/java-concurrency05-Semaphore/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2023/05/29/java-concurrency12-ForkJoinPool/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/05/22/java-concurrency05-Semaphore/","path":"2023/05/22/java-concurrency05-Semaphore/","title":"Java并发编程--JUC并发工具类之Semaphore"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/05/29/java-concurrency12-ForkJoinPool/","path":"2023/05/29/java-concurrency12-ForkJoinPool/","title":"Java并发编程--线程池之ForkJoinPool"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Java并发编程--JUC并发工具类之Semaphore | 飘逸峰的博客</title>
+<title>Java并发编程--线程池之ForkJoinPool | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -518,7 +518,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Semaphore%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">Semaphore介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Semaphore%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">Semaphore常用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Semaphore%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.</span> <span class="nav-text">Semaphore代码示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Semaphore%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">5.</span> <span class="nav-text">Semaphore应用场景</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join%E6%A1%86%E6%9E%B6%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">Fork&#x2F;Join框架介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.1.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ForkJoinPool%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.</span> <span class="nav-text">ForkJoinPool介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ForkJoinPool%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">ForkJoinPool的创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ForkJoinTask%E4%BB%8B%E7%BB%8D"><span class="nav-number">5.</span> <span class="nav-text">ForkJoinTask介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ForkJoinPool-%E4%B8%8E-ForkJoinTask-%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">6.</span> <span class="nav-text">ForkJoinPool 与 ForkJoinTask 使用示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ForkJoinPool%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">7.</span> <span class="nav-text">ForkJoinPool工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E7%AA%83%E5%8F%96"><span class="nav-number">8.</span> <span class="nav-text">工作窃取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -699,7 +699,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/05/22/java-concurrency05-Semaphore/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/05/29/java-concurrency12-ForkJoinPool/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -712,12 +712,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Java并发编程--JUC并发工具类之Semaphore | 飘逸峰的博客">
+      <meta itemprop="name" content="Java并发编程--线程池之ForkJoinPool | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Java并发编程--JUC并发工具类之Semaphore
+          Java并发编程--线程池之ForkJoinPool
         </h1>
 
         <div class="post-meta-container">
@@ -729,7 +729,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-05-22 22:32:05 / 修改时间：17:29:21" itemprop="dateCreated datePublished" datetime="2023-05-22T22:32:05+08:00">2023-05-22</time>
+      <time title="创建时间：2023-05-29 22:34:05 / 修改时间：19:22:18" itemprop="dateCreated datePublished" datetime="2023-05-29T22:34:05+08:00">2023-05-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -769,7 +769,7 @@
 </div>
 
 
-    <span id="/2023/05/22/java-concurrency05-Semaphore/" class="leancloud_visitors" data-flag-title="Java并发编程--JUC并发工具类之Semaphore" title="阅读次数">
+    <span id="/2023/05/29/java-concurrency12-ForkJoinPool/" class="leancloud_visitors" data-flag-title="Java并发编程--线程池之ForkJoinPool" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -781,14 +781,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.9k</span>
+      <span>8.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>7 分钟</span>
     </span>
 
         </div>
@@ -827,81 +827,231 @@
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>本文介绍Semaphore相关技术</p>
+<p>本文介绍线程池ForkJoinPool相关技术</p>
 </li>
 <li class="lvl-2">
 <p>本文基于<code>jdk1.8</code></p>
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="Semaphore介绍">Semaphore介绍</h2>
+<h2 id="Fork-Join框架介绍">Fork/Join框架介绍</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>Semaphore</code>（信号量）是一种用于多线程编程的同步工具，用于控制同时访问某个资源的线程数量。</p>
+<p><code>Fork/Join</code>是一个是一个并行计算的框架，主要就是用来支持分治任务模型的，这个计算框架里的 <code>Fork</code>对应的是分治任务模型里的任务分解，<code>Join</code> 对应的是结果合并。</p>
 </li>
 <li class="lvl-2">
-<p><code>Semaphore</code>维护了一个计数器，线程可以通过调用<code>acquire()</code>方法来获取<code>Semaphore</code>中的许可证，当计数器为<code>0</code>时，调用<code>acquire()</code>的线程将被阻塞，直到有其他线程释放许可证；</p>
+<p>它的核心思想是将一个大任务分成许多小任务，然后并行执行这些小任务，最终将它们的结果合并成一个大的结果。</p>
 </li>
 <li class="lvl-2">
-<p>线程可以通过调用<code>release()</code>方法来释放<code>Semaphore</code>中的许可证，这会使<code>Semaphore</code>中的计数器增加，从而允许更多的线程访问共享资源。<br>
-<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/kcdir2.jpg" alt=""></p>
+<p><code>Fork/Join</code>模式是实现任务并行性的一种常用模式，它将大任务递归地分解成小任务，然后利用多线程并行执行这些小任务。</p>
+</li>
+<li class="lvl-2">
+<p><code>Fork/Join</code>框架的主要组成部分是<code>ForkJoinPool</code>、<code>ForkJoinTask</code>。<code>ForkJoinPool</code>是一个线程池，它用于管理<code>Fork/Join</code>任务的执行。<code>ForkJoinTask</code>是一个抽象类，用于表示可以被分割成更小部分的任务。</p>
+</li>
+<li class="lvl-2">
+<p><code>Fork/Join</code>框架更适合执行CPU密集型任务，同时需要避免在<code>ForkJoinPool</code>中提交大量的阻塞型任务，以免影响整个线程池的性能。</p>
 </li>
 </ul>
-<h2 id="Semaphore常用方法">Semaphore常用方法</h2>
+<h3 id="应用场景">应用场景</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.递归分解型任务<br>
+<code>Fork/Join</code>框架特别适用于递归分解型的任务，例如排序、归并、遍历等。这些任务通常可以将大的任务分解成若干个子任务，每个子任务可以独立执行，并且可以通过归并操作将子任务的结果合并成一个有序的结果。</p>
+</li>
+<li class="lvl-2">
+<p>2.数组处理<br>
+<code>Fork/Join</code>框架还可以用于数组的处理，例如数组的排序、查找、统计等。在处理大型数组时，<code>Fork/Join</code>框架可以将数组分成若干个子数组，并行地处理每个子数组，最后将处理后的子数组合并成一个有序的大数组。</p>
+</li>
+<li class="lvl-2">
+<p>3.并行化算法<br>
+<code>Fork/Join</code>框架还可以用于并行化算法的实现，例如并行化的图像处理算法、并行化的机器学习算法等。在这些算法中，可以将问题分解成若干个子问题，并行地解决每个子问题，然后将子问题的结果合并起来得到最终的解决方案。</p>
+</li>
+<li class="lvl-2">
+<p>4.大数据处理<br>
+<code>Fork/Join</code>框架还可以用于大数据处理，例如大型日志文件的处理、大型数据库的查询等。在处理大数据时，可以将数据分成若干个分片，并行地处理每个分片，最后将处理后的分片合并成一个完整的结果</p>
+</li>
+</ul>
+<h2 id="ForkJoinPool介绍">ForkJoinPool介绍</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ForkJoinPool</code>是<code>Fork/Join</code>框架中的线程池类，它用于管理<code>Fork/Join</code>任务的线程，基于工作窃取算法（work-stealing）来实现任务的分配和执行。</p>
+</li>
+<li class="lvl-2">
+<p><code>ForkJoinPool</code>类包括一些重要的方法，例如<code>submit()</code>、<code>invoke()</code>、<code>shutdown()</code>、<code>awaitTermination()</code>等，用于提交任务、执行任务、关闭线程池和等待任务的执行结果。<code>ForkJoinPool</code>类中还包括一些参数，例如线程池的大小、工作线程的优先级、任务队列的容量等，可以根据具体的应用场景进行设置。</p>
+</li>
+<li class="lvl-2">
+<p>常用API</p>
+</li>
+</ul>
 <table>
 <thead>
 <tr>
-<th>方法</th>
+<th>API/方法</th>
+<th>返回值</th>
 <th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Semaphore(int permits)</code></td>
-<td>构造函数，创建具有给定许可数的Semaphore对象</td>
+<td><code>ForkJoinPool(int parallelism)</code></td>
+<td>无</td>
+<td>使用指定的并行度创建一个新的ForkJoinPool。</td>
 </tr>
 <tr>
-<td><code>Semaphore(int permits,boolean fair)</code></td>
-<td>构造函数，创建具有给定许可数的Semaphore对象，fair 表示公平性，如果这个设为 true 的话，下次执行的线程会是等待最久的线程</td>
+<td><code>invoke(ForkJoinTask&lt;T&gt; task)</code></td>
+<td>T</td>
+<td>同步执行给定的任务，并返回结果。</td>
 </tr>
 <tr>
-<td><code>int availablePermits()</code></td>
-<td>返回当前可用的许可数</td>
+<td><code>submit(ForkJoinTask&lt;T&gt; task)</code></td>
+<td><code>Future&lt;T&gt;</code></td>
+<td>异步执行给定的任务，并返回一个<code>Future</code>对象，可以用于获取任务的执行结果。</td>
 </tr>
 <tr>
-<td><code>void acquire()</code></td>
-<td>获取一个许可，如果没有可用的许可，则阻塞直到有可用的许可</td>
+<td><code>execute(ForkJoinTask&lt;?&gt; task)</code></td>
+<td>无</td>
+<td>异步执行给定的任务，没有返回值。</td>
 </tr>
 <tr>
-<td><code>void release()</code></td>
-<td>释放一个许可</td>
+<td><code>awaitTermination(long timeout, TimeUnit unit)</code></td>
+<td><code>boolean</code></td>
+<td>阻塞当前线程，直到所有任务执行完成或超过指定的超时时间，并返回是否成功终止。</td>
 </tr>
 <tr>
-<td><code>boolean tryAcquire()</code></td>
-<td>尝试获取一个许可，如果有可用的许可，则获取成功，返回true；否则返回false</td>
+<td><code>isShutdown()</code></td>
+<td><code>boolean</code></td>
+<td>判断ForkJoinPool是否已经关闭。</td>
+</tr>
+<tr>
+<td><code>isTerminated()</code></td>
+<td><code>boolean</code></td>
+<td>判断ForkJoinPool中的所有任务是否已经执行完成。</td>
+</tr>
+<tr>
+<td><code>shutdown()</code></td>
+<td>无</td>
+<td>优雅地关闭ForkJoinPool，不再接受新的任务，并等待已提交的任务执行完成。</td>
+</tr>
+<tr>
+<td><code>shutdownNow()</code></td>
+<td><code>List&lt;Runnable&gt;</code></td>
+<td>强制关闭ForkJoinPool，尝试取消所有正在执行的任务，并返回等待执行的任务列表。</td>
+</tr>
+<tr>
+<td><code>getParallelism()</code></td>
+<td><code>int</code></td>
+<td>获取ForkJoinPool的并行度，即同时执行任务的线程数。</td>
+</tr>
+<tr>
+<td><code>getPoolSize()</code></td>
+<td><code>int</code></td>
+<td>获取ForkJoinPool中当前的工作线程数。</td>
+</tr>
+<tr>
+<td><code>getActiveThreadCount()</code></td>
+<td><code>int</code></td>
+<td>获取ForkJoinPool中当前活动的线程数。</td>
+</tr>
+<tr>
+<td><code>getQueuedTaskCount()</code></td>
+<td><code>long</code></td>
+<td>获取ForkJoinPool中当前等待执行的任务数。</td>
+</tr>
+<tr>
+<td><code>getRunningThreadCount()</code></td>
+<td><code>int</code></td>
+<td>获取ForkJoinPool中当前正在执行任务的线程数。</td>
+</tr>
+<tr>
+<td><code>getStealCount()</code></td>
+<td><code>long</code></td>
+<td>获取ForkJoinPool中总共发生的工作窃取次数。</td>
 </tr>
 </tbody>
 </table>
-<h2 id="Semaphore代码示例">Semaphore代码示例</h2>
+<h2 id="ForkJoinPool的创建">ForkJoinPool的创建</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>在这个示例中，Semaphore的初始许可数为2，意味着最多允许两个线程同时访问共享资源。</p>
+<p>ForkJoinPool中有四个核心参数，用于控制线程池的并行数、工作线程的创建、异常处理和模式指定等。各参数解释如下：</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>int parallelism</code>：指定并行级别（parallelism level）。<br>
+ForkJoinPool将根据这个设定，决定工作线程的数量。如果未设置的话，将使用<code>Runtime.getRuntime().availableProcessors()</code>来设置并行级别；  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ForkJoinPool</span><span class="params">(<span class="type">int</span> parallelism)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>(parallelism, defaultForkJoinWorkerThreadFactory, <span class="literal">null</span>, <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li class="lvl-2">
-<p>每个工作线程在执行工作前都会请求一个许可，如果许可可用，它将获得许可并执行工作，然后释放许可供其他线程使用。</p>
-</li>
-<li class="lvl-2">
-<p>如果没有可用的许可，线程将被阻塞直到有可用的许可为止。通过Semaphore的控制，最多允许两个线程并发执行，而第三个线程需要等待前面的线程释放许可后才能执行。</p>
+<li class="lvl-6"><code>ForkJoinWorkerThreadFactory factory</code>：ForkJoinPool在创建线程时，会通过factory来创建。<br>
+注意，这里需要实现的是<code>ForkJoinWorkerThreadFactory</code>，而不是<code>ThreadFactory</code>。如果你不指定<code>factory</code>，那么将由默认的<code>DefaultForkJoinWorkerThreadFactory</code>负责线程的创建工作；</li>
+<li class="lvl-6"><code>UncaughtExceptionHandler handler</code>：指定异常处理器<br>
+当任务在运行中出错时，将由设定的处理器处理；</li>
+<li class="lvl-6"><code>boolean asyncMode</code>：设置队列的工作模式。<br>
+当<code>asyncMode</code>为<code>true</code>时，将使用先进先出队列，而为<code>false</code>时则使用后进先出的模式。  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ForkJoinPool</span><span class="params">(<span class="type">int</span> parallelism,</span></span><br><span class="line"><span class="params">                ForkJoinWorkerThreadFactory factory,</span></span><br><span class="line"><span class="params">                UncaughtExceptionHandler handler,</span></span><br><span class="line"><span class="params">                <span class="type">boolean</span> asyncMode)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>(checkParallelism(parallelism),</span><br><span class="line">        checkFactory(factory),</span><br><span class="line">        handler,</span><br><span class="line">        asyncMode ? FIFO_QUEUE : LIFO_QUEUE,</span><br><span class="line">        <span class="string">&quot;ForkJoinPool-&quot;</span> + nextPoolId() + <span class="string">&quot;-worker-&quot;</span>);</span><br><span class="line">    checkPermission();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.Semaphore;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SemaphoreConcurrencyExample</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Semaphore</span> <span class="variable">semaphore</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">2</span>); <span class="comment">// 创建Semaphore对象，限制并发数为2</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建并启动三个线程</span></span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Worker</span>(semaphore, <span class="string">&quot;Thread 1&quot;</span>));</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Worker</span>(semaphore, <span class="string">&quot;Thread 2&quot;</span>));</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Worker</span>(semaphore, <span class="string">&quot;Thread 3&quot;</span>));</span><br><span class="line"></span><br><span class="line">        thread1.start();</span><br><span class="line">        thread2.start();</span><br><span class="line">        thread3.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Worker</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Semaphore semaphore;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Worker</span><span class="params">(Semaphore semaphore, String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.semaphore = semaphore;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(name + <span class="string">&quot; is waiting for a permit.&quot;</span>);</span><br><span class="line">            semaphore.acquire(); <span class="comment">// 获取许可</span></span><br><span class="line"></span><br><span class="line">            System.out.println(name + <span class="string">&quot; has acquired a permit.&quot;</span>);</span><br><span class="line">            <span class="comment">// 模拟工作</span></span><br><span class="line">            Thread.sleep(<span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">            System.out.println(name + <span class="string">&quot; is releasing the permit.&quot;</span>);</span><br><span class="line">            semaphore.release(); <span class="comment">// 释放许可</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Semaphore应用场景">Semaphore应用场景</h2>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取处理器数量</span></span><br><span class="line"><span class="type">int</span> <span class="variable">processors</span> <span class="operator">=</span> Runtime.getRuntime().availableProcessors();</span><br><span class="line"><span class="comment">//构建forkjoin线程池</span></span><br><span class="line"><span class="type">ForkJoinPool</span> <span class="variable">forkJoinPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>(processors);</span><br><span class="line"></span><br><span class="line"><span class="comment">//此时等同于无参创建</span></span><br><span class="line"><span class="type">ForkJoinPool</span> <span class="variable">forkJoinPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="ForkJoinTask介绍">ForkJoinTask介绍</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>限流：<code>Semaphore</code>可以用于限制对共享资源的并发访问数量，以控制系统的流量。</p>
+<p><code>ForkJoinTask</code>是<code>Fork/Join</code>框架中的抽象类，它定义了执行任务的基本接口。用户可以通过继承<code>ForkJoinTask</code>类来实现自己的任务类，并重写其中的<code>compute()</code>方法来定义任务的执行逻辑。</p>
 </li>
 <li class="lvl-2">
-<p>资源池：<code>Semaphore</code>可以用于实现资源池，以维护一组有限的共享资源</p>
+<p>通常情况下我们不需要直接继承<code>ForkJoinTask</code>类，而只需要继承它的子类，<code>Fork/Join</code>框架提供了以下三个子类：</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>RecursiveAction</code>：用于递归执行但不需要返回结果的任务。</li>
+<li class="lvl-6"><code>RecursiveTask</code> ：用于递归执行需要返回结果的任务。</li>
+<li class="lvl-6"><code>CountedCompleter&lt;T&gt;</code> ：在任务完成执行后会触发执行一个自定义的钩子函数</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><code>ForkJoinTask</code> 最核心的是 <code>fork()</code> 方法和 <code>join()</code>方法，承载着主要的任务协调作用，一个用于任务提交，一个用于结果获取。</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>fork()</code>–提交任务<br>
+<code>fork()</code>方法用于向当前任务所运行的线程池中提交任务。如果当前线程是<code>ForkJoinWorkerThread</code>类型，将会放入该线程的工作队列，否则放入<code>common</code>线程池的工作队列中。</li>
+<li class="lvl-6"><code>join()</code>–获取任务执行结果<br>
+<code>join()</code>方法用于获取任务的执行结果。调用<code>join()</code>时，将阻塞当前线程直到对应的子任务完成运行并返回结果</li>
+</ul>
+</li>
+</ul>
+<h2 id="ForkJoinPool-与-ForkJoinTask-使用示例">ForkJoinPool 与 ForkJoinTask 使用示例</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>利用<code>fork-join</code>实现数组归并排序算法</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ForkJoinPool;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.RecursiveTask;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 利用fork-join实现数组归并排序算法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MergeSortRecursiveTask</span> <span class="keyword">extends</span> <span class="title class_">RecursiveTask</span>&lt;<span class="type">int</span>[]&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> threshold; <span class="comment">//拆分的阈值，低于此阈值就不再进行拆分</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] arrayToSort; <span class="comment">//要排序的数组</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MergeSortRecursiveTask</span><span class="params">(<span class="keyword">final</span> <span class="type">int</span>[] arrayToSort, <span class="keyword">final</span> <span class="type">int</span> threshold)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.arrayToSort = arrayToSort;</span><br><span class="line">        <span class="built_in">this</span>.threshold = threshold;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span>[] compute() &#123;</span><br><span class="line">        <span class="comment">//拆分后的数组长度小于阈值，直接进行排序</span></span><br><span class="line">        <span class="keyword">if</span> (arrayToSort.length &lt;= threshold) &#123;</span><br><span class="line">            <span class="comment">// 调用jdk提供的排序方法</span></span><br><span class="line">            Arrays.sort(arrayToSort);</span><br><span class="line">            <span class="keyword">return</span> arrayToSort;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对数组进行拆分</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">midpoint</span> <span class="operator">=</span> arrayToSort.length / <span class="number">2</span>;</span><br><span class="line">        <span class="type">int</span>[] leftArray = Arrays.copyOfRange(arrayToSort, <span class="number">0</span>, midpoint);</span><br><span class="line">        <span class="type">int</span>[] rightArray = Arrays.copyOfRange(arrayToSort, midpoint, arrayToSort.length);</span><br><span class="line"></span><br><span class="line">        <span class="type">MergeSortRecursiveTask</span> <span class="variable">leftTask</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MergeSortRecursiveTask</span>(leftArray, threshold);</span><br><span class="line">        <span class="type">MergeSortRecursiveTask</span> <span class="variable">rightTask</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MergeSortRecursiveTask</span>(rightArray, threshold);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调用任务,阻塞当前线程，直到所有子任务执行完成</span></span><br><span class="line">        <span class="comment">// 使用invokeAll()方法同时提交多个任务，以提高任务的并行度，相当于同时fork并join</span></span><br><span class="line">        invokeAll(leftTask, rightTask);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//提交任务，多个任务同时提交时，推荐使用invokeAll()</span></span><br><span class="line">        <span class="comment">// leftTask.fork();</span></span><br><span class="line">        <span class="comment">// rightTask.fork();</span></span><br><span class="line">        <span class="comment">//合并结果</span></span><br><span class="line">        <span class="comment">// leftTask.join();</span></span><br><span class="line">        <span class="comment">// rightTask.join();</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并排序结果</span></span><br><span class="line">        arrayToSort = merge(leftTask.getSortedArray(), rightTask.getSortedArray());</span><br><span class="line">        <span class="keyword">return</span> arrayToSort;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] getSortedArray() &#123;</span><br><span class="line">        <span class="keyword">return</span> arrayToSort;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 合并两个有序数组，并返回合并后的有序数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] merge(<span class="keyword">final</span> <span class="type">int</span>[] leftArray, <span class="keyword">final</span> <span class="type">int</span>[] rightArray) &#123;</span><br><span class="line">        <span class="comment">// 定义用于合并结果的数组</span></span><br><span class="line">        <span class="type">int</span>[] mergedArray = <span class="keyword">new</span> <span class="title class_">int</span>[leftArray.length + rightArray.length];</span><br><span class="line">        <span class="type">int</span> <span class="variable">mergedArrayPos</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 利用双指针进行两个数的比较</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">leftArrayPos</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">rightArrayPos</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (leftArrayPos &lt; leftArray.length &amp;&amp; rightArrayPos &lt; rightArray.length) &#123;</span><br><span class="line">            <span class="comment">// 比较左右数组中的元素大小，并将较小的元素放入合并结果数组中</span></span><br><span class="line">            <span class="keyword">if</span> (leftArray[leftArrayPos] &lt;= rightArray[rightArrayPos]) &#123;</span><br><span class="line">                mergedArray[mergedArrayPos] = leftArray[leftArrayPos];</span><br><span class="line">                leftArrayPos++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                mergedArray[mergedArrayPos] = rightArray[rightArrayPos];</span><br><span class="line">                rightArrayPos++;</span><br><span class="line">            &#125;</span><br><span class="line">            mergedArrayPos++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将剩余的左数组元素放入合并结果数组中</span></span><br><span class="line">        <span class="keyword">while</span> (leftArrayPos &lt; leftArray.length) &#123;</span><br><span class="line">            mergedArray[mergedArrayPos] = leftArray[leftArrayPos];</span><br><span class="line">            leftArrayPos++;</span><br><span class="line">            mergedArrayPos++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将剩余的右数组元素放入合并结果数组中</span></span><br><span class="line">        <span class="keyword">while</span> (rightArrayPos &lt; rightArray.length) &#123;</span><br><span class="line">            mergedArray[mergedArrayPos] = rightArray[rightArrayPos];</span><br><span class="line">            rightArrayPos++;</span><br><span class="line">            mergedArrayPos++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 返回合并后的有序数组</span></span><br><span class="line">        <span class="keyword">return</span> mergedArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 随机生成数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> size 数组的大小</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span>[] buildRandomIntArray(<span class="keyword">final</span> <span class="type">int</span> size) &#123;</span><br><span class="line">        <span class="type">int</span>[] arrayToCalculateSumOf = <span class="keyword">new</span> <span class="title class_">int</span>[size];</span><br><span class="line">        <span class="type">Random</span> <span class="variable">generator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arrayToCalculateSumOf.length; i++) &#123;</span><br><span class="line">            arrayToCalculateSumOf[i] = generator.nextInt(<span class="number">10000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> arrayToCalculateSumOf;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//拆分的阈值</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">threshold</span> <span class="operator">=</span> <span class="number">20</span>;</span><br><span class="line">        <span class="type">int</span>[] arrayToSortByMergeSort = buildRandomIntArray(<span class="number">2000</span>);</span><br><span class="line">        System.out.print(<span class="string">&quot;排序前: &quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> element : arrayToSortByMergeSort) &#123;</span><br><span class="line">            System.out.print(element + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">        <span class="comment">//利用forkjoin排序</span></span><br><span class="line">        <span class="type">MergeSortRecursiveTask</span> <span class="variable">mergeSortRecursiveTask</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MergeSortRecursiveTask</span>(arrayToSortByMergeSort, threshold);</span><br><span class="line">        <span class="comment">//构建forkjoin线程池</span></span><br><span class="line">        <span class="type">ForkJoinPool</span> <span class="variable">forkJoinPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>();</span><br><span class="line">        <span class="type">long</span> <span class="variable">startTime</span> <span class="operator">=</span> System.nanoTime();</span><br><span class="line">        <span class="comment">//执行排序任务</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span>[] mergeSortArray = forkJoinPool.invoke(mergeSortRecursiveTask);</span><br><span class="line">        System.out.print(<span class="string">&quot;排序后: &quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> element : mergeSortArray) &#123;</span><br><span class="line">            System.out.print(element + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> <span class="variable">duration</span> <span class="operator">=</span> System.nanoTime() - startTime;</span><br><span class="line">        System.out.println(<span class="string">&quot;forkjoin排序时间: &quot;</span> + (duration / (<span class="number">1000f</span> * <span class="number">1000f</span>)) + <span class="string">&quot;毫秒&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ForkJoinPool工作原理">ForkJoinPool工作原理</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ForkJoinPool</code> 内部有多个任务队列，当我们通过 <code>ForkJoinPool</code> 的 <code>invoke()</code> 或者 <code>submit()</code> 方法提交任务时，<code>ForkJoinPool</code> 根据一定的路由规则把任务提交到一个任务队列中，如果任务在执行过程中会创建出子任务，那么子任务会提交到工作线程对应的任务队列中。</p>
+</li>
+<li class="lvl-2">
+<p>如果工作线程对应的任务队列空了，是不是就没活儿干了呢？不是的，<code>ForkJoinPool</code> 支持一种叫做<code>任务窃取</code>的机制，如果工作线程空闲了，那它可以<code>窃取</code>其他工作任务队列里的任务。如此一来，所有的工作线程都不会闲下来了。</p>
+</li>
+</ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em></p>
+<h2 id="工作窃取">工作窃取</h2>
+<ul class="lvl-1">
+<li class="lvl-2">工作窃取，就是允许空闲线程从繁忙线程的双端队列中窃取任务。</li>
+<li class="lvl-2">默认情况下，工作线程从它自己的双端队列的头部获取任务。但是，当自己的任务为空时，线程会从其他繁忙线程双端队列的尾部中获取任务。这种方法，最大限度地减少了线程竞争任务的可能性。</li>
+</ul>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ForkJoinPool</code>执行流程<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/1bBSl8.jpg" alt=""></p>
+</li>
+</ul>
+<h2 id="总结">总结</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>Fork/Join</code>是一种基于分治思想的模型，在并发处理计算型任务时有着显著的优势。其效率的提升主要得益于两个方面：</p>
+<ul class="lvl-2">
+<li class="lvl-6">任务切分：将大的任务分割成更小粒度的小任务，让更多的线程参与执行；</li>
+<li class="lvl-6">任务窃取：通过任务窃取，充分地利用空闲线程，并减少竞争。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>在使用<code>ForkJoinPool</code>时，需要特别注意任务的类型是否为纯函数计算类型，也就是这些任务不应该关心状态或者外界的变化，这样才是最安全的做法。如果是阻塞类型任务，那么你需要谨慎评估技术方案。虽然ForkJoinPool也能处理阻塞类型任务，但可能会带来复杂的管理成本。</p>
 </li>
 </ul>
 
@@ -947,7 +1097,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2023/05/22/java-concurrency05-Semaphore/" title="Java并发编程--JUC并发工具类之Semaphore">https://blog.hanqunfeng.com/2023/05/22/java-concurrency05-Semaphore/</a>
+      <a href="https://blog.hanqunfeng.com/2023/05/29/java-concurrency12-ForkJoinPool/" title="Java并发编程--线程池之ForkJoinPool">https://blog.hanqunfeng.com/2023/05/29/java-concurrency12-ForkJoinPool/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1000,13 +1150,10 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/05/22/java-concurrency06-CountDownLatch/" rel="prev" title="Java并发编程--JUC并发工具类之CountDownLatch">
-                  <i class="fa fa-chevron-left"></i> Java并发编程--JUC并发工具类之CountDownLatch
-                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/05/22/java-concurrency04-StampedLock/" rel="next" title="Java并发编程--JUC并发工具类之StampedLock">
-                  Java并发编程--JUC并发工具类之StampedLock <i class="fa fa-chevron-right"></i>
+                <a href="/2023/05/25/java-concurrency11-ThreadPoolExecutor/" rel="next" title="Java并发编程--线程池之ThreadPoolExecutor">
+                  Java并发编程--线程池之ThreadPoolExecutor <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>

@@ -1,6 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java并发编程--线程池之ForkJoinPool</title>
+    <url>/2023/05/29/java-concurrency12-ForkJoinPool/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍线程池ForkJoinPool相关技术</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>jdk1.8</code></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="Fork-Join框架介绍">Fork/Join框架介绍</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>Fork/Join</code>是一个是一个并行计算的框架，主要就是用来支持分治任务模型的，这个计算框架里的 <code>Fork</code>对应的是分治任务模型里的任务分解，<code>Join</code> 对应的是结果合并。</p>
+</li>
+<li class="lvl-2">
+<p>它的核心思想是将一个大任务分成许多小任务，然后并行执行这些小任务，最终将它们的结果合并成一个大的结果。</p>
+</li>
+<li class="lvl-2">
+<p><code>Fork/Join</code>模式是实现任务并行性的一种常用模式，它将大任务递归地分解成小任务，然后利用多线程并行执行这些小任务。</p>
+</li>
+<li class="lvl-2">
+<p><code>Fork/Join</code>框架的主要组成部分是<code>ForkJoinPool</code>、<code>ForkJoinTask</code>。<code>ForkJoinPool</code>是一个线程池，它用于管理<code>Fork/Join</code>任务的执行。<code>ForkJoinTask</code>是一个抽象类，用于表示可以被分割成更小部分的任务。</p>
+</li>
+<li class="lvl-2">
+<p><code>Fork/Join</code>框架更适合执行CPU密集型任务，同时需要避免在<code>ForkJoinPool</code>中提交大量的阻塞型任务，以免影响整个线程池的性能。</p>
+</li>
+</ul>
+<h3 id="应用场景">应用场景</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.递归分解型任务<br>
+<code>Fork/Join</code>框架特别适用于递归分解型的任务，例如排序、归并、遍历等。这些任务通常可以将大的任务分解成若干个子任务，每个子任务可以独立执行，并且可以通过归并操作将子任务的结果合并成一个有序的结果。</p>
+</li>
+<li class="lvl-2">
+<p>2.数组处理<br>
+<code>Fork/Join</code>框架还可以用于数组的处理，例如数组的排序、查找、统计等。在处理大型数组时，<code>Fork/Join</code>框架可以将数组分成若干个子数组，并行地处理每个子数组，最后将处理后的子数组合并成一个有序的大数组。</p>
+</li>
+<li class="lvl-2">
+<p>3.并行化算法<br>
+<code>Fork/Join</code>框架还可以用于并行化算法的实现，例如并行化的图像处理算法、并行化的机器学习算法等。在这些算法中，可以将问题分解成若干个子问题，并行地解决每个子问题，然后将子问题的结果合并起来得到最终的解决方案。</p>
+</li>
+<li class="lvl-2">
+<p>4.大数据处理<br>
+<code>Fork/Join</code>框架还可以用于大数据处理，例如大型日志文件的处理、大型数据库的查询等。在处理大数据时，可以将数据分成若干个分片，并行地处理每个分片，最后将处理后的分片合并成一个完整的结果</p>
+</li>
+</ul>
+<h2 id="ForkJoinPool介绍">ForkJoinPool介绍</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ForkJoinPool</code>是<code>Fork/Join</code>框架中的线程池类，它用于管理<code>Fork/Join</code>任务的线程，基于工作窃取算法（work-stealing）来实现任务的分配和执行。</p>
+</li>
+<li class="lvl-2">
+<p><code>ForkJoinPool</code>类包括一些重要的方法，例如<code>submit()</code>、<code>invoke()</code>、<code>shutdown()</code>、<code>awaitTermination()</code>等，用于提交任务、执行任务、关闭线程池和等待任务的执行结果。<code>ForkJoinPool</code>类中还包括一些参数，例如线程池的大小、工作线程的优先级、任务队列的容量等，可以根据具体的应用场景进行设置。</p>
+</li>
+<li class="lvl-2">
+<p>常用API</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>API/方法</th>
+<th>返回值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ForkJoinPool(int parallelism)</code></td>
+<td>无</td>
+<td>使用指定的并行度创建一个新的ForkJoinPool。</td>
+</tr>
+<tr>
+<td><code>invoke(ForkJoinTask&lt;T&gt; task)</code></td>
+<td>T</td>
+<td>同步执行给定的任务，并返回结果。</td>
+</tr>
+<tr>
+<td><code>submit(ForkJoinTask&lt;T&gt; task)</code></td>
+<td><code>Future&lt;T&gt;</code></td>
+<td>异步执行给定的任务，并返回一个<code>Future</code>对象，可以用于获取任务的执行结果。</td>
+</tr>
+<tr>
+<td><code>execute(ForkJoinTask&lt;?&gt; task)</code></td>
+<td>无</td>
+<td>异步执行给定的任务，没有返回值。</td>
+</tr>
+<tr>
+<td><code>awaitTermination(long timeout, TimeUnit unit)</code></td>
+<td><code>boolean</code></td>
+<td>阻塞当前线程，直到所有任务执行完成或超过指定的超时时间，并返回是否成功终止。</td>
+</tr>
+<tr>
+<td><code>isShutdown()</code></td>
+<td><code>boolean</code></td>
+<td>判断ForkJoinPool是否已经关闭。</td>
+</tr>
+<tr>
+<td><code>isTerminated()</code></td>
+<td><code>boolean</code></td>
+<td>判断ForkJoinPool中的所有任务是否已经执行完成。</td>
+</tr>
+<tr>
+<td><code>shutdown()</code></td>
+<td>无</td>
+<td>优雅地关闭ForkJoinPool，不再接受新的任务，并等待已提交的任务执行完成。</td>
+</tr>
+<tr>
+<td><code>shutdownNow()</code></td>
+<td><code>List&lt;Runnable&gt;</code></td>
+<td>强制关闭ForkJoinPool，尝试取消所有正在执行的任务，并返回等待执行的任务列表。</td>
+</tr>
+<tr>
+<td><code>getParallelism()</code></td>
+<td><code>int</code></td>
+<td>获取ForkJoinPool的并行度，即同时执行任务的线程数。</td>
+</tr>
+<tr>
+<td><code>getPoolSize()</code></td>
+<td><code>int</code></td>
+<td>获取ForkJoinPool中当前的工作线程数。</td>
+</tr>
+<tr>
+<td><code>getActiveThreadCount()</code></td>
+<td><code>int</code></td>
+<td>获取ForkJoinPool中当前活动的线程数。</td>
+</tr>
+<tr>
+<td><code>getQueuedTaskCount()</code></td>
+<td><code>long</code></td>
+<td>获取ForkJoinPool中当前等待执行的任务数。</td>
+</tr>
+<tr>
+<td><code>getRunningThreadCount()</code></td>
+<td><code>int</code></td>
+<td>获取ForkJoinPool中当前正在执行任务的线程数。</td>
+</tr>
+<tr>
+<td><code>getStealCount()</code></td>
+<td><code>long</code></td>
+<td>获取ForkJoinPool中总共发生的工作窃取次数。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ForkJoinPool的创建">ForkJoinPool的创建</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>ForkJoinPool中有四个核心参数，用于控制线程池的并行数、工作线程的创建、异常处理和模式指定等。各参数解释如下：</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>int parallelism</code>：指定并行级别（parallelism level）。<br>
+ForkJoinPool将根据这个设定，决定工作线程的数量。如果未设置的话，将使用<code>Runtime.getRuntime().availableProcessors()</code>来设置并行级别；  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ForkJoinPool</span><span class="params">(<span class="type">int</span> parallelism)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>(parallelism, defaultForkJoinWorkerThreadFactory, <span class="literal">null</span>, <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-6"><code>ForkJoinWorkerThreadFactory factory</code>：ForkJoinPool在创建线程时，会通过factory来创建。<br>
+注意，这里需要实现的是<code>ForkJoinWorkerThreadFactory</code>，而不是<code>ThreadFactory</code>。如果你不指定<code>factory</code>，那么将由默认的<code>DefaultForkJoinWorkerThreadFactory</code>负责线程的创建工作；</li>
+<li class="lvl-6"><code>UncaughtExceptionHandler handler</code>：指定异常处理器<br>
+当任务在运行中出错时，将由设定的处理器处理；</li>
+<li class="lvl-6"><code>boolean asyncMode</code>：设置队列的工作模式。<br>
+当<code>asyncMode</code>为<code>true</code>时，将使用先进先出队列，而为<code>false</code>时则使用后进先出的模式。  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ForkJoinPool</span><span class="params">(<span class="type">int</span> parallelism,</span></span><br><span class="line"><span class="params">                ForkJoinWorkerThreadFactory factory,</span></span><br><span class="line"><span class="params">                UncaughtExceptionHandler handler,</span></span><br><span class="line"><span class="params">                <span class="type">boolean</span> asyncMode)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>(checkParallelism(parallelism),</span><br><span class="line">        checkFactory(factory),</span><br><span class="line">        handler,</span><br><span class="line">        asyncMode ? FIFO_QUEUE : LIFO_QUEUE,</span><br><span class="line">        <span class="string">&quot;ForkJoinPool-&quot;</span> + nextPoolId() + <span class="string">&quot;-worker-&quot;</span>);</span><br><span class="line">    checkPermission();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//获取处理器数量</span></span><br><span class="line"><span class="type">int</span> <span class="variable">processors</span> <span class="operator">=</span> Runtime.getRuntime().availableProcessors();</span><br><span class="line"><span class="comment">//构建forkjoin线程池</span></span><br><span class="line"><span class="type">ForkJoinPool</span> <span class="variable">forkJoinPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>(processors);</span><br><span class="line"></span><br><span class="line"><span class="comment">//此时等同于无参创建</span></span><br><span class="line"><span class="type">ForkJoinPool</span> <span class="variable">forkJoinPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="ForkJoinTask介绍">ForkJoinTask介绍</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ForkJoinTask</code>是<code>Fork/Join</code>框架中的抽象类，它定义了执行任务的基本接口。用户可以通过继承<code>ForkJoinTask</code>类来实现自己的任务类，并重写其中的<code>compute()</code>方法来定义任务的执行逻辑。</p>
+</li>
+<li class="lvl-2">
+<p>通常情况下我们不需要直接继承<code>ForkJoinTask</code>类，而只需要继承它的子类，<code>Fork/Join</code>框架提供了以下三个子类：</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>RecursiveAction</code>：用于递归执行但不需要返回结果的任务。</li>
+<li class="lvl-6"><code>RecursiveTask</code> ：用于递归执行需要返回结果的任务。</li>
+<li class="lvl-6"><code>CountedCompleter&lt;T&gt;</code> ：在任务完成执行后会触发执行一个自定义的钩子函数</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><code>ForkJoinTask</code> 最核心的是 <code>fork()</code> 方法和 <code>join()</code>方法，承载着主要的任务协调作用，一个用于任务提交，一个用于结果获取。</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>fork()</code>–提交任务<br>
+<code>fork()</code>方法用于向当前任务所运行的线程池中提交任务。如果当前线程是<code>ForkJoinWorkerThread</code>类型，将会放入该线程的工作队列，否则放入<code>common</code>线程池的工作队列中。</li>
+<li class="lvl-6"><code>join()</code>–获取任务执行结果<br>
+<code>join()</code>方法用于获取任务的执行结果。调用<code>join()</code>时，将阻塞当前线程直到对应的子任务完成运行并返回结果</li>
+</ul>
+</li>
+</ul>
+<h2 id="ForkJoinPool-与-ForkJoinTask-使用示例">ForkJoinPool 与 ForkJoinTask 使用示例</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>利用<code>fork-join</code>实现数组归并排序算法</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ForkJoinPool;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.RecursiveTask;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 利用fork-join实现数组归并排序算法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MergeSortRecursiveTask</span> <span class="keyword">extends</span> <span class="title class_">RecursiveTask</span>&lt;<span class="type">int</span>[]&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> threshold; <span class="comment">//拆分的阈值，低于此阈值就不再进行拆分</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] arrayToSort; <span class="comment">//要排序的数组</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MergeSortRecursiveTask</span><span class="params">(<span class="keyword">final</span> <span class="type">int</span>[] arrayToSort, <span class="keyword">final</span> <span class="type">int</span> threshold)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.arrayToSort = arrayToSort;</span><br><span class="line">        <span class="built_in">this</span>.threshold = threshold;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span>[] compute() &#123;</span><br><span class="line">        <span class="comment">//拆分后的数组长度小于阈值，直接进行排序</span></span><br><span class="line">        <span class="keyword">if</span> (arrayToSort.length &lt;= threshold) &#123;</span><br><span class="line">            <span class="comment">// 调用jdk提供的排序方法</span></span><br><span class="line">            Arrays.sort(arrayToSort);</span><br><span class="line">            <span class="keyword">return</span> arrayToSort;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对数组进行拆分</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">midpoint</span> <span class="operator">=</span> arrayToSort.length / <span class="number">2</span>;</span><br><span class="line">        <span class="type">int</span>[] leftArray = Arrays.copyOfRange(arrayToSort, <span class="number">0</span>, midpoint);</span><br><span class="line">        <span class="type">int</span>[] rightArray = Arrays.copyOfRange(arrayToSort, midpoint, arrayToSort.length);</span><br><span class="line"></span><br><span class="line">        <span class="type">MergeSortRecursiveTask</span> <span class="variable">leftTask</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MergeSortRecursiveTask</span>(leftArray, threshold);</span><br><span class="line">        <span class="type">MergeSortRecursiveTask</span> <span class="variable">rightTask</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MergeSortRecursiveTask</span>(rightArray, threshold);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调用任务,阻塞当前线程，直到所有子任务执行完成</span></span><br><span class="line">        <span class="comment">// 使用invokeAll()方法同时提交多个任务，以提高任务的并行度，相当于同时fork并join</span></span><br><span class="line">        invokeAll(leftTask, rightTask);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//提交任务，多个任务同时提交时，推荐使用invokeAll()</span></span><br><span class="line">        <span class="comment">// leftTask.fork();</span></span><br><span class="line">        <span class="comment">// rightTask.fork();</span></span><br><span class="line">        <span class="comment">//合并结果</span></span><br><span class="line">        <span class="comment">// leftTask.join();</span></span><br><span class="line">        <span class="comment">// rightTask.join();</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并排序结果</span></span><br><span class="line">        arrayToSort = merge(leftTask.getSortedArray(), rightTask.getSortedArray());</span><br><span class="line">        <span class="keyword">return</span> arrayToSort;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] getSortedArray() &#123;</span><br><span class="line">        <span class="keyword">return</span> arrayToSort;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 合并两个有序数组，并返回合并后的有序数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] merge(<span class="keyword">final</span> <span class="type">int</span>[] leftArray, <span class="keyword">final</span> <span class="type">int</span>[] rightArray) &#123;</span><br><span class="line">        <span class="comment">// 定义用于合并结果的数组</span></span><br><span class="line">        <span class="type">int</span>[] mergedArray = <span class="keyword">new</span> <span class="title class_">int</span>[leftArray.length + rightArray.length];</span><br><span class="line">        <span class="type">int</span> <span class="variable">mergedArrayPos</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 利用双指针进行两个数的比较</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">leftArrayPos</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">rightArrayPos</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (leftArrayPos &lt; leftArray.length &amp;&amp; rightArrayPos &lt; rightArray.length) &#123;</span><br><span class="line">            <span class="comment">// 比较左右数组中的元素大小，并将较小的元素放入合并结果数组中</span></span><br><span class="line">            <span class="keyword">if</span> (leftArray[leftArrayPos] &lt;= rightArray[rightArrayPos]) &#123;</span><br><span class="line">                mergedArray[mergedArrayPos] = leftArray[leftArrayPos];</span><br><span class="line">                leftArrayPos++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                mergedArray[mergedArrayPos] = rightArray[rightArrayPos];</span><br><span class="line">                rightArrayPos++;</span><br><span class="line">            &#125;</span><br><span class="line">            mergedArrayPos++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将剩余的左数组元素放入合并结果数组中</span></span><br><span class="line">        <span class="keyword">while</span> (leftArrayPos &lt; leftArray.length) &#123;</span><br><span class="line">            mergedArray[mergedArrayPos] = leftArray[leftArrayPos];</span><br><span class="line">            leftArrayPos++;</span><br><span class="line">            mergedArrayPos++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将剩余的右数组元素放入合并结果数组中</span></span><br><span class="line">        <span class="keyword">while</span> (rightArrayPos &lt; rightArray.length) &#123;</span><br><span class="line">            mergedArray[mergedArrayPos] = rightArray[rightArrayPos];</span><br><span class="line">            rightArrayPos++;</span><br><span class="line">            mergedArrayPos++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 返回合并后的有序数组</span></span><br><span class="line">        <span class="keyword">return</span> mergedArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 随机生成数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> size 数组的大小</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span>[] buildRandomIntArray(<span class="keyword">final</span> <span class="type">int</span> size) &#123;</span><br><span class="line">        <span class="type">int</span>[] arrayToCalculateSumOf = <span class="keyword">new</span> <span class="title class_">int</span>[size];</span><br><span class="line">        <span class="type">Random</span> <span class="variable">generator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arrayToCalculateSumOf.length; i++) &#123;</span><br><span class="line">            arrayToCalculateSumOf[i] = generator.nextInt(<span class="number">10000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> arrayToCalculateSumOf;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//拆分的阈值</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">threshold</span> <span class="operator">=</span> <span class="number">20</span>;</span><br><span class="line">        <span class="type">int</span>[] arrayToSortByMergeSort = buildRandomIntArray(<span class="number">2000</span>);</span><br><span class="line">        System.out.print(<span class="string">&quot;排序前: &quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> element : arrayToSortByMergeSort) &#123;</span><br><span class="line">            System.out.print(element + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">        <span class="comment">//利用forkjoin排序</span></span><br><span class="line">        <span class="type">MergeSortRecursiveTask</span> <span class="variable">mergeSortRecursiveTask</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MergeSortRecursiveTask</span>(arrayToSortByMergeSort, threshold);</span><br><span class="line">        <span class="comment">//构建forkjoin线程池</span></span><br><span class="line">        <span class="type">ForkJoinPool</span> <span class="variable">forkJoinPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>();</span><br><span class="line">        <span class="type">long</span> <span class="variable">startTime</span> <span class="operator">=</span> System.nanoTime();</span><br><span class="line">        <span class="comment">//执行排序任务</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span>[] mergeSortArray = forkJoinPool.invoke(mergeSortRecursiveTask);</span><br><span class="line">        System.out.print(<span class="string">&quot;排序后: &quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> element : mergeSortArray) &#123;</span><br><span class="line">            System.out.print(element + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> <span class="variable">duration</span> <span class="operator">=</span> System.nanoTime() - startTime;</span><br><span class="line">        System.out.println(<span class="string">&quot;forkjoin排序时间: &quot;</span> + (duration / (<span class="number">1000f</span> * <span class="number">1000f</span>)) + <span class="string">&quot;毫秒&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ForkJoinPool工作原理">ForkJoinPool工作原理</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ForkJoinPool</code> 内部有多个任务队列，当我们通过 <code>ForkJoinPool</code> 的 <code>invoke()</code> 或者 <code>submit()</code> 方法提交任务时，<code>ForkJoinPool</code> 根据一定的路由规则把任务提交到一个任务队列中，如果任务在执行过程中会创建出子任务，那么子任务会提交到工作线程对应的任务队列中。</p>
+</li>
+<li class="lvl-2">
+<p>如果工作线程对应的任务队列空了，是不是就没活儿干了呢？不是的，<code>ForkJoinPool</code> 支持一种叫做<code>任务窃取</code>的机制，如果工作线程空闲了，那它可以<code>窃取</code>其他工作任务队列里的任务。如此一来，所有的工作线程都不会闲下来了。</p>
+</li>
+</ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em></p>
+<h2 id="工作窃取">工作窃取</h2>
+<ul class="lvl-1">
+<li class="lvl-2">工作窃取，就是允许空闲线程从繁忙线程的双端队列中窃取任务。</li>
+<li class="lvl-2">默认情况下，工作线程从它自己的双端队列的头部获取任务。但是，当自己的任务为空时，线程会从其他繁忙线程双端队列的尾部中获取任务。这种方法，最大限度地减少了线程竞争任务的可能性。</li>
+</ul>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ForkJoinPool</code>执行流程<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/1bBSl8.jpg" alt=""></p>
+</li>
+</ul>
+<h2 id="总结">总结</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>Fork/Join</code>是一种基于分治思想的模型，在并发处理计算型任务时有着显著的优势。其效率的提升主要得益于两个方面：</p>
+<ul class="lvl-2">
+<li class="lvl-6">任务切分：将大的任务分割成更小粒度的小任务，让更多的线程参与执行；</li>
+<li class="lvl-6">任务窃取：通过任务窃取，充分地利用空闲线程，并减少竞争。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>在使用<code>ForkJoinPool</code>时，需要特别注意任务的类型是否为纯函数计算类型，也就是这些任务不应该关心状态或者外界的变化，这样才是最安全的做法。如果是阻塞类型任务，那么你需要谨慎评估技术方案。虽然ForkJoinPool也能处理阻塞类型任务，但可能会带来复杂的管理成本。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>java</category>
+        <category>java多线程</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java并发编程--线程池之ThreadPoolExecutor</title>
     <url>/2023/05/25/java-concurrency11-ThreadPoolExecutor/</url>
     <content><![CDATA[<!--
@@ -233,13 +502,27 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 不再接受新的任务，但是正在处理的任务和队列中尚未处理的任务会继续执行完毕</span></span><br><span class="line">executor.shutdown();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不再接受新的任务，也不再执行队列中的任务，并且会中断正在处理的任务</span></span><br><span class="line"><span class="comment">// 线程池会尽力停止正在执行的任务，但无法保证任务会立即停止。因此，在调用shutdownNow()后，你可以通过检查返回的任务列表来获取所有尚未处理完成的任务，并根据需要进行处理。</span></span><br><span class="line">List&lt;Runnable&gt; list = executor.shutdownNow();</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>调用<code>shutdownNow()</code>也并不意味着线程池立刻就关闭了，可以通过如下方式判断线程池是否已经终止<br>
-| 方法签名                                       | 描述                                                         |<br>
-| ---------------------------------------- | ------------------------------------------------------------ |<br>
-| <code>boolean isTerminated()</code>                  | 判断线程池是否已经终止，已经终止返回true                                        |<br>
-| <code>boolean awaitTermination(long timeout, TimeUnit unit)</code> | 等待线程池终止，最多等待指定的时间 ，超时后仍未终止返回false                            |</p>
+<p>调用<code>shutdownNow()</code>也并不意味着线程池立刻就关闭了，可以通过如下方式判断线程池是否已经终止</p>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>方法签名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>boolean isTerminated()</code></td>
+<td>判断线程池是否已经终止，已经终止返回true</td>
+</tr>
+<tr>
+<td><code>boolean awaitTermination(long timeout, TimeUnit unit)</code></td>
+<td>等待线程池终止，最多等待指定的时间 ，超时后仍未终止返回false</td>
+</tr>
+</tbody>
+</table>
 <h2 id="ThreadPoolExecutor线程池的五种状态">ThreadPoolExecutor线程池的五种状态</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -2486,7 +2769,7 @@ RentrantReadWriteLock不支持锁升级（把持读锁、获取写锁，最后�
 <p>创建：</p>
 </li>
 </ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    <span class="comment">//子线程代码逻辑</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;str&quot;</span>; <span class="comment">//返回值</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    <span class="comment">//子线程代码逻辑</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello, world!&quot;</span>; <span class="comment">//返回值</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// CompletableFuture 使用的线程池是 ForkJoinPool ，建议全局共用一个ForkJoinPool，建议创建CompletableFuture时，为其指定一个新的线程池</span></span><br><span class="line"><span class="comment">//构建一个forkjoin线程池</span></span><br><span class="line"><span class="type">ForkJoinPool</span> <span class="variable">pool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个异步任务，并将其提交到ForkJoinPool中执行</span></span><br><span class="line">CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="string">&quot;Hello, world!&quot;</span>;</span><br><span class="line">&#125;, pool);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 等待任务完成，并获取结果</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> future.get();</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="comment">//关闭ForkJoinPool，释放资源</span></span><br><span class="line">    pool.shutdown();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>工厂方法：</p>
@@ -2713,6 +2996,123 @@ ABA 问题可能会对某些并发算法和数据结构产生影响，例如自�
 </li>
 <li class="lvl-2">
 <p>基于AQS构建的<code>ReentrantLock</code>和<code>CountDownLatch</code>等同步类就是借鉴了MESA模型中的概念和技术，如互斥锁、条件变量等，以提供线程间的同步和互斥功能。</p>
+</li>
+</ul>
+<h3 id="JMM">JMM</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Java线程之间的通信由Java内存模型（Java Memory Model，简称JMM）控制，JMM决定一个线程对共享变量的写入何时对另一个线程可见。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/QMgkD0.jpg" alt="" width="600" height="400"></p>
+</li>
+</ul>
+<h3 id="并发三大特性">并发三大特性</h3>
+<h4 id="原子性">原子性</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>一个或多个操作，要么全部执行且在执行过程中不被任何因素打断，要么全部不执行。</p>
+</li>
+<li class="lvl-2">
+<p>在 Java中，对基本数据类型的变量的读取和赋值操作是原子性操作（64位处理器）,自增/自减操作并不是原子性的。</p>
+</li>
+<li class="lvl-2">
+<p>如何保证原子性:</p>
+<ul class="lvl-2">
+<li class="lvl-6">通过 <code>synchronized</code> 关键字保证原子性</li>
+<li class="lvl-6">通过 <code>Lock</code> 锁保证原子性</li>
+<li class="lvl-6">通过 <code>CAS</code> 保证原子性</li>
+</ul>
+</li>
+</ul>
+<h4 id="可见性">可见性</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>可见性是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。</p>
+</li>
+<li class="lvl-2">
+<p>如何保证可见性:</p>
+<ul class="lvl-2">
+<li class="lvl-6">通过 <code>volatile</code> 关键字保证可见性</li>
+<li class="lvl-6">通过 <code>内存屏障</code>保证可见性</li>
+<li class="lvl-6">通过 <code>synchronized</code> 关键字保证可见性</li>
+<li class="lvl-6">通过 <code>Lock</code> 锁保证可见性</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>Java中可见性底层有两种实现：</p>
+<ul class="lvl-2">
+<li class="lvl-6">
+<ol>
+<li class="lvl-9">内存屏障，以下实现都是基于内存屏障</li>
+</ol>
+<ul class="lvl-4">
+<li class="lvl-10">synchronized</li>
+<li class="lvl-10">Threed.sleep(10)</li>
+<li class="lvl-10">volatile</li>
+</ul>
+</li>
+<li class="lvl-6">
+<ol start="2">
+<li class="lvl-9">cup上下文切换</li>
+</ol>
+<ul class="lvl-4">
+<li class="lvl-10">Threed.yield()</li>
+<li class="lvl-10">Threed.sleep(0)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>synchronized关键字的作用</p>
+<ul class="lvl-2">
+<li class="lvl-6">是确保多个线程访问共享资源时的互斥性和可见性</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>锁的内存语义</p>
+<ul class="lvl-2">
+<li class="lvl-6">当线程获取锁时，JMM会把该线程对应的本地内存置为无效。</li>
+<li class="lvl-6">当线程释放锁时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存中。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>volatile内存语义</p>
+<ul class="lvl-2">
+<li class="lvl-6">写：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。</li>
+<li class="lvl-6">读：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量。</li>
+</ul>
+</li>
+</ul>
+<h4 id="有序性">有序性</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>即程序执行的顺序按照代码的先后顺序执行。</p>
+</li>
+<li class="lvl-2">
+<p>为了提升性能，编译器和处理器常常会对指令做重排序，所以存在有序性问题。</p>
+</li>
+<li class="lvl-2">
+<p>如何保证有序性:</p>
+<ul class="lvl-2">
+<li class="lvl-6">通过 <code>volatile</code> 关键字保证有序性</li>
+<li class="lvl-6">通过 <code>内存屏障</code>保证有序性</li>
+<li class="lvl-6">通过 <code>synchronized</code> 关键字保证有序性</li>
+<li class="lvl-6">通过 <code>Lock</code> 锁保证有序性</li>
+</ul>
+</li>
+</ul>
+<h4 id="总结">总结</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.保证了可见性就保证了有序性</p>
+</li>
+<li class="lvl-2">
+<p>2.<code>volatile</code>并不能保证原子性，但可以保证多线程操作共享变量的可见性以及禁止指令重排序</p>
+</li>
+<li class="lvl-2">
+<p>3.<code>synchronized</code>关键字不仅保证可见性，同时也保证了原子性（互斥性）</p>
+</li>
+<li class="lvl-2">
+<p>4.JMM通过<code>内存屏障</code>来实现内存的可见性以及禁止重排序</p>
 </li>
 </ul>
 ]]></content>
