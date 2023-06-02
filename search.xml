@@ -1412,13 +1412,16 @@ CPU核心数[逻辑核] = Runtime.getRuntime().availableProcessors();<br>
 <li class="lvl-2">
 <p><code>getBlocker()</code>方法可以获取指定线程关联的阻塞对象，以便进行进一步的操作或分析。</p>
 </li>
+<li class="lvl-2">
+<p>在<code>LockSupport</code>的内部实现中，会使用底层的<code>CAS</code>操作来控制线程的阻塞和唤醒。当线程调用<code>park()</code>方法时，会将线程置于等待队列，并将线程的许可状态设置为负数。当调用<code>unpark()</code>方法时，会将线程的许可状态设置为非负数，从而唤醒等待的线程。</p>
+</li>
 </ul>
 <h2 id="代码示例">代码示例</h2>
 <h3 id="示例1–park-和unpark">示例1–<code>park()</code>和<code>unpark()</code></h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.LockSupport;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LockSupportExample</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">WorkerThread</span>());</span><br><span class="line">        thread.start();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 主线程暂停一段时间</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 唤醒WorkerThread线程</span></span><br><span class="line">        LockSupport.unpark(thread);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">WorkerThread</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;WorkerThread started&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 线程阻塞</span></span><br><span class="line">            LockSupport.park();</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">&quot;WorkerThread resumed&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.LockSupport;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CASParkUnparkExample</span> &#123;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="type">boolean</span> <span class="variable">condition</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">waiterThread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (!condition) &#123;</span><br><span class="line">                <span class="comment">// 阻塞当前线程</span></span><br><span class="line">                LockSupport.park();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;Condition is true. Thread is awake.&quot;</span>);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="type">Thread</span> <span class="variable">notifierThread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            <span class="comment">// 模拟一些耗时操作</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            condition = <span class="literal">true</span>;</span><br><span class="line">            <span class="comment">// 唤醒等待的线程</span></span><br><span class="line">            LockSupport.unpark(waiterThread);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        waiterThread.start();</span><br><span class="line">        notifierThread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>在这个示例中，我们创建了一个<code>WorkerThread</code>线程，并在主线程中启动它。主线程在启动<code>WorkerThread</code>后暂停了<code>2</code>秒钟，然后通过调用<code>LockSupport.unpark()</code>方法唤醒了<code>WorkerThread</code>线程。<code>WorkerThread</code>线程在<code>run()</code>方法中调用<code>LockSupport.park()</code>进入阻塞状态，直到被唤醒才会继续执行。执行结果会打印出&quot;WorkerThread started&quot;和&quot;WorkerThread resumed&quot;。</p>
+<p>在上面的示例中，<code>waiterThread</code>线程通过调用<code>LockSupport.park()</code>进入阻塞状态，直到<code>condition</code>变为<code>true</code>。<code>notifierThread</code>线程在经过一些耗时操作后，将<code>condition</code>设置为<code>true</code>，然后调用<code>LockSupport.unpark(waiterThread)</code>唤醒<code>waiterThread</code>线程。</p>
 </li>
 </ul>
 <h3 id="示例2–park-Object-blocker-和getBlocker-Thread-thread">示例2–<code>park(Object blocker)</code>和<code>getBlocker(Thread thread)</code></h3>
@@ -2503,6 +2506,249 @@ RentrantReadWriteLock不支持锁升级（把持读锁、获取写锁，最后�
       </tags>
   </entry>
   <entry>
+    <title>Java并发编程--CompletableFuture</title>
+    <url>/2023/05/18/java-concurrency01-CompletableFuture/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍CompletableFuture相关技术</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>jdk1.8</code></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="CompletableFuture介绍">CompletableFuture介绍</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>CompletableFuture是Java 8引入的一个强大的工具，用于处理异步编程和并发操作。它提供了一种简洁而灵活的方式来编写并发代码，使得处理异步任务和组合多个任务变得更加直观和易于管理。</p>
+</li>
+<li class="lvl-2">
+<p>CompletableFuture类实现了Java的Future接口，并提供了许多附加的方法，使得处理异步操作更加方便。它可以用于执行异步计算、等待多个异步任务完成、处理异常情况以及将多个异步任务组合成一个更大的任务等。</p>
+</li>
+<li class="lvl-2">
+<p>CompletableFuture的关键概念和用法：</p>
+<ul class="lvl-2">
+<li class="lvl-6">异步执行：CompletableFuture可以在后台线程中异步地执行任务，而不会阻塞主线程。你可以使用supplyAsync()方法来执行一个Supplier类型的任务，或者使用runAsync()方法来执行一个没有返回值的Runnable任务。</li>
+<li class="lvl-6">链式操作：你可以使用一系列的方法来对CompletableFuture进行链式操作，每个方法都会在前一个操作完成后触发。这些方法包括thenApply()、thenAccept()和thenRun()等，它们可以对前一个操作的结果进行处理、消费或执行额外的操作。</li>
+<li class="lvl-6">异常处理：CompletableFuture提供了异常处理的机制，使得你可以在任务完成时处理异常情况。你可以使用exceptionally()方法来处理任务的异常结果，或者使用handle()方法来处理正常和异常的结果。</li>
+<li class="lvl-6">组合任务：你可以将多个CompletableFuture组合在一起，以创建更复杂的任务流水线。例如，你可以使用thenCompose()方法将两个CompletableFuture串联起来，或者使用allOf()和anyOf()方法来等待多个CompletableFuture的完成。</li>
+</ul>
+</li>
+</ul>
+<h3 id="常用API">常用API</h3>
+<table>
+<thead>
+<tr>
+<th>方法签名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>static CompletableFuture&lt;Void&gt; allOf(CompletableFuture&lt;?&gt;... cfs)</code></td>
+<td>当所有的CompletableFuture都完成时返回一个新的CompletableFuture，它的结果是一个空值。</td>
+</tr>
+<tr>
+<td><code>static CompletableFuture&lt;Object&gt; anyOf(CompletableFuture&lt;?&gt;... cfs)</code></td>
+<td>当任意一个CompletableFuture完成时返回一个新的CompletableFuture，它的结果是最先完成的CompletableFuture的结果。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; exceptionally(Function&lt;Throwable, ? extends T&gt; fn)</code></td>
+<td>当CompletableFuture异常完成时执行一个Function，并返回一个新的CompletableFuture，它的结果是Function的返回值。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; thenApply(Function&lt;? super T, ? extends U&gt; fn)</code></td>
+<td>当CompletableFuture正常完成时执行一个Function，并返回一个新的CompletableFuture，它的结果是Function的返回值。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;Void&gt; thenAccept(Consumer&lt;? super T&gt; action)</code></td>
+<td>当CompletableFuture正常完成时执行一个Consumer，不返回任何结果的CompletableFuture。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;Void&gt; thenRun(Runnable action)</code></td>
+<td>当CompletableFuture正常完成时执行一个Runnable，不接受任何参数和返回值的CompletableFuture。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; thenCompose(Function&lt;? super T, ? extends CompletableFuture&lt;U&gt;&gt; fn)</code></td>
+<td>当CompletableFuture正常完成时执行一个Function，返回一个新的CompletableFuture，它的结果是Function返回的CompletableFuture的结果。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; exceptionallyCompose(Function&lt;Throwable, ? extends CompletableFuture&lt;T&gt;&gt; fn)</code></td>
+<td>当CompletableFuture异常完成时执行一个Function，返回一个新的CompletableFuture，它的结果是Function返回的CompletableFuture的结果。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; whenComplete(BiConsumer&lt;? super T, ? super Throwable&gt; action)</code></td>
+<td>当CompletableFuture完成时执行一个BiConsumer，接受结果值和异常作为参数。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; handle(BiFunction&lt;? super T, Throwable, ? extends U&gt; fn)</code></td>
+<td>当CompletableFuture完成时执行一个BiFunction，并返回一个新的CompletableFuture，它的结果是BiFunction的返回值。</td>
+</tr>
+<tr>
+<td><code>static &lt;U&gt; CompletableFuture&lt;U&gt; supplyAsync(Supplier&lt;U&gt; supplier)</code></td>
+<td>创建一个新的CompletableFuture，它会异步地执行给定的Supplier并返回结果。</td>
+</tr>
+<tr>
+<td><code>static &lt;U&gt; CompletableFuture&lt;U&gt; supplyAsync(Supplier&lt;U&gt; supplier, Executor executor)</code></td>
+<td>创建一个新的CompletableFuture，它会异步地在给定的Executor中执行给定的Supplier并返回结果。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; thenApplyAsync(Function&lt;? super T, ? extends U&gt; fn)</code></td>
+<td>当CompletableFuture正常完成时异步地执行一个Function，并返回一个新的CompletableFuture，它的结果是Function的返回值。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;Void&gt; thenAcceptAsync(Consumer&lt;? super T&gt; action)</code></td>
+<td>当CompletableFuture正常完成时异步地执行一个Consumer，不返回任何结果的CompletableFuture。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;Void&gt; thenRunAsync(Runnable action)</code></td>
+<td>当CompletableFuture正常完成时异步地执行一个Runnable，不接受任何参数和返回值的CompletableFuture。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; thenComposeAsync(Function&lt;? super T, ? extends CompletableFuture&lt;U&gt;&gt; fn)</code></td>
+<td>当CompletableFuture正常完成时异步地执行一个Function，并返回一个新的CompletableFuture，它的结果是Function返回的CompletableFuture的结果。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; exceptionallyComposeAsync(Function&lt;Throwable, ? extends CompletableFuture&lt;T&gt;&gt; fn)</code></td>
+<td>当CompletableFuture异常完成时异步地执行一个Function，并返回一个新的CompletableFuture，它的结果是Function返回的CompletableFuture的结果。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; whenCompleteAsync(BiConsumer&lt;? super T, ? super Throwable&gt; action)</code></td>
+<td>当CompletableFuture完成时异步地执行一个BiConsumer，接受结果值和异常作为参数。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; handleAsync(BiFunction&lt;? super T, Throwable, ? extends U&gt; fn)</code></td>
+<td>当CompletableFuture完成时异步地执行一个BiFunction，并返回一个新的CompletableFuture，它的结果是BiFunction的返回值。</td>
+</tr>
+<tr>
+<td><code>CompletableFuture&lt;T&gt; completeExceptionally(Throwable ex)</code></td>
+<td>手动地将CompletableFuture标记为异常完成，并提供一个异常作为结果。</td>
+</tr>
+<tr>
+<td><code>boolean complete(T value)</code></td>
+<td>手动地将CompletableFuture标记为正常完成，并提供一个值作为结果。</td>
+</tr>
+<tr>
+<td><code>T get()</code></td>
+<td>等待CompletableFuture完成并返回结果值。</td>
+</tr>
+<tr>
+<td><code>T get(long timeout, TimeUnit unit)</code></td>
+<td>在给定的时间内等待CompletableFuture完成并返回结果值。</td>
+</tr>
+<tr>
+<td><code>boolean isDone()</code></td>
+<td>检查CompletableFuture是否已经完成。</td>
+</tr>
+<tr>
+<td><code>boolean isCancelled()</code></td>
+<td>检查CompletableFuture是否已经被取消。</td>
+</tr>
+<tr>
+<td><code>boolean cancel(boolean mayInterruptIfRunning)</code></td>
+<td>取消CompletableFuture的执行。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Demo">Demo</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    <span class="comment">//子线程代码逻辑</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello, world!&quot;</span>; <span class="comment">//返回值</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// CompletableFuture 使用的线程池是 ForkJoinPool ，默认全局共用一个ForkJoinPool，建议创建CompletableFuture时，为其指定一个新的线程池</span></span><br><span class="line"><span class="comment">//构建一个forkjoin线程池</span></span><br><span class="line"><span class="type">ForkJoinPool</span> <span class="variable">pool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个异步任务，并将其提交到ForkJoinPool中执行</span></span><br><span class="line">CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="string">&quot;Hello, world!&quot;</span>;</span><br><span class="line">&#125;, pool);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 等待任务完成，并获取结果</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> future.get();</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="comment">//关闭ForkJoinPool，释放资源</span></span><br><span class="line">    pool.shutdown();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>工厂方法：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier,Executor executor)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable,Executor executor)</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Asynsc 表示异步,而 supplyAsync 与 runAsync 不同在于，supplyAsync 异步返回一个结果,runAsync 是 void。第二个函数第二个参数表示是用我们自己创建的线程池,否则采用默认的ForkJoinPool.commonPool()作为它的线程池</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>获取返回值: <code>get</code>与<code>join</code>的区别</p>
+<blockquote>
+<p>future.get(); 需要处理异常：InterruptedException，ExecutionException<br>
+future.join();  不需要处理异常</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p><code>allOf</code>、<code>anyOf</code></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture.allOf(future1,future2,future3).thenRun(()-&gt;&#123;</span><br><span class="line">    <span class="comment">//所有线程全部返回</span></span><br><span class="line">    System.out.println(<span class="string">&quot;All done!&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//接收返回最快的那个值</span></span><br><span class="line">CompletableFuture&lt;Object&gt; f = CompletableFuture.anyOf(future1,future2,future3);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>处理返回结果：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//thenAccept :消费，没有返回值</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).thenAccept(s -&gt; System.out.println(s+<span class="string">&quot; world&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//thenApply ：变更返回结果(值或类型)</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).thenApply(s -&gt; s + <span class="string">&quot; world&quot;</span>).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//exceptionally ：捕获异常并返回结果</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).exceptionally(e -&gt; &#123;</span><br><span class="line">    System.out.println(e.getMessage());</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">&#125;).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//thenCompose ：第一个future的结果作为第二个future的参数</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="number">10</span>).thenCompose(i -&gt; CompletableFuture.supplyAsync(() -&gt; i+<span class="number">1</span>)).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//whenComplete：不修改返回值</span></span><br><span class="line"><span class="comment">//whenComplete()方法接收一个BiConsumer参数，当异步任务完成时，无论是否发生异常，都会执行该BiConsumer。如果任务发生异常，异常信息会被传递给BiConsumer，但whenComplete()方法无法修改异常或处理异常。</span></span><br><span class="line">    CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).whenComplete((s, t) -&gt; &#123;</span><br><span class="line">        System.out.println(s); <span class="comment">//s是返回值</span></span><br><span class="line">        System.out.println(t.getMessage()); <span class="comment">//t是异常对象</span></span><br><span class="line">    &#125;).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//handle ：会修改返回值</span></span><br><span class="line"><span class="comment">//handle()方法接收一个BiFunction参数，当异步任务完成时，可以对任务的结果进行处理。如果任务发生异常，异常信息会被传递给BiFunction，并允许你根据异常进行处理并返回一个结果。如果没有异常发生，BiFunction将使用任务的结果进行处理。</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).handle((s, t) -&gt; &#123;</span><br><span class="line">    System.out.println(s); <span class="comment">//s是返回值</span></span><br><span class="line">    System.out.println(t.getMessage()); <span class="comment">//t是异常对象return s;</span></span><br><span class="line">&#125;).join();</span><br></pre></td></tr></table></figure>
+<h3 id="CompletableFuture的优势和不足">CompletableFuture的优势和不足</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>优势：</p>
+<ul class="lvl-2">
+<li class="lvl-6">1.强大的异步编程支持：CompletableFuture提供了丰富的方法和操作符，使得异步编程变得直观和易于管理。你可以使用链式操作来处理异步任务，进行任务组合和转换，以及处理异常情况。</li>
+<li class="lvl-6">2.可组合性和灵活性：CompletableFuture可以非常容易地组合多个任务，构建复杂的任务流水线。你可以将多个CompletableFuture串联起来，以处理依赖关系，并发起并行任务。</li>
+<li class="lvl-6">3.错误处理机制：CompletableFuture提供了异常处理的机制，使得你可以在任务完成时处理异常情况。你可以对任务的正常结果和异常结果进行不同的处理，保证代码的健壮性。</li>
+<li class="lvl-6">4.非阻塞的并发操作：CompletableFuture允许你以非阻塞的方式执行异步任务，并在任务完成时执行后续操作。这样可以充分利用计算资源，提高系统的并发能力和响应性能。</li>
+<li class="lvl-6">5.可扩展性：CompletableFuture可以与Java 8引入的Stream API和Lambda表达式结合使用，以实现更简洁、可读性更高的代码。它还可以与其他并发工具和库进行集成，如Executor框架和并发集合类。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>不足：</p>
+<ul class="lvl-2">
+<li class="lvl-6">1.学习曲线较陡峭：使用CompletableFuture需要一定的学习和理解成本，特别是对于初学者来说。理解它的概念和方法的正确用法可能需要一些时间和实践。</li>
+<li class="lvl-6">2.缺乏对非JDK库的支持：CompletableFuture主要是用于Java的标准库，因此在与其他非JDK库和框架集成时可能会有一些限制。某些库可能没有提供与CompletableFuture的无缝集成。</li>
+<li class="lvl-6">3.异常处理略显繁琐：虽然CompletableFuture提供了异常处理的机制，但在处理复杂的异常场景时，可能需要编写较多的代码来处理各种异常情况和错误处理策略。</li>
+<li class="lvl-6">4.可能存在性能开销：在某些情况下，使用CompletableFuture可能会引入额外的性能开销。例如，创建和管理多个CompletableFuture实例可能会导致一些额外的开销。</li>
+<li class="lvl-6">5.复杂度增加：当涉及到更复杂的并发场景和任务组合时，CompletableFuture的代码可能变得复杂和难以理解。需要谨慎设计和组织任务的依赖关系和并发控制逻辑。</li>
+</ul>
+</li>
+</ul>
+<div class="tips">
+<p>虽然CompletableFuture具有一些不足之处，但它仍然是Java中强大且灵活的异步编程工具。</p>
+</div>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>java</category>
+        <category>java多线程</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java并发编程--基本概念</title>
     <url>/2023/05/18/java-concurrency01-base/</url>
     <content><![CDATA[<!--
@@ -2739,6 +2985,15 @@ RentrantReadWriteLock不支持锁升级（把持读锁、获取写锁，最后�
 </blockquote>
 </li>
 </ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em></p>
+<h3 id="Java中的等待唤醒机制有哪些？">Java中的等待唤醒机制有哪些？</h3>
+<ul class="lvl-1">
+<li class="lvl-2">synchronized + wait/notify/notifyAll</li>
+<li class="lvl-2">ReentrantLock + Condition(await/singal/singalAll)</li>
+<li class="lvl-2">CAS + park/unpark(CAS是LockSupport底层实现机制)</li>
+</ul>
+</div>
 <h3 id="Callable-T-、Future-T-与FutureTask-T"><code>Callable&lt;T&gt;</code>、<code>Future&lt;T&gt;</code>与<code>FutureTask&lt;T&gt;</code>:</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -2763,41 +3018,6 @@ RentrantReadWriteLock不支持锁升级（把持读锁、获取写锁，最后�
 <p>中断线程：<code>futureTask.cancel(true);</code></p>
 </li>
 </ul>
-<h3 id="CompletableFuture-T-：返回值的子线程，这里只罗列一些常用的方法"><code>CompletableFuture&lt;T&gt;</code>：返回值的子线程，这里只罗列一些常用的方法</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>创建：</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    <span class="comment">//子线程代码逻辑</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello, world!&quot;</span>; <span class="comment">//返回值</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// CompletableFuture 使用的线程池是 ForkJoinPool ，默认全局共用一个ForkJoinPool，建议创建CompletableFuture时，为其指定一个新的线程池</span></span><br><span class="line"><span class="comment">//构建一个forkjoin线程池</span></span><br><span class="line"><span class="type">ForkJoinPool</span> <span class="variable">pool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForkJoinPool</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个异步任务，并将其提交到ForkJoinPool中执行</span></span><br><span class="line">CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="string">&quot;Hello, world!&quot;</span>;</span><br><span class="line">&#125;, pool);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 等待任务完成，并获取结果</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> future.get();</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="comment">//关闭ForkJoinPool，释放资源</span></span><br><span class="line">    pool.shutdown();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>工厂方法：</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier,Executor executor)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable,Executor executor)</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Asynsc 表示异步,而 supplyAsync 与 runAsync 不同在于，supplyAsync 异步返回一个结果,runAsync 是 void。第二个函数第二个参数表示是用我们自己创建的线程池,否则采用默认的ForkJoinPool.commonPool()作为它的线程池</p>
-</blockquote>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>获取返回值: <code>get</code>与<code>join</code>的区别</p>
-<blockquote>
-<p>future.get(); 需要处理异常：InterruptedException，ExecutionException<br>
-future.join();  不需要处理异常</p>
-</blockquote>
-</li>
-<li class="lvl-2">
-<p><code>allOf</code>、<code>anyOf</code></p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture.allOf(future1,future2,future3).thenRun(()-&gt;&#123;</span><br><span class="line">    <span class="comment">//所有线程全部返回</span></span><br><span class="line">    System.out.println(<span class="string">&quot;All done!&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//接收返回最快的那个值</span></span><br><span class="line">CompletableFuture&lt;Object&gt; f = CompletableFuture.anyOf(future1,future2,future3);</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>处理返回结果：</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//thenAccept :消费，没有返回值</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).thenAccept(s -&gt; System.out.println(s+<span class="string">&quot; world&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//thenApply ：变更返回结果(值或类型)</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).thenApply(s -&gt; s + <span class="string">&quot; world&quot;</span>).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//exceptionally ：捕获异常并返回结果</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).exceptionally(e -&gt; &#123;</span><br><span class="line">    System.out.println(e.getMessage());</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">&#125;).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//thenCompose ：第一个future的结果作为第二个future的参数</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="number">10</span>).thenCompose(i -&gt; CompletableFuture.supplyAsync(() -&gt; i+<span class="number">1</span>)).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//whenComplete：不修改返回值</span></span><br><span class="line"><span class="comment">//whenComplete()方法接收一个BiConsumer参数，当异步任务完成时，无论是否发生异常，都会执行该BiConsumer。如果任务发生异常，异常信息会被传递给BiConsumer，但whenComplete()方法无法修改异常或处理异常。</span></span><br><span class="line">    CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).whenComplete((s, t) -&gt; &#123;</span><br><span class="line">        System.out.println(s); <span class="comment">//s是返回值</span></span><br><span class="line">        System.out.println(t.getMessage()); <span class="comment">//t是异常对象</span></span><br><span class="line">    &#125;).join();</span><br><span class="line"></span><br><span class="line"><span class="comment">//handle ：会修改返回值</span></span><br><span class="line"><span class="comment">//handle()方法接收一个BiFunction参数，当异步任务完成时，可以对任务的结果进行处理。如果任务发生异常，异常信息会被传递给BiFunction，并允许你根据异常进行处理并返回一个结果。如果没有异常发生，BiFunction将使用任务的结果进行处理。</span></span><br><span class="line">CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;hello&quot;</span>).handle((s, t) -&gt; &#123;</span><br><span class="line">    System.out.println(s); <span class="comment">//s是返回值</span></span><br><span class="line">    System.out.println(t.getMessage()); <span class="comment">//t是异常对象return s;</span></span><br><span class="line">&#125;).join();</span><br></pre></td></tr></table></figure>
 <h3 id="volatile：最轻量的通信-同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见">volatile：最轻量的通信/同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="type">boolean</span> ready;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
@@ -2815,7 +3035,7 @@ future.join();  不需要处理异常</p>
 <p>初始化方法</p>
 </li>
 </ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方式1</span></span><br><span class="line">ThreadLocal&lt;Integer&gt; threadLocal1 = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;Integer&gt;()&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> Integer <span class="title function_">initialValue</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//方式2，Java 8及更高版本</span></span><br><span class="line">ThreadLocal&lt;Integer&gt; threadLocal2 = ThreadLocal.withInitial(() -&gt; <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方式1</span></span><br><span class="line">ThreadLocal&lt;Integer&gt; threadLocal = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;Integer&gt;()&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> Integer <span class="title function_">initialValue</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//方式2，Java 8及更高版本</span></span><br><span class="line">ThreadLocal&lt;Integer&gt; threadLocal = ThreadLocal.withInitial(() -&gt; <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>为了避免内存泄露，ThreadLocal变量用完后要进行销毁：<code>threadLocal.remove();</code></p>
