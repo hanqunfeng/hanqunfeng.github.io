@@ -28,7 +28,7 @@
 <meta property="og:description" content="摘要   本文介绍Linux进程管理等相关命令   本文基于CentOS8(x86_64)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-03-27T14:45:05.000Z">
-<meta property="article:modified_time" content="2023-03-30T04:05:17.436Z">
+<meta property="article:modified_time" content="2023-06-26T03:08:52.219Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux常用命令">
 <meta name="twitter:card" content="summary">
@@ -733,7 +733,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-03-30 12:05:17" itemprop="dateModified" datetime="2023-03-30T12:05:17+08:00">2023-03-30</time>
+      <time title="修改时间：2023-06-26 11:08:52" itemprop="dateModified" datetime="2023-06-26T11:08:52+08:00">2023-06-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -785,14 +785,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.8k</span>
+      <span>8.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
+      <span>8 分钟</span>
     </span>
 
         </div>
@@ -929,13 +929,17 @@
 <p>查看服务</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出当前已经启动的 unit，如果添加 -all 选项会同时列出没有启动的 unit</span></span><br><span class="line">systemctl ==== systemctl list-units</span><br><span class="line">systemctl -all</span><br><span class="line"><span class="comment"># 只查看服务类型为service的服务</span></span><br><span class="line">systemctl list-units --<span class="built_in">type</span>=service -all</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据 /lib/systemd/system/ 目录内的文件列出所有的服务及其当前的状态</span></span><br><span class="line">systemctl list-unit-files</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果发现某个 服务 不工作，可以查看是否有 服务 加载失败</span></span><br><span class="line">systemctl --failed</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出当前已经加载启动的 unit，如果添加 -all 选项会同时列出没有启动的 unit</span></span><br><span class="line">systemctl ==== systemctl list-units</span><br><span class="line"><span class="comment"># 加载后有几种情况</span></span><br><span class="line"><span class="comment"># loaded active running 加载文件成功，启动成功，正在运行</span></span><br><span class="line"><span class="comment"># loaded active exited  加载文件成功，启动成功，运行一次正常退出</span></span><br><span class="line"><span class="comment"># loaded active waiting  加载文件成功，启动成功，正在运行，不过还在等待其它事件才能继续处理</span></span><br><span class="line"><span class="comment"># loaded failed failed  加载文件成功，启动失败，运行失败</span></span><br><span class="line"></span><br><span class="line">systemctl -all</span><br><span class="line"><span class="comment"># 会多几个状态</span></span><br><span class="line"><span class="comment"># not-found inactive dead 加载文件失败[没找到文件]</span></span><br><span class="line"><span class="comment"># loaded    inactive dead 加载文件成功 但没有设置问开机启动，所以没有运行过</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 只查看服务类型为service的服务</span></span><br><span class="line">systemctl --<span class="built_in">type</span> service</span><br><span class="line">systemctl list-units --<span class="built_in">type</span>=service -all</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据 /lib/systemd/system/ 目录内的文件列出所有的服务及其当前的状态，如是否开机启动等等</span></span><br><span class="line">systemctl list-unit-files</span><br><span class="line"><span class="comment"># 状态类型</span></span><br><span class="line"><span class="comment"># enabled 设置为开机启动</span></span><br><span class="line"><span class="comment"># disabled 没有设置为开机启动</span></span><br><span class="line"><span class="comment"># masked 注销状态，此时不能通过systemctl进行启动，需要先取消注销状态</span></span><br><span class="line"><span class="comment"># static 该配置文件没有[Install]部分（无法执行），只能作为其他配置文件的依赖</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 只列出设置为开机启动的项</span></span><br><span class="line">systemctl list-unit-files | grep enabled</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只列出service</span></span><br><span class="line">systemctl list-unit-files --<span class="built_in">type</span> service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果发现某个 服务 不工作，可以查看是否有 服务 加载失败</span></span><br><span class="line">systemctl --failed</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>service :系统服务</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动redis服务</span></span><br><span class="line">systemctl start redis</span><br><span class="line"><span class="comment"># 重新启动redis服务</span></span><br><span class="line">systemctl restart redis</span><br><span class="line"><span class="comment"># 关闭redis服务</span></span><br><span class="line">systemctl stop redis</span><br><span class="line"><span class="comment"># 不关闭redis的情况下重新加载配置文件，让新的设置生效</span></span><br><span class="line">systemctl reload redis</span><br><span class="line"><span class="comment"># 加入开机自启动</span></span><br><span class="line">systemctl <span class="built_in">enable</span> redis</span><br><span class="line"><span class="comment"># 关闭开机自启动</span></span><br><span class="line">systemctl <span class="built_in">disable</span> redis</span><br><span class="line"><span class="comment"># 查看redis服务状态</span></span><br><span class="line">systemctl status redis</span><br><span class="line"><span class="comment"># 目前有没有正在运行中</span></span><br><span class="line">systemctl is-active redis</span><br><span class="line"><span class="comment"># 开机时有没有默认要启用</span></span><br><span class="line">systemctl is-enabled redis</span><br><span class="line"><span class="comment"># 是否启动失败</span></span><br><span class="line">systemctl is-failed redis</span><br><span class="line"><span class="comment"># 列出 redis服务 的配置</span></span><br><span class="line">systemctl show redis</span><br><span class="line"><span class="comment"># 注销 redis服务 ，注销后就无法启动</span></span><br><span class="line">systemctl mask redis</span><br><span class="line"><span class="comment"># 取消 redis服务 的注销</span></span><br><span class="line">systemctl unmask redis</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>小贴士</strong></em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看系统启动耗时</span></span><br><span class="line">$ systemd-analyze</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看每个服务的启动耗时</span></span><br><span class="line">$ systemd-analyze blame</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示瀑布状的启动过程流</span></span><br><span class="line">$ systemd-analyze critical-chain</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示指定服务的启动流</span></span><br><span class="line">$ systemd-analyze critical-chain sshd.service</span><br></pre></td></tr></table></figure>
+</div>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>target :类似于运行级别，支持多个target同时启动。target其实是多个unit的组合，系统启动说白了就是启动多个unit</p>
@@ -1134,7 +1138,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">16:55</span>
+    <span title="站点阅读时长">16:56</span>
   </span>
 </div>
 <div class="busuanzi-count">
