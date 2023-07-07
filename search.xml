@@ -696,7 +696,7 @@
 <p>如果是同一个Pod内的多个容器之间的存储共享，您可以考虑使用EBS卷。</p>
 </li>
 <li class="lvl-2">
-<p>如果是不同的Pod之间的存储共享，您可以考虑使用EFS文件系统。</p>
+<p>如果是不同的Pod之间的存储共享，此时由于可能跨可用区，您可以考虑使用EFS文件系统。</p>
 </li>
 </ul>
 <h2 id="安装-Amazon-EFS-CSI-驱动程序">安装 Amazon EFS CSI 驱动程序</h2>
@@ -977,7 +977,14 @@
 </li>
 </ul>
 <h2 id="后记">后记</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>这里要注意一个问题，如果pv被pvc绑定，此时是无法删除pv的，同理pvc被其它资源关联，也是不能被删除的，需要先删除对应的资源才可以。</p>
+</li>
+<li class="lvl-2">
+<p>EBS不能跨可用区，如果pod部署在不同的可用区，则不能使用ebs作为存储，此时可以使用EFS。</p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>技术</category>
