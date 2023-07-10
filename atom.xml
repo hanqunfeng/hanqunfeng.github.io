@@ -269,6 +269,69 @@
   </entry>
   
   <entry>
+    <title>AWS-EKS-10--向其他 IAM 主体授予权限</title>
+    <link href="https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/"/>
+    <id>https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/</id>
+    <published>2023-07-07T15:10:05.000Z</published>
+    <updated>2023-07-10T10:03:03.358Z</updated>
+    
+    <content type="html"><![CDATA[<!-- **加粗** *斜体* ***加粗并斜体*** ~~删除线~~ ==突出显示== `突出显示(推荐)` ++下划线++ ~下标~ ^上标^ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference. 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600) +++ **点击折叠** 这是被隐藏的内容 +++::: tips success warning danger这里是容器内的内容:::% note info % success warning danger这里是容器内的内容% endnote % --><h2 id="摘要">摘要</h2><ul class="lvl-0"><li class="lvl-2"><p>本文介绍EKS集群如何向其他 IAM 主体授予权限</p></li><li class="lvl-2"><p>参考资料：</p><ul class="lvl-2"><li class="lvl-6"><a href="https://docs.aws.amazon.com/zh_cn/eks/latest/userguide">Amazon EKS用户指南</a></li><li class="lvl-6"><a href="https://kubernetes.io/zh-cn/docs/home/">Kubernetes 文档</a></li></ul></li></ul><span id="more"></span><h2 id="向其他-IAM-主体授予权限">向其他 IAM 主体授予权限</h2><ul class="lvl-0"><li class="lvl-2"><p>创建集群的 IAM 主体是唯一可以访问集群的主体。向其他 IAM 主体授予权限，以便它们可以访问您的集群。</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 ConfigMap 中的当前映射</span></span><br><span class="line">~ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y28EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 所有命名空间中的 Kubernetes 资源，文件中的组名称为 eks-console-dashboard-full-access-group</span></span><br><span class="line">~ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 特定命名空间中的 Kubernetes 资源 - 此文件中的命名空间为 default，请依据需要修改命名空间名称。文件中的组名为 eks-console-dashboard-restricted-access-group</span></span><br><span class="line">~ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-restricted-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里以所有资源为例</span></span><br><span class="line">~ kubectl apply -f eks-console-full-access.yaml</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/eks-console-dashboard-full-access-clusterrole created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/eks-console-dashboard-full-access-binding created</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为用户添加映射，这里为用户hanqf添加权限策略</span></span><br><span class="line">~ eksctl create iamidentitymapping \</span><br><span class="line">    --cluster eks-lexing --profile eks-us-west-2 \</span><br><span class="line">    --arn arn:aws:iam::743263909655:user/hanqf \</span><br><span class="line">    --group eks-console-dashboard-full-access-group \</span><br><span class="line">    --no-duplicate-arns</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  checking arn arn:aws:iam::743263909655:user/hanqf against entries <span class="keyword">in</span> the auth ConfigMap</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  adding identity <span class="string">&quot;arn:aws:iam::743263909655:user/hanqf&quot;</span> to auth ConfigMap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次查看 ConfigMap 中的映射</span></span><br><span class="line">eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y28EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line">arn:aws:iam::743263909655:user/hanqf                                                    eks-console-dashboard-full-access-group</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>此时使用hanqf帐号登录aws控制台就可以查看eks的资源信息了</p></li></ul><h2 id="取消授权">取消授权</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">~ eksctl delete iamidentitymapping \</span><br><span class="line">    --cluster eks-lexing --profile eks-ty-old \</span><br><span class="line">    --arn arn:aws:iam::743263909644:user/hanqf</span><br><span class="line">2023-07-05 09:12:29 [ℹ]  removing identity <span class="string">&quot;arn:aws:iam::743263909644:user/hanqf&quot;</span> from auth ConfigMap (username = <span class="string">&quot;&quot;</span>, <span class="built_in">groups</span> = [<span class="string">&quot;eks-console-dashboard-full-access-group&quot;</span>])</span><br><span class="line"></span><br><span class="line">~ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-ty-old</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909644:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y28EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ --&gt;
+&lt;h2 id=&quot;摘要&quot;&gt;摘要&lt;/h2&gt;
+&lt;ul class=&quot;lvl-0&quot;&gt;
+&lt;li class=&quot;lvl-2&quot;&gt;
+&lt;p&gt;本文介绍EKS集群如何向其他 IAM 主体授予权限&lt;/p&gt;
+&lt;/li&gt;
+&lt;li class=&quot;lvl-2&quot;&gt;
+&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;ul class=&quot;lvl-2&quot;&gt;
+&lt;li class=&quot;lvl-6&quot;&gt;&lt;a href=&quot;https://docs.aws.amazon.com/zh_cn/eks/latest/userguide&quot;&gt;Amazon EKS用户指南&lt;/a&gt;&lt;/li&gt;
+&lt;li class=&quot;lvl-6&quot;&gt;&lt;a href=&quot;https://kubernetes.io/zh-cn/docs/home/&quot;&gt;Kubernetes 文档&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="技术" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="aws" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/aws/"/>
+    
+    <category term="eks" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/aws/eks/"/>
+    
+    
+    <category term="java" scheme="https://blog.hanqunfeng.com/tags/java/"/>
+    
+  </entry>
+  
+  <entry>
     <title>AWS-EKS-09--创建基于LoadBalancer的service和ingress</title>
     <link href="https://blog.hanqunfeng.com/2023/07/07/aws-eks09-service-ingress/"/>
     <id>https://blog.hanqunfeng.com/2023/07/07/aws-eks09-service-ingress/</id>
@@ -686,69 +749,6 @@
 &lt;ul class=&quot;lvl-0&quot;&gt;
 &lt;li class=&quot;lvl-2&quot;&gt;
 &lt;p&gt;本文介绍为EKS集群创建 IAM OIDC 身份提供商&lt;/p&gt;
-&lt;/li&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;参考资料：&lt;/p&gt;
-&lt;ul class=&quot;lvl-2&quot;&gt;
-&lt;li class=&quot;lvl-6&quot;&gt;&lt;a href=&quot;https://docs.aws.amazon.com/zh_cn/eks/latest/userguide&quot;&gt;Amazon EKS用户指南&lt;/a&gt;&lt;/li&gt;
-&lt;li class=&quot;lvl-6&quot;&gt;&lt;a href=&quot;https://kubernetes.io/zh-cn/docs/home/&quot;&gt;Kubernetes 文档&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    
-    
-    
-    <category term="技术" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="aws" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/aws/"/>
-    
-    <category term="eks" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/aws/eks/"/>
-    
-    
-    <category term="java" scheme="https://blog.hanqunfeng.com/tags/java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>AWS-EKS-10--向其他 IAM 主体授予权限</title>
-    <link href="https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/"/>
-    <id>https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/</id>
-    <published>2023-07-07T12:30:05.000Z</published>
-    <updated>2023-07-07T07:59:43.316Z</updated>
-    
-    <content type="html"><![CDATA[<!-- **加粗** *斜体* ***加粗并斜体*** ~~删除线~~ ==突出显示== `突出显示(推荐)` ++下划线++ ~下标~ ^上标^ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference. 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600) +++ **点击折叠** 这是被隐藏的内容 +++::: tips success warning danger这里是容器内的内容:::% note info % success warning danger这里是容器内的内容% endnote % --><h2 id="摘要">摘要</h2><ul class="lvl-0"><li class="lvl-2"><p>本文介绍EKS集群如何向其他 IAM 主体授予权限</p></li><li class="lvl-2"><p>参考资料：</p><ul class="lvl-2"><li class="lvl-6"><a href="https://docs.aws.amazon.com/zh_cn/eks/latest/userguide">Amazon EKS用户指南</a></li><li class="lvl-6"><a href="https://kubernetes.io/zh-cn/docs/home/">Kubernetes 文档</a></li></ul></li></ul><span id="more"></span><h2 id="向其他-IAM-主体授予权限">向其他 IAM 主体授予权限</h2><ul class="lvl-0"><li class="lvl-2"><p>创建集群的 IAM 主体是唯一可以访问集群的主体。向其他 IAM 主体授予权限，以便它们可以访问您的集群。</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 ConfigMap 中的当前映射</span></span><br><span class="line">~ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y28EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 所有命名空间中的 Kubernetes 资源，文件中的组名称为 eks-console-dashboard-full-access-group</span></span><br><span class="line">~ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 特定命名空间中的 Kubernetes 资源 - 此文件中的命名空间为 default，请依据需要修改命名空间名称。文件中的组名为 eks-console-dashboard-restricted-access-group</span></span><br><span class="line">~ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-restricted-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里以所有资源为例</span></span><br><span class="line">~ kubectl apply -f eks-console-full-access.yaml</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/eks-console-dashboard-full-access-clusterrole created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/eks-console-dashboard-full-access-binding created</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为用户添加映射，这里为用户hanqf添加权限策略</span></span><br><span class="line">~ eksctl create iamidentitymapping \</span><br><span class="line">    --cluster eks-lexing --profile eks-us-west-2 \</span><br><span class="line">    --arn arn:aws:iam::743263909655:user/hanqf \</span><br><span class="line">    --group eks-console-dashboard-full-access-group \</span><br><span class="line">    --no-duplicate-arns</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  checking arn arn:aws:iam::743263909655:user/hanqf against entries <span class="keyword">in</span> the auth ConfigMap</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  adding identity <span class="string">&quot;arn:aws:iam::743263909655:user/hanqf&quot;</span> to auth ConfigMap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次查看 ConfigMap 中的映射</span></span><br><span class="line">eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y28EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line">arn:aws:iam::743263909655:user/hanqf                                                    eks-console-dashboard-full-access-group</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>此时使用hanqf帐号登录aws控制台就可以查看eks的资源信息了</p></li></ul><h2 id="取消授权">取消授权</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">~ eksctl delete iamidentitymapping \</span><br><span class="line">    --cluster eks-lexing --profile eks-ty-old \</span><br><span class="line">    --arn arn:aws:iam::743263909644:user/hanqf</span><br><span class="line">2023-07-05 09:12:29 [ℹ]  removing identity <span class="string">&quot;arn:aws:iam::743263909644:user/hanqf&quot;</span> from auth ConfigMap (username = <span class="string">&quot;&quot;</span>, <span class="built_in">groups</span> = [<span class="string">&quot;eks-console-dashboard-full-access-group&quot;</span>])</span><br><span class="line"></span><br><span class="line">~ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-ty-old</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909644:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y28EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;!--
- **加粗**
- *斜体*
- ***加粗并斜体***
- ~~删除线~~
- ==突出显示==
- `突出显示(推荐)`
- ++下划线++
- ~下标~
- ^上标^
- 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
- 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
-
- +++ **点击折叠**
- 这是被隐藏的内容
- +++
-
-::: tips success warning danger
-这里是容器内的内容
-:::
-
-% note info % success warning danger
-这里是容器内的内容
-% endnote %
-
- --&gt;
-&lt;h2 id=&quot;摘要&quot;&gt;摘要&lt;/h2&gt;
-&lt;ul class=&quot;lvl-0&quot;&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;本文介绍EKS集群如何向其他 IAM 主体授予权限&lt;/p&gt;
 &lt;/li&gt;
 &lt;li class=&quot;lvl-2&quot;&gt;
 &lt;p&gt;参考资料：&lt;/p&gt;
