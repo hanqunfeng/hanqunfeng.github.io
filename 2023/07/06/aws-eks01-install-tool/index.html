@@ -28,7 +28,7 @@
 <meta property="og:description" content="摘要   本文介绍在AWS中创建EKS集群的过程中会使用到的命令行工具的安装方法   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-06T14:30:05.000Z">
-<meta property="article:modified_time" content="2023-07-10T07:14:51.002Z">
+<meta property="article:modified_time" content="2023-07-11T02:21:25.681Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
@@ -733,7 +733,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-07-10 15:14:51" itemprop="dateModified" datetime="2023-07-10T15:14:51+08:00">2023-07-10</time>
+      <time title="修改时间：2023-07-11 10:21:25" itemprop="dateModified" datetime="2023-07-11T10:21:25+08:00">2023-07-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -785,14 +785,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.9k</span>
+      <span>5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
+      <span>5 分钟</span>
     </span>
 
         </div>
@@ -874,6 +874,12 @@
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认default，这里配置上用户的访问密钥</span></span><br><span class="line">$ aws configure</span><br><span class="line">AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE</span><br><span class="line">AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</span><br><span class="line">Default region name [None]: us-west-1</span><br><span class="line">Default output format [None]: json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定profile，后面所有命令中涉及到凭证的部分都使用该profile</span></span><br><span class="line">$ aws configure --profile eks-us-west-2</span><br><span class="line">AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE</span><br><span class="line">AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</span><br><span class="line">Default region name [None]: us-west-2</span><br><span class="line">Default output format [None]: json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看配置</span></span><br><span class="line">$ <span class="built_in">cat</span> ~/.aws/config</span><br><span class="line">[default]</span><br><span class="line">region = us-west-1</span><br><span class="line">output = json</span><br><span class="line">[profile eks-us-west-2]</span><br><span class="line">region = us-west-2</span><br><span class="line">output = json</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">cat</span> ~/.aws/credentials</span><br><span class="line">[default]</span><br><span class="line">aws_access_key_id = AKIAIOSFODNN7EXAMPLE</span><br><span class="line">aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</span><br><span class="line">[eks-us-west-2]</span><br><span class="line">aws_access_key_id = AKIAIOSFODNN7EXAMPLE</span><br><span class="line">aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有profile</span></span><br><span class="line">$ aws configure list-profiles</span><br><span class="line">default</span><br><span class="line">eks-us-west-2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看指定的profile的信息</span></span><br><span class="line">$ aws configure list --profile eks-us-west-2</span><br><span class="line">      Name                    Value             Type    Location</span><br><span class="line">      ----                    -----             ----    --------</span><br><span class="line">   profile               eks-us-west-2           manual    --profile</span><br><span class="line">access_key     ****************IP6L shared-credentials-file</span><br><span class="line">secret_key     ****************OIQU shared-credentials-file</span><br><span class="line">    region                us-west-2      config-file    ~/.aws/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看与profile对应的用户信息</span></span><br><span class="line">$ aws sts get-caller-identity --profile eks-us-west-2</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;UserId&quot;</span>: <span class="string">&quot;AIDA55DP3G4GIDWF2GNIR&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Account&quot;</span>: <span class="string">&quot;743263909655&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Arn&quot;</span>: <span class="string">&quot;arn:aws:iam::743263909655:user/hanqunfeng&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用aws命令时，如果不指定<code>--profile</code>，则默认使用<code>default</code>对应的认证信息，也可以通过环境变量指定要使用的profile</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> AWS_PROFILE=eks-us-west-2</span><br></pre></td></tr></table></figure>
 <h3 id="kubectl">kubectl</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1085,7 +1091,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">18:30</span>
+    <span title="站点阅读时长">18:31</span>
   </span>
 </div>
 <div class="busuanzi-count">
