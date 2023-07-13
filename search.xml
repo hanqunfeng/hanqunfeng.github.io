@@ -1,6 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AWS-EKS-15--Pod 是如何调用 AWS 资源的</title>
+    <url>/2023/07/13/aws-eks15-serviceaccount/</url>
+    <content><![CDATA[<!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍为EKS集群的 Pod 调用 AWS 资源的方法</p>
+</li>
+<li class="lvl-2">
+<p>参考资料：</p>
+<ul class="lvl-2">
+<li class="lvl-6"><a href="https://docs.aws.amazon.com/zh_cn/eks/latest/userguide">Amazon EKS用户指南</a></li>
+<li class="lvl-6"><a href="https://kubernetes.io/zh-cn/docs/home/">Kubernetes 文档</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="原理解析">原理解析</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在Pod中访问AWS资源，如获取S3中的文件，将ingress绑定到ELB，等等，这些操作都需要被授予相应的权限才可以正常访问。</p>
+</li>
+<li class="lvl-2">
+<p>在AWS IAM中的Role可以被授权给基于OIDC身份提供商的外部用户，而在EKS集群中的pod对于AWS IAM来说就属于外部用户，AWS会通过IAM OIDC对这些外部用户的有效性进行校验。</p>
+</li>
+<li class="lvl-2">
+<p>前文已经介绍过<a href="/2023/07/07/aws-eks03-oidc/" title="AWS-EKS-03--创建 IAM OIDC 身份提供商">如何为EKS创建 IAM OIDC 身份提供商</a>，在EKS(K8s)中，并不是直接对Pod进行权限校验，而是ServcieAccount，在 K8s 中，ServiceAccount 是一种用于身份验证和授权的机制，它为 Pod 提供了一个身份标识。每个 Pod 都与一个 ServiceAccount 相关联，并且可以使用该 ServiceAccount 获取与其关联的身份凭据。</p>
+</li>
+<li class="lvl-2">
+<p>在EKS（K8s）中可以将ServcieAccount与AWS IAM Role进行绑定，同时将ServcieAccount与Pod进行关联，这样Pod也就具备了相应的IAM Role。</p>
+</li>
+<li class="lvl-2">
+<p>EKS（K8s）的 ServcieAccount 通过 Idp（EKS OpenID Connect provider）获得 ID_token并将其发送给 IAM Identity providers ，IAM Identity providers负责获取OIDC的key并验证ID_token的有效性。</p>
+</li>
+<li class="lvl-2">
+<p>当ServcieAccount通过IAM OIDC身份校验后，关联的Pod就可以使用相对应的Role获得访问AWS资源的权限。</p>
+</li>
+<li class="lvl-2">
+<p>创建Pod时，如果没有为其指定关联的ServcieAccount，则默认使用Pod所在Namespace下的名称为<code>default</code>的ServcieAccount，创建Namespace时会自动为其创建该缺省的ServcieAccount，默认其没有绑定任何IAM Role，则缺省继承NodeGroup的IAM Role，NodeGroup的IAM Role是在创建EKS集群时自动创建的，其具有对ECR存储库的只读访问、允许Amazon EKS工作节点连接到Amazon EKS群集等权限。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/fXD4pY.png" alt="" width="1200" height="800"></p>
+</li>
+<li class="lvl-2">
+<p>Amazon EKS Pod Identity Webhook 会查看与 service account 关联的 Pods，并向 Pod 提供下列环境变量</p>
+<ul class="lvl-2">
+<li class="lvl-6">AWS_ROLE_ARN=arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/&lt;IAM_ROLE_NAME&gt;</li>
+<li class="lvl-6">AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><code>AWS_ROLE_ARN</code>就是绑定到ServiceAccount上的IAM Role，<code>AWS_WEB_IDENTITY_TOKEN_FILE</code>就是要发送给IAM Identity providers的ID_token。</p>
+</li>
+<li class="lvl-2">
+<p>默认只有以 root 用户运行的容器才有权限访问 web identity token 文件，当以其它用户运行容器时，需要用 fsGroup 指定一个 groupID。在 Amazon EKS 中，可以将 fsGroup 设置为 65534。这是 Kubernetes 中的推荐做法，因为这个值对应于 nobody 用户和 nogroup 组的 ID。使用 fsGroup: 65534 将确保容器中的非 root 用户具有适当的权限来访问 Web Identity Token 文件。</p>
+</li>
+</ul>
+<h2 id="案例分析">案例分析</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>前面在<a href="/2023/07/07/aws-eks07-loadbalancer/" title="AWS-EKS-07--安装 AWS Load Balancer Controller 附加组件">安装 AWS Load Balancer Controller 附加组件</a>时，通过如下方式进行授权</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.7/docs/install/iam_policy.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用上一步中下载的策略创建一个 IAM policy</span></span><br><span class="line">$ aws iam create-policy \</span><br><span class="line">    --profile eks-us-west-2 \</span><br><span class="line">    --policy-name AWSLoadBalancerControllerIAMPolicy \</span><br><span class="line">    --policy-document file://iam_policy.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 AWS Load Balancer Controller 的 kube-system 命名空间中创建名为 aws-load-balancer-controller 的 Kubernetes 服务账户，并使用 IAM 角色的名称注释 Kubernetes 服务账户。</span></span><br><span class="line">$ eksctl create iamserviceaccount \</span><br><span class="line">  --cluster=eks-lexing \</span><br><span class="line">  --profile eks-us-west-2 \</span><br><span class="line">  --namespace=kube-system \</span><br><span class="line">  --name=aws-load-balancer-controller \</span><br><span class="line">  --role-name AmazonEKSLoadBalancerControllerRole \</span><br><span class="line">  --attach-policy-arn=arn:aws:iam::743263909644:policy/AWSLoadBalancerControllerIAMPolicy \</span><br><span class="line">  --approve</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>上面是先通过<code>aws iam create-policy</code>命令创建了一个策略，然后通过<code>eksctl create iamserviceaccount</code>命令为EKS(K8s)创建了一个ServiceAccount，同时创建了一个IAM Role与ServiceAccount绑定，并将该Role与上面创建的策略进行关联。</p>
+</li>
+<li class="lvl-2">
+<p>所以实际上，上面的一个命令干了四件事</p>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p>1.创建了一个名称为<code>AmazonEKSLoadBalancerControllerRole</code>的IAM角色并关联新建的名称为<code>AWSLoadBalancerControllerIAMPolicy</code>的策略<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/xl0OSL.png" alt="" width="1200" height="600"></p>
+</li>
+<li class="lvl-6">
+<p>2.在k8s的<code>kube-system</code>namespace下创建了一个名称为<code>aws-load-balancer-controller</code>的ServiceAccount</p>
+</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ k get sa -n kube-system aws-load-balancer-controller</span><br><span class="line">NAME                           SECRETS   AGE</span><br><span class="line">aws-load-balancer-controller   0         9d</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">3.在名称为<code>AmazonEKSLoadBalancerControllerRole</code>的IAM角色的信任关系中指定认证方式为OIDC，并且关联名称为<code>aws-load-balancer-controller</code>的ServiceAccount。</li>
+</ul>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/MkTXd5.png" alt="" width="1200" height="500"></p>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p>4.在名称为<code>aws-load-balancer-controller</code>的ServiceAccount中关联上面的角色<code>AmazonEKSLoadBalancerControllerRole</code>，就是添加注释<code>eks.amazonaws.com/role-arn: arn:aws:iam::743263909644:role/AmazonEKSLoadBalancerControll</code>。</p>
+</li>
+</ul>
+  <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">k</span> <span class="string">edit</span> <span class="string">sa</span> <span class="string">-n</span> <span class="string">kube-system</span> <span class="string">aws-load-balancer-controller</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">eks.amazonaws.com/role-arn:</span> <span class="string">arn:aws:iam::743263909644:role/AmazonEKSLoadBalancerControll</span></span><br><span class="line"><span class="attr">creationTimestamp:</span> <span class="string">&quot;2023-07-04T09:20:41Z&quot;</span></span><br><span class="line"><span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app.kubernetes.io/managed-by:</span> <span class="string">eksctl</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">aws-load-balancer-controller</span></span><br><span class="line"><span class="attr">namespace:</span> <span class="string">kube-system</span></span><br><span class="line"><span class="attr">resourceVersion:</span> <span class="string">&quot;1707669&quot;</span></span><br><span class="line"><span class="attr">uid:</span> <span class="string">857200a6-2e16-4939-bbbc-483dd579acbb</span></span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p>然后在创建Pod时，为Pod指定<code>serviceAccountName: aws-load-balancer-controller</code>，以及为了有权限访问 web identity token 文件，需要用<code>fsGroup</code> 指定一个 groupID，通常设置为65534，确保容器中的用户具有访问 /var/run/secrets/eks.amazonaws.com/serviceaccount/token 文件的权限。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ kubectl edit deployment -n kube-system aws-load-balancer-controller</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/rSKtJm.png" alt=""></p>
+<h2 id="动手实践">动手实践</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>搞明白了上面的原理，我们只需要按照上面那的步骤做就可以了，接下来就以Pod访问S3为例进行说明。</p>
+</li>
+<li class="lvl-2">
+<p>创建新的策略或使用现有策略，这里我们使用已有的策略<code>arn:aws:iam::aws:policy/AmazonS3FullAccess</code></p>
+</li>
+<li class="lvl-2">
+<p>使用<code>eksctl create iamserviceaccount</code>创建Service和IAM Role，并将它们进行绑定关联</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ eksctl create iamserviceaccount \</span><br><span class="line">  --cluster=eks-lexing \</span><br><span class="line">  --namespace=<span class="built_in">test</span> \</span><br><span class="line">  --name=test-s3-sa-new \</span><br><span class="line">  --role-name TestS3Role \</span><br><span class="line">  --attach-policy-arn=arn:aws:iam::aws:policy/AmazonS3FullAccess \</span><br><span class="line">  --approve</span><br><span class="line">2023-07-13 19:59:18 [ℹ]  6 existing iamserviceaccount(s) (kube-system/aws-load-balancer-controller,kube-system/aws-node,kube-system/ebs-csi-controller-sa,kube-system/efs-csi-controller-sa,<span class="built_in">test</span>/test-s3-sa,<span class="built_in">test</span>/testS3SA) will be excluded</span><br><span class="line">2023-07-13 19:59:18 [ℹ]  1 iamserviceaccount (<span class="built_in">test</span>/test-s3-sa-new) was included (based on the include/exclude rules)</span><br><span class="line">2023-07-13 19:59:18 [!]  serviceaccounts that exist <span class="keyword">in</span> Kubernetes will be excluded, use --override-existing-serviceaccounts to override</span><br><span class="line">2023-07-13 19:59:18 [ℹ]  1 task: &#123;</span><br><span class="line">    2 sequential sub-tasks: &#123;</span><br><span class="line">        create IAM role <span class="keyword">for</span> serviceaccount <span class="string">&quot;test/test-s3-sa-new&quot;</span>,</span><br><span class="line">        create serviceaccount <span class="string">&quot;test/test-s3-sa-new&quot;</span>,</span><br><span class="line">    &#125; &#125;2023-07-13 19:59:18 [ℹ]  building iamserviceaccount stack <span class="string">&quot;eksctl-eks-lexing-addon-iamserviceaccount-test-test-s3-sa-new&quot;</span></span><br><span class="line">2023-07-13 19:59:18 [ℹ]  deploying stack <span class="string">&quot;eksctl-eks-lexing-addon-iamserviceaccount-test-test-s3-sa-new&quot;</span></span><br><span class="line">2023-07-13 19:59:19 [ℹ]  waiting <span class="keyword">for</span> CloudFormation stack <span class="string">&quot;eksctl-eks-lexing-addon-iamserviceaccount-test-test-s3-sa-new&quot;</span></span><br><span class="line">2023-07-13 19:59:50 [ℹ]  waiting <span class="keyword">for</span> CloudFormation stack <span class="string">&quot;eksctl-eks-lexing-addon-iamserviceaccount-test-test-s3-sa-new&quot;</span></span><br><span class="line">2023-07-13 19:59:51 [ℹ]  created serviceaccount <span class="string">&quot;test/test-s3-sa-new&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看sa，确认是否已关联IAM Role</span></span><br><span class="line">$ k describe sa test-s3-sa-new</span><br><span class="line">Name:                test-s3-sa-new</span><br><span class="line">Namespace:           <span class="built_in">test</span></span><br><span class="line">Labels:              app.kubernetes.io/managed-by=eksctl</span><br><span class="line">Annotations:         eks.amazonaws.com/role-arn: arn:aws:iam::743263909644:role/TestS3Role</span><br><span class="line">Image pull secrets:  &lt;none&gt;</span><br><span class="line">Mountable secrets:   &lt;none&gt;</span><br><span class="line">Tokens:              &lt;none&gt;</span><br><span class="line">Events:              &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/IOszUm.png" alt="" width="1200" height="600"><br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/oQ6D30.png" alt="" width="1200" height="400"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个已经安装过AWS CLI的Pod，这里镜像就使用<code>amazon/aws-cli</code>，注意要指定<code>serviceAccountName: test-s3-sa-new</code></p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">deployment-test-s3-sa</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app.kubernetes.io/name:</span> <span class="string">app-test-s3-sa</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app.kubernetes.io/name:</span> <span class="string">app-test-s3-sa</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">serviceAccountName:</span> <span class="string">test-s3-sa-new</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">amazon/aws-cli</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">app-test-s3-sa</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">command:</span> [<span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;-c&quot;</span>]</span><br><span class="line">        <span class="attr">args:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">tail</span> <span class="string">-f</span> <span class="string">/dev/null</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 部署</span></span><br><span class="line">$ k apply -f testS3SA.yaml</span><br><span class="line">deployment.apps/deployment-test-s3-sa created</span><br><span class="line"><span class="comment"># 进入pod</span></span><br><span class="line">$ k <span class="built_in">exec</span> -it deployment-test-s3-sa-5bd985845d-mqjjp -- bash</span><br><span class="line"><span class="comment"># 查看当前的AWS用户信息，可以看到这里关联的是一个临时用户，但是从Arn中也能看出来其关联的角色 TestS3Role</span></span><br><span class="line">bash-4.2<span class="comment"># aws sts get-caller-identity</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;UserId&quot;</span>: <span class="string">&quot;AROA22DP3G4GNBLHPZBAM:botocore-session-1689250618&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Account&quot;</span>: <span class="string">&quot;743263909644&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Arn&quot;</span>: <span class="string">&quot;arn:aws:sts::743263909644:assumed-role/TestS3Role/botocore-session-1689250618&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 查看s3存储桶列表，查询成功，说明当前pod已经具备的访问AWS S3资源的权限</span></span><br><span class="line">bash-4.2<span class="comment"># aws s3 ls</span></span><br><span class="line">2023-07-10 09:34:45 lexing-helm-charts</span><br><span class="line"><span class="comment"># 查看环境变量</span></span><br><span class="line">bash-4.2<span class="comment"># echo $AWS_ROLE_ARN</span></span><br><span class="line">arn:aws:iam::743263909644:role/TestS3Role</span><br><span class="line">bash-4.2<span class="comment"># echo $AWS_WEB_IDENTITY_TOKEN_FILE</span></span><br><span class="line">/var/run/secrets/eks.amazonaws.com/serviceaccount/token</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>上面提到过，<code>eksctl create iamserviceaccount</code>一个命令干了四件事，确实很方便，实际上我们也可以不使用这个命令，而是分别完成这四个步骤，感兴趣的小伙伴可以参考这篇文章: <a href="https://zhuanlan.zhihu.com/p/461611497">一文搞懂 AWS EKS 权限管理 下篇 service account 测试</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>aws</category>
+        <category>eks</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>AWS-EKS-14--Helm</title>
     <url>/2023/07/10/aws-eks14-helm/</url>
     <content><![CDATA[<!--
@@ -839,14 +997,34 @@
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="创建-IAM-用户">创建 IAM 用户</h2>
+<h2 id="EKS权限管理">EKS权限管理</h2>
 <ul class="lvl-0">
+<li class="lvl-2">
+<p>创建EKS集群后，默认只有创建集群的 IAM 主体可以访问并管理EKS集群，实际业务中，我们需要将EKS的全部或部分权限分配给指定的用户，就需要对该用户进行授权。</p>
+</li>
+<li class="lvl-2">
+<p>对于 AWS EKS 的权限管理，主要有以下三个方面内容</p>
+<ul class="lvl-2">
+<li class="lvl-6">IAM 用户、Role 或者 Account 访问 EKS 相关资源。这里的资源是指 EKS 集群本身的 AWS 资源。比如，EKS 集群信息配置，EC2 节点等等，这里不包括 K8s 中的资源。</li>
+<li class="lvl-6">IAM 用户、Role 或者 Account 访问 EKS K8s 资源，这里的资源是指 K8s 内部的资源，比如，K8s 内部的 service account、deployment、service 等等。</li>
+<li class="lvl-6">K8s 内部 Pod 调用 AWS 的资源。比如，通过创建 Ingress 来创建 AWS ALB。这部分后面会单独介绍。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>与IAM用户授权相关的是头两条，即要使 IAM 用户能够访问 EKS 集群本身的 AWS 资源，又要能够访问 K8s 内部的资源。</p>
+</li>
+</ul>
+<h2 id="创建-IAM-用户并授权其访问EKS资源">创建 IAM 用户并授权其访问EKS资源</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>关于如何在IAM中创建用户并授予相应的策略属于<a href="https://docs.aws.amazon.com/zh_cn/IAM/latest/UserGuide/introduction.html">AWS IAM权限管理</a>的范畴，不是本文的重点，作者默认读者已掌握这些内容。</p>
+</li>
 <li class="lvl-2">
 <p>在AWS控制台中创建一个用户<code>ekstest</code>，为了保证最小权限原则，这里只为其分配一个内联策略，同时为其创建访问密钥。注意必须为用户至少分配如下策略，以保证IAM用户有权限查看 EKS 集群，否则使用密钥无法通过命令行连通EKS。</p>
 </li>
 </ul>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;Version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2012-10-17&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;Statement&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">		<span class="punctuation">&#123;</span></span><br><span class="line">			<span class="attr">&quot;Sid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;VisualEditor0&quot;</span><span class="punctuation">,</span></span><br><span class="line">			<span class="attr">&quot;Effect&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Allow&quot;</span><span class="punctuation">,</span></span><br><span class="line">			<span class="attr">&quot;Action&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eks:DescribeCluster&quot;</span><span class="punctuation">,</span></span><br><span class="line">			<span class="attr">&quot;Resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;arn:aws:eks:us-west-2:743263909655:cluster/eks-lexing&quot;</span></span><br><span class="line">		<span class="punctuation">&#125;</span></span><br><span class="line">	<span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-<h2 id="向-IAM-用户授予权限">向 IAM 用户授予权限</h2>
+<h2 id="向-IAM-用户授予访问K8s资源的权限">向 IAM 用户授予访问K8s资源的权限</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>创建集群的 IAM 主体是唯一可以访问集群的主体。向其他 IAM 主体授予权限，以便它们可以访问您的集群。</p>
@@ -861,7 +1039,13 @@
 <p>现在 aws-auth 中只有一个 mapRoles，这里的 rolearn 就是我们之前创建EKS时自动创建的，为 EC2 提供权限。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 通过eksctl查看 ConfigMap 中的aws-auth映射</span></span><br><span class="line">$ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过kubectl查看configmap aws-auth</span></span><br><span class="line">$ kubectl describe configmap -n kube-system aws-auth</span><br><span class="line">Name:         aws-auth</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">mapRoles:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - system:bootstrappers</span><br><span class="line">  - system:nodes</span><br><span class="line">  rolearn: arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG</span><br><span class="line">  username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span><br><span class="line"></span><br><span class="line">mapUsers:</span><br><span class="line">----</span><br><span class="line">[]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BinaryData</span><br><span class="line">====</span><br><span class="line"></span><br><span class="line">Events:  &lt;none&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 所有命名空间中的 Kubernetes 资源，文件中的组名称为 eks-console-dashboard-full-access-group</span></span><br><span class="line">$ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 特定命名空间中的 Kubernetes 资源 - 此文件中的命名空间为 default，请依据需要修改命名空间名称。文件中的组名为 eks-console-dashboard-restricted-access-group</span></span><br><span class="line">$ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-restricted-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里以所有资源为例</span></span><br><span class="line">$ kubectl apply -f eks-console-full-access.yaml</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/eks-console-dashboard-full-access-clusterrole created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/eks-console-dashboard-full-access-binding created</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为用户添加映射，这里为用户 ekstest 添加权限策略</span></span><br><span class="line">$ eksctl create iamidentitymapping \</span><br><span class="line">    --cluster eks-lexing --profile eks-us-west-2 \</span><br><span class="line">    --arn arn:aws:iam::743263909655:user/ekstest \</span><br><span class="line">    --group eks-console-dashboard-full-access-group \</span><br><span class="line">    --no-duplicate-arns</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  checking arn arn:aws:iam::743263909655:user/ekstest against entries <span class="keyword">in</span> the auth ConfigMap</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  adding identity <span class="string">&quot;arn:aws:iam::743263909655:user/ekstest&quot;</span> to auth ConfigMap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次通过eksctl查看 ConfigMap 中的aws-auth映射</span></span><br><span class="line">$ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line">arn:aws:iam::743263909655:user/ekstest                                                    eks-console-dashboard-full-access-group</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过kubectl再次查看configmap aws-auth</span></span><br><span class="line"><span class="comment"># 实际上直接编辑也可以: kubectl edit configmap -n kube-system aws-auth</span></span><br><span class="line">$ kubectl describe configmap -n kube-system aws-auth</span><br><span class="line">Name:         aws-auth</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">mapRoles:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - system:bootstrappers</span><br><span class="line">  - system:nodes</span><br><span class="line">  rolearn: arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG</span><br><span class="line">  username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span><br><span class="line"></span><br><span class="line">mapUsers:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - eks-console-dashboard-full-access-group</span><br><span class="line">  userarn: arn:aws:iam::743263909655:user/ekstest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BinaryData</span><br><span class="line">====</span><br><span class="line"></span><br><span class="line">Events:  &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 通过eksctl查看 ConfigMap 中的aws-auth映射</span></span><br><span class="line">$ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过kubectl查看configmap aws-auth</span></span><br><span class="line">$ kubectl describe configmap -n kube-system aws-auth</span><br><span class="line">Name:         aws-auth</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">mapRoles:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - system:bootstrappers</span><br><span class="line">  - system:nodes</span><br><span class="line">  rolearn: arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG</span><br><span class="line">  username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span><br><span class="line"></span><br><span class="line">mapUsers:</span><br><span class="line">----</span><br><span class="line">[]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BinaryData</span><br><span class="line">====</span><br><span class="line"></span><br><span class="line">Events:  &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>授权</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 所有命名空间中的 Kubernetes 资源，文件中的组名称为 eks-console-dashboard-full-access-group</span></span><br><span class="line">$ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 特定命名空间中的 Kubernetes 资源 - 此文件中的命名空间为 default，请依据需要修改命名空间名称。文件中的组名为 eks-console-dashboard-restricted-access-group</span></span><br><span class="line">$ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-restricted-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里以所有资源为例</span></span><br><span class="line">$ kubectl apply -f eks-console-full-access.yaml</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/eks-console-dashboard-full-access-clusterrole created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/eks-console-dashboard-full-access-binding created</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为用户添加映射，这里为用户 ekstest 添加权限策略</span></span><br><span class="line">$ eksctl create iamidentitymapping \</span><br><span class="line">    --cluster eks-lexing --profile eks-us-west-2 \</span><br><span class="line">    --arn arn:aws:iam::743263909655:user/ekstest \</span><br><span class="line">    --group eks-console-dashboard-full-access-group \</span><br><span class="line">    --no-duplicate-arns</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  checking arn arn:aws:iam::743263909655:user/ekstest against entries <span class="keyword">in</span> the auth ConfigMap</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  adding identity <span class="string">&quot;arn:aws:iam::743263909655:user/ekstest&quot;</span> to auth ConfigMap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次通过eksctl查看 ConfigMap 中的aws-auth映射</span></span><br><span class="line">$ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line">arn:aws:iam::743263909655:user/ekstest                                                    eks-console-dashboard-full-access-group</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过kubectl再次查看configmap aws-auth</span></span><br><span class="line"><span class="comment"># 实际上直接编辑也可以: kubectl edit configmap -n kube-system aws-auth</span></span><br><span class="line">$ kubectl describe configmap -n kube-system aws-auth</span><br><span class="line">Name:         aws-auth</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">mapRoles:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - system:bootstrappers</span><br><span class="line">  - system:nodes</span><br><span class="line">  rolearn: arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG</span><br><span class="line">  username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span><br><span class="line"></span><br><span class="line">mapUsers:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - eks-console-dashboard-full-access-group</span><br><span class="line">  userarn: arn:aws:iam::743263909655:user/ekstest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BinaryData</span><br><span class="line">====</span><br><span class="line"></span><br><span class="line">Events:  &lt;none&gt;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>此时使用 ekstest 的访问密钥就可以通过命令行访问eks了</p>
@@ -870,7 +1054,7 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 配置aws访问密钥</span></span><br><span class="line">$ aws configure --profile ekstest</span><br><span class="line">AWS Access Key ID [None]: AKIA22DP3</span><br><span class="line">AWS Secret Access Key [None]: 9ajQeyy/AiaAC0n1</span><br><span class="line">Default region name [None]: us-west-2</span><br><span class="line">Default output format [None]: json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新 ~/.kube/config</span></span><br><span class="line">$ <span class="built_in">export</span> AWS_PROFILE=ekstest</span><br><span class="line">$ aws eks update-kubeconfig --name eks-lexing</span><br><span class="line">Added new context arn:aws:eks:us-west-2:743263909655:cluster/eks-lexing to /Users/hanqf/.kube/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试命令</span></span><br><span class="line">$ k get node</span><br><span class="line">NAME                                           STATUS   ROLES    AGE   VERSION</span><br><span class="line">ip-192-168-16-155.us-west-2.compute.internal   Ready    &lt;none&gt;   13d   v1.26.4-eks-0a21954</span><br><span class="line">ip-192-168-48-14.us-west-2.compute.internal    Ready    &lt;none&gt;   13d   v1.26.4-eks-0a21954</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>此时 ekstest 还不能通过aws控制台中访问eks资源，还需要为其在IAM中授予必要的EKS策略。</p>
+<p>此时 ekstest 还不能通过aws控制台中访问eks资源，还需要为其在IAM中授予必要的EKS策略，下面的策略是授予IAM用户对EKS的完全访问权限。</p>
 </li>
 </ul>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;Version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2012-10-17&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;Statement&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;Sid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;VisualEditor0&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;Effect&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Allow&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;Action&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eks:*&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;Resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
@@ -1699,7 +1883,10 @@
 <h2 id="为集群创建-IAM-OIDC-身份提供商">为集群创建 IAM OIDC 身份提供商</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>要使用某些 Amazon EKS 附加组件，或启用个别 Kubernetes 工作负载以具有特定 AWS Identity and Access Management（IAM）权限，请为集群创建 IAM OpenID Connect（OIDC）提供商。您只需为集群创建一次 IAM OIDC 提供商。</p>
+<p>要使用某些 Amazon EKS 附加组件，或启用个别 Kubernetes 工作负载以具有特定 AWS Identity and Access Management（IAM）权限，请为集群创建 IAM OpenID Connect（OIDC）提供商。</p>
+</li>
+<li class="lvl-2">
+<p>只需为集群创建一次 IAM OIDC 提供商。</p>
 </li>
 <li class="lvl-2">
 <p>确定您的账户中是否已存在具有您的集群 ID 的 IAM OIDC 提供商</p>
@@ -1711,7 +1898,20 @@
 <p>使用以下命令为您的集群创建 IAM OIDC 身份提供商</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ eksctl utils associate-iam-oidc-provider --cluster eks-lexing --profile eks-us-west-2 --approve</span><br><span class="line">2023-06-28 15:38:20 [ℹ]  will create IAM Open ID Connect provider <span class="keyword">for</span> cluster <span class="string">&quot;eks-lexing&quot;</span> <span class="keyword">in</span> <span class="string">&quot;us-west-2&quot;</span></span><br><span class="line">2023-06-28 15:38:21 [✔]  created IAM Open ID Connect provider <span class="keyword">for</span> cluster <span class="string">&quot;eks-lexing&quot;</span> <span class="keyword">in</span> <span class="string">&quot;us-west-2&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看集群的 OIDC 提供商 URL，如果该命令返回为空，则说明尚未创建IAM OIDC 身份提供商</span></span><br><span class="line">$ aws eks describe-cluster --name eks-lexing --query <span class="string">&quot;cluster.identity.oidc.issuer&quot;</span> --output text --profile eks-us-west-2</span><br><span class="line">https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB872B6B7A1CC65D44191A56</span><br><span class="line"></span><br><span class="line">$ aws iam --profile eks-us-west-2 list-open-id-connect-providers | grep <span class="variable">$oidc_id</span> | <span class="built_in">cut</span> -d <span class="string">&quot;/&quot;</span> -f4</span><br><span class="line">1029FF88CB872B6B7A1CC65D44191A56<span class="string">&quot;</span></span><br></pre></td></tr></table></figure>]]></content>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ eksctl utils associate-iam-oidc-provider --cluster eks-lexing --profile eks-us-west-2 --approve</span><br><span class="line">2023-06-28 15:38:20 [ℹ]  will create IAM Open ID Connect provider <span class="keyword">for</span> cluster <span class="string">&quot;eks-lexing&quot;</span> <span class="keyword">in</span> <span class="string">&quot;us-west-2&quot;</span></span><br><span class="line">2023-06-28 15:38:21 [✔]  created IAM Open ID Connect provider <span class="keyword">for</span> cluster <span class="string">&quot;eks-lexing&quot;</span> <span class="keyword">in</span> <span class="string">&quot;us-west-2&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看集群的 OIDC 提供商 URL，如果该命令返回为空，则说明尚未创建IAM OIDC 身份提供商</span></span><br><span class="line">$ aws eks describe-cluster --name eks-lexing --query <span class="string">&quot;cluster.identity.oidc.issuer&quot;</span> --output text --profile eks-us-west-2</span><br><span class="line">https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56</span><br><span class="line"></span><br><span class="line">$ aws iam --profile eks-us-west-2 list-open-id-connect-providers | grep <span class="variable">$oidc_id</span> | <span class="built_in">cut</span> -d <span class="string">&quot;/&quot;</span> -f4</span><br><span class="line">1029FF88CB8725555A1CC65D44191A56<span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看OIDC元数据">查看OIDC元数据</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在集群的 OIDC 提供商 URL后面加上<code>/.well-known/openid-configuration</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ curl https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56/.well-known/openid-configuration -s| python -m json.tool</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;authorization_endpoint&quot;</span>: <span class="string">&quot;urn:kubernetes:programmatic_authorization&quot;</span>,</span><br><span class="line">    <span class="string">&quot;claims_supported&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;sub&quot;</span>,</span><br><span class="line">        <span class="string">&quot;iss&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;id_token_signing_alg_values_supported&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;RS256&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;issuer&quot;</span>: <span class="string">&quot;https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56&quot;</span>,</span><br><span class="line">    <span class="string">&quot;jwks_uri&quot;</span>: <span class="string">&quot;https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56/keys&quot;</span>,</span><br><span class="line">    <span class="string">&quot;response_types_supported&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;id_token&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;subject_types_supported&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;public&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>然后查看<code>jwks_uri</code>中的url，这里的keys就是 IAM 用来验证 EKS service account 发送过来的 ID_token 是否有效的。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56/keys -s | python -m json.tool</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;keys&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;RS256&quot;</span>,</span><br><span class="line">            <span class="string">&quot;e&quot;</span>: <span class="string">&quot;AQAB&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kid&quot;</span>: <span class="string">&quot;4e49f2d2c6c8550c55556b01637a93a8a4f941e5&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kty&quot;</span>: <span class="string">&quot;RSA&quot;</span>,</span><br><span class="line">            <span class="string">&quot;n&quot;</span>: <span class="string">&quot;rEKprAR5nRAHfulQyyI9unXUNpczPCKZO8hXVuTiKrwlzdI7pETs6g0hWQaKe96n4p-KERF-dc-KajboMqrCfsff7boVJdnA9k8CljwKvt-5ILyXe07ASZQkkbDgpY30GNvMB7tbhiwkaNjuBzrLsO2Ipom5rzlK3i6rjHxp3O94BgMbMMt4trvWtJ9vmhWILihkl_e8--5JOOzjjeNcrNoK_o5LxbHSetaALoGAk-XbCmUeFDWvLQ&quot;</span>,</span><br><span class="line">            <span class="string">&quot;use&quot;</span>: <span class="string">&quot;sig&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;RS256&quot;</span>,</span><br><span class="line">            <span class="string">&quot;e&quot;</span>: <span class="string">&quot;AQAB&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kid&quot;</span>: <span class="string">&quot;831cd2c5a14af3ff3ee5555ab1edf6dc7d7fb54d&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kty&quot;</span>: <span class="string">&quot;RSA&quot;</span>,</span><br><span class="line">            <span class="string">&quot;n&quot;</span>: <span class="string">&quot;xdlnMmc1lUGyVlt58621Arf-2Ytxxe5HCiBguYe1Y4DYvfxTzknH3x07Q1sMQLNGHV_4d-bT29ufhAnht6AaLcuxtxaonEcMArh95bnuau6-GFMe06XaBYlMDoTcf_czTGdI4On7veJtMpSsNlHNj507Jn6mcH8TGHIl6qRwj9NZSaoADrkDO87O-w71l1c2a3m0us1vWir0QJdZ3J2al4k1Qm7KZT-dN9rs2LquQS0s6MTX-VdQLFb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;use&quot;</span>: <span class="string">&quot;sig&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;RS256&quot;</span>,</span><br><span class="line">            <span class="string">&quot;e&quot;</span>: <span class="string">&quot;AQAB&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kid&quot;</span>: <span class="string">&quot;eba5269e0fedd9431af2755550dd09f85bec7ad0&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kty&quot;</span>: <span class="string">&quot;RSA&quot;</span>,</span><br><span class="line">            <span class="string">&quot;n&quot;</span>: <span class="string">&quot;qzfrIdEsOebdO243KkkGOl8r1rXiErQXwjK0RspvrX6roV6uJg6gBT0qBN7nM1J92WNVNte-3UhcBfm_hdBHRfib8zN_AvMNZ04Yc76hri7xTqa1iHFLl8823YEBnP_FSM97rdzsz_wCNkBM8bzsD-Cg4KMqrrY_qzFFymBRHPklBLyJudJN1zv8_dCXbDzBKtQo8UklM3MuSLsIf1TZGDbpemEpvNO-mu9UDVEccw0oeMPPKx6K_br&quot;</span>,</span><br><span class="line">            <span class="string">&quot;use&quot;</span>: <span class="string">&quot;sig&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>技术</category>
         <category>aws</category>

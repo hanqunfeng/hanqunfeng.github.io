@@ -28,7 +28,7 @@
 <meta property="og:description" content="摘要   本文介绍为EKS集群创建 IAM OIDC 身份提供商   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-07T12:30:05.000Z">
-<meta property="article:modified_time" content="2023-07-07T07:31:59.343Z">
+<meta property="article:modified_time" content="2023-07-13T08:57:37.298Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
@@ -516,7 +516,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E9%9B%86%E7%BE%A4%E5%88%9B%E5%BB%BA-IAM-OIDC-%E8%BA%AB%E4%BB%BD%E6%8F%90%E4%BE%9B%E5%95%86"><span class="nav-number">2.</span> <span class="nav-text">为集群创建 IAM OIDC 身份提供商</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E9%9B%86%E7%BE%A4%E5%88%9B%E5%BB%BA-IAM-OIDC-%E8%BA%AB%E4%BB%BD%E6%8F%90%E4%BE%9B%E5%95%86"><span class="nav-number">2.</span> <span class="nav-text">为集群创建 IAM OIDC 身份提供商</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BOIDC%E5%85%83%E6%95%B0%E6%8D%AE"><span class="nav-number">3.</span> <span class="nav-text">查看OIDC元数据</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -531,7 +531,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">104</span>
+          <span class="site-state-item-count">105</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -725,9 +725,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-07-07 20:30:05 / 修改时间：15:31:59" itemprop="dateCreated datePublished" datetime="2023-07-07T20:30:05+08:00">2023-07-07</time>
+      <time title="创建时间：2023-07-07 20:30:05" itemprop="dateCreated datePublished" datetime="2023-07-07T20:30:05+08:00">2023-07-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-13 16:57:37" itemprop="dateModified" datetime="2023-07-13T16:57:37+08:00">2023-07-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -779,14 +785,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.3k</span>
+      <span>3.8k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>3 分钟</span>
     </span>
 
         </div>
@@ -839,7 +845,10 @@
 <h2 id="为集群创建-IAM-OIDC-身份提供商">为集群创建 IAM OIDC 身份提供商</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>要使用某些 Amazon EKS 附加组件，或启用个别 Kubernetes 工作负载以具有特定 AWS Identity and Access Management（IAM）权限，请为集群创建 IAM OpenID Connect（OIDC）提供商。您只需为集群创建一次 IAM OIDC 提供商。</p>
+<p>要使用某些 Amazon EKS 附加组件，或启用个别 Kubernetes 工作负载以具有特定 AWS Identity and Access Management（IAM）权限，请为集群创建 IAM OpenID Connect（OIDC）提供商。</p>
+</li>
+<li class="lvl-2">
+<p>只需为集群创建一次 IAM OIDC 提供商。</p>
 </li>
 <li class="lvl-2">
 <p>确定您的账户中是否已存在具有您的集群 ID 的 IAM OIDC 提供商</p>
@@ -851,7 +860,20 @@
 <p>使用以下命令为您的集群创建 IAM OIDC 身份提供商</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ eksctl utils associate-iam-oidc-provider --cluster eks-lexing --profile eks-us-west-2 --approve</span><br><span class="line">2023-06-28 15:38:20 [ℹ]  will create IAM Open ID Connect provider <span class="keyword">for</span> cluster <span class="string">&quot;eks-lexing&quot;</span> <span class="keyword">in</span> <span class="string">&quot;us-west-2&quot;</span></span><br><span class="line">2023-06-28 15:38:21 [✔]  created IAM Open ID Connect provider <span class="keyword">for</span> cluster <span class="string">&quot;eks-lexing&quot;</span> <span class="keyword">in</span> <span class="string">&quot;us-west-2&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看集群的 OIDC 提供商 URL，如果该命令返回为空，则说明尚未创建IAM OIDC 身份提供商</span></span><br><span class="line">$ aws eks describe-cluster --name eks-lexing --query <span class="string">&quot;cluster.identity.oidc.issuer&quot;</span> --output text --profile eks-us-west-2</span><br><span class="line">https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB872B6B7A1CC65D44191A56</span><br><span class="line"></span><br><span class="line">$ aws iam --profile eks-us-west-2 list-open-id-connect-providers | grep <span class="variable">$oidc_id</span> | <span class="built_in">cut</span> -d <span class="string">&quot;/&quot;</span> -f4</span><br><span class="line">1029FF88CB872B6B7A1CC65D44191A56<span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ eksctl utils associate-iam-oidc-provider --cluster eks-lexing --profile eks-us-west-2 --approve</span><br><span class="line">2023-06-28 15:38:20 [ℹ]  will create IAM Open ID Connect provider <span class="keyword">for</span> cluster <span class="string">&quot;eks-lexing&quot;</span> <span class="keyword">in</span> <span class="string">&quot;us-west-2&quot;</span></span><br><span class="line">2023-06-28 15:38:21 [✔]  created IAM Open ID Connect provider <span class="keyword">for</span> cluster <span class="string">&quot;eks-lexing&quot;</span> <span class="keyword">in</span> <span class="string">&quot;us-west-2&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看集群的 OIDC 提供商 URL，如果该命令返回为空，则说明尚未创建IAM OIDC 身份提供商</span></span><br><span class="line">$ aws eks describe-cluster --name eks-lexing --query <span class="string">&quot;cluster.identity.oidc.issuer&quot;</span> --output text --profile eks-us-west-2</span><br><span class="line">https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56</span><br><span class="line"></span><br><span class="line">$ aws iam --profile eks-us-west-2 list-open-id-connect-providers | grep <span class="variable">$oidc_id</span> | <span class="built_in">cut</span> -d <span class="string">&quot;/&quot;</span> -f4</span><br><span class="line">1029FF88CB8725555A1CC65D44191A56<span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看OIDC元数据">查看OIDC元数据</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在集群的 OIDC 提供商 URL后面加上<code>/.well-known/openid-configuration</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ curl https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56/.well-known/openid-configuration -s| python -m json.tool</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;authorization_endpoint&quot;</span>: <span class="string">&quot;urn:kubernetes:programmatic_authorization&quot;</span>,</span><br><span class="line">    <span class="string">&quot;claims_supported&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;sub&quot;</span>,</span><br><span class="line">        <span class="string">&quot;iss&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;id_token_signing_alg_values_supported&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;RS256&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;issuer&quot;</span>: <span class="string">&quot;https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56&quot;</span>,</span><br><span class="line">    <span class="string">&quot;jwks_uri&quot;</span>: <span class="string">&quot;https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56/keys&quot;</span>,</span><br><span class="line">    <span class="string">&quot;response_types_supported&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;id_token&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;subject_types_supported&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;public&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>然后查看<code>jwks_uri</code>中的url，这里的keys就是 IAM 用来验证 EKS service account 发送过来的 ID_token 是否有效的。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">curl https://oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB8725555A1CC65D44191A56/keys -s | python -m json.tool</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;keys&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;RS256&quot;</span>,</span><br><span class="line">            <span class="string">&quot;e&quot;</span>: <span class="string">&quot;AQAB&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kid&quot;</span>: <span class="string">&quot;4e49f2d2c6c8550c55556b01637a93a8a4f941e5&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kty&quot;</span>: <span class="string">&quot;RSA&quot;</span>,</span><br><span class="line">            <span class="string">&quot;n&quot;</span>: <span class="string">&quot;rEKprAR5nRAHfulQyyI9unXUNpczPCKZO8hXVuTiKrwlzdI7pETs6g0hWQaKe96n4p-KERF-dc-KajboMqrCfsff7boVJdnA9k8CljwKvt-5ILyXe07ASZQkkbDgpY30GNvMB7tbhiwkaNjuBzrLsO2Ipom5rzlK3i6rjHxp3O94BgMbMMt4trvWtJ9vmhWILihkl_e8--5JOOzjjeNcrNoK_o5LxbHSetaALoGAk-XbCmUeFDWvLQ&quot;</span>,</span><br><span class="line">            <span class="string">&quot;use&quot;</span>: <span class="string">&quot;sig&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;RS256&quot;</span>,</span><br><span class="line">            <span class="string">&quot;e&quot;</span>: <span class="string">&quot;AQAB&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kid&quot;</span>: <span class="string">&quot;831cd2c5a14af3ff3ee5555ab1edf6dc7d7fb54d&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kty&quot;</span>: <span class="string">&quot;RSA&quot;</span>,</span><br><span class="line">            <span class="string">&quot;n&quot;</span>: <span class="string">&quot;xdlnMmc1lUGyVlt58621Arf-2Ytxxe5HCiBguYe1Y4DYvfxTzknH3x07Q1sMQLNGHV_4d-bT29ufhAnht6AaLcuxtxaonEcMArh95bnuau6-GFMe06XaBYlMDoTcf_czTGdI4On7veJtMpSsNlHNj507Jn6mcH8TGHIl6qRwj9NZSaoADrkDO87O-w71l1c2a3m0us1vWir0QJdZ3J2al4k1Qm7KZT-dN9rs2LquQS0s6MTX-VdQLFb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;use&quot;</span>: <span class="string">&quot;sig&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;RS256&quot;</span>,</span><br><span class="line">            <span class="string">&quot;e&quot;</span>: <span class="string">&quot;AQAB&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kid&quot;</span>: <span class="string">&quot;eba5269e0fedd9431af2755550dd09f85bec7ad0&quot;</span>,</span><br><span class="line">            <span class="string">&quot;kty&quot;</span>: <span class="string">&quot;RSA&quot;</span>,</span><br><span class="line">            <span class="string">&quot;n&quot;</span>: <span class="string">&quot;qzfrIdEsOebdO243KkkGOl8r1rXiErQXwjK0RspvrX6roV6uJg6gBT0qBN7nM1J92WNVNte-3UhcBfm_hdBHRfib8zN_AvMNZ04Yc76hri7xTqa1iHFLl8823YEBnP_FSM97rdzsz_wCNkBM8bzsD-Cg4KMqrrY_qzFFymBRHPklBLyJudJN1zv8_dCXbDzBKtQo8UklM3MuSLsIf1TZGDbpemEpvNO-mu9UDVEccw0oeMPPKx6K_br&quot;</span>,</span><br><span class="line">            <span class="string">&quot;use&quot;</span>: <span class="string">&quot;sig&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -997,7 +1019,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">18:38</span>
+    <span title="站点阅读时长">18:47</span>
   </span>
 </div>
 <div class="busuanzi-count">
