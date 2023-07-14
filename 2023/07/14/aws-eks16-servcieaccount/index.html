@@ -20,30 +20,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="什么是Hexo   Hexo 是一个简单地、轻量地、基于Node的一个静态博客框架，可以方便的生成静态网页托管在github和Heroku上，引用Hexo作者 @tommy351 的话：   快速、简单且功能强大的 Node.js 博客框架。A fast, simple &amp; powerful blog framework, powered by Node.js.   GitHub Page">
+    <meta name="description" content="摘要   本文聊一聊ServiceAccount   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo+GitHub Page搭建自己的Blog">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2016/11/14/hexo_gitpage/index.html">
+<meta property="og:title" content="AWS-EKS-16--聊一聊ServiceAccount">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2023/07/14/aws-eks16-servcieaccount/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="什么是Hexo   Hexo 是一个简单地、轻量地、基于Node的一个静态博客框架，可以方便的生成静态网页托管在github和Heroku上，引用Hexo作者 @tommy351 的话：   快速、简单且功能强大的 Node.js 博客框架。A fast, simple &amp; powerful blog framework, powered by Node.js.   GitHub Page">
+<meta property="og:description" content="摘要   本文聊一聊ServiceAccount   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://blog.hanqunfeng.com/images_glob/blog_dir.png">
-<meta property="article:published_time" content="2016-11-14T09:43:05.000Z">
-<meta property="article:modified_time" content="2020-04-21T15:15:11.333Z">
+<meta property="article:published_time" content="2023-07-14T12:30:05.000Z">
+<meta property="article:modified_time" content="2023-07-14T09:57:54.342Z">
 <meta property="article:author" content="飘逸峰">
-<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.hanqunfeng.com/images_glob/blog_dir.png">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2016/11/14/hexo_gitpage/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2023/07/14/aws-eks16-servcieaccount/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2016/11/14/hexo_gitpage/","path":"2016/11/14/hexo_gitpage/","title":"Hexo+GitHub Page搭建自己的Blog"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/07/14/aws-eks16-servcieaccount/","path":"2023/07/14/aws-eks16-servcieaccount/","title":"AWS-EKS-16--聊一聊ServiceAccount"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hexo+GitHub Page搭建自己的Blog | 飘逸峰的博客</title>
+<title>AWS-EKS-16--聊一聊ServiceAccount | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -60,7 +58,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="/js-expand/httpToHttps.js"></script>
-<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+<meta name="keywords" content="aws,eks,hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
 
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
@@ -518,7 +516,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFHexo"><span class="nav-number">1.</span> <span class="nav-text">什么是Hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub-Pages%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">GitHub Pages是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">Hexo安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#git%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">git安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85npm"><span class="nav-number">3.2.</span> <span class="nav-text">安装npm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Hexo"><span class="nav-number">3.3.</span> <span class="nav-text">安装Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BHexo%E7%89%88%E6%9C%AC"><span class="nav-number">3.4.</span> <span class="nav-text">查看Hexo版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">4.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setup-your-blog"><span class="nav-number">4.1.</span> <span class="nav-text">Setup your blog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#blog%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E8%AF%B4%E6%98%8E"><span class="nav-number">4.2.</span> <span class="nav-text">blog目录结构说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-yml%E7%AE%80%E4%BB%8B"><span class="nav-number">4.3.</span> <span class="nav-text">_config.yml简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Start-the-server"><span class="nav-number">4.4.</span> <span class="nav-text">Start the server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">4.5.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">4.6.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clean-static-files"><span class="nav-number">4.7.</span> <span class="nav-text">Clean static files</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">主题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%8D%A2%E4%B8%BB%E9%A2%98"><span class="nav-number">5.1.</span> <span class="nav-text">更换主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%B5%84%E6%BA%90"><span class="nav-number">5.2.</span> <span class="nav-text">添加资源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E5%88%B0Github"><span class="nav-number">6.</span> <span class="nav-text">发布到Github</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85hexo%E7%9A%84git%E5%8F%91%E5%B8%83%E5%8C%85"><span class="nav-number">6.1.</span> <span class="nav-text">安装hexo的git发布包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BASSH%E5%AF%86%E9%92%A5"><span class="nav-number">6.2.</span> <span class="nav-text">创建SSH密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">6.3.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%8A%E4%B8%80%E8%81%8AServiceAccount"><span class="nav-number">2.</span> <span class="nav-text">聊一聊ServiceAccount</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BASA"><span class="nav-number">2.1.</span> <span class="nav-text">创建SA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2SA"><span class="nav-number">2.2.</span> <span class="nav-text">查询SA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%8C%87%E5%AE%9A%E7%9A%84SA%E8%A2%AB%E7%BB%91%E5%AE%9A%E5%88%B0%E5%93%AA%E4%BA%9B%E8%A7%92%E8%89%B2"><span class="nav-number">2.3.</span> <span class="nav-text">查询指定的SA被绑定到哪些角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%8C%87%E5%AE%9A%E7%9A%84SA%E8%A2%AB%E5%85%B3%E8%81%94%E5%88%B0%E5%93%AA%E4%BA%9Bdeploy"><span class="nav-number">2.4.</span> <span class="nav-text">查询指定的SA被关联到哪些deploy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%8C%87%E5%AE%9A%E7%9A%84SA%E8%A2%AB%E5%85%B3%E8%81%94%E5%88%B0%E5%93%AA%E4%BA%9Bpod"><span class="nav-number">2.5.</span> <span class="nav-text">查询指定的SA被关联到哪些pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91SA"><span class="nav-number">2.6.</span> <span class="nav-text">编辑SA</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -699,7 +697,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2016/11/14/hexo_gitpage/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/07/14/aws-eks16-servcieaccount/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -712,12 +710,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Hexo+GitHub Page搭建自己的Blog | 飘逸峰的博客">
+      <meta itemprop="name" content="AWS-EKS-16--聊一聊ServiceAccount | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hexo+GitHub Page搭建自己的Blog
+          AWS-EKS-16--聊一聊ServiceAccount
         </h1>
 
         <div class="post-meta-container">
@@ -727,15 +725,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2016-11-14 17:43:05" itemprop="dateCreated datePublished" datetime="2016-11-14T17:43:05+08:00">2016-11-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2020-04-21 23:15:11" itemprop="dateModified" datetime="2020-04-21T23:15:11+08:00">2020-04-21</time>
+      <time title="创建时间：2023-07-14 20:30:05 / 修改时间：17:57:54" itemprop="dateCreated datePublished" datetime="2023-07-14T20:30:05+08:00">2023-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -745,11 +737,24 @@
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
         </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/aws/" itemprop="url" rel="index"><span itemprop="name">aws</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/aws/eks/" itemprop="url" rel="index"><span itemprop="name">eks</span></a>
+        </span>
     </span>
 
   
   
 <!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fas fa-thumbtack zhidingtop">置顶</i>
+    </span>
     <span class="post-meta-item">
     <span>
     <span class="post-meta-item-icon">
@@ -762,7 +767,7 @@
 </div>
 
 
-    <span id="/2016/11/14/hexo_gitpage/" class="leancloud_visitors" data-flag-title="Hexo+GitHub Page搭建自己的Blog" title="阅读次数">
+    <span id="/2023/07/14/aws-eks16-servcieaccount/" class="leancloud_visitors" data-flag-title="AWS-EKS-16--聊一聊ServiceAccount" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -774,7 +779,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.7k</span>
+      <span>3.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -791,195 +796,89 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="什么是Hexo">什么是Hexo</h2>
+        <!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 是一个简单地、轻量地、基于Node的一个静态博客框架，可以方便的生成静态网页托管在github和Heroku上，引用Hexo作者 @tommy351 的话：</p>
+<p>本文聊一聊ServiceAccount</p>
 </li>
 <li class="lvl-2">
-<p>快速、简单且功能强大的 Node.js 博客框架。A fast, simple &amp; powerful blog framework, powered by Node.js.</p>
-</li>
+<p>参考资料：</p>
+<ul class="lvl-2">
+<li class="lvl-6"><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/zh_cn/eks/latest/userguide">Amazon EKS用户指南</a></li>
+<li class="lvl-6"><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/home/">Kubernetes 文档</a></li>
 </ul>
-<h2 id="GitHub-Pages是什么？">GitHub Pages是什么？</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://pages.github.com">GitHub Pages</a> 可以被认为是用户编写的、托管在github上的静态网页。由于它的空间免费稳定， 可以用于介绍托管在github上的Project或者搭建网站。</p>
 </li>
 </ul>
 <span id="more"></span>
-<p>以下环境为mac下安装。</p>
-<h2 id="Hexo安装">Hexo安装</h2>
-<p>需要安装git和Node.js运行环境</p>
-<h3 id="git安装">git安装</h3>
+<h2 id="聊一聊ServiceAccount">聊一聊ServiceAccount</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>mac自带git，如果需要重新安装，可去<a target="_blank" rel="noopener" href="https://git-scm.com/downloads">官网下载</a></p>
+<p>网上关于ServiceAccount的介绍有很多，但大多都比较晦涩难懂，不好理解，这里我基于自己的理解聊一聊ServiceAccount。</p>
+</li>
+<li class="lvl-2">
+<p>ServiceAccount是k8s中的用户，其被定义在namespace下，可以被关联到pod上，使其获得相应的权限。</p>
+<ul class="lvl-2">
+<li class="lvl-6">ServiceAccount可以与k8s中的Role或者ClusterRole进行绑定，以使其具有访问k8s内部资源的权限，当pod关联ServiceAccount后也就获得了相应的权限。参考<a href="/2023/07/07/aws-eks12-dashboard/" title="AWS-EKS-12--部署 Dashboard UI">AWS-EKS-12--部署 Dashboard UI</a></li>
+</ul>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dashboard-adminuser.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">admin-user</span></span><br><span class="line"><span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">admin-user</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line"><span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">cluster-admin</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">admin-user</span></span><br><span class="line"><span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">ServiceAccount也可以被关联到IAM Role，以使其具有访问AWS资源的权限。当pod关联ServiceAccount后就获得了访问AWS资源的权限。参考<a href="/2023/07/13/aws-eks15-auth-pod/" title="AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的">AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的</a></li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ eksctl create iamserviceaccount \</span><br><span class="line">--cluster=eks-lexing \</span><br><span class="line">--profile eks-us-west-2 \</span><br><span class="line">--namespace=kube-system \</span><br><span class="line">--name=aws-load-balancer-controller \</span><br><span class="line">--role-name AmazonEKSLoadBalancerControllerRole \</span><br><span class="line">--attach-policy-arn=arn:aws:iam::743263909644:policy/AWSLoadBalancerControllerIAMPolicy \</span><br><span class="line">--approve</span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p>ServiceAccount default 在 Kubernetes 中是默认存在的，它通常与运行在 Pod 内的应用程序关联，用于与 Kubernetes API 服务器进行身份验证和授权。default ServiceAccount 是每个命名空间中的默认 ServiceAccount，如果没有为 Pod 显式指定 ServiceAccount，则会自动关联到 default ServiceAccount。</p>
+</li>
+<li class="lvl-2">
+<p>default ServiceAccount的权限是由所分配的角色（Role）或集群角色（ClusterRole）定义的。在默认情况下，default ServiceAccount没有任何特权或访问权限。它只能访问其所在命名空间的一些基本资源，例如查看自身的 Pod、Service、Endpoints 等。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git --version</span><br><span class="line">git version 2.9.3 (Apple Git-75)</span><br></pre></td></tr></table></figure>
-<h3 id="安装npm">安装npm</h3>
+<h3 id="创建SA">创建SA</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式1，使用kubectl命令行直接创建</span></span><br><span class="line">$ kubectl create serviceaccount &lt;serviceaccount-name&gt; -n &lt;namespace&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式2，基于yaml</span></span><br><span class="line"><span class="comment"># sa.yaml</span></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: &lt;serviceaccount-name&gt;</span><br><span class="line">  namespace: &lt;namespace&gt;</span><br><span class="line"></span><br><span class="line">$ kubectl apply -f sa.yaml</span><br></pre></td></tr></table></figure>
+<h3 id="查询SA">查询SA</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ k get sa -n kubernetes-dashboard</span><br><span class="line">NAME                   SECRETS   AGE</span><br><span class="line">admin-user             0         8d</span><br><span class="line">default                0         8d</span><br><span class="line">kubernetes-dashboard   0         8d</span><br></pre></td></tr></table></figure>
+<h3 id="查询指定的SA被绑定到哪些角色">查询指定的SA被绑定到哪些角色</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get rolebindings,clusterrolebindings -A \</span><br><span class="line">-o <span class="string">&#x27;custom-columns=KIND:.kind,NAMESPACE:.metadata.namespace,NAME:.metadata.name,ROLE-KIND:.roleRef.kind,ROLE:.roleRef.name, SUBJECT-KIND:.subjects[*].kind,SUBJECT-NAMESPACE:.subjects[*].namespace,SUBJECT-NAME:.subjects[*].name&#x27;</span> \</span><br><span class="line">| (<span class="built_in">head</span> -n 1 &amp;&amp; awk <span class="string">&#x27;&#123;if ($8 == &quot;kubernetes-dashboard&quot;) print&#125;&#x27;</span>)</span><br><span class="line">KIND                 NAMESPACE              NAME                                                           ROLE-KIND     ROLE                                                    SUBJECT-KIND         SUBJECT-NAMESPACE      SUBJECT-NAME</span><br><span class="line">RoleBinding          kubernetes-dashboard   kubernetes-dashboard                                           Role          kubernetes-dashboard                                   ServiceAccount        kubernetes-dashboard   kubernetes-dashboard</span><br><span class="line">ClusterRoleBinding   &lt;none&gt;                 kubernetes-dashboard                                           ClusterRole   kubernetes-dashboard                                   ServiceAccount        kubernetes-dashboard   kubernetes-dashboard</span><br></pre></td></tr></table></figure>
+<h3 id="查询指定的SA被关联到哪些deploy">查询指定的SA被关联到哪些deploy</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ k get deploy -A \</span><br><span class="line">-o <span class="string">&#x27;custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,SERVICEACCOUNT:.spec.template.spec.serviceAccountName&#x27;</span> \</span><br><span class="line">| (<span class="built_in">head</span> -n 1 &amp;&amp; awk <span class="string">&#x27;&#123;if ($3 == &quot;kubernetes-dashboard&quot;) print&#125;&#x27;</span>)</span><br><span class="line">NAMESPACE              NAME                           SERVICEACCOUNT</span><br><span class="line">kubernetes-dashboard   dashboard-metrics-scraper      kubernetes-dashboard</span><br><span class="line">kubernetes-dashboard   kubernetes-dashboard           kubernetes-dashboard</span><br></pre></td></tr></table></figure>
+<h3 id="查询指定的SA被关联到哪些pod">查询指定的SA被关联到哪些pod</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ k get pod -A \</span><br><span class="line">-o <span class="string">&#x27;custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,SERVICEACCOUNT:.spec.serviceAccountName&#x27;</span> \</span><br><span class="line">| (<span class="built_in">head</span> -n 1 &amp;&amp; awk <span class="string">&#x27;&#123;if ($3 == &quot;kubernetes-dashboard&quot;) print&#125;&#x27;</span>)</span><br><span class="line">NAMESPACE              NAME                                            SERVICEACCOUNT</span><br><span class="line">kubernetes-dashboard   dashboard-metrics-scraper-7bc864c59-sqjq8       kubernetes-dashboard</span><br><span class="line">kubernetes-dashboard   kubernetes-dashboard-6c7ccbcf87-zb2hb           kubernetes-dashboard</span><br></pre></td></tr></table></figure>
+<h3 id="编辑SA">编辑SA</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>基于<a target="_blank" rel="noopener" href="http://brew.sh">brew</a>方式安装npm</p>
+<p>比如我们要为已经创建好的SA关联AWS IAM角色，需要编辑SA，将IAM角色添加到SA的注释中。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install npm</span><br></pre></td></tr></table></figure>
-<h3 id="安装Hexo">安装Hexo</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
-<p>npm安装Hexo：<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/hexo">参考资料</a></p>
-<h3 id="查看Hexo版本">查看Hexo版本</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ hexo version</span><br><span class="line">hexo: 3.2.2</span><br><span class="line">hexo-cli: 1.0.2</span><br><span class="line">os: Darwin 16.1.0 darwin x64</span><br><span class="line">http_parser: 2.7.0</span><br><span class="line">node: 6.6.0</span><br><span class="line">v8: 5.1.281.83</span><br><span class="line">uv: 1.9.1</span><br><span class="line">zlib: 1.2.8</span><br><span class="line">ares: 1.10.1-DEV</span><br><span class="line">icu: 57.1</span><br><span class="line">modules: 48</span><br><span class="line">openssl: 1.0.2h</span><br></pre></td></tr></table></figure>
-<h2 id="Quick-Start">Quick Start</h2>
-<h3 id="Setup-your-blog">Setup your blog</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br><span class="line">$ hexo init blog</span><br><span class="line">$ <span class="built_in">cd</span> blog</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">k</span> <span class="string">edit</span> <span class="string">sa</span> <span class="string">-n</span> <span class="string">kube-system</span> <span class="string">aws-load-balancer-controller</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">eks.amazonaws.com/role-arn:</span> <span class="string">arn:aws:iam::743263909644:role/AmazonEKSLoadBalancerControll</span></span><br><span class="line"><span class="attr">creationTimestamp:</span> <span class="string">&quot;2023-07-04T09:20:41Z&quot;</span></span><br><span class="line"><span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app.kubernetes.io/managed-by:</span> <span class="string">eksctl</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">aws-load-balancer-controller</span></span><br><span class="line"><span class="attr">namespace:</span> <span class="string">kube-system</span></span><br><span class="line"><span class="attr">resourceVersion:</span> <span class="string">&quot;1707669&quot;</span></span><br><span class="line"><span class="attr">uid:</span> <span class="string">857200a6-2e16-4939-bbbc-483dd579acbb</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>此命令会在当前用户的家目录下创建一个blog目录，并初始化相关文件，如下为初始化的目录结构：<br>
-<img src="/images_glob/blog_dir.png" alt="blog目录结构" title="blog目录结构"></p>
-</li>
-</ul>
-<h3 id="blog目录结构说明">blog目录结构说明</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>scaffolds ：模板文件夹，新建文章时，Hexo 会根据 scaffold 来建立文件。Hexo 有三种默认布局： post 、 page 和 draft ，它们分别对应不同的路径。新建文件的默认布局是 post ，可以在配置文件中更改布局。用 draft 布局生成的文件会被保存到 source/_drafts 文件夹。</p>
-</li>
-<li class="lvl-2">
-<p>source ：资源文件夹是存放用户资源的地方。</p>
-</li>
-<li class="lvl-2">
-<p>source/_post ：文件箱。除 _posts 文件夹之外，开头命名为 _ (下划线)的文件或者文件夹和隐藏的文件将会被忽略。Markdown文件会被解析并放到 public 文件夹。</p>
-</li>
-<li class="lvl-2">
-<p>themes ：主题 文件夹。Hexo 会根据主题来生成静态页面。我们可以将自己的主题放到该目录下，然后在_config.yml中修改默认的主题即可。</p>
-</li>
-<li class="lvl-2">
-<p>themes/landscape ：默认的皮肤文件夹</p>
-</li>
-<li class="lvl-2">
-<p>_config.yml ：全局的配置文件，每次更改要重启服务。</p>
-</li>
-</ul>
-<h3 id="config-yml简介">_config.yml简介</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hexo Configuration</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/configuration.html</span></span><br><span class="line"><span class="comment">## Source: https://github.com/hexojs/hexo/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Site 站点配置</span></span><br><span class="line">title: Study Zone <span class="comment">#网站标题</span></span><br><span class="line">subtitle: Spring--java程序员的春天 <span class="comment">#网站副标题</span></span><br><span class="line">description: 分享成长与快乐的地方 <span class="comment">#网站描述</span></span><br><span class="line">author: hanqunfeng <span class="comment">#作者，网站所有者</span></span><br><span class="line">language: zh-CN <span class="comment">#网站使用的语言</span></span><br><span class="line">timezone: Asia/Shanghai <span class="comment">#网站时区</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># URL 可以不配置</span></span><br><span class="line"><span class="comment">## If your site is put in a subdirectory, set url as &#x27;http://yoursite.com/child&#x27; and root as &#x27;/child/&#x27;</span></span><br><span class="line">url: http://hanqunfeng.github.io <span class="comment">#网址，搜索时会在搜索引擎中显示</span></span><br><span class="line">root: / <span class="comment">#网站根目录</span></span><br><span class="line">permalink: :year/:month/:day/:title/ <span class="comment">#永久链接格式</span></span><br><span class="line">permalink_defaults: <span class="comment">#永久链接中各部分的默认值</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Directory 目录配置</span></span><br><span class="line">source_dir: <span class="built_in">source</span> <span class="comment">#资源文件夹，这个文件夹用来存放内容</span></span><br><span class="line">public_dir: public <span class="comment">#公共文件夹，这个文件夹用于存放生成的站点文件</span></span><br><span class="line">tag_dir: tags <span class="comment">#标签文件夹</span></span><br><span class="line">archive_dir: archives <span class="comment">#归档文件夹</span></span><br><span class="line">category_dir: categories <span class="comment">#分类文件夹</span></span><br><span class="line">code_dir: downloads/code <span class="comment">#Include code 文件夹</span></span><br><span class="line">i18n_dir: :lang <span class="comment">#国际化文件夹</span></span><br><span class="line">skip_render: <span class="comment">#跳过指定文件的渲染，您可使用 glob 来配置路径</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Writing 写作配置</span></span><br><span class="line">new_post_name: :title.md <span class="comment"># File name of new posts # 新文章的文件名称</span></span><br><span class="line">default_layout: post <span class="comment">#默认布局</span></span><br><span class="line">titlecase: <span class="literal">false</span> <span class="comment"># Transform title into titlecase</span></span><br><span class="line">external_link: <span class="literal">true</span> <span class="comment"># Open external links in new tab</span></span><br><span class="line">filename_case: 0 <span class="comment">#把文件名称转换为 (1) 小写或 (2) 大写</span></span><br><span class="line">render_drafts: <span class="literal">false</span> <span class="comment">#显示草稿</span></span><br><span class="line">post_asset_folder: <span class="literal">false</span> <span class="comment">#是否启动资源文件夹</span></span><br><span class="line">relative_link: <span class="literal">false</span> <span class="comment">#把链接改为与根目录的相对位址</span></span><br><span class="line">future: <span class="literal">true</span></span><br><span class="line">highlight: <span class="comment">#代码块的设置</span></span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  line_number: <span class="literal">true</span></span><br><span class="line">  auto_detect: <span class="literal">false</span></span><br><span class="line">  tab_replace:</span><br><span class="line"></span><br><span class="line"><span class="comment"># Category &amp; Tag 分类 &amp; 标签</span></span><br><span class="line">default_category: uncategorized <span class="comment">#默认分类</span></span><br><span class="line">category_map: <span class="comment">#分类别名</span></span><br><span class="line">tag_map: <span class="comment">#标签别名</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Date / Time format 时间和日期</span></span><br><span class="line"><span class="comment">## Hexo uses Moment.js to parse and display date</span></span><br><span class="line"><span class="comment">## You can customize the date format as defined in</span></span><br><span class="line"><span class="comment">## http://momentjs.com/docs/#/displaying/format/</span></span><br><span class="line">date_format: YYYY-MM-DD</span><br><span class="line">time_format: HH:mm:ss</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pagination 分页</span></span><br><span class="line"><span class="comment">## Set per_page to 0 to disable pagination</span></span><br><span class="line">per_page: 10 <span class="comment">#每页显示的文章量 (0 = 关闭分页功能)</span></span><br><span class="line">pagination_dir: page <span class="comment">#分页目录</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Extensions 扩展</span></span><br><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/ 插件</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/ 主题</span></span><br><span class="line"><span class="comment"># theme: landscape #当前主题名称</span></span><br><span class="line">theme: yilia <span class="comment">#当前主题名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Deployment #部署到github</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span><br><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: https://github.com/hanqunfeng/hanqunfeng.github.io.git</span><br><span class="line">  branch: master</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>注意：以下所有命令，都必须在blog目录下执行。</p>
-<h3 id="Start-the-server">Start the server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br><span class="line">INFO  Start processing</span><br><span class="line">INFO  Hexo is running at http://localhost:4000/. Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>我们可以通过浏览器访问<a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a>，就可以看到blog的页面了。</p>
-</li>
-<li class="lvl-2">
-<p>创建文件、生成静态文件以及发布到github，都不需要启动服务，启动服务的目的仅是为了能在本地看到效果。</p>
-</li>
-<li class="lvl-2">
-<p><code>hexo server</code> == <code>hexo s</code></p>
-</li>
-</ul>
-<h3 id="Create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;Hello Hexo&quot;</span></span><br><span class="line">INFO  Created: ~/blog/source/_posts/Hello-Hexo.md</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>创建好的文件基于<a target="_blank" rel="noopener" href="http://www.appinn.com/markdown/">makedown</a>语法，可以使用sublime或者atom编辑器，进行编辑与管理。</p>
-</li>
-<li class="lvl-2">
-<p>编辑完成后不需要执行<code>hexo generate</code>命令即可在浏览器中查看效果，但是修改了主题内容，有时会不生效，需要先生成静态文件才能看到最终效果。</p>
-</li>
-<li class="lvl-2">
-<p><code>hexo new</code> == <code>hexo n</code></p>
-</li>
-</ul>
-<h3 id="Generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>该命令用于将makedown文件转换为静态html文件，并放到public文件夹下。</p>
-</li>
-<li class="lvl-2">
-<p>可以使用<code>hexo clean</code>命令来删除public文件夹，之后再使用<code>hexo generate</code>来重新生成静态文件。</p>
-</li>
-<li class="lvl-2">
-<p><code>hexo generate</code> == <code>hexo g</code></p>
-</li>
-</ul>
-<h3 id="Clean-static-files">Clean static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">INFO  Deleted database.</span><br><span class="line">INFO  Deleted public folder.</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>hexo clean</code> == <code>hexo cl</code></p>
-</li>
-</ul>
-<h2 id="主题">主题</h2>
-<h3 id="更换主题">更换主题</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>github上有许多技术达人为Hexo制作的主题，可以clone到本地，并拷贝到themes文件夹下，然后修改_config.yml中的theme属性，修改主题需要重启Hexo才能生效。</p>
-</li>
-<li class="lvl-2">
-<p>比如博主使用主题为<a target="_blank" rel="noopener" href="https://github.com/litten/hexo-theme-yilia">yilia下载地址</a>:</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/blog</span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/litten/hexo-theme-yilia.git themes/yilia</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>更新主题时，在themes/yilia目录下执行<code>git pull</code>。</p>
-</li>
-</ul>
-<h3 id="添加资源">添加资源</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>可以在当前主题的source目录下放入自己的资源，执行<code>hexo generate</code>命令时，会将主题中的source目录下的内容拷贝到public目录下。</p>
-</li>
-<li class="lvl-2">
-<p>但是这样做如果更换主题，则资源就失效了，所以一般是在source目录下创建资源文件，执行<code>hexo generate</code>命令时，会将source目录下的内容拷贝到public目录下。</p>
-</li>
-</ul>
-<h2 id="发布到Github">发布到Github</h2>
-<h3 id="安装hexo的git发布包">安装hexo的git发布包</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git -S</span><br></pre></td></tr></table></figure>
-<h3 id="创建SSH密钥">创建SSH密钥</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>创建密钥可以在执行发布时不需要每次都输入用户名和密码，具体创建方法查看如下资料:</p>
-</li>
-</ul>
-<blockquote>
-<ul class="lvl-1">
-<li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://help.github.com/articles/generating-an-ssh-key/">github官网</a></p>
-</li>
-<li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="http://www.xuanfengge.com/using-ssh-key-link-github-photo-tour.html">图文教程</a></p>
-</li>
-</ul>
-</blockquote>
-<h3 id="Deploy-to-remote-sites">Deploy to remote sites</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>因为使用<a target="_blank" rel="noopener" href="https://pages.github.com">GitPage</a>，所以需要申请一个Github帐号，并创建一个仓库，仓库名称为&quot;your_name.github.io&quot;。</p>
-</li>
-<li class="lvl-2">
-<p>创建好仓库后，在_config.yml中按上文中的内容配置好deploy属性。</p>
-</li>
-<li class="lvl-2">
-<p>执行如下命令，会将public下的文件发布到该仓库中，一般执行deploy前先执行clean和generate保证文件最新。</p>
-</li>
-<li class="lvl-2">
-<p>访问<a target="_blank" rel="noopener" href="https://hanqunfeng.github.io">https://hanqunfeng.github.io</a>，查看blog页面。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo generate</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>hexo deploy</code> == <code>hexo d</code></p>
-</li>
-</ul>
-<h2 id="参考资料">参考资料</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="http://www.tuicool.com/articles/ueI7naV">http://www.tuicool.com/articles/ueI7naV</a></p>
-</li>
-<li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="http://www.jianshu.com/p/465830080ea9">http://www.jianshu.com/p/465830080ea9</a></p>
+<p>ServiceAccount被修改过后，关联的pod需要重新启动才能生效。</p>
 </li>
 </ul>
 
@@ -1025,7 +924,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2016/11/14/hexo_gitpage/" title="Hexo+GitHub Page搭建自己的Blog">https://blog.hanqunfeng.com/2016/11/14/hexo_gitpage/</a>
+      <a href="https://blog.hanqunfeng.com/2023/07/14/aws-eks16-servcieaccount/" title="AWS-EKS-16--聊一聊ServiceAccount">https://blog.hanqunfeng.com/2023/07/14/aws-eks16-servcieaccount/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1071,18 +970,18 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/hexo/" rel="tag"><i class="fa fa-tag"></i> hexo</a>
+              <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2016/11/16/hexo_duoshuo_baidutongji/" rel="prev" title="Hexo--添加多说评论插件和百度统计插件">
-                  <i class="fa fa-chevron-left"></i> Hexo--添加多说评论插件和百度统计插件
-                </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2023/07/13/aws-eks15-auth-pod/" rel="next" title="AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的">
+                  AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的 <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>
