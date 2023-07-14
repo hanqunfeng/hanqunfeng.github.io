@@ -22,13 +22,13 @@
 
     <meta name="description" content="摘要   本文介绍EKS集群如何向其他 IAM 用户授予权限   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AWS-EKS-10--向其他 IAM 用户授予权限">
+<meta property="og:title" content="AWS-EKS-10--EKS权限管理(上)向其他 IAM 用户授予权限">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
 <meta property="og:description" content="摘要   本文介绍EKS集群如何向其他 IAM 用户授予权限   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-07T15:10:05.000Z">
-<meta property="article:modified_time" content="2023-07-13T06:04:05.929Z">
+<meta property="article:modified_time" content="2023-07-14T02:34:20.406Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
@@ -38,10 +38,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/","path":"2023/07/07/aws-eks10-iam-share/","title":"AWS-EKS-10--向其他 IAM 用户授予权限"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/","path":"2023/07/07/aws-eks10-iam-share/","title":"AWS-EKS-10--EKS权限管理(上)向其他 IAM 用户授予权限"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>AWS-EKS-10--向其他 IAM 用户授予权限 | 飘逸峰的博客</title>
+<title>AWS-EKS-10--EKS权限管理(上)向其他 IAM 用户授予权限 | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -710,12 +710,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="AWS-EKS-10--向其他 IAM 用户授予权限 | 飘逸峰的博客">
+      <meta itemprop="name" content="AWS-EKS-10--EKS权限管理(上)向其他 IAM 用户授予权限 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          AWS-EKS-10--向其他 IAM 用户授予权限
+          AWS-EKS-10--EKS权限管理(上)向其他 IAM 用户授予权限
         </h1>
 
         <div class="post-meta-container">
@@ -733,7 +733,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-07-13 14:04:05" itemprop="dateModified" datetime="2023-07-13T14:04:05+08:00">2023-07-13</time>
+      <time title="修改时间：2023-07-14 10:34:20" itemprop="dateModified" datetime="2023-07-14T10:34:20+08:00">2023-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -773,7 +773,7 @@
 </div>
 
 
-    <span id="/2023/07/07/aws-eks10-iam-share/" class="leancloud_visitors" data-flag-title="AWS-EKS-10--向其他 IAM 用户授予权限" title="阅读次数">
+    <span id="/2023/07/07/aws-eks10-iam-share/" class="leancloud_visitors" data-flag-title="AWS-EKS-10--EKS权限管理(上)向其他 IAM 用户授予权限" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -785,14 +785,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>5.6k</span>
+      <span>6.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
+      <span>6 分钟</span>
     </span>
 
         </div>
@@ -850,9 +850,9 @@
 <li class="lvl-2">
 <p>对于 AWS EKS 的权限管理，主要有以下三个方面内容</p>
 <ul class="lvl-2">
-<li class="lvl-6">IAM 用户、Role 或者 Account 访问 EKS 相关资源。这里的资源是指 EKS 集群本身的 AWS 资源。比如，EKS 集群信息配置，EC2 节点等等，这里不包括 K8s 中的资源。</li>
-<li class="lvl-6">IAM 用户、Role 或者 Account 访问 EKS K8s 资源，这里的资源是指 K8s 内部的资源，比如，K8s 内部的 service account、deployment、service 等等。</li>
-<li class="lvl-6">K8s 内部 Pod 调用 AWS 的资源。比如，通过创建 Ingress 来创建 AWS ALB。这部分后面会单独介绍。</li>
+<li class="lvl-6">IAM 用户、Role 或者 Account 访问 EKS 相关资源。这里的资源是指 EKS 集群本身的 AWS 资源。比如，EKS 集群信息配置，EC2 节点等等，这里不包括 K8s 中的资源。这部分直接在AWS IAM中进行授权即可。</li>
+<li class="lvl-6">IAM 用户、Role 或者 Account 访问 EKS K8s 资源，这里的资源是指 K8s 内部的资源，比如，K8s 内部的 service account、deployment、service 等等。本章重点讲这部分内容。</li>
+<li class="lvl-6">K8s 内部 Pod 调用 AWS 的资源。比如，通过创建 Ingress 来创建 AWS ALB。这部分在<a href="/2023/07/13/aws-eks15-auth-pod/" title="AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的">EKS权限管理(下)Pod 是如何调用 AWS 资源的</a>中介绍。</li>
 </ul>
 </li>
 <li class="lvl-2">
@@ -862,10 +862,10 @@
 <h2 id="创建-IAM-用户并授权其访问EKS资源">创建 IAM 用户并授权其访问EKS资源</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>关于如何在IAM中创建用户并授予相应的策略属于<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/zh_cn/IAM/latest/UserGuide/introduction.html">AWS IAM权限管理</a>的范畴，不是本文的重点，作者默认读者已掌握这些内容。</p>
+<p>关于如何在IAM中创建用户并授予相应的策略属于<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/zh_cn/IAM/latest/UserGuide/introduction.html">AWS IAM权限管理</a>的范畴，不是本文的重点，作者默认读者已掌握这些内容，重点理解用户、组、角色和策略之间的关系。读者也可以参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/379235758">一文搞懂 AWS IAM 权限 基础篇上 理论</a></p>
 </li>
 <li class="lvl-2">
-<p>在AWS控制台中创建一个用户<code>ekstest</code>，为了保证最小权限原则，这里只为其分配一个内联策略，同时为其创建访问密钥。注意必须为用户至少分配如下策略，以保证IAM用户有权限查看 EKS 集群，否则使用密钥无法通过命令行连通EKS。</p>
+<p>在AWS控制台中创建一个用户<code>ekstest</code>，为了保证最小权限原则，这里只为其分配一个内联策略(只针对关联用户)，同时为其创建访问密钥。注意必须为用户至少分配如下策略，以保证IAM用户有权限查看 EKS 集群，否则使用密钥无法通过命令行连通EKS。</p>
 </li>
 </ul>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;Version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2012-10-17&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;Statement&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">		<span class="punctuation">&#123;</span></span><br><span class="line">			<span class="attr">&quot;Sid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;VisualEditor0&quot;</span><span class="punctuation">,</span></span><br><span class="line">			<span class="attr">&quot;Effect&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Allow&quot;</span><span class="punctuation">,</span></span><br><span class="line">			<span class="attr">&quot;Action&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eks:DescribeCluster&quot;</span><span class="punctuation">,</span></span><br><span class="line">			<span class="attr">&quot;Resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;arn:aws:eks:us-west-2:743263909655:cluster/eks-lexing&quot;</span></span><br><span class="line">		<span class="punctuation">&#125;</span></span><br><span class="line">	<span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
@@ -887,10 +887,28 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过eksctl查看 ConfigMap 中的aws-auth映射</span></span><br><span class="line">$ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过kubectl查看configmap aws-auth</span></span><br><span class="line">$ kubectl describe configmap -n kube-system aws-auth</span><br><span class="line">Name:         aws-auth</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">mapRoles:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - system:bootstrappers</span><br><span class="line">  - system:nodes</span><br><span class="line">  rolearn: arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG</span><br><span class="line">  username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span><br><span class="line"></span><br><span class="line">mapUsers:</span><br><span class="line">----</span><br><span class="line">[]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BinaryData</span><br><span class="line">====</span><br><span class="line"></span><br><span class="line">Events:  &lt;none&gt;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>授权</p>
+<p>授权–1.角色与组绑定</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 所有命名空间中的 Kubernetes 资源，文件中的组名称为 eks-console-dashboard-full-access-group</span></span><br><span class="line">$ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 特定命名空间中的 Kubernetes 资源 - 此文件中的命名空间为 default，请依据需要修改命名空间名称。文件中的组名为 eks-console-dashboard-restricted-access-group</span></span><br><span class="line">$ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-restricted-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里以所有资源为例</span></span><br><span class="line">$ kubectl apply -f eks-console-full-access.yaml</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/eks-console-dashboard-full-access-clusterrole created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/eks-console-dashboard-full-access-binding created</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为用户添加映射，这里为用户 ekstest 添加权限策略</span></span><br><span class="line">$ eksctl create iamidentitymapping \</span><br><span class="line">    --cluster eks-lexing --profile eks-us-west-2 \</span><br><span class="line">    --arn arn:aws:iam::743263909655:user/ekstest \</span><br><span class="line">    --group eks-console-dashboard-full-access-group \</span><br><span class="line">    --no-duplicate-arns</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  checking arn arn:aws:iam::743263909655:user/ekstest against entries <span class="keyword">in</span> the auth ConfigMap</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  adding identity <span class="string">&quot;arn:aws:iam::743263909655:user/ekstest&quot;</span> to auth ConfigMap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次通过eksctl查看 ConfigMap 中的aws-auth映射</span></span><br><span class="line">$ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line">arn:aws:iam::743263909655:user/ekstest                                                    eks-console-dashboard-full-access-group</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过kubectl再次查看configmap aws-auth</span></span><br><span class="line"><span class="comment"># 实际上直接编辑也可以: kubectl edit configmap -n kube-system aws-auth</span></span><br><span class="line">$ kubectl describe configmap -n kube-system aws-auth</span><br><span class="line">Name:         aws-auth</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">mapRoles:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - system:bootstrappers</span><br><span class="line">  - system:nodes</span><br><span class="line">  rolearn: arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG</span><br><span class="line">  username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span><br><span class="line"></span><br><span class="line">mapUsers:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - eks-console-dashboard-full-access-group</span><br><span class="line">  userarn: arn:aws:iam::743263909655:user/ekstest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BinaryData</span><br><span class="line">====</span><br><span class="line"></span><br><span class="line">Events:  &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 所有命名空间中的 Kubernetes 资源，文件中的组名称为 eks-console-dashboard-full-access-group</span></span><br><span class="line">$ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 特定命名空间中的 Kubernetes 资源 - 此文件中的命名空间为 default，请依据需要修改命名空间名称。文件中的组名为 eks-console-dashboard-restricted-access-group</span></span><br><span class="line">$ curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-restricted-access.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里以所有资源为例</span></span><br><span class="line">$ kubectl apply -f eks-console-full-access.yaml</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/eks-console-dashboard-full-access-clusterrole created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/eks-console-dashboard-full-access-binding created</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看上面的yaml文件，可以看到里面定义了<code>ClusterRole</code>和<code>ClusterRoleBinding</code>以及<code>Role</code>和<code>RoleBinding</code>，这是K8s中的 <code>RBAC(Role-based access control )</code> 授权模块中的4个对象:</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>Role</code>：设置对 K8s 资源访问的具体权限，与某个 namesapce 相关联</li>
+<li class="lvl-6"><code>ClusterRole</code>：与 <code>Role</code> 类似，区别是不与某个 namepsace 相关联，针对整个 Cluster</li>
+<li class="lvl-6"><code>RoleBinding</code>：把<code>User|Group|ServiceAccount</code>和 <code>Role</code> 绑定，使其获得具体权限</li>
+<li class="lvl-6"><code>ClusterRoleBinding</code>：与 <code>RoleBinding</code> 类似，把<code>User|Group|ServiceAccount</code>和<code>ClusterRole</code>绑定，区别是不与某个 namepsace 相关联</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看集群角色及其绑定</span></span><br><span class="line">k get ClusterRole</span><br><span class="line">k get ClusterRoleBinding</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看角色及其绑定</span></span><br><span class="line">k get Role -A</span><br><span class="line">k get RoleBinding -A</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>授权–2.用户与组绑定</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为用户添加映射，这里为用户 ekstest 添加权限策略</span></span><br><span class="line">$ eksctl create iamidentitymapping \</span><br><span class="line">    --cluster eks-lexing --profile eks-us-west-2 \</span><br><span class="line">    --arn arn:aws:iam::743263909655:user/ekstest \</span><br><span class="line">    --group eks-console-dashboard-full-access-group \</span><br><span class="line">    --no-duplicate-arns</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  checking arn arn:aws:iam::743263909655:user/ekstest against entries <span class="keyword">in</span> the auth ConfigMap</span><br><span class="line">2023-07-05 16:28:51 [ℹ]  adding identity <span class="string">&quot;arn:aws:iam::743263909655:user/ekstest&quot;</span> to auth ConfigMap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次通过eksctl查看 ConfigMap 中的aws-auth映射</span></span><br><span class="line">$ eksctl get iamidentitymapping --cluster eks-lexing --profile eks-us-west-2</span><br><span class="line">ARN                                                USERNAME                GROUPS                    ACCOUNT</span><br><span class="line">arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG    system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;    system:bootstrappers,system:nodes</span><br><span class="line">arn:aws:iam::743263909655:user/ekstest                                                    eks-console-dashboard-full-access-group</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过kubectl再次查看configmap aws-auth</span></span><br><span class="line"><span class="comment"># 实际上直接编辑也可以: kubectl edit configmap -n kube-system aws-auth</span></span><br><span class="line">$ kubectl describe configmap -n kube-system aws-auth</span><br><span class="line">Name:         aws-auth</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">mapRoles:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - system:bootstrappers</span><br><span class="line">  - system:nodes</span><br><span class="line">  rolearn: arn:aws:iam::743263909655:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y55EPJO9XYDG</span><br><span class="line">  username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span><br><span class="line"></span><br><span class="line">mapUsers:</span><br><span class="line">----</span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - eks-console-dashboard-full-access-group</span><br><span class="line">  userarn: arn:aws:iam::743263909655:user/ekstest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BinaryData</span><br><span class="line">====</span><br><span class="line"></span><br><span class="line">Events:  &lt;none&gt;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>此时使用 ekstest 的访问密钥就可以通过命令行访问eks了</p>
@@ -947,7 +965,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/" title="AWS-EKS-10--向其他 IAM 用户授予权限">https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/</a>
+      <a href="https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/" title="AWS-EKS-10--EKS权限管理(上)向其他 IAM 用户授予权限">https://blog.hanqunfeng.com/2023/07/07/aws-eks10-iam-share/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1050,7 +1068,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">18:47</span>
+    <span title="站点阅读时长">18:48</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -22,8 +22,8 @@
 
     <meta name="description" content="摘要   本文介绍为EKS集群的 Pod 调用 AWS 资源的方法   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AWS-EKS-15--Pod 是如何调用 AWS 资源的">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-serviceaccount/index.html">
+<meta property="og:title" content="AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-auth-pod/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
 <meta property="og:description" content="摘要   本文介绍为EKS集群的 Pod 调用 AWS 资源的方法   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:locale" content="zh_CN">
@@ -34,21 +34,21 @@
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/IOszUm.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/oQ6D30.png">
 <meta property="article:published_time" content="2023-07-13T12:30:05.000Z">
-<meta property="article:modified_time" content="2023-07-13T12:38:36.073Z">
+<meta property="article:modified_time" content="2023-07-14T01:47:20.843Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/fXD4pY.png">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-serviceaccount/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-auth-pod/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/07/13/aws-eks15-serviceaccount/","path":"2023/07/13/aws-eks15-serviceaccount/","title":"AWS-EKS-15--Pod 是如何调用 AWS 资源的"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/07/13/aws-eks15-auth-pod/","path":"2023/07/13/aws-eks15-auth-pod/","title":"AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>AWS-EKS-15--Pod 是如何调用 AWS 资源的 | 飘逸峰的博客</title>
+<title>AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的 | 飘逸峰的博客</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -704,7 +704,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-serviceaccount/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-auth-pod/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -717,12 +717,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="AWS-EKS-15--Pod 是如何调用 AWS 资源的 | 飘逸峰的博客">
+      <meta itemprop="name" content="AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          AWS-EKS-15--Pod 是如何调用 AWS 资源的
+          AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的
         </h1>
 
         <div class="post-meta-container">
@@ -732,9 +732,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-07-13 20:30:05 / 修改时间：20:38:36" itemprop="dateCreated datePublished" datetime="2023-07-13T20:30:05+08:00">2023-07-13</time>
+      <time title="创建时间：2023-07-13 20:30:05" itemprop="dateCreated datePublished" datetime="2023-07-13T20:30:05+08:00">2023-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-14 09:47:20" itemprop="dateModified" datetime="2023-07-14T09:47:20+08:00">2023-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -774,7 +780,7 @@
 </div>
 
 
-    <span id="/2023/07/13/aws-eks15-serviceaccount/" class="leancloud_visitors" data-flag-title="AWS-EKS-15--Pod 是如何调用 AWS 资源的" title="阅读次数">
+    <span id="/2023/07/13/aws-eks15-auth-pod/" class="leancloud_visitors" data-flag-title="AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -991,7 +997,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-serviceaccount/" title="AWS-EKS-15--Pod 是如何调用 AWS 资源的">https://blog.hanqunfeng.com/2023/07/13/aws-eks15-serviceaccount/</a>
+      <a href="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-auth-pod/" title="AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的">https://blog.hanqunfeng.com/2023/07/13/aws-eks15-auth-pod/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1091,7 +1097,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">18:47</span>
+    <span title="站点阅读时长">18:48</span>
   </span>
 </div>
 <div class="busuanzi-count">
