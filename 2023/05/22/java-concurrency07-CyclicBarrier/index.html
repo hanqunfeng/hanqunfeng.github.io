@@ -568,91 +568,13 @@
   <div class="cc-license animated" itemprop="license">
     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
   </div>
-<div id="toBottom">
+<div class="toBottom">
 <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
 直达底部
 <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
 </div>
 
-<style>
 
- .hover {
-            color: #FF9966;
-            cursor:pointer;
-        }
-</style>
-
-<script type="text/javascript">
-
-    let a = true;
-
-    let gao=0;
-
-    let no_clear = true;
-    var timer;
-
-    jQuery(function ($) {
-
-        $("#toBottom").bind("mouseover", function () {
-            $(this).addClass("hover");
-        });
-
-
-        $("#toBottom").bind("mouseout", function () {
-            $(this).removeClass("hover");
-        });
-
-        $("#toBottom").click(function () {
-            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
-            if(a){
-                if(gao == 0){
-                    //设置定时器
-                    timer=setInterval("scrollwindow()",10);
-                }else{
-                    no_clear = false;
-                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
-                }
-
-            }
-
-        });
-    });
-
-    //滚动函数
-
-    function scrollwindow(){
-        gao=gao+100;
-        window.scroll(0,gao);
-    }
-
-    //清除定时器
-    function clear(){
-        if(no_clear){
-            clearInterval(timer);
-        }
-    }
-
-    //滚动到底部触发函数
-    window.onscroll = function(){
-        //变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
-        //变量windowHeight是可视区的高度
-        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        //变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
-               //滚动条到底部的条件
-            if(scrollTop+windowHeight==scrollHeight){
-                
-                
-                clear();
-                a = false;
-             }else{
-                a = true;
-             }
-        }
-
-
-</script>
         </div>
       </div>
     </div>
@@ -1121,6 +1043,34 @@
 </div>
 <span id="show_hidden">🇨🇳</span>
 
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
 <script type="text/javascript">
           jQuery(function ($) {
 
@@ -1130,9 +1080,82 @@
                 current = (current+180)%360;
                 this.style.transform = 'rotate('+current+'deg)';
             });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
           });
 </script>
 
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
 
     </div>
   </footer>
