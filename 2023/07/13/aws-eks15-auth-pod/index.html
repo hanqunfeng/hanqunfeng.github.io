@@ -29,18 +29,18 @@
 <meta property="og:site_name" content="飘逸峰的博客">
 <meta property="og:description" content="摘要   本文介绍为EKS集群的 Pod 调用 AWS 资源的方法   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/fXD4pY.png?x-oss-process=style/blog">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/xl0OSL.png?x-oss-process=style/blog">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/MkTXd5.png?x-oss-process=style/blog">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/rSKtJm.png?x-oss-process=style/blog">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/IOszUm.png?x-oss-process=style/blog">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/oQ6D30.png?x-oss-process=style/blog">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/fXD4pY.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/xl0OSL.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/MkTXd5.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rSKtJm.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/IOszUm.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/oQ6D30.png">
 <meta property="article:published_time" content="2023-07-13T12:30:05.000Z">
-<meta property="article:modified_time" content="2024-01-08T07:08:56.535Z">
+<meta property="article:modified_time" content="2024-01-08T08:50:52.594Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="eks">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/fXD4pY.png?x-oss-process=style/blog">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/fXD4pY.png">
 
 
 <link rel="canonical" href="https://blog.hanqunfeng.com/2023/07/13/aws-eks15-auth-pod/">
@@ -708,7 +708,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-01-08 15:08:56" itemprop="dateModified" datetime="2024-01-08T15:08:56+08:00">2024-01-08</time>
+      <time title="修改时间：2024-01-08 16:50:52" itemprop="dateModified" datetime="2024-01-08T16:50:52+08:00">2024-01-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -787,7 +787,7 @@
  ~下标~
  ^上标^
  脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
- 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/innodb_buffer_pool.png?x-oss-process=style/blog =900x600)
+ 图片设置宽度和高度 ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
 
  +++ **点击折叠**
  这是被隐藏的内容
@@ -838,7 +838,7 @@
 </li>
 <li class="lvl-2">
 <p>创建Pod时，如果没有为其指定关联的ServcieAccount，则默认使用Pod所在Namespace下的名称为<code>default</code>的ServcieAccount，创建Namespace时会自动为其创建该缺省的ServcieAccount，默认其没有绑定任何IAM Role，则缺省继承NodeGroup的IAM Role，NodeGroup的IAM Role是在创建EKS集群时自动创建的，其具有对ECR存储库的只读访问、允许Amazon EKS工作节点连接到Amazon EKS群集等权限。<br>
-<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/fXD4pY.png?x-oss-process=style/blog" alt="" width="1200" height="800"></p>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/fXD4pY.png" alt="" width="1200" height="800"></p>
 </li>
 <li class="lvl-2">
 <p>Amazon EKS Pod Identity Webhook 会查看与 service account 关联的 Pods，并向 Pod 提供下列环境变量</p>
@@ -870,7 +870,7 @@
 <ul class="lvl-2">
 <li class="lvl-6">
 <p>1.创建了一个名称为<code>AmazonEKSLoadBalancerControllerRole</code>的IAM角色并关联新建的名称为<code>AWSLoadBalancerControllerIAMPolicy</code>的策略<br>
-<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/xl0OSL.png?x-oss-process=style/blog" alt="" width="1200" height="600"></p>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/xl0OSL.png" alt="" width="1200" height="600"></p>
 </li>
 <li class="lvl-6">
 <p>2.在k8s的<code>kube-system</code>namespace下创建了一个名称为<code>aws-load-balancer-controller</code>的ServiceAccount</p>
@@ -880,7 +880,7 @@
 <ul class="lvl-2">
 <li class="lvl-6">3.在名称为<code>AmazonEKSLoadBalancerControllerRole</code>的IAM角色的信任关系中指定认证方式为OIDC，并且关联名称为<code>aws-load-balancer-controller</code>的ServiceAccount。</li>
 </ul>
-<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/MkTXd5.png?x-oss-process=style/blog" alt="" width="1200" height="500"></p>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/MkTXd5.png" alt="" width="1200" height="500"></p>
 <ul class="lvl-2">
 <li class="lvl-6">
 <p>4.在名称为<code>aws-load-balancer-controller</code>的ServiceAccount中关联上面的角色<code>AmazonEKSLoadBalancerControllerRole</code>，就是添加注释<code>eks.amazonaws.com/role-arn: arn:aws:iam::743263909644:role/AmazonEKSLoadBalancerControll</code>。</p>
@@ -896,7 +896,7 @@
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl edit deployment -n kube-system aws-load-balancer-controller</span><br></pre></td></tr></table></figure>
-<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/rSKtJm.png?x-oss-process=style/blog" alt=""></p>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rSKtJm.png" alt=""></p>
 <div class="tips">
 <p><em><strong>使用aws命令创建角色并关联SA</strong></em></p>
 <ul class="lvl-1">
@@ -950,8 +950,8 @@
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">$ eksctl create iamserviceaccount \</span><br><span class="line">  --cluster=eks-lexing \</span><br><span class="line">  --namespace=<span class="built_in">test</span> \</span><br><span class="line">  --name=test-s3-sa-new \</span><br><span class="line">  --role-name TestS3Role \</span><br><span class="line">  --attach-policy-arn=arn:aws:iam::aws:policy/AmazonS3FullAccess \</span><br><span class="line">  --approve</span><br><span class="line">2023-07-13 19:59:18 [ℹ]  6 existing iamserviceaccount(s) (kube-system/aws-load-balancer-controller,kube-system/aws-node,kube-system/ebs-csi-controller-sa,kube-system/efs-csi-controller-sa,<span class="built_in">test</span>/test-s3-sa,<span class="built_in">test</span>/testS3SA) will be excluded</span><br><span class="line">2023-07-13 19:59:18 [ℹ]  1 iamserviceaccount (<span class="built_in">test</span>/test-s3-sa-new) was included (based on the include/exclude rules)</span><br><span class="line">2023-07-13 19:59:18 [!]  serviceaccounts that exist <span class="keyword">in</span> Kubernetes will be excluded, use --override-existing-serviceaccounts to override</span><br><span class="line">2023-07-13 19:59:18 [ℹ]  1 task: &#123;</span><br><span class="line">    2 sequential sub-tasks: &#123;</span><br><span class="line">        create IAM role <span class="keyword">for</span> serviceaccount <span class="string">&quot;test/test-s3-sa-new&quot;</span>,</span><br><span class="line">        create serviceaccount <span class="string">&quot;test/test-s3-sa-new&quot;</span>,</span><br><span class="line">    &#125; &#125;2023-07-13 19:59:18 [ℹ]  building iamserviceaccount stack <span class="string">&quot;eksctl-eks-lexing-addon-iamserviceaccount-test-test-s3-sa-new&quot;</span></span><br><span class="line">2023-07-13 19:59:18 [ℹ]  deploying stack <span class="string">&quot;eksctl-eks-lexing-addon-iamserviceaccount-test-test-s3-sa-new&quot;</span></span><br><span class="line">2023-07-13 19:59:19 [ℹ]  waiting <span class="keyword">for</span> CloudFormation stack <span class="string">&quot;eksctl-eks-lexing-addon-iamserviceaccount-test-test-s3-sa-new&quot;</span></span><br><span class="line">2023-07-13 19:59:50 [ℹ]  waiting <span class="keyword">for</span> CloudFormation stack <span class="string">&quot;eksctl-eks-lexing-addon-iamserviceaccount-test-test-s3-sa-new&quot;</span></span><br><span class="line">2023-07-13 19:59:51 [ℹ]  created serviceaccount <span class="string">&quot;test/test-s3-sa-new&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看sa，确认是否已关联IAM Role</span></span><br><span class="line">$ k describe sa test-s3-sa-new</span><br><span class="line">Name:                test-s3-sa-new</span><br><span class="line">Namespace:           <span class="built_in">test</span></span><br><span class="line">Labels:              app.kubernetes.io/managed-by=eksctl</span><br><span class="line">Annotations:         eks.amazonaws.com/role-arn: arn:aws:iam::743263909644:role/TestS3Role</span><br><span class="line">Image pull secrets:  &lt;none&gt;</span><br><span class="line">Mountable secrets:   &lt;none&gt;</span><br><span class="line">Tokens:              &lt;none&gt;</span><br><span class="line">Events:              &lt;none&gt;</span><br></pre></td></tr></table></figure>
-<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/IOszUm.png?x-oss-process=style/blog" alt="" width="1200" height="600"><br>
-<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/oQ6D30.png?x-oss-process=style/blog" alt="" width="1200" height="400"></p>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/IOszUm.png" alt="" width="1200" height="600"><br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/oQ6D30.png" alt="" width="1200" height="400"></p>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>创建一个已经安装过AWS CLI的Pod，这里镜像就使用<code>amazon/aws-cli</code>，注意要指定<code>serviceAccountName: test-s3-sa-new</code></p>
