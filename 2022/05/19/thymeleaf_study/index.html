@@ -264,27 +264,49 @@
         width: 200,
         height: 200,
         onMouseenter: function (view, date, data) {
-          console.log(view);
+          
           let year = date.getFullYear();
           let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
           let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
           var fulltime = year + "-" + month + "-" + day;
           var keytime = year + "-" + (date.getMonth() + 1);
+
+          
+
           let mycalendarElement = mycalendar[keytime];
           let n = 0;
           if (view == "month") {
 
             } else {
-
-                for (var i = 0; i < mycalendarElement.length; i++) {
-                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
-                    if (fulltime == ordertime) {
-                      n++;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        if (fulltime == ordertime) {
+                        n++;
+                        }
                     }
                 }
                 
+                if(n==0){
+                    let self = this;
+                    // 发送同步 GET 请求
+                    $.ajax({
+                        url: 'http://8.130.53.151:3000/lunar?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            $(self).attr('title','农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '||' + data.data.Animal + ']');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+
+                }
                 if(n>0){
-                  $(this).attr('title',n + '');
+                  $(this).attr('title','创作[' + n + ']篇，点击查看');
                 }
 
 
@@ -308,21 +330,23 @@
                 $(".over").remove();
 
                 let n = 0;
-                for (var i = 0; i < mycalendarElement.length; i++) {
-                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
-                    if (fulltime == ordertime) {
-                        n++;
-                        if(n==1){
-                          coverLayer(1);
-                          autoWidth();
-                          $(".toast").show(transtime);
-                        }
-                        
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
 
-                        var title = mycalendarElement[i]["title"];
-                        var link = head + mycalendarElement[i]["link"];
-                        $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
-                        
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
                     }
                 }
                 n = 0;
@@ -1039,14 +1063,14 @@ common/model.html，<code>th:fragment=&quot;header&quot;</code>指定代码块�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">311k</span>
+    <span title="站点总字数">312k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">18:49</span>
+    <span title="站点阅读时长">18:54</span>
   </span>
 </div>
 <div class="busuanzi-count">
