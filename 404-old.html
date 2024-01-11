@@ -199,6 +199,20 @@
     margin: auto;
 }
 
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
 </style>
 
 <div id="img_css">
@@ -224,6 +238,7 @@
 	  $('#img_css').click(function(){
                 location.href = "/404";
       });
+
 
 
       function coverLayer(tag) {
@@ -261,36 +276,63 @@
       head = localhostPaht;
       transtime=300; // dong
 
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+
 
        $('#ca').calendar({
         width: 200,
         height: 200,
         onMouseenter: function (view, date, data) {
           
+
           let year = date.getFullYear();
           let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
           let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
           var fulltime = year + "-" + month + "-" + day;
-          var keytime = year + "-" + (date.getMonth() + 1);
-
-          
-
-          let mycalendarElement = mycalendar[keytime];
           let n = 0;
-          if (view == "month") {
 
-            } else {
-                if (mycalendarElement && mycalendarElement.length !== undefined) {
-                    for (var i = 0; i < mycalendarElement.length; i++) {
-                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
-                        if (fulltime == ordertime) {
-                        n++;
-                        }
-                    }
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
                 }
-                
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
                 if(n==0){
-                    let self = this;
+
                     // 发送同步 GET 请求
                     $.ajax({
                         url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
@@ -299,16 +341,16 @@
                         success: function(data) {
                             
                             
-                            $(self).attr('title','农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+                            $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
                         },
                         error: function(xhr, status, error) {
                             console.error('请求失败:', status, error);
                         }
                     });
-
                 }
-                if(n>0){
-                  $(this).attr('title','创作[' + n + ']篇，点击查看');
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
                 }
 
 
@@ -316,6 +358,7 @@
         },
         onSelected: function (view, date, data) {   // 点击事件
             if (view == "month") {
+                
                 let fullYear = date.getFullYear();
                 monthTag(fullYear, date.getMonth() + 1);
             } else {
@@ -387,6 +430,16 @@
 
     // 对月份进行设置，json文件中存在的才显示
     function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
         removeHaveClass();
         // debugger;
         var flag = true;
@@ -395,13 +448,7 @@
             if (mycalendar[currentyear + "-" + i]) {
                 
                 addHaveClass(i);
-                // 此处对当前月份下的日子进行匹配
-                if (date) {
-                    var month = date;
-                } else {
-                    var currentData = new Date();
-                    var month = currentData.getMonth() + 1;
-                }
+
 
                 if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
                     flag = false;
@@ -419,16 +466,37 @@
                 }
             }
         }
+        
         resolveday(month, mycalValue, currentyear);
     }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
 
     // 对月份下的日期进行渲染
     function resolveday(month, mycalValue, currentyear) {
         $(".toast").hide("transtime");
-        
+
         var precurrentyear=currentyear;
         var nextcurrentyear=currentyear;
-        let attr = $("#cal" + month).children("li");
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
         var preMonth = month - 1 > 0 ? month - 1 : 12;
         var nextMonth = month + 1 > 12 ? 1 : month + 1;
         if (preMonth==12) {
@@ -437,6 +505,10 @@
         if(nextMonth==1){
             nextcurrentyear = currentyear + 1;
         }
+        
+
+        let attr = $("#cal" + month).children("li");
+
         // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
             var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
             var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
@@ -449,17 +521,20 @@
                      if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
                          jQuery(this).css("color","#FF808E");
                      }
+                     jQuery(this).attr('title',formatDate(precurrentyear,preMonth,dayVal));
                  } else if(emptclass=="new"){
                     var dayVal = jQuery(this).text();
                     if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
                         jQuery(this).css("color","#FF808E");
                     }
+                    jQuery(this).attr('title',formatDate(nextcurrentyear,nextMonth,dayVal));
                  }
                 }else {
                     var dayVal = jQuery(this).text();
                     if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
                         jQuery(this).css("color","#FF808E");
                     }
+                    jQuery(this).attr('title',formatDate(currentyear,month,dayVal));
                 }
             });
         // }

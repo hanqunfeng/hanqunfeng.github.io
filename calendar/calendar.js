@@ -94,6 +94,7 @@
 
         ITEM_DAY = ACTION_NAMESPACE + 'day',
         ITEM_MONTH = ACTION_NAMESPACE + 'month',
+        ITEM_MONTH_NOW = ACTION_NAMESPACE + 'month-now',
 
         DISABLED = 'disabled',
         MARK_DATA = 'markData',
@@ -126,6 +127,7 @@
             '</a>',
             '<div class="calendar-arrow">',
             '<span class="prev" title="上一月" data-calendar-arrow-date>{prev}</span>',
+            '<span class="month-now"  title="当前月" data-calendar-month-now>●</span>',
             '<span class="next" title="下一月" data-calendar-arrow-date>{next}</span>',
             '</div>',
             '</div>',
@@ -139,6 +141,7 @@
             '<a href="javascript:;" data-calendar-display-month class="calendar-display">{yyyy}</a>',
             '<div class="calendar-arrow">',
             '<span class="prev" title="上一年" data-calendar-arrow-month>{prev}</span>',
+            '<span class="month-now"  title="当前月" data-calendar-month-now>●</span>',
             '<span class="next" title="下一年" data-calendar-arrow-month>{next}</span>',
             '</div>',
             '</div>',
@@ -688,7 +691,6 @@
                     type = getClass(this),
                     y = arr[0],
                     m = arr[1];
-
                 var d = _this.updateDateView(y, m, type, function() {
                     vc('date', d.y, d.m);
                 });
@@ -718,7 +720,14 @@
             }).on('click', '[' + ITEM_MONTH + ']', function() {
                 var y = Number(_this.$disMonth.html()),
                     m = parseInt(this.innerHTML);
-
+                // console.log(y)
+                _this.updateDateView(y, m);
+                vc('date', y, m);
+                _this.options.onSelected.call(this, 'month', new Date(y, m - 1));
+            }).on('click', '[' + ITEM_MONTH_NOW + ']', function() {
+                var y = 2024,
+                    m = 1;
+                // console.log(y)
                 _this.updateDateView(y, m);
                 vc('date', y, m);
                 _this.options.onSelected.call(this, 'month', new Date(y, m - 1));
@@ -737,6 +746,14 @@
                 _this.options.onMouseenter.call(this, 'date', day, $(this).data(MARK_DATA));
             }).on('mouseleave', '[' + ITEM_DAY + ']', function() {
                 _this.$label.hide();
+            }).on('mouseenter', '[' + ITEM_MONTH + ']', function(e) {
+                var y = Number(_this.$disMonth.html()),
+                    m = parseInt(this.innerHTML);
+
+                _this.options.onMouseenter.call(this, 'month', new Date(y, m - 1));
+            }).on('mouseleave', '[' + ITEM_MONTH + ']', function() {
+                _this.$label.hide();
+                // $(this).attr('title','');
             });
         },
         resize: function() {
