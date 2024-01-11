@@ -720,14 +720,14 @@
             }).on('click', '[' + ITEM_MONTH + ']', function() {
                 var y = Number(_this.$disMonth.html()),
                     m = parseInt(this.innerHTML);
-                // console.log(y)
                 _this.updateDateView(y, m);
                 vc('date', y, m);
                 _this.options.onSelected.call(this, 'month', new Date(y, m - 1));
             }).on('click', '[' + ITEM_MONTH_NOW + ']', function() {
-                var y = 2024,
-                    m = 1;
-                // console.log(y)
+                let date_now = new Date();
+                var y = date_now.getFullYear(),
+                    m = date_now.getMonth() + 1;
+                // console.log(y,m)
                 _this.updateDateView(y, m);
                 vc('date', y, m);
                 _this.options.onSelected.call(this, 'month', new Date(y, m - 1));
