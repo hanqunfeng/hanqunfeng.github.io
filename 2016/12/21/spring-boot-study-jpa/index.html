@@ -333,14 +333,29 @@
                 if(n==0){
 
                     // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
                     $.ajax({
-                        url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
                         type: 'GET',
                         async: false,  // 设置 async 参数为 false
                         success: function(data) {
                             
                             
-                            $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+                            $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
 
                         },
                         error: function(xhr, status, error) {
