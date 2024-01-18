@@ -850,6 +850,7 @@ function getcalendar (){
         mycalendar = data;
         // 然后继续用content就行了
     })
+
    /* $.ajax({
         url:"https://raw.githack.com/1260408088/static/master/calendar.json",
         type:"GET",
