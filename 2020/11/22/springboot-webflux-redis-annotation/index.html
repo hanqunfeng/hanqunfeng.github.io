@@ -167,7 +167,8 @@
     padding: 4px;
     width: 800px;
     background-color: rgb(255, 128, 142);
-    position: absolute;
+    
+    position: fixed;
     z-index: 25;
     display: block;
     left: 0;
@@ -419,6 +420,12 @@ i.ban {
             }
         },
         onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
             if (view == "month") {
                 
                 let fullYear = date.getFullYear();
@@ -576,7 +583,7 @@ i.ban {
             var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
             jQuery.each(attr, function () {
                 let emptclass = jQuery(this).attr("class");
-                
+                //console.log("emptclass",emptclass);
                 if (emptclass) {
                     if(emptclass=="old"){ // 前一个月的数据
                      var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
@@ -624,13 +631,40 @@ i.ban {
                         }
                     }
 
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
                  }
+
                 }else {
                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
                     if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
                         jQuery(this).css("color","#FF808E");
                     }
                     dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
                     jQuery(this).attr('title',dateStr);
                     if(ban_xiu_data){
                         if(ban_xiu_data[dateStr] == '班'){
@@ -676,7 +710,7 @@ i.ban {
     }
 
     function preMonth() {
-        $(".toast").hide(transtime);
+        $(".toast").hide("transtime");
         monthTag(getCurrentyear(), getCurrentmonth());
     }
 

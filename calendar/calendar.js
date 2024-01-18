@@ -707,7 +707,12 @@
 
             // selected
             _this.$element.on('click', '[' + ITEM_DAY + ']', function() {
-                var d = parseInt(this.innerHTML),
+                //console.log(this.innerHTML)
+                var originalString = this.innerHTML;
+                var modifiedString = originalString.replace(/<i[^>]*>.*?<\/i>/g, '');
+                //console.log(modifiedString)
+
+                var d = parseInt(modifiedString),
                     cls = getClass(this),
                     type = /new|old/.test(cls) ? cls.match(/new|old/)[0] : '';
 
