@@ -22,28 +22,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍Linux下MongoDB7.0的安装   MongoDB官方文档   本文基于CentOS8(x86_64)">
+    <meta name="description" content="摘要   安装完linux后，一些常用的设置可以方便我们今后的使用，比如关闭SELinux，增加文件描述符限制，等等。   本文基于CentOS8。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MongoDB7.0的安装">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2024/03/01/mongodb7/index.html">
+<meta property="og:title" content="Linux常用命令--常用设置">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2024/03/13/linux-command14-setting/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍Linux下MongoDB7.0的安装   MongoDB官方文档   本文基于CentOS8(x86_64)">
+<meta property="og:description" content="摘要   安装完linux后，一些常用的设置可以方便我们今后的使用，比如关闭SELinux，增加文件描述符限制，等等。   本文基于CentOS8。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-03-01T13:30:05.000Z">
-<meta property="article:modified_time" content="2024-03-13T02:01:50.992Z">
+<meta property="article:published_time" content="2024-03-13T13:30:05.000Z">
+<meta property="article:modified_time" content="2024-03-13T03:59:19.820Z">
 <meta property="article:author" content="飘逸峰">
-<meta property="article:tag" content="mongodb">
+<meta property="article:tag" content="linux常用命令">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2024/03/01/mongodb7/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2024/03/13/linux-command14-setting/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2024/03/01/mongodb7/","path":"2024/03/01/mongodb7/","title":"MongoDB7.0的安装"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2024/03/13/linux-command14-setting/","path":"2024/03/13/linux-command14-setting/","title":"Linux常用命令--常用设置"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>MongoDB7.0的安装 | 飘逸峰的博客</title>
+<title>Linux常用命令--常用设置 | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -63,7 +63,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="/js-expand/httpToHttps.js"></script>
-<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+<meta name="keywords" content="linux,bash,hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
 
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
@@ -765,7 +765,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MongoDB-7-0%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">MongoDB 7.0新特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85MongoDB"><span class="nav-number">3.</span> <span class="nav-text">安装MongoDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8mongodb%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.</span> <span class="nav-text">启动mongodb服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell%E5%AE%A2%E6%88%B7%E7%AB%AFmongosh"><span class="nav-number">5.</span> <span class="nav-text">shell客户端mongosh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81"><span class="nav-number">6.</span> <span class="nav-text">安全认证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MongoDB%E5%90%AF%E7%94%A8%E9%89%B4%E6%9D%83"><span class="nav-number">7.</span> <span class="nav-text">MongoDB启用鉴权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E8%BF%9E%E6%8E%A5MongoDB%E6%97%B6%E5%87%BA%E7%8E%B0%E7%9A%84-vm-max-map-count-is-too-low-%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">8.</span> <span class="nav-text">解决连接MongoDB时出现的 vm.max_map_count is too low 的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MongoDB-Database-Tools"><span class="nav-number">9.</span> <span class="nav-text">MongoDB Database Tools</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%97%ADSELinux"><span class="nav-number">2.</span> <span class="nav-text">关闭SELinux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%99%90%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">增加文件描述符限制</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -858,38 +858,31 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2024/03/05/mongodb7-springboot/" rel="bookmark">
-        <time class="popular-posts-time">2024-03-05</time>
+      <a class="popular-posts-link" href="/2023/02/28/linux-command02-firewall/" rel="bookmark">
+        <time class="popular-posts-time">2023-02-28</time>
         <br>
-      MongoDB7.0--SpringBoot单集合操作
+      Linux常用命令--防火墙firewalld
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2024/03/11/mongodb7-index/" rel="bookmark">
-        <time class="popular-posts-time">2024-03-11</time>
+      <a class="popular-posts-link" href="/2023/02/24/linux-command01-zip/" rel="bookmark">
+        <time class="popular-posts-time">2023-02-24</time>
         <br>
-      MongoDB7.0--索引
+      Linux常用命令--文件与目录的压缩
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/11/22/mysql-sql-optimization/" rel="bookmark">
-        <time class="popular-posts-time">2022-11-22</time>
+      <a class="popular-posts-link" href="/2016/12/06/md-subl-atom/" rel="bookmark">
+        <time class="popular-posts-time">2016-12-06</time>
         <br>
-      MySql--sql语句优化
+      Markdown编辑器--Sublime Text和Atom
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2024/03/07/mongodb7-springboot-aggregate/" rel="bookmark">
-        <time class="popular-posts-time">2024-03-07</time>
+      <a class="popular-posts-link" href="/2023/04/20/linux-command11-user/" rel="bookmark">
+        <time class="popular-posts-time">2023-04-20</time>
         <br>
-      MongoDB7.0--SpringBoot聚合操作
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2020/03/19/mongodb-mongos/" rel="bookmark">
-        <time class="popular-posts-time">2020-03-19</time>
-        <br>
-      MongoDB 分片集群搭建
+      Linux常用命令--用户管理
       </a>
     </li>
   </ul>
@@ -912,7 +905,7 @@ i.ban {
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2024/03/01/mongodb7/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2024/03/13/linux-command14-setting/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -925,12 +918,12 @@ i.ban {
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="MongoDB7.0的安装 | 飘逸峰的博客">
+      <meta itemprop="name" content="Linux常用命令--常用设置 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          MongoDB7.0的安装
+          Linux常用命令--常用设置
         </h1>
 
         <div class="post-meta-container">
@@ -940,15 +933,9 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2024-03-01 21:30:05" itemprop="dateCreated datePublished" datetime="2024-03-01T21:30:05+08:00">2024-03-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-03-13 10:01:50" itemprop="dateModified" datetime="2024-03-13T10:01:50+08:00">2024-03-13</time>
+      <time title="创建时间：2024-03-13 21:30:05 / 修改时间：11:59:19" itemprop="dateCreated datePublished" datetime="2024-03-13T21:30:05+08:00">2024-03-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -964,7 +951,7 @@ i.ban {
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/linux/mongodb/" itemprop="url" rel="index"><span itemprop="name">mongodb</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" itemprop="url" rel="index"><span itemprop="name">linux常用命令</span></a>
         </span>
     </span>
 
@@ -988,7 +975,7 @@ i.ban {
 </div>
 
 
-    <span id="/2024/03/01/mongodb7/" class="leancloud_visitors" data-flag-title="MongoDB7.0的安装" title="阅读次数">
+    <span id="/2024/03/13/linux-command14-setting/" class="leancloud_visitors" data-flag-title="Linux常用命令--常用设置" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -1000,14 +987,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2k</span>
+      <span>1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
+      <span>4 分钟</span>
     </span>
 
         </div>
@@ -1041,366 +1028,83 @@ i.ban {
 这里是容器内的内容
 % endnote %
 
-引用本地其它文章连接{}
- 大括号开始% post_link 文件名称(不包含.md) %大括号结束
  -->
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>本文介绍Linux下MongoDB7.0的安装</p>
+<p>安装完linux后，一些常用的设置可以方便我们今后的使用，比如关闭SELinux，增加文件描述符限制，等等。</p>
 </li>
 <li class="lvl-2">
-<p>MongoDB<a target="_blank" rel="noopener" href="https://www.mongodb.com/docs/v7.0/">官方文档</a></p>
-</li>
-<li class="lvl-2">
-<p>本文基于<code>CentOS8(x86_64)</code></p>
+<p>本文基于CentOS8。</p>
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="MongoDB-7-0新特性">MongoDB 7.0新特性</h2>
+<h2 id="关闭SELinux">关闭SELinux</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>2024年8月15日，MongoDB正式发布7.0版本，截止目前最新版本为7.0.6。</p>
+<p>SELinux（Security-Enhanced Linux）是一种基于安全策略的 Linux 安全模块，其主要目的是提供对各种应用程序和进程的更细粒度的访问控制。</p>
 </li>
 <li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://www.mongodb.com/docs/v7.0/release-notes/7.0/">MongoDB7.0特性</a></p>
+<p>SELinux 的安全方案主要基于以下两个策略：</p>
+<ul class="lvl-2">
+<li class="lvl-6">强制访问控制（Mandatory Access Control, MAC）：MAC 策略不允许用户在他们拥有的文件和进程上设置安全访问控制，而是根据一个由系统管理员和/或操作系统开发商定义的集中安全策略进行访问控制。</li>
+<li class="lvl-6">类型强制访问控制（Type Enforcement）：通过将文件、目录和其他资源分配到类型，并定义它们之间的交互，限制进程在资源之间的信息流。</li>
+</ul>
 </li>
 <li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/mongodb/product-overview/features-of-mongodb-7-0?spm=a2c4g.11186623.0.0.2acc36f3yP2Mr9">阿里云关于MongoDB7.0的特性说明</a>，该文档中也包含MongoDB其它版本的特性说明</p>
+<p>在实际工作中，SELinux 可以用来阻止或限制恶意或损坏的应用程序对系统造成的损害。当配置正确时，SELinux 提供的强大安全机制可以显著提高系统的安全性。</p>
 </li>
 <li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://www.mongodb.com/legal/support-policy/lifecycles">MongoDB Software Lifecycle Schedules</a></p>
+<p>但是，SELinux 也可能会带来一些问题，例如，它可能会导致某些应用程序无法正常工作，或者它可能会在某些情况下导致性能下降。因此，许多 Linux 发行版默认会关闭 SELinux，以避免这些问题。</p>
+</li>
+<li class="lvl-2">
+<p>通过以下命令，可以查看当前的 SELinux 状态：</p>
 </li>
 </ul>
-<h2 id="安装MongoDB">安装MongoDB</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果当前状态为 Enforcing，表示 SELinux 已启用，否则为 Disabled。</span></span><br><span class="line">$ sestatus</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>mongodb的安装方法可以查看<a target="_blank" rel="noopener" href="https://www.mongodb.com/docs/v7.0/administration/install-community/">官方文档</a></p>
-</li>
-<li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://www.mongodb.com/try/download/community">MongoDB下载地址</a>，选择合适的版本、平台和包类型</p>
+<p>临时关闭 SELinux，可以使用以下命令：</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载MongoDB</span></span><br><span class="line">wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel80-7.0.6.tgz</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf mongodb-linux-x86_64-rhel80-7.0.6.tgz</span><br><span class="line"><span class="comment"># 方便起见，创建软连接</span></span><br><span class="line"><span class="built_in">ln</span> -s mongodb-linux-x86_64-rhel80-7.0.6 mongodb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改/etc/profile，添加环境变量，方便执行MongoDB命令</span></span><br><span class="line"><span class="built_in">export</span> MONGODB_HOME=/usr/local/soft/mongodb</span><br><span class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$MONGODB_HOME</span>/bin</span><br><span class="line"></span><br><span class="line"><span class="comment">#重新加载环境变量</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看版本，检查命令是否可用</span></span><br><span class="line">mongod --version</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建dbpath和logpath的存储目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /mongodb/data /mongodb/log</span><br></pre></td></tr></table></figure>
-<h2 id="启动mongodb服务">启动mongodb服务</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ setenforce 0</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>命令参数启动</p>
+<p>永久关闭 SELinux，可以使用以下命令：</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mongod --port=27017 --dbpath=/mongodb/data --logpath=/mongodb/log/mongodb.log --bind_ip=0.0.0.0 --fork</span><br><span class="line">    <span class="comment"># 参数说明</span></span><br><span class="line">    --port: 指定端口，默认为27017</span><br><span class="line">    --dbpath: 指定数据文件存放目录</span><br><span class="line">    --logpath: 指定日志文件，注意是指定文件不是目录</span><br><span class="line">    --bind_ip: 默认只监听localhost网卡</span><br><span class="line">    --fork: 后台启动</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/selinux/config</span><br><span class="line">    <span class="comment"># 在文件中找到以下行，将值改为 disabled。</span></span><br><span class="line">    SELINUX=disabled</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启系统，SELinux 就会关闭。</span></span><br><span class="line">$ reboot</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>也可以将上面的参数写到配置文件中，如<code>/mongodb/conf/mongo.conf</code>文件，必须是yaml格式</p>
+<p>临时开启 SELinux，可以使用以下命令：</p>
 </li>
 </ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">systemLog:</span></span><br><span class="line">  <span class="attr">destination:</span> <span class="string">file</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">/mongodb/log/mongodb.log</span> <span class="comment"># log path</span></span><br><span class="line">  <span class="attr">logAppend:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">  <span class="attr">dbPath:</span> <span class="string">/mongodb/data</span> <span class="comment"># data directory</span></span><br><span class="line">  <span class="attr">engine:</span> <span class="string">wiredTiger</span>  <span class="comment">#存储引擎，默认值就是wiredTiger</span></span><br><span class="line">  <span class="attr">journal:</span>            <span class="comment">#journal日志配置</span></span><br><span class="line">    <span class="attr">commitIntervalMs:</span> <span class="number">1</span> <span class="comment">#mongod进程在日志操作之间允许的最大时间（以毫秒为单位）。值可以从1到500毫秒不等。较低的值会增加日志的耐用性，而牺牲了磁盘性能。在WiredTiger上，默认的日志提交间隔是100毫秒。此外，包含或暗示j:true的写入将导致期刊立即同步。</span></span><br><span class="line"><span class="attr">net:</span></span><br><span class="line">  <span class="attr">bindIp:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">27017</span></span><br><span class="line"><span class="attr">processManagement:</span></span><br><span class="line">  <span class="attr">fork:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ setenforce 1</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>将命令行参数直接转换为yaml:<code>--outputConfig</code></p>
+<p>永久开启 SELinux，可以使用以下命令：</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mongod --port=27017 --dbpath=/mongodb/data --logpath=/mongodb/log/mongodb.log --bind_ip=0.0.0.0 --fork --outputConfig</span><br></pre></td></tr></table></figure>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">net:</span></span><br><span class="line">  <span class="attr">bindIp:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">27017</span></span><br><span class="line"><span class="attr">outputConfig:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">processManagement:</span></span><br><span class="line">  <span class="attr">fork:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">  <span class="attr">dbPath:</span> <span class="string">/mongodb/data</span></span><br><span class="line"><span class="attr">systemLog:</span></span><br><span class="line">  <span class="attr">destination:</span> <span class="string">file</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">/mongodb/log/mongodb.log</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>删除<code>outputConfig: true</code>这一行，然后将其余内容复制到mongo.conf中</p>
-</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/selinux/config</span><br><span class="line">    <span class="comment"># 在文件中找到以下行，将值改为 enforcing。</span></span><br><span class="line">    SELINUX=enforcing</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启系统，SELinux 就会开启。</span></span><br><span class="line">$ reboot</span><br></pre></td></tr></table></figure>
+<h2 id="增加文件描述符限制">增加文件描述符限制</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>关于配置参数的详细信息可以查看<a target="_blank" rel="noopener" href="https://www.mongodb.com/docs/v7.0/reference/configuration-options/">官方文档</a></p>
+<p>每个运行中的进程都有一个限制，即它可以同时打开的最大文件描述符数量。这个限制对于避免过度使用系统资源非常重要。然而，在某些情况下，你可能需要增加这个限制来满足应用的需求。</p>
+</li>
+<li class="lvl-2">
+<p>Linux 服务器默认的文件描述符限制为 1024，如果需要使用更多的文件描述符，可以使用以下命令来增加限制：</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动mongo服务</span></span><br><span class="line">mongod -f /mongodb/conf/mongo.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭mongo服务，注意：macos下不支持 --shutdown</span></span><br><span class="line">mongod -f /mongodb/conf/mongo.conf --shutdown</span><br></pre></td></tr></table></figure>
-<h2 id="shell客户端mongosh">shell客户端mongosh</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时设置，即刻生效</span></span><br><span class="line"><span class="built_in">ulimit</span> -n 65535</span><br><span class="line"></span><br><span class="line"><span class="comment"># 永久设置</span></span><br><span class="line">$ vi /etc/security/limits.conf</span><br><span class="line">    <span class="comment"># 在文件中找到以下行，将值改为 65535</span></span><br><span class="line">    <span class="comment"># 如果不存在对应的配置则在文件末尾添加即可</span></span><br><span class="line">    <span class="comment"># root用户限制</span></span><br><span class="line">    root soft nofile 65535</span><br><span class="line">    root hard nofile 65535</span><br><span class="line">    <span class="comment"># 其它用户限制</span></span><br><span class="line">    * soft nofile 65535</span><br><span class="line">    * hard nofile 65535</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启系统，文件描述符限制就变了。</span></span><br><span class="line">$ reboot</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>从mongodb6开始不再支持mongo命令，而是需要使用mongosh命令，关于mongosh命令的使用可以查看<a target="_blank" rel="noopener" href="https://www.mongodb.com/docs/mongodb-shell/">官方文档</a></p>
+<p>这样的设置既为 root 用户设置了文件描述符（句柄）的软硬限制数量为65535，也为系统中所有其他用户设置了同样的限制。所谓“软限制”是指用户可以达到但不能超过的限制，而“硬限制”是指系统设置的绝对限制。即软限制不能大于硬限制的值。</p>
 </li>
 <li class="lvl-2">
-<p>mongosh命令的使用方式与mongo命令基本一致</p>
-</li>
-<li class="lvl-2">
-<p>下载地址：<a target="_blank" rel="noopener" href="https://www.mongodb.com/try/download/shell">mongosh下载地址</a></p>
+<p>通过以下命令，可以查看当前的文件描述符限制：</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载安装包</span></span><br><span class="line">wget https://downloads.mongodb.com/compass/mongodb-mongosh-2.1.5.x86_64.rpm</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">yum install -y mongodb-mongosh-2.1.5.x86_64.rpm</span><br><span class="line"><span class="comment"># 查看版本</span></span><br><span class="line">mongosh --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 连接mongodb server端，以下几种方式都可以，默认登录到test数据库</span></span><br><span class="line">mongosh --host=127.0.0.1 --port=27017</span><br><span class="line">mongosh 127.0.0.1:27017</span><br><span class="line"><span class="comment"># 指定uri方式连接</span></span><br><span class="line">mongosh mongodb://127.0.0.1:27017/test</span><br><span class="line"><span class="comment">#如果只是连接本机的server端，而且端口为27017，可以省略host和port</span></span><br><span class="line">mongosh</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>mongosh常用命令</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>show dbs 或 show databases</td>
-<td>显示数据库</td>
-</tr>
-<tr>
-<td>use 数据库名</td>
-<td>切换数据库，如果不存在创建数据库</td>
-</tr>
-<tr>
-<td>db.dropDatabase()</td>
-<td>删除数据库</td>
-</tr>
-<tr>
-<td>show collections 或 show tables</td>
-<td>显示当前数据库的集合列表</td>
-</tr>
-<tr>
-<td>db.集合名.stats()</td>
-<td>查看集合详情</td>
-</tr>
-<tr>
-<td>db.集合名.drop()</td>
-<td>删除集合</td>
-</tr>
-<tr>
-<td>show users</td>
-<td>显示当前数据库的用户列表</td>
-</tr>
-<tr>
-<td>show roles</td>
-<td>显示当前数据库的角色列表</td>
-</tr>
-<tr>
-<td>show profile</td>
-<td>显示最近发生的操作</td>
-</tr>
-<tr>
-<td>load(“xxx.js”)</td>
-<td>执行一个JavaScript脚本文件</td>
-</tr>
-<tr>
-<td>exit 或 quit</td>
-<td>退出</td>
-</tr>
-<tr>
-<td>help</td>
-<td>查看mongodb支持哪些命令</td>
-</tr>
-<tr>
-<td>db.help()</td>
-<td>查询当前数据库支持的方法</td>
-</tr>
-<tr>
-<td>db.集合名.help()</td>
-<td>显示集合的帮助信息</td>
-</tr>
-<tr>
-<td>db.version()</td>
-<td>查看数据库版本</td>
-</tr>
-<tr>
-<td>cls</td>
-<td>清屏</td>
-</tr>
-<tr>
-<td>db.shutdownServer()</td>
-<td>关闭mongodb server端</td>
-</tr>
-</tbody>
-</table>
-<h2 id="安全认证">安全认证</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>创建管理员</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置管理员用户名密码需要切换到admin库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment">#显示可设置权限</span></span><br><span class="line">show roles</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建管理员，授予root角色</span></span><br><span class="line">db.createUser(&#123;user:<span class="string">&quot;root&quot;</span>,<span class="built_in">pwd</span>:<span class="string">&quot;password&quot;</span>,roles:[<span class="string">&quot;root&quot;</span>]&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看当前数据库所有用户信息</span></span><br><span class="line">show <span class="built_in">users</span></span><br><span class="line"><span class="comment">#显示所有用户</span></span><br><span class="line">db.system.users.find()</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>常用角色</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>权限名</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>read</td>
-<td>允许用户读取指定数据库</td>
-</tr>
-<tr>
-<td>readWrite</td>
-<td>允许用户读写指定数据库</td>
-</tr>
-<tr>
-<td>dbAdmin</td>
-<td>允许用户在指定数据库中执行管理函数，如索引创建、删除，查看统计或访问system.profile</td>
-</tr>
-<tr>
-<td>dbOwner</td>
-<td>允许用户在指定数据库中执行任意操作，增、删、改、查等</td>
-</tr>
-<tr>
-<td>userAdmin</td>
-<td>允许用户向system.users集合写入，可以在指定数据库里创建、删除和管理用户</td>
-</tr>
-<tr>
-<td>clusterAdmin</td>
-<td>只在admin数据库中可用，赋予用户所有分片和复制集相关函数的管理权限</td>
-</tr>
-<tr>
-<td>readAnyDatabase</td>
-<td>只在admin数据库中可用，赋予用户所有数据库的读权限</td>
-</tr>
-<tr>
-<td>readWriteAnyDatabase</td>
-<td>只在admin数据库中可用，赋予用户所有数据库的读写权限</td>
-</tr>
-<tr>
-<td>userAdminAnyDatabase</td>
-<td>只在admin数据库中可用，赋予用户所有数据库的userAdmin权限</td>
-</tr>
-<tr>
-<td>dbAdminAnyDatabase</td>
-<td>只在admin数据库中可用，赋予用户所有数据库的dbAdmin权限</td>
-</tr>
-<tr>
-<td>root</td>
-<td>只在admin数据库中可用。超级账号，超级权限</td>
-</tr>
-</tbody>
-</table>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>创建数据库用户</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">admin&gt; use mydb</span><br><span class="line">switched to db mydb</span><br><span class="line">mydb&gt; db.createUser(&#123;user:<span class="string">&quot;mytest&quot;</span>,<span class="built_in">pwd</span>:<span class="string">&quot;123456&quot;</span>,roles:[<span class="string">&quot;dbOwner&quot;</span>]&#125;)</span><br><span class="line">&#123; ok: 1 &#125;</span><br><span class="line">mydb&gt; show tables</span><br><span class="line"></span><br><span class="line">mydb&gt; show <span class="built_in">users</span></span><br><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    _id: <span class="string">&#x27;mydb.mytest&#x27;</span>,</span><br><span class="line">    userId: UUID(<span class="string">&#x27;8bc42a74-5d84-4849-af25-09fdcbdfd03a&#x27;</span>),</span><br><span class="line">    user: <span class="string">&#x27;mytest&#x27;</span>,</span><br><span class="line">    db: <span class="string">&#x27;mydb&#x27;</span>,</span><br><span class="line">    roles: [ &#123; role: <span class="string">&#x27;dbOwner&#x27;</span>, db: <span class="string">&#x27;mydb&#x27;</span> &#125; ],</span><br><span class="line">    mechanisms: [ <span class="string">&#x27;SCRAM-SHA-1&#x27;</span>, <span class="string">&#x27;SCRAM-SHA-256&#x27;</span> ]</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>重置用户密码</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mydb&gt; db.changeUserPassword(<span class="string">&quot;mytest&quot;</span>, <span class="string">&quot;password&quot;</span>)</span><br><span class="line">&#123; ok: 1 &#125;</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">mydb&gt; db.updateUser(<span class="string">&quot;mytest&quot;</span>, &#123;<span class="built_in">pwd</span>: <span class="string">&quot;password&quot;</span>&#125;)</span><br><span class="line">&#123; ok: 1 &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>重新赋予用户角色</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设已经创建了用户mytest，需要重新赋予其角色</span></span><br><span class="line">db.grantRolesToUser( <span class="string">&quot;mytest&quot;</span> , [</span><br><span class="line"> &#123; role: <span class="string">&quot;clusterAdmin&quot;</span>, db: <span class="string">&quot;admin&quot;</span> &#125; ,</span><br><span class="line"> &#123; role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db: <span class="string">&quot;admin&quot;</span>&#125;,</span><br><span class="line"> &#123; role: <span class="string">&quot;readWriteAnyDatabase&quot;</span>, db: <span class="string">&quot;admin&quot;</span>&#125;</span><br><span class="line"> ])</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>删除用户</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mydb&gt; db.dropUser(<span class="string">&quot;mytest&quot;</span>)</span><br><span class="line">&#123; ok: 1 &#125;</span><br><span class="line">mydb&gt; show <span class="built_in">users</span></span><br><span class="line">[]</span><br></pre></td></tr></table></figure>
-<h2 id="MongoDB启用鉴权">MongoDB启用鉴权</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>默认情况下，MongoDB不会启用鉴权，以鉴权模式启动MongoDB有两种方法</p>
-</li>
-</ul>
-<blockquote>
-<p>命令行参数增加 <code>--auth</code></p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod -f /mongodb/conf/mongo.conf --auth</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>配置文件中加上如下内容</p>
-</blockquote>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">security:</span></span><br><span class="line">  <span class="attr">authorization:</span> <span class="string">enabled</span></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>启用鉴权之后，连接MongoDB的相关操作都需要提供身份认证</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongosh 127.0.0.1:27017 -u root -p password --authenticationDatabase=admin</span><br></pre></td></tr></table></figure>
-<h2 id="解决连接MongoDB时出现的-vm-max-map-count-is-too-low-的问题">解决连接MongoDB时出现的 vm.max_map_count is too low 的问题</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>默认的<code>vm.max_map_count</code>值为<code>65530</code>，如果需要开启MongoDB的分片功能，需要将<code>vm.max_map_count</code>设置为较高的值，通常推荐为<code>1048576</code></p>
-</li>
-<li class="lvl-2">
-<p>查看当前<code>vm.max_map_count</code>的值</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl vm.max_map_count</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>临时增加<code>vm.max_map_count</code>的值</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -w vm.max_map_count=1048576</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>永久增加<code>vm.max_map_count</code>的值</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改/etc/sysctl.conf文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;vm.max_map_count = 1048576&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="comment"># 使配置生效</span></span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>重启MongoDB才会生效</p>
-</li>
-</ul>
-<h2 id="MongoDB-Database-Tools">MongoDB Database Tools</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>MongoDB Database Tools是MongoDB官方提供的数据库管理工具，可以用于管理MongoDB数据库，包括MongoDB的备份、恢复、监控等功能。</p>
-</li>
-<li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://www.mongodb.com/try/download/database-tools">MongoDB Database Tools的下载地址</a></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载安装包</span></span><br><span class="line">wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel80-x86_64-100.9.4.tgz</span><br><span class="line"><span class="comment"># 解压安装包</span></span><br><span class="line">tar -xvzf mongodb-database-tools-rhel80-x86_64-100.9.4.tgz</span><br><span class="line"><span class="comment"># 创建软连接</span></span><br><span class="line"><span class="built_in">ln</span> -s mongodb-database-tools-rhel80-x86_64-100.9.4 /mongodb/tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在/etc/profile文件中配置PATH环境变量</span></span><br><span class="line"><span class="built_in">export</span> PATH=/mongodb/tools/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="comment"># 使配置生效</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>MongoDB Database Tools常用命令，使用方法请查看<a target="_blank" rel="noopener" href="https://www.mongodb.com/docs/database-tools/">官方文档</a></p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>文件名称</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>mongostat</td>
-<td>数据库性能监控工具</td>
-</tr>
-<tr>
-<td>mongotop</td>
-<td>热点表监控工具</td>
-</tr>
-<tr>
-<td>mongodump</td>
-<td>数据库逻辑备份工具</td>
-</tr>
-<tr>
-<td>mongorestore</td>
-<td>数据库逻辑恢复工具</td>
-</tr>
-<tr>
-<td>mongoexport</td>
-<td>数据导出工具</td>
-</tr>
-<tr>
-<td>mongoimport</td>
-<td>数据导入工具</td>
-</tr>
-<tr>
-<td>bsondump</td>
-<td>BSON格式转换工具</td>
-</tr>
-<tr>
-<td>mongofiles</td>
-<td>GridFS文件工具</td>
-</tr>
-</tbody>
-</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看的是当前 bash 的“软”文件描述符限制</span></span><br><span class="line">$ <span class="built_in">ulimit</span> -n</span><br><span class="line"><span class="comment"># 查看软限制，在大多数情况下，ulimit -n 和 ulimit -Sn 是相同的</span></span><br><span class="line">$ <span class="built_in">ulimit</span> -Sn</span><br><span class="line"><span class="comment"># 查看硬限制</span></span><br><span class="line">$ <span class="built_in">ulimit</span> -Hn</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -1444,7 +1148,7 @@ i.ban {
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2024/03/01/mongodb7/" title="MongoDB7.0的安装">https://blog.hanqunfeng.com/2024/03/01/mongodb7/</a>
+      <a href="https://blog.hanqunfeng.com/2024/03/13/linux-command14-setting/" title="Linux常用命令--常用设置">https://blog.hanqunfeng.com/2024/03/13/linux-command14-setting/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1490,20 +1194,17 @@ i.ban {
 </div>
 
           <div class="post-tags">
-              <a href="/tags/mongodb/" rel="tag"><i class="fa fa-tag"></i> mongodb</a>
+              <a href="/tags/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" rel="tag"><i class="fa fa-tag"></i> linux常用命令</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/03/05/mongodb7-springboot/" rel="prev" title="MongoDB7.0--SpringBoot单集合操作">
-                  <i class="fa fa-angle-left"></i> MongoDB7.0--SpringBoot单集合操作
-                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2024/02/28/linux-command13-echo-printf/" rel="next" title="Linux常用命令--echo与printf">
-                  Linux常用命令--echo与printf <i class="fa fa-angle-right"></i>
+                <a href="/2024/03/11/mongodb7-index/" rel="next" title="MongoDB7.0--索引">
+                  MongoDB7.0--索引 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
