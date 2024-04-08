@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/d2K4tD.png">
 <meta property="article:published_time" content="2024-03-29T13:30:05.000Z">
-<meta property="article:modified_time" content="2024-04-03T06:51:19.185Z">
+<meta property="article:modified_time" content="2024-04-08T06:09:08.508Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mongodb">
 <meta name="twitter:card" content="summary">
@@ -767,7 +767,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E9%9B%86%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">复制集节点类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8E3%E5%8F%B0%E6%9C%BA%E5%99%A8%E7%9A%84%E5%A4%8D%E5%88%B6%E9%9B%86"><span class="nav-number">3.</span> <span class="nav-text">搭建基于3台机器的复制集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%88%E6%9D%83"><span class="nav-number">5.</span> <span class="nav-text">授权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95"><span class="nav-number">6.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="nav-number">7.</span> <span class="nav-text">查看用户信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%99%90"><span class="nav-number">8.</span> <span class="nav-text">开启从库读取数据的权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#readPreference"><span class="nav-number">9.</span> <span class="nav-text">readPreference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tag"><span class="nav-number">10.</span> <span class="nav-text">Tag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7-priority-%E4%B8%8E-%E9%80%89%E4%B8%BE%E6%9D%83-vote"><span class="nav-number">11.</span> <span class="nav-text">优先级(priority) 与 选举权(vote)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%85%B3%E6%B3%A8-readConcern"><span class="nav-number">12.</span> <span class="nav-text">读关注(readConcern)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%85%B3%E6%B3%A8-writeConcern"><span class="nav-number">13.</span> <span class="nav-text">写关注(writeConcern)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E9%9B%85%E7%9A%84%E9%87%8D%E5%90%AF%E5%A4%8D%E5%88%B6%E9%9B%86"><span class="nav-number">14.</span> <span class="nav-text">优雅的重启复制集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oplog"><span class="nav-number">15.</span> <span class="nav-text">oplog</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A2%E7%84%B6oplog%E7%9A%84%E5%A4%A7%E5%B0%8F%E6%9C%89%E9%99%90%E5%88%B6%EF%BC%8C%E6%96%B0%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BC%9A%E8%A6%86%E7%9B%96%E6%97%A7%E7%9A%84%E6%95%B0%E6%8D%AE%EF%BC%8C%E9%82%A3%E4%B9%88%E6%96%B0%E5%8A%A0%E5%85%A5%E7%9A%84%E8%8A%82%E7%82%B9%E5%A6%82%E4%BD%95%E5%85%A8%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E5%91%A2%EF%BC%9F"><span class="nav-number">16.</span> <span class="nav-text">既然oplog的大小有限制，新的数据会覆盖旧的数据，那么新加入的节点如何全量同步数据呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E9%9B%86%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="nav-number">17.</span> <span class="nav-text">复制集相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4%E8%8A%82%E7%82%B9"><span class="nav-number">17.1.</span> <span class="nav-text">移除节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%BB%B2%E8%A3%81%E8%8A%82%E7%82%B9"><span class="nav-number">17.2.</span> <span class="nav-text">添加仲裁节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E8%8A%82%E7%82%B9"><span class="nav-number">17.3.</span> <span class="nav-text">添加新的节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">18.</span> <span class="nav-text">故障转移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A8%E8%8D%90%E9%9B%86%E7%BE%A4%E8%BF%9E%E6%8E%A5%E7%9A%84%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="nav-number">18.1.</span> <span class="nav-text">为什么推荐集群连接的方式？</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E9%9B%86%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">复制集节点类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8E3%E5%8F%B0%E6%9C%BA%E5%99%A8%E7%9A%84%E5%A4%8D%E5%88%B6%E9%9B%86"><span class="nav-number">3.</span> <span class="nav-text">搭建基于3台机器的复制集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%88%E6%9D%83"><span class="nav-number">5.</span> <span class="nav-text">授权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95"><span class="nav-number">6.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="nav-number">7.</span> <span class="nav-text">查看用户信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%99%90"><span class="nav-number">8.</span> <span class="nav-text">开启从库读取数据的权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#readPreference"><span class="nav-number">9.</span> <span class="nav-text">readPreference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tag"><span class="nav-number">10.</span> <span class="nav-text">Tag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7-priority-%E4%B8%8E-%E9%80%89%E4%B8%BE%E6%9D%83-vote"><span class="nav-number">11.</span> <span class="nav-text">优先级(priority) 与 选举权(vote)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%85%B3%E6%B3%A8-readConcern"><span class="nav-number">12.</span> <span class="nav-text">读关注(readConcern)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%85%B3%E6%B3%A8-writeConcern"><span class="nav-number">13.</span> <span class="nav-text">写关注(writeConcern)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E9%9B%85%E7%9A%84%E9%87%8D%E5%90%AF%E5%A4%8D%E5%88%B6%E9%9B%86"><span class="nav-number">14.</span> <span class="nav-text">优雅的重启复制集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oplog"><span class="nav-number">15.</span> <span class="nav-text">oplog</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A2%E7%84%B6oplog%E7%9A%84%E5%A4%A7%E5%B0%8F%E6%9C%89%E9%99%90%E5%88%B6%EF%BC%8C%E6%96%B0%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BC%9A%E8%A6%86%E7%9B%96%E6%97%A7%E7%9A%84%E6%95%B0%E6%8D%AE%EF%BC%8C%E9%82%A3%E4%B9%88%E6%96%B0%E5%8A%A0%E5%85%A5%E7%9A%84%E8%8A%82%E7%82%B9%E5%A6%82%E4%BD%95%E5%85%A8%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E5%91%A2%EF%BC%9F"><span class="nav-number">16.</span> <span class="nav-text">既然oplog的大小有限制，新的数据会覆盖旧的数据，那么新加入的节点如何全量同步数据呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E9%9B%86%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="nav-number">17.</span> <span class="nav-text">复制集相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4%E8%8A%82%E7%82%B9"><span class="nav-number">17.1.</span> <span class="nav-text">移除节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%BB%B2%E8%A3%81%E8%8A%82%E7%82%B9"><span class="nav-number">17.2.</span> <span class="nav-text">添加仲裁节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E8%8A%82%E7%82%B9"><span class="nav-number">17.3.</span> <span class="nav-text">添加新的节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">18.</span> <span class="nav-text">故障转移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A8%E8%8D%90%E9%9B%86%E7%BE%A4%E8%BF%9E%E6%8E%A5%E7%9A%84%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="nav-number">18.1.</span> <span class="nav-text">为什么推荐集群连接的方式？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot%E9%9B%86%E6%88%90MongoDB%E9%9B%86%E7%BE%A4"><span class="nav-number">19.</span> <span class="nav-text">SpringBoot集成MongoDB集群</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -782,7 +782,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">131</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -905,7 +905,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 14:51:19" itemprop="dateModified" datetime="2024-04-03T14:51:19+08:00">2024-04-03</time>
+      <time title="修改时间：2024-04-08 14:09:08" itemprop="dateModified" datetime="2024-04-08T14:09:08+08:00">2024-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -957,7 +957,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>8.2k</span>
+      <span>8.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1519,6 +1519,11 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mongosh <span class="string">&quot;mongodb://user:password@10.1.2.26:27017,10.1.2.142:27017,10.1.2.41:27017/test?authSource=admin&amp;replicaSet=rs0&quot;</span></span><br><span class="line"><span class="comment"># 插入操作没有被中断</span></span><br><span class="line">rs0 [primary] <span class="built_in">test</span>&gt; <span class="keyword">for</span>(i=0;i&lt;10000;i++)&#123;db.emp.insertOne(&#123;name:<span class="string">&quot;test&quot;</span>+i&#125;)&#125;</span><br><span class="line">&#123;</span><br><span class="line">  acknowledged: <span class="literal">true</span>,</span><br><span class="line">  insertedId: ObjectId(<span class="string">&#x27;660cce829918b823661879c6&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 查询结果正确</span></span><br><span class="line">rs0 [primary] <span class="built_in">test</span>&gt; db.emp.countDocuments()</span><br><span class="line">10000</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这里有一点需要注意，当你创建集群时使用的是各个节点的内网ip地址，则客户端必须可以访问这些内网ip才能通过集群连接，否则会出现连接失败的情况。因为通过集群连接的方式，实际上是会先在集群内部判断出主节点的ip地址返回给客户端，然后客户端再通过这个主节点ip访问主节点。</p>
+</li>
+</ul>
 <div class="tips">
 <p><em><strong>小贴士</strong></em></p>
 <ul class="lvl-1">
@@ -1527,6 +1532,8 @@ i.ban {
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongosh <span class="string">&quot;mongodb://user:password@10.1.2.26:27017,10.1.2.142:27017,10.1.2.41:27017/test?authSource=admin&amp;replicaSet=rs0&amp;retryWrites=true&quot;</span></span><br></pre></td></tr></table></figure>
 </div>
+<h2 id="SpringBoot集成MongoDB集群">SpringBoot集成MongoDB集群</h2>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">data:</span></span><br><span class="line">    <span class="attr">mongodb:</span></span><br><span class="line">      <span class="attr">uri:</span> <span class="string">mongodb://user:password@127.0.0.1:27040,127.0.0.1:27041,127.0.0.1:27042/mytest?authSource=admin&amp;readPreference=primaryPreferred</span></span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -1665,14 +1672,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">374k</span>
+    <span title="站点总字数">375k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">22:39</span>
+    <span title="站点阅读时长">22:45</span>
   </span>
 </div>
 <div class="busuanzi-count">
