@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍如何使用SpringBoot配置MongoDB7.0的连接池   SpringBoot版本3.2.4，MongoDB版本7.0.6   关于springboot与mongodb的集成可以参考：MongoDB7.0--SpringBoot单集合操作，本文只讨论连接池相关内容。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-08T13:30:05.000Z">
-<meta property="article:modified_time" content="2024-04-09T03:20:56.866Z">
+<meta property="article:modified_time" content="2024-04-09T04:03:19.984Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mongodb">
 <meta name="twitter:card" content="summary">
@@ -765,7 +765,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring-boot-%E7%9A%84-MongoDB-%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="nav-number">2.</span> <span class="nav-text">spring-boot 的 MongoDB 连接池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">3.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring-boot-%E7%9A%84-MongoDB-%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="nav-number">2.</span> <span class="nav-text">spring-boot 的 MongoDB 连接池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E8%BF%9E%E6%8E%A5%E6%B1%A0%E6%98%AF%E5%90%A6%E7%94%9F%E6%95%88%E4%BA%86%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">如何查看连接池是否生效了？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -927,7 +927,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-09 11:20:56" itemprop="dateModified" datetime="2024-04-09T11:20:56+08:00">2024-04-09</time>
+      <time title="修改时间：2024-04-09 12:03:19" itemprop="dateModified" datetime="2024-04-09T12:03:19+08:00">2024-04-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -979,7 +979,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.9k</span>
+      <span>2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1099,13 +1099,20 @@ i.ban {
 <p>大体过程就是这样，很绕，简单点说就是springboot已经为我们提供了mongodb的连接池，我们也可以基于需要，在配置<code>mongodb-uri</code>时，增加相关的连接池参数，springboot就会按照我们配置的参数为我们创建连接池，并自动管理连接池。</p>
 </li>
 </ul>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">data:</span></span><br><span class="line">    <span class="attr">mongodb:</span></span><br><span class="line">      <span class="attr">uri:</span> <span class="string">mongodb://user:password@127.0.0.1:27040/mytest?authSource=admin&amp;maxpoolsize=100&amp;minpoolsize=10&amp;maxidletimems=0&amp;maxlifetimems=0&amp;maxconnecting=5&amp;waitqueuetimeoutms=60000</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">data:</span></span><br><span class="line">    <span class="attr">mongodb:</span></span><br><span class="line">      <span class="attr">uri:</span> <span class="string">mongodb://user:password@127.0.0.1:27040,127.0.0.1:27041,127.0.0.1:27042/mytest?authSource=admin&amp;readPreference=primaryPreferred&amp;maxpoolsize=100&amp;minpoolsize=10&amp;maxidletimems=0&amp;maxlifetimems=0&amp;maxconnecting=5&amp;waitqueuetimeoutms=60000</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>参数说明</p>
 </li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">maxpoolsize: 100 # 池中允许的最大连接数。一旦池耗尽，任何需要连接的操作都将在阻塞队列中等待直到获取到连接， 默认: 100</span><br><span class="line">minpoolsize: 10 # 池中允许的最小连接数。这些连接在空闲时将保留在池中，并且池将确保它至少包含这个最小数量 默认: 0</span><br><span class="line">maxidletimems: 0 # 池连接的最大空闲时间。零值表示对空闲时间没有限制。超过其空闲时间的池连接将被关闭并在必要时由新连接替换。单位为毫秒</span><br><span class="line">maxlifetimems: 0 # 池连接可以存活的最长时间。零值表示寿命没有限制。超过其生命周期的池连接将被关闭并在必要时由新连接替换。单位为毫秒</span><br><span class="line">maxconnecting: 5 # 同一时刻允许的最大并行连接数。默认值是: 2。</span><br><span class="line">waitqueuetimeoutms: 60000 # 阻塞队列中请求的最大等待时间，超过这个时间的请求将被拒绝。单位为毫秒，默认为: 120s</span><br></pre></td></tr></table></figure>
+<h2 id="如何查看连接池是否生效了？">如何查看连接池是否生效了？</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>很简单，我们只需要注入<code>MongoClient</code>并查看其<code>settings</code>属性，就可以看到连接池的配置信息了`</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">MongoClient mongoClient;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印连接池配置信息</span></span><br><span class="line">System.out.println(((MongoClientImpl) mongoClient).getSettings().getConnectionPoolSettings());</span><br><span class="line"><span class="comment">// 输出结果</span></span><br><span class="line">ConnectionPoolSettings&#123;maxSize=<span class="number">100</span>, minSize=<span class="number">10</span>, maxWaitTimeMS=<span class="number">60000</span>, maxConnectionLifeTimeMS=<span class="number">0</span>, maxConnectionIdleTimeMS=<span class="number">0</span>, maintenanceInitialDelayMS=<span class="number">0</span>, maintenanceFrequencyMS=<span class="number">60000</span>, connectionPoolListeners=[], maxConnecting=<span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="后记">后记</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
