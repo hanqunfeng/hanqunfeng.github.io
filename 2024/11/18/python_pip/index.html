@@ -22,19 +22,19 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要  测试环境：macOS 13.7.1，Python 3.11.3 今天将pip升级到24.3.1版本后，通过pip install命令安装依赖时会报错，比如：  12$ pip install certifiCould not fetch URL https:&#x2F;&#x2F;pypi.org&#x2F;simple&#x2F;certifi&#x2F;: There was a problem confirming the ssl">
+    <meta name="description" content="摘要  测试环境：macOS 13.7.1，Python 3.11.3 今天将pip升级(pip install --upgrade pip)到24.3.1版本后，通过pip install命令安装依赖时会报错，比如：  12$ pip install certifiCould not fetch URL https:&#x2F;&#x2F;pypi.org&#x2F;simple&#x2F;certifi&#x2F;: There was a">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pip--CERTIFICATE_VERIFY_FAILED">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2024/11/18/python_pip/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  测试环境：macOS 13.7.1，Python 3.11.3 今天将pip升级到24.3.1版本后，通过pip install命令安装依赖时会报错，比如：  12$ pip install certifiCould not fetch URL https:&#x2F;&#x2F;pypi.org&#x2F;simple&#x2F;certifi&#x2F;: There was a problem confirming the ssl">
+<meta property="og:description" content="摘要  测试环境：macOS 13.7.1，Python 3.11.3 今天将pip升级(pip install --upgrade pip)到24.3.1版本后，通过pip install命令安装依赖时会报错，比如：  12$ pip install certifiCould not fetch URL https:&#x2F;&#x2F;pypi.org&#x2F;simple&#x2F;certifi&#x2F;: There was a">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/tMocyD.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/uS4W2W.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/OiZf9R.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/JHw2ML.png">
 <meta property="article:published_time" content="2024-11-18T15:33:15.000Z">
-<meta property="article:modified_time" content="2024-11-18T10:00:33.697Z">
+<meta property="article:modified_time" content="2024-11-20T08:17:12.270Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
@@ -771,7 +771,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-trusted-host-%E5%BF%BD%E7%95%A5%E8%AF%81%E4%B9%A6%E9%AA%8C%E8%AF%81"><span class="nav-number">2.1.</span> <span class="nav-text">1. --trusted-host: 忽略证书验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-cert-%E6%8C%87%E5%AE%9A%E8%AF%81%E4%B9%A6%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">2. --cert: 指定证书文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-pip-conf-%E9%85%8D%E7%BD%AE%E5%85%A8%E5%B1%80%E8%AF%81%E4%B9%A6%E6%96%87%E4%BB%B6"><span class="nav-number">2.3.</span> <span class="nav-text">3. pip.conf: 配置全局证书文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B0%86%E8%AF%81%E4%B9%A6%E6%B7%BB%E5%8A%A0%E5%88%B0%E7%B3%BB%E7%BB%9F%E4%BF%A1%E4%BB%BB%E7%9A%84%E8%AF%81%E4%B9%A6%E5%AD%98%E5%82%A8"><span class="nav-number">2.4.</span> <span class="nav-text">4.将证书添加到系统信任的证书存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E-macOS%EF%BC%9A"><span class="nav-number">2.4.1.</span> <span class="nav-text">对于 macOS：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">3.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-trusted-host-%E5%BF%BD%E7%95%A5%E8%AF%81%E4%B9%A6%E9%AA%8C%E8%AF%81"><span class="nav-number">2.1.</span> <span class="nav-text">1. --trusted-host: 忽略证书验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-cert-%E6%8C%87%E5%AE%9A%E8%AF%81%E4%B9%A6%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">2. --cert: 指定证书文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-pip-conf-%E9%85%8D%E7%BD%AE%E5%85%A8%E5%B1%80%E8%AF%81%E4%B9%A6%E6%96%87%E4%BB%B6"><span class="nav-number">2.3.</span> <span class="nav-text">3. pip.conf: 配置全局证书文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B0%86%E8%AF%81%E4%B9%A6%E6%B7%BB%E5%8A%A0%E5%88%B0%E7%B3%BB%E7%BB%9F%E4%BF%A1%E4%BB%BB%E7%9A%84%E8%AF%81%E4%B9%A6%E5%AD%98%E5%82%A8"><span class="nav-number">2.4.</span> <span class="nav-text">4.将证书添加到系统信任的证书存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E-macOS%EF%BC%9A"><span class="nav-number">2.4.1.</span> <span class="nav-text">对于 macOS：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E4%BD%BF%E7%94%A8-Python-%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90%E7%9A%84%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D%E5%B7%A5%E5%85%B7-%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">5.使用 Python 官方推荐的证书修复工具 （推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%BD%BF%E7%94%A8%E5%85%B6%E5%AE%83%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">2.6.</span> <span class="nav-text">6.使用其它镜像源</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -857,6 +857,37 @@ i.ban {
         </ul>
       </div>
     </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2018/03/27/protocol-buffer-study-python/" rel="bookmark">
+        <time class="popular-posts-time">2018-03-27</time>
+        <br>
+      Protocol Buffer学习笔记(Python)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2018/04/28/django2_study/" rel="bookmark">
+        <time class="popular-posts-time">2018-04-28</time>
+        <br>
+      Django2学习笔记
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2018/04/28/python_virtualenv/" rel="bookmark">
+        <time class="popular-posts-time">2018-04-28</time>
+        <br>
+      Python--virtualenv
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
   </aside>
 
 
@@ -901,9 +932,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2024-11-18 23:33:15 / 修改时间：18:00:33" itemprop="dateCreated datePublished" datetime="2024-11-18T23:33:15+08:00">2024-11-18</time>
+      <time title="创建时间：2024-11-18 23:33:15" itemprop="dateCreated datePublished" datetime="2024-11-18T23:33:15+08:00">2024-11-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-11-20 16:17:12" itemprop="dateModified" datetime="2024-11-20T16:17:12+08:00">2024-11-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -947,14 +984,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>475</span>
+      <span>1.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>4 分钟</span>
     </span>
 
         </div>
@@ -966,11 +1003,12 @@ i.ban {
     <div class="post-body" itemprop="articleBody"><h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">测试环境：macOS 13.7.1，Python 3.11.3</li>
-<li class="lvl-2">今天将<code>pip</code>升级到<code>24.3.1</code>版本后，通过<code>pip install</code>命令安装依赖时会报错，比如：</li>
+<li class="lvl-2">今天将<code>pip</code>升级(<code>pip install --upgrade pip</code>)到<code>24.3.1</code>版本后，通过<code>pip install</code>命令安装依赖时会报错，比如：</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pip install certifi</span><br><span class="line">Could not fetch URL https://pypi.org/simple/certifi/: There was a problem confirming the ssl certificate: HTTPSConnectionPool(host=<span class="string">&#x27;pypi.org&#x27;</span>, port=443): Max retries exceeded with url: /simple/certifi/ (Caused by SSLError(SSLCertVerificationError(1, <span class="string">&#x27;[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1002)&#x27;</span>))) - skipping</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
-<li class="lvl-2">很奇怪，从<code>pip</code>自己的网站上下载依赖都会出现证书无法验证的错误。</li>
+<li class="lvl-2">很奇怪，从<code>pip</code>自己的网站上下载依赖都会出现证书无法验证的错误。测试了一下，该问题只在macOS上遇到，其他平台没有遇到过。</li>
+<li class="lvl-2">先说结论，推荐使用第五种方法。</li>
 </ul>
 <span id="more"></span>
 <h2 id="解决方法">解决方法</h2>
@@ -1001,7 +1039,13 @@ i.ban {
 <p>还是需要先下载证书文件，参考上面方法</p>
 </li>
 <li class="lvl-2">
-<p>创建<code>~/.pip/pip.conf</code>文件，内容如下：</p>
+<p><code>pip</code> 的配置文件位置因操作系统而异。可以通过以下命令找到配置文件路径：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 我使用的是 macOS</span></span><br><span class="line">$ pip config -v list</span><br><span class="line">For variant <span class="string">&#x27;global&#x27;</span>, will try loading <span class="string">&#x27;/Library/Application Support/pip/pip.conf&#x27;</span></span><br><span class="line">For variant <span class="string">&#x27;user&#x27;</span>, will try loading <span class="string">&#x27;/Users/hanqf/.pip/pip.conf&#x27;</span></span><br><span class="line">For variant <span class="string">&#x27;user&#x27;</span>, will try loading <span class="string">&#x27;/Users/hanqf/.config/pip/pip.conf&#x27;</span></span><br><span class="line">For variant <span class="string">&#x27;site&#x27;</span>, will try loading <span class="string">&#x27;/Library/Frameworks/Python.framework/Versions/3.11/pip.conf&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>pip</code>会从上面的路径中查找配置信息，我这里选择第二个，如果不存在就创建<code>~/.pip/pip.conf</code>文件，内容如下：</p>
 </li>
 </ul>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[global]</span></span><br><span class="line"><span class="attr">cert</span> = ~/Downloads/GlobalSign.pem</span><br></pre></td></tr></table></figure>
@@ -1027,13 +1071,34 @@ i.ban {
 <p>会提示你输入密码，如果证书不受信任，可以将证书设置为为始终信任该证书 (双击证书 》 信任 》 使用此证书时 》设置为<code>始终信任</code>)。</p>
 </li>
 </ul>
-<h2 id="后记">后记</h2>
+<h3 id="5-使用-Python-官方推荐的证书修复工具-（推荐）">5.使用 Python 官方推荐的证书修复工具 （推荐）</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>目前，我暂时没有找到更好的解决方案，笔者暂时选择第三种方法。</p>
+<p>这个方法最简单</p>
 </li>
 <li class="lvl-2">
-<p>也许这个问题只是暂时的，未来官方会尽快修复。</p>
+<p>运行这个脚本前需要先安装 <code>certifi</code>，其主要用于提供权威的CA根证书列表</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install certifi --trusted-host pypi.org --trusted-host files.pythonhosted.org</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>运行证书安装脚本（适用于 macOS 内置的 Python）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首次运行依旧会报错，但实际上已经进行了修复，主要就是最后4步进行的操作</span></span><br><span class="line"><span class="comment"># 注意替换你自己的Python版本号</span></span><br><span class="line">$ /Applications/Python\ 3.11/Install\ Certificates.<span class="built_in">command</span></span><br><span class="line"></span><br><span class="line"> -- pip install --upgrade certifi</span><br><span class="line">Requirement already satisfied: certifi <span class="keyword">in</span> /Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages (2024.8.30)</span><br><span class="line">WARNING: Retrying (Retry(total=4, connect=None, <span class="built_in">read</span>=None, redirect=None, status=None)) after connection broken by <span class="string">&#x27;SSLError(SSLCertVerificationError(1, &#x27;</span>[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get <span class="built_in">local</span> issuer certificate (_ssl.c:1002)<span class="string">&#x27;))&#x27;</span>: /simple/certifi/</span><br><span class="line">WARNING: Retrying (Retry(total=3, connect=None, <span class="built_in">read</span>=None, redirect=None, status=None)) after connection broken by <span class="string">&#x27;SSLError(SSLCertVerificationError(1, &#x27;</span>[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get <span class="built_in">local</span> issuer certificate (_ssl.c:1002)<span class="string">&#x27;))&#x27;</span>: /simple/certifi/</span><br><span class="line">WARNING: Retrying (Retry(total=2, connect=None, <span class="built_in">read</span>=None, redirect=None, status=None)) after connection broken by <span class="string">&#x27;SSLError(SSLCertVerificationError(1, &#x27;</span>[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get <span class="built_in">local</span> issuer certificate (_ssl.c:1002)<span class="string">&#x27;))&#x27;</span>: /simple/certifi/</span><br><span class="line">WARNING: Retrying (Retry(total=1, connect=None, <span class="built_in">read</span>=None, redirect=None, status=None)) after connection broken by <span class="string">&#x27;SSLError(SSLCertVerificationError(1, &#x27;</span>[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get <span class="built_in">local</span> issuer certificate (_ssl.c:1002)<span class="string">&#x27;))&#x27;</span>: /simple/certifi/</span><br><span class="line">WARNING: Retrying (Retry(total=0, connect=None, <span class="built_in">read</span>=None, redirect=None, status=None)) after connection broken by <span class="string">&#x27;SSLError(SSLCertVerificationError(1, &#x27;</span>[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get <span class="built_in">local</span> issuer certificate (_ssl.c:1002)<span class="string">&#x27;))&#x27;</span>: /simple/certifi/</span><br><span class="line">Could not fetch URL https://pypi.org/simple/certifi/: There was a problem confirming the ssl certificate: HTTPSConnectionPool(host=<span class="string">&#x27;pypi.org&#x27;</span>, port=443): Max retries exceeded with url: /simple/certifi/ (Caused by SSLError(SSLCertVerificationError(1, <span class="string">&#x27;[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1002)&#x27;</span>))) - skipping</span><br><span class="line"> -- removing any existing file or <span class="built_in">link</span></span><br><span class="line"> -- creating symlink to certifi certificate bundle</span><br><span class="line"> -- setting permissions</span><br><span class="line"> -- update complete</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>之后再运行<code>pip install</code>命令，就不会报错了</p>
+</li>
+</ul>
+<h3 id="6-使用其它镜像源">6.使用其它镜像源</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>该问题是因为Pypi软件仓库官网的证书文件存在问题导致的，只要我们不从官网下载就不会有问题。</p>
+</li>
+<li class="lvl-2">
+<p>在国内为了加速下载我们一般会使用国内的镜像源，例如<a target="_blank" rel="noopener" href="https://developer.aliyun.com/mirror/pypi">阿里云的Pypi镜像源</a>或者<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/pypi/">清华大学的Pypi镜像源</a>，具体使用方法参考各自的官网说明即可。</p>
 </li>
 </ul>
 
@@ -1172,14 +1237,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">393k</span>
+    <span title="站点总字数">394k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">23:49</span>
+    <span title="站点阅读时长">23:51</span>
   </span>
 </div>
 <div class="busuanzi-count">
