@@ -22,17 +22,17 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要  poetry是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与conda相比poetry更轻量，同时与venv + pip的方式相比具有如下优点：  使用缓存机制，避免重复下载依赖包 包管理上更加精确，删除不需要的依赖包时会同时删除没用的依赖包，避免无用的依赖包造成包体积过大 打包和发布更加简单，只需要一个命令就可以打包和发布">
+    <meta name="description" content="摘要  Poetry是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与 conda 相比 poetry 更轻量，同时与 venv + pip Python--virtualenv 的方式相比具有如下优点：  使用缓存机制，避免重复下载依赖包 包管理上更加精确，删除不需要的包时会同时删除与其关联的且没有被使用的那些依赖包，避免无用的依赖包">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Poetry--轻量级的python包管理器">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2024/11/22/python_poetry/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  poetry是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与conda相比poetry更轻量，同时与venv + pip的方式相比具有如下优点：  使用缓存机制，避免重复下载依赖包 包管理上更加精确，删除不需要的依赖包时会同时删除没用的依赖包，避免无用的依赖包造成包体积过大 打包和发布更加简单，只需要一个命令就可以打包和发布">
+<meta property="og:description" content="摘要  Poetry是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与 conda 相比 poetry 更轻量，同时与 venv + pip Python--virtualenv 的方式相比具有如下优点：  使用缓存机制，避免重复下载依赖包 包管理上更加精确，删除不需要的包时会同时删除与其关联的且没有被使用的那些依赖包，避免无用的依赖包">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/iShot_2024-11-21_18.00.50.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/iShot_2024-11-21_18.13.21.png">
 <meta property="article:published_time" content="2024-11-22T15:33:15.000Z">
-<meta property="article:modified_time" content="2024-11-22T03:55:45.313Z">
+<meta property="article:modified_time" content="2024-11-22T07:43:23.953Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
@@ -769,7 +769,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">查看所有命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#new-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.1.</span> <span class="nav-text">new : 创建项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init-%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%80%E4%B8%AA%E5%B7%B2%E6%9C%89%E7%9A%84%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95"><span class="nav-number">4.2.</span> <span class="nav-text">init : 初始化一个已有的项目目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-poetry%E7%9A%84%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">config : poetry的全局配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#env-%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86"><span class="nav-number">4.4.</span> <span class="nav-text">env : 虚拟环境管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%8C%85%E7%AE%A1%E7%90%86"><span class="nav-number">4.5.</span> <span class="nav-text">依赖包管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#source-%E9%95%9C%E5%83%8F%E6%BA%90%E7%AE%A1%E7%90%86"><span class="nav-number">4.6.</span> <span class="nav-text">source : 镜像源管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">4.7.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E5%8F%91%E5%B8%83"><span class="nav-number">4.8.</span> <span class="nav-text">打包和发布</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">查看所有命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#new-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.1.</span> <span class="nav-text">new : 创建项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init-%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%80%E4%B8%AA%E5%B7%B2%E6%9C%89%E7%9A%84%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95"><span class="nav-number">4.2.</span> <span class="nav-text">init : 初始化一个已有的项目目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-poetry%E7%9A%84%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">config : poetry的全局配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#env-%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86"><span class="nav-number">4.4.</span> <span class="nav-text">env : 虚拟环境管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%8C%85%E7%AE%A1%E7%90%86"><span class="nav-number">4.5.</span> <span class="nav-text">依赖包管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lock-%E9%94%81%E5%AE%9A%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.6.</span> <span class="nav-text">lock : 锁定依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#source-%E9%95%9C%E5%83%8F%E6%BA%90%E7%AE%A1%E7%90%86"><span class="nav-number">4.7.</span> <span class="nav-text">source : 镜像源管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">4.8.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E5%8F%91%E5%B8%83"><span class="nav-number">4.9.</span> <span class="nav-text">打包和发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#self-%E4%B8%BB%E8%A6%81%E7%94%A8%E4%BA%8E-poetry-%E8%87%AA%E8%BA%AB%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6%E4%BD%BF%E7%94%A8"><span class="nav-number">4.10.</span> <span class="nav-text">self : 主要用于 poetry 自身安装插件使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#debug-resolve-%E6%9F%A5%E7%9C%8B%E5%8C%85%E7%9A%84%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB"><span class="nav-number">4.11.</span> <span class="nav-text">debug resolve : 查看包的依赖关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cache-%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">4.12.</span> <span class="nav-text">cache : 缓存管理</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -862,13 +862,6 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2018/04/28/python_virtualenv/" rel="bookmark">
-        <time class="popular-posts-time">2018-04-28</time>
-        <br>
-      Python--virtualenv
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2024/11/18/python_pip/" rel="bookmark">
         <time class="popular-posts-time">2024-11-18</time>
         <br>
@@ -876,10 +869,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2018/03/27/protocol-buffer-study-python/" rel="bookmark">
-        <time class="popular-posts-time">2018-03-27</time>
+      <a class="popular-posts-link" href="/2018/04/28/python_virtualenv/" rel="bookmark">
+        <time class="popular-posts-time">2018-04-28</time>
         <br>
-      Protocol Buffer学习笔记(Python)
+      Python--virtualenv
       </a>
     </li>
   </ul>
@@ -932,7 +925,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2024-11-22 23:33:15 / 修改时间：11:55:45" itemprop="dateCreated datePublished" datetime="2024-11-22T23:33:15+08:00">2024-11-22</time>
+      <time title="创建时间：2024-11-22 23:33:15 / 修改时间：15:43:23" itemprop="dateCreated datePublished" datetime="2024-11-22T23:33:15+08:00">2024-11-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -976,14 +969,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>5.4k</span>
+      <span>5.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>20 分钟</span>
+      <span>22 分钟</span>
     </span>
 
         </div>
@@ -994,10 +987,10 @@ i.ban {
     
     <div class="post-body" itemprop="articleBody"><h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
-<li class="lvl-2"><a target="_blank" rel="noopener" href="https://python-poetry.org/docs/">poetry</a>是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与conda相比poetry更轻量，同时与<code>venv + pip</code>的方式相比具有如下优点：
+<li class="lvl-2"><a target="_blank" rel="noopener" href="https://python-poetry.org/docs/">Poetry</a>是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与 <a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/stable/">conda</a> 相比 poetry 更轻量，同时与 <code>venv + pip</code> <a href="/2018/04/28/python_virtualenv/" title="Python--virtualenv">Python--virtualenv</a> 的方式相比具有如下优点：
 <ul class="lvl-2">
 <li class="lvl-6">使用缓存机制，避免重复下载依赖包</li>
-<li class="lvl-6">包管理上更加精确，删除不需要的依赖包时会同时删除没用的依赖包，避免无用的依赖包造成包体积过大</li>
+<li class="lvl-6">包管理上更加精确，删除不需要的包时会同时删除与其关联的且没有被使用的那些依赖包，避免无用的依赖包造成打包体积过大</li>
 <li class="lvl-6">打包和发布更加简单，只需要一个命令就可以打包和发布</li>
 </ul>
 </li>
@@ -1016,6 +1009,11 @@ i.ban {
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">$ poetry list</span><br><span class="line">Poetry (版本 1.8.4)</span><br><span class="line"></span><br><span class="line">用法：</span><br><span class="line">  <span class="built_in">command</span> [选项] [参数]</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -h, --<span class="built_in">help</span>                 显示给定命令的帮助。如果没有指定命令，则显示列表命令的帮助。</span><br><span class="line">  -q, --quiet                不输出任何消息。</span><br><span class="line">  -V, --version              显示此应用程序版本。</span><br><span class="line">      --ansi                强制输出ANSI格式。</span><br><span class="line">      --no-ansi             禁用ANSI输出。</span><br><span class="line">  -n, --no-interaction       不要提问任何交互性问题。</span><br><span class="line">      --no-plugins           禁用插件。</span><br><span class="line">      --no-cache            禁用源缓存。</span><br><span class="line">  -C, --directory=目录      Poetry命令的工作目录（默认为当前工作目录）。</span><br><span class="line">  -v|vv|vvv, --verbose       增加消息的冗长度：1 表示正常输出，2 表示更详细的输出，3 表示调试。</span><br><span class="line"></span><br><span class="line">可用命令：</span><br><span class="line">  about              显示关于Poetry的信息。</span><br><span class="line">  add                将新依赖项添加到pyproject.toml并安装它。</span><br><span class="line">  build              默认构建一个包，分别是tarball和wheel。</span><br><span class="line">  check              验证pyproject.toml文件的内容及其与poetry.lock文件的一致性。</span><br><span class="line">  config             管理配置设置。</span><br><span class="line">  <span class="built_in">export</span>             将锁文件导出到其他格式。</span><br><span class="line">  <span class="built_in">help</span>               显示特定命令的帮助。</span><br><span class="line">  init               在当前目录创建一个基础的pyproject.toml文件。</span><br><span class="line">  install            安装项目依赖项。</span><br><span class="line">  list               列出命令。</span><br><span class="line">  lock              锁定项目依赖项。</span><br><span class="line">  new               在&lt;path&gt;处创建一个新的Python项目。</span><br><span class="line">  publish           将包发布到远程仓库。</span><br><span class="line">  remove            从项目依赖项中移除包。</span><br><span class="line">  run                在适当的环境中运行命令。</span><br><span class="line">  search            在远程仓库中搜索包。</span><br><span class="line">  shell            在虚拟环境中启动shell。</span><br><span class="line">  show              显示有关包的信息。</span><br><span class="line">  update            根据pyproject.toml文件更新依赖项。</span><br><span class="line">  version           显示项目的版本或在提供有效版本规则时更新它。</span><br><span class="line"></span><br><span class="line">缓存</span><br><span class="line">  cache clear        按名称清除Poetry缓存。</span><br><span class="line">  cache list         列出Poetry的缓存列表。</span><br><span class="line"></span><br><span class="line">调试</span><br><span class="line">  debug info        显示调试信息。</span><br><span class="line">  debug resolve    调试依赖项解析。</span><br><span class="line"></span><br><span class="line">环境</span><br><span class="line">  <span class="built_in">env</span> info         显示当前环境的信息。</span><br><span class="line">  <span class="built_in">env</span> list          列出与当前项目关联的所有虚拟环境。</span><br><span class="line">  <span class="built_in">env</span> remove        移除与项目关联的虚拟环境。</span><br><span class="line">  <span class="built_in">env</span> use           激活或创建当前项目的新的虚拟环境。</span><br><span class="line"></span><br><span class="line">自身</span><br><span class="line">  self add          向Poetry的运行时环境添加其他包。</span><br><span class="line">  self install      安装此Poetry安装所需的锁定包（包括插件）。</span><br><span class="line">  self lock         锁定Poetry安装的系统要求。</span><br><span class="line">  self remove       从Poetry的运行时环境中移除其他包。</span><br><span class="line">  self show         显示Poetry运行时环境中的包。</span><br><span class="line">  self show plugins 显示当前已安装插件的信息。</span><br><span class="line">  self update       更新Poetry到最新版本。</span><br><span class="line"></span><br><span class="line">源</span><br><span class="line">  <span class="built_in">source</span> add         为项目添加源配置。</span><br><span class="line">  <span class="built_in">source</span> remove      移除为项目配置的源。</span><br><span class="line">  <span class="built_in">source</span> show        显示为项目配置的源信息。</span><br></pre></td></tr></table></figure>
 <h2 id="常用命令">常用命令</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这里只对日常开发中比较常用的命令进行简要说明，详细介绍可以参考<a target="_blank" rel="noopener" href="https://python-poetry.org/docs/">官方文档</a></p>
+</li>
+</ul>
 <h3 id="new-创建项目">new : 创建项目</h3>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按照默认规则创建一个基于 poetry 的项目</span></span><br><span class="line">$ poetry new my-project</span><br><span class="line">Created package my_project <span class="keyword">in</span> my-project</span><br><span class="line">$ <span class="built_in">cd</span> my-project</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看生成的目录结构</span></span><br><span class="line">$ exa -T</span><br><span class="line">.</span><br><span class="line">├── my_project</span><br><span class="line">│  └── __init__.py</span><br><span class="line">├── pyproject.toml</span><br><span class="line">├── README.md</span><br><span class="line">└── tests</span><br><span class="line">   └── __init__.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 pyproject.toml 内容，该文件为项目的配置的配置文件</span></span><br><span class="line">$ more pyproject.toml</span><br><span class="line">[tool.poetry]</span><br><span class="line">name = <span class="string">&quot;my-project&quot;</span></span><br><span class="line">version = <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line">description = <span class="string">&quot;&quot;</span></span><br><span class="line">authors = [<span class="string">&quot;hanqunfeng &lt;hanqf2008@163.com&gt;&quot;</span>]</span><br><span class="line">readme = <span class="string">&quot;README.md&quot;</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies]</span><br><span class="line">python = <span class="string">&quot;^3.11&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires = [<span class="string">&quot;poetry-core&quot;</span>]</span><br><span class="line">build-backend = <span class="string">&quot;poetry.core.masonry.api&quot;</span></span><br></pre></td></tr></table></figure>
 <h3 id="init-初始化一个已有的项目目录">init : 初始化一个已有的项目目录</h3>
@@ -1073,6 +1071,9 @@ i.ban {
 <p>add : 安装依赖包</p>
 </li>
 </ul>
+<blockquote>
+<p>这个命令会修改 pyproject.toml 文件，在 [tool.poetry.dependencies] 部分添加新的依赖项。还会自动更新 poetry.lock 文件，锁定依赖的确切版本。</p>
+</blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖，安装后会将依赖信息写入 pyproject.toml 中</span></span><br><span class="line"><span class="comment"># 不指定版本则安装最新版</span></span><br><span class="line">$ poetry add fastapi</span><br><span class="line">Using version ^0.115.5 <span class="keyword">for</span> fastapi</span><br><span class="line"></span><br><span class="line">Updating dependencies</span><br><span class="line">Resolving dependencies... (1.3s)</span><br><span class="line"></span><br><span class="line">Package operations: 9 installs, 0 updates, 0 removals</span><br><span class="line"></span><br><span class="line">  - Installing idna (3.10)</span><br><span class="line">  - Installing sniffio (1.3.1)</span><br><span class="line">  - Installing typing-extensions (4.12.2)</span><br><span class="line">  - Installing annotated-types (0.7.0)</span><br><span class="line">  - Installing anyio (4.6.2.post1)</span><br><span class="line">  - Installing pydantic-core (2.23.4)</span><br><span class="line">  - Installing pydantic (2.9.2)</span><br><span class="line">  - Installing starlette (0.41.3)</span><br><span class="line">  - Installing fastapi (0.115.5)</span><br><span class="line"></span><br><span class="line">Writing lock file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定版本号安装依赖</span></span><br><span class="line">poetry add package_name@^1.2.3</span><br><span class="line">    <span class="comment"># 规则说明</span></span><br><span class="line">    ^1.2.3 表示兼容 1.2.3 及更高的小版本，但不包括 2.0.0。    如：poetry add requests@^2.28.0</span><br><span class="line">    ~1.2.3：允许升级到 1.2.x，但不包括 1.3.0。               如：poetry add requests@~2.28.0</span><br><span class="line">    1.2.3：固定为 1.2.3。                                   如：poetry add requests@2.28.0</span><br><span class="line">    &gt;=1.2.3：允许使用 1.2.3 及以上版本。注意zsh下要加上双引号，如：poetry add <span class="string">&quot;requests@&gt;=2.28.0&quot;</span></span><br><span class="line">    &lt;2.0.0：允许使用小于 2.0.0 的版本。 注意zsh下要加上双引号，如：poetry add <span class="string">&quot;requests@&lt;3.0.0&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装到指定的分组，默认都是安装到主环境中的，poetry build默认只会打包主环境的依赖</span></span><br><span class="line">poetry add flask <span class="comment"># 安装到主环境中</span></span><br><span class="line">poetry add flask --group=<span class="built_in">test</span> <span class="comment">#添加分组名 test</span></span><br><span class="line">poetry add flask --dev  <span class="comment">#相当于--group=dev</span></span><br><span class="line"><span class="comment"># 分别执行上面3个安装命令后，输出 pyproject.toml 的内容如下</span></span><br><span class="line">[tool.poetry]</span><br><span class="line">name = <span class="string">&quot;poetrydemo&quot;</span></span><br><span class="line">version = <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line">description = <span class="string">&quot;&quot;</span></span><br><span class="line">authors = [<span class="string">&quot;hanqunfeng &lt;hanqf2008@163.com&gt;&quot;</span>]</span><br><span class="line">readme = <span class="string">&quot;README.md&quot;</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies] <span class="comment"># 主环境</span></span><br><span class="line">python = <span class="string">&quot;^3.11&quot;</span></span><br><span class="line">flask = <span class="string">&quot;^3.1.0&quot;</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.group.test.dependencies] <span class="comment"># test分组依赖</span></span><br><span class="line">flask = <span class="string">&quot;^3.1.0&quot;</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.group.dev.dependencies] <span class="comment"># dev分组依赖</span></span><br><span class="line">flask = <span class="string">&quot;^3.1.0&quot;</span></span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires = [<span class="string">&quot;poetry-core&quot;</span>]</span><br><span class="line">build-backend = <span class="string">&quot;poetry.core.masonry.api&quot;</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1094,7 +1095,7 @@ i.ban {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索远程仓库</span></span><br><span class="line">$ poetry search fastapi</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>install 和 update<br>
+<p>install 和 update : 安装和更新依赖包<br>
 <em><strong>在 Poetry 中，install 和 update 是两个常用的命令，但它们的作用和使用场景不同</strong></em></p>
 <ul class="lvl-2">
 <li class="lvl-7">
@@ -1125,6 +1126,19 @@ i.ban {
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+<h3 id="lock-锁定依赖包">lock : 锁定依赖包</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>poetry lock</code> 是 Poetry（一个 Python 包管理工具）中的一个命令，用于锁定项目的依赖关系。使用这个命令可以创建或更新 <code>poetry.lock</code> 文件，确保你的项目中所使用的每个包的版本都被明确记录下来。这样做对于项目的可复现性和稳定性至关重要。</p>
+</li>
+<li class="lvl-2">
+<p>实际上，当运行 <code>poetry install</code> 、 <code>poetry update</code> 或者 <code>poetry add</code> 等命令时， poetry 都会根据<br>
+<code>pyproject.toml</code> 文件中的依赖范围，解析依赖树，并在项目目录下创建或更新 <code>poetry.lock</code> 文件。</p>
+</li>
+<li class="lvl-2">
+<p>当我们手工修改了 <code>pyproject.toml</code> 文件中的依赖范围，此时又不想立刻更新依赖，而是希望在某个时机再更新，此时就可以使用 <code>poetry lock</code> 命令，先锁定这些依赖，之后再通过 <code>poetry install</code> 命令安装。</p>
 </li>
 </ul>
 <h3 id="source-镜像源管理">source : 镜像源管理</h3>
@@ -1158,13 +1172,13 @@ i.ban {
 <li class="lvl-2">
 <p>运行，两种方法</p>
 <ul class="lvl-2">
-<li class="lvl-6">poetry run</li>
+<li class="lvl-6"><code>poetry run</code></li>
 </ul>
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ poetry run python array_util.py</span><br><span class="line">均匀分布随机数组：</span><br><span class="line">[[7.44623063 1.89415788 4.81008329 4.25556572]</span><br><span class="line">[3.31925154 6.44037063 5.3216543  7.54950573]</span><br><span class="line">[3.97160747 5.04800698 3.28299934 3.42841887]]</span><br><span class="line">正态分布随机数组：</span><br><span class="line">[[ 0.49671415 -0.1382643   0.64768854]</span><br><span class="line">[ 1.52302986 -0.23415337 -0.23413696]]</span><br><span class="line">随机整数数组：</span><br><span class="line">[[10 10  3  7  2]</span><br><span class="line">[ 1 11  5  1  0]</span><br><span class="line">[11 11 16  9 15]</span><br><span class="line">[14 14 18 11 19]]</span><br></pre></td></tr></table></figure>
 <ul class="lvl-2">
-<li class="lvl-6">poetry shell</li>
+<li class="lvl-6"><code>poetry shell</code> : 此时会开启一个新的shell，并开启虚拟环境</li>
 </ul>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启虚拟环境</span></span><br><span class="line">$ poetry shell</span><br><span class="line">Spawning shell within /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11</span><br><span class="line">Restored session: 2024年11月21日 星期四 15时31分52秒 CST</span><br><span class="line">INFO: init terminal...success</span><br><span class="line">➜  poetrydemo <span class="built_in">emulate</span> bash -c <span class="string">&#x27;. /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11/bin/activate&#x27;</span></span><br><span class="line"><span class="comment"># 在虚拟环境下运行</span></span><br><span class="line">$ python array_util.py</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启虚拟环境</span></span><br><span class="line">$ poetry shell</span><br><span class="line">Spawning shell within /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11</span><br><span class="line">Restored session: 2024年11月21日 星期四 15时31分52秒 CST</span><br><span class="line">➜  poetrydemo <span class="built_in">emulate</span> bash -c <span class="string">&#x27;. /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11/bin/activate&#x27;</span></span><br><span class="line"><span class="comment"># 在虚拟环境下运行</span></span><br><span class="line">$ python array_util.py</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h3 id="打包和发布">打包和发布</h3>
@@ -1206,6 +1220,27 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pip install</span></span><br><span class="line">$ pip install hqf_poetrydemo</span><br><span class="line"></span><br><span class="line"><span class="comment"># poetry add</span></span><br><span class="line">$ poetry add hqf_poetrydemo</span><br><span class="line">Using version ^0.1.0 <span class="keyword">for</span> hqf-poetrydemo</span><br><span class="line"></span><br><span class="line">Updating dependencies</span><br><span class="line">Resolving dependencies... (0.5s)</span><br><span class="line"></span><br><span class="line">Package operations: 2 installs, 0 updates, 0 removals</span><br><span class="line"></span><br><span class="line">  - Installing numpy (2.1.3)</span><br><span class="line">  - Installing hqf-poetrydemo (0.1.0)</span><br><span class="line"></span><br><span class="line">Writing lock file</span><br></pre></td></tr></table></figure>
+<h3 id="self-主要用于-poetry-自身安装插件使用">self : 主要用于 poetry 自身安装插件使用</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>估计插件功能目前还不成熟，官网也没有进行详细的说明，并且 windows 下无法使用，所以这里不讨论。</p>
+</li>
+<li class="lvl-2">
+<p><code>self</code>命令下目前只需要记住一个命令： <code>self update</code> : 升级 poetry 版本</p>
+</li>
+</ul>
+<h3 id="debug-resolve-查看包的依赖关系"><code>debug resolve</code> : 查看包的依赖关系</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只查看，不安装</span></span><br><span class="line">$ poetry debug resolve requests</span><br><span class="line">Resolving dependencies... (0.4s)</span><br><span class="line"></span><br><span class="line">Resolution results:</span><br><span class="line"></span><br><span class="line">certifi            2024.8.30</span><br><span class="line">charset-normalizer 3.4.0</span><br><span class="line">idna               3.10</span><br><span class="line">urllib3            2.2.3</span><br><span class="line">requests           2.32.3</span><br></pre></td></tr></table></figure>
+<h3 id="cache-缓存管理">cache : 缓存管理</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>poetry一个很重要的功能就是缓存安装包，可以 <code>减少</code> 相同的安装包被重复下载。为什么是减少而不是避免呢？因为不同的镜像源的包是分别缓存的。</p>
+</li>
+<li class="lvl-2">
+<p>通过 <code>poetry config --list </code> 可以看到 <code>cache-dir</code> 的地址，这里就是缓存下载包的目录。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看缓存列表，这里会按镜像源进行分组</span></span><br><span class="line">$ poetry cache list</span><br><span class="line">PyPI</span><br><span class="line">_default_cache</span><br><span class="line">tsinghua</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清除指定源的全部缓存</span></span><br><span class="line">$ poetry cache clear pypi --all</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清除指定源下某个包的缓存</span></span><br><span class="line">$ poetry cache clear pypi:requests:2.24.0</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -1342,14 +1377,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">399k</span>
+    <span title="站点总字数">400k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">24:11</span>
+    <span title="站点阅读时长">24:13</span>
   </span>
 </div>
 <div class="busuanzi-count">
