@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍Linux进程管理等相关命令   本文基于CentOS8(x86_64)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-03-27T14:46:05.000Z">
-<meta property="article:modified_time" content="2024-04-03T03:45:37.228Z">
+<meta property="article:modified_time" content="2024-11-27T03:31:26.624Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux常用命令">
 <meta name="twitter:card" content="summary">
@@ -866,31 +866,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/07/14/aws-eks16-servcieaccount/" rel="bookmark">
-        <time class="popular-posts-time">2023-07-14</time>
-        <br>
-      AWS-EKS-16--聊一聊ServiceAccount
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-user/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-26</time>
-        <br>
-      MySql--用户管理
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2024/03/19/linux-command15-ansible/" rel="bookmark">
         <time class="popular-posts-time">2024-03-19</time>
         <br>
       Linux常用命令--Ansible
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2024/04/07/mongodb7-others/" rel="bookmark">
-        <time class="popular-posts-time">2024-04-07</time>
-        <br>
-      MongoDB7.0一些有用的功能
       </a>
     </li>
   </ul>
@@ -949,7 +928,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
+      <time title="修改时间：2024-11-27 11:31:26" itemprop="dateModified" datetime="2024-11-27T11:31:26+08:00">2024-11-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1001,14 +980,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.4k</span>
+      <span>5.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>16 分钟</span>
+      <span>20 分钟</span>
     </span>
 
         </div>
@@ -1059,6 +1038,223 @@ i.ban {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 折叠展示，只展示父进程和子进程的数量</span></span><br><span class="line">$ pstree</span><br><span class="line"><span class="comment"># 展开所有子进程，并显示完整命令</span></span><br><span class="line">$ pstree -a</span><br><span class="line"><span class="comment"># 展开所有子进程，并显示PID</span></span><br><span class="line">$ pstree -p</span><br></pre></td></tr></table></figure>
 <h2 id="kill-终止进程">kill :终止进程</h2>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 正常关闭进程</span></span><br><span class="line"><span class="built_in">kill</span> 进程号</span><br><span class="line"><span class="comment"># 强行关闭，遇到进程不能正常关闭时使用</span></span><br><span class="line"><span class="built_in">kill</span> -9 进程号</span><br><span class="line"><span class="comment"># 查看所有信号</span></span><br><span class="line"><span class="built_in">kill</span> -l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 杀死进程名称所关联的全部进程</span></span><br><span class="line">killall 进程名称</span><br><span class="line">killall -9 进程名称</span><br><span class="line"></span><br><span class="line"><span class="comment"># 杀死进程名称所关联的全部进程，同killall</span></span><br><span class="line">pkill 进程名称</span><br><span class="line">pkill -9 进程名称</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找服务的进程号</span></span><br><span class="line">pgrep 进程名称  : 效果同 ps -aux | grep 进程名 | grep -v grep| awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span></span><br><span class="line"><span class="comment"># 终止进程名称为mysql的全部进程</span></span><br><span class="line">pgrep mysql | xargs <span class="built_in">kill</span> -s 9</span><br><span class="line"></span><br><span class="line">pgrep -f 匹配字符串 ：其表示查找所有包含‘匹配字符串’的进程</span><br><span class="line"><span class="comment">#比如：查询 elasticsearch</span></span><br><span class="line">pgrep elasticsearch <span class="comment"># 此时查询不出进程Id，因为elasticsearch的进程是java</span></span><br><span class="line">pgrep -f elasticsearch <span class="comment"># 可以查询出进程Id，因为只要进程完整路径中包含elasticsearch就行</span></span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>信号量</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2">通过<code>kill -l</code>可以查看所有信号的编号和名称</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>信号编号</th>
+<th>信号名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>SIGHUP</td>
+<td>挂起信号，通常用于通知进程终端断开或重新加载配置。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>SIGINT</td>
+<td>中断信号，通常由用户通过键盘 (<code>Ctrl+C</code>) 发送，用于中断一个进程。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>SIGQUIT</td>
+<td>退出信号，通常由键盘 (<code>Ctrl+\</code>) 发送，要求进程生成核心转储并退出。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>SIGILL</td>
+<td>非法指令信号，表示进程执行了非法或未定义的机器指令。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>SIGTRAP</td>
+<td>陷阱信号，通常用于调试程序（如断点异常）。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>SIGABRT</td>
+<td>异常终止信号，进程调用 <code>abort()</code> 函数时触发。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>SIGBUS</td>
+<td>总线错误信号，通常由于未对齐的内存访问引发。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>SIGFPE</td>
+<td>浮点异常信号，例如除零或溢出。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>SIGKILL</td>
+<td>强制终止信号，无法被捕获或忽略，立即终止进程。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>SIGUSR1</td>
+<td>用户自定义信号 1，用户或应用程序自定义用途。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>SIGSEGV</td>
+<td>段错误信号，表示进程访问了非法的内存地址。</td>
+</tr>
+<tr>
+<td>12</td>
+<td>SIGUSR2</td>
+<td>用户自定义信号 2，用户或应用程序自定义用途。</td>
+</tr>
+<tr>
+<td>13</td>
+<td>SIGPIPE</td>
+<td>管道破裂信号，通常在写入一个已关闭的管道或套接字时触发。</td>
+</tr>
+<tr>
+<td>14</td>
+<td>SIGALRM</td>
+<td>定时器信号，由 <code>alarm()</code> 函数触发，用于定时操作。</td>
+</tr>
+<tr>
+<td>15</td>
+<td>SIGTERM</td>
+<td>终止信号，允许进程执行清理操作后终止。这个也是缺省的信号。</td>
+</tr>
+<tr>
+<td>16</td>
+<td>SIGSTKFLT</td>
+<td>堆栈错误信号，主要用于硬件相关的堆栈操作（极少使用）。</td>
+</tr>
+<tr>
+<td>17</td>
+<td>SIGCHLD</td>
+<td>子进程状态改变信号，当子进程退出或停止时触发。</td>
+</tr>
+<tr>
+<td>18</td>
+<td>SIGCONT</td>
+<td>继续信号，用于恢复被暂停的进程。</td>
+</tr>
+<tr>
+<td>19</td>
+<td>SIGSTOP</td>
+<td>暂停信号，无法被捕获或忽略，立即暂停进程。</td>
+</tr>
+<tr>
+<td>20</td>
+<td>SIGTSTP</td>
+<td>终端暂停信号，通常通过键盘 (<code>Ctrl+Z</code>) 发送。</td>
+</tr>
+<tr>
+<td>21</td>
+<td>SIGTTIN</td>
+<td>后台进程尝试从终端读取输入时触发。</td>
+</tr>
+<tr>
+<td>22</td>
+<td>SIGTTOU</td>
+<td>后台进程尝试向终端写入输出时触发。</td>
+</tr>
+<tr>
+<td>23</td>
+<td>SIGURG</td>
+<td>紧急条件信号，通常用于套接字通信中的紧急数据。</td>
+</tr>
+<tr>
+<td>24</td>
+<td>SIGXCPU</td>
+<td>超过 CPU 时间限制信号。</td>
+</tr>
+<tr>
+<td>25</td>
+<td>SIGXFSZ</td>
+<td>超过文件大小限制信号。</td>
+</tr>
+<tr>
+<td>26</td>
+<td>SIGVTALRM</td>
+<td>虚拟定时器信号，由 <code>setitimer()</code> 触发，用于进程执行时间的计时。</td>
+</tr>
+<tr>
+<td>27</td>
+<td>SIGPROF</td>
+<td>统计定时器信号，用于程序性能分析。</td>
+</tr>
+<tr>
+<td>28</td>
+<td>SIGWINCH</td>
+<td>窗口大小改变信号，终端窗口调整时触发。</td>
+</tr>
+<tr>
+<td>29</td>
+<td>SIGIO</td>
+<td>I/O 可用信号，表示文件描述符可用。</td>
+</tr>
+<tr>
+<td>30</td>
+<td>SIGPWR</td>
+<td>电源故障信号。</td>
+</tr>
+<tr>
+<td>31</td>
+<td>SIGSYS</td>
+<td>无效的系统调用信号。</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>从 SIGRTMIN（34）到 SIGRTMAX（64）的信号是实时信号，供用户或应用程序使用，具有更高的优先级和灵活性。</p>
+</li>
+<li class="lvl-2">
+<p>使用时，可以通过数字或名称来指定信号，例如 <code>kill -9</code> 或 <code>kill -SIGKILL</code>，当然也支持去掉<code>SIG</code>的简称，例如 <code>kill -KILL</code>。</p>
+</li>
+<li class="lvl-2">
+<p>咋一看有很多，但实际上我们日常通过键盘能操作的就几个。</p>
+<ul class="lvl-3">
+<li class="lvl-6">
+<ol>
+<li class="lvl-9">SIGHUP：挂起信号，通常用于通知进程终端断开或重新加载配置。</li>
+</ol>
+</li>
+</ul>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重新加载nginx配置文件</span></span><br><span class="line"><span class="built_in">kill</span> -HUP `<span class="built_in">cat</span> /var/run/nginx.pid`</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl reload nginx</span><br></pre></td></tr></table></figure>
+<ul class="lvl-3">
+<li class="lvl-6">
+<ol start="2">
+<li class="lvl-9">SIGINT：中断信号，通常由用户通过键盘 (<code>Ctrl+C</code>) 发送，用于中断一个进程。</li>
+</ol>
+</li>
+<li class="lvl-6">
+<ol start="3">
+<li class="lvl-9">SIGQUIT：退出信号，通常由键盘 (<code>Ctrl+\</code>) 发送，要求进程生成核心转储并退出。</li>
+</ol>
+</li>
+<li class="lvl-6">
+<ol start="9">
+<li class="lvl-9">SIGKILL：强制终止信号，无法被捕获或忽略，立即终止进程。</li>
+</ol>
+</li>
+</ul>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 强制终止进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 `<span class="built_in">cat</span> /var/run/nginx.pid`</span><br></pre></td></tr></table></figure>
+<ul class="lvl-3">
+<li class="lvl-6">
+<ol start="15">
+<li class="lvl-10">SIGTERM：用于优雅的终止进程，通常由用户或应用程序发送，用于通知进程进行清理操作。这个也是缺省的信号。</li>
+</ol>
+</li>
+</ul>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 终止进程</span></span><br><span class="line"><span class="built_in">kill</span> -TERM `<span class="built_in">cat</span> /var/run/nginx.pid`</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="built_in">kill</span> `<span class="built_in">cat</span> /var/run/nginx.pid`</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</div>
 <h2 id="进程的挂起和恢复">进程的挂起和恢复</h2>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ctrl+c :终止</span><br><span class="line"></span><br><span class="line">ctrl+z :挂起，暂停</span><br><span class="line"></span><br><span class="line"><span class="built_in">bg</span> num :转到后台继续运行</span><br><span class="line"></span><br><span class="line"><span class="built_in">fg</span> num :从后台恢复到前台继续运行</span><br><span class="line"></span><br><span class="line"><span class="built_in">jobs</span> :查看被挂起或正在后台运行的进程，会显示编号num</span><br><span class="line"></span><br><span class="line">commond &amp; :后台运行，只在当前终端下有效</span><br><span class="line"></span><br><span class="line"><span class="built_in">nohup</span> commond &amp; :后台执行，退出终端依然继续执行</span><br></pre></td></tr></table></figure>
 <h2 id="进程运行优先级">进程运行优先级</h2>
@@ -1353,14 +1549,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">401k</span>
+    <span title="站点总字数">402k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">24:18</span>
+    <span title="站点阅读时长">24:22</span>
   </span>
 </div>
 <div class="busuanzi-count">
