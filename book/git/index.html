@@ -311,9 +311,13 @@ i.ban {
 
 
 <img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
-
 <img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
 <img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
 
 <img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
 
@@ -332,28 +336,66 @@ i.ban {
                 location.href = "/404";
       });
 
-
-    const year = new Date().getFullYear();
-    const month = new Date().getMonth() + 1;
-    const day = new Date().getDate();
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
     console.log(year,month,day);
 
      // 显示当前年份图片
     $("#img_year").attr("src", "/images_glob/" + year + ".png");
     $("#img_year").show();
 
+    // 阳历节日、纪念日
     // 显示918图片
     if(month==9 && day==18){
         $("#img_918").show();
     }
     // 显示9月10日教师节图片
-    if(month==9 && day==10){
+    else if(month==9 && day==10){
         $("#img_910").show();
     }
     // 显示10月1日国庆节图片
-    if(month==10 && (day >= 1 || day <= 7)){
+    else if(month==10 && (day >= 1 || day <= 7)){
         $("#img_101").show();
     }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 || day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+
+    // 农历节日、纪念日
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
 
 
 
