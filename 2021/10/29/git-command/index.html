@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/A-git-dev.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/B-git-dev.png">
 <meta property="article:published_time" content="2021-10-29T13:30:05.000Z">
-<meta property="article:modified_time" content="2024-12-06T11:06:59.706Z">
+<meta property="article:modified_time" content="2024-12-09T06:36:51.004Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary">
@@ -987,7 +987,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-12-06 19:06:59" itemprop="dateModified" datetime="2024-12-06T19:06:59+08:00">2024-12-06</time>
+      <time title="修改时间：2024-12-09 14:36:51" itemprop="dateModified" datetime="2024-12-09T14:36:51+08:00">2024-12-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1038,7 +1038,7 @@ i.ban {
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>37 分钟</span>
+      <span>38 分钟</span>
     </span>
 
         </div>
@@ -1312,8 +1312,14 @@ i.ban {
 <h3 id="23-git-pull-git-fetch-git-merge这种说法对吗？">23.<code>git pull</code> = <code>git fetch</code> + <code>git merge</code>这种说法对吗？</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>先说答案，<code>git pull</code> != <code>git fetch</code> + <code>git merge</code>，但是确实很像。</p>
+<p>默认情况下，<code>git pull</code> = <code>git fetch</code> + <code>git merge</code></p>
 </li>
+<li class="lvl-2">
+<p>如果配置了 <code>pull.rebase=true</code>，那么 <code>git pull</code> 不再执行 <code>merge</code>，而是执行 <code>rebase</code>。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置为 rebase，--global 表示全局配置</span></span><br><span class="line">git config --global pull.rebase <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复默认行为为 merge</span></span><br><span class="line">git config --global pull.rebase <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前配置</span></span><br><span class="line"><span class="comment"># 检查全局配置</span></span><br><span class="line">git config --global pull.rebase</span><br><span class="line"><span class="comment"># 检查当前仓库配置</span></span><br><span class="line">git config pull.rebase</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
 <li class="lvl-2">
 <p>其实更好的比较是<code>git pull --rebase</code> 与 <code>git fetch</code> + <code>git merge</code>的区别，其相当于<code>git fetch</code> + <code>git rebase</code></p>
 </li>
@@ -1335,7 +1341,7 @@ i.ban {
 <p><code>git fetch</code>的作用是将远程仓库(如github)的版本与本地远程跟踪仓库(如orign/master)的版本保持一致。之后我们在master分支下执行<code>git merge orign/master</code>就会将远程仓库的代码合并到本地仓库，所以合并后会产出一个新的版本，我们可以发布这个版本到远程仓库。</p>
 </li>
 <li class="lvl-2">
-<p><code>git pull</code>的作用很像<code>git fetch</code> + <code>git merge</code>，区别就是，<code>git pull</code>时如果没有冲突，就不会产生新的版本。</p>
+<p><code>git pull</code>的作用是先执行<code>git fetch</code>，再执行<code>git merge</code>，所以<code>git pull</code>会自动将远程仓库的代码合并到本地仓库，所以合并后会产出一个新的版本，我们可以发布这个版本到远程仓库。</p>
 </li>
 </ul>
 <h3 id="24-如何确定开发–-测试–-发布流程？">24.如何确定开发–&gt;测试–&gt;发布流程？</h3>
@@ -1622,7 +1628,7 @@ i.ban {
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">24:46</span>
+    <span title="站点阅读时长">24:47</span>
   </span>
 </div>
 <div class="busuanzi-count">
