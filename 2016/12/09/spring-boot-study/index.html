@@ -530,10 +530,16 @@ i.ban {
                 coverLayer(0);
                 $(".over").remove();
 
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
                 let n = 0;
                 if (mycalendarElement && mycalendarElement.length !== undefined) {
                     for (var i = 0; i < mycalendarElement.length; i++) {
                         let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
                         if (fulltime == ordertime) {
                             n++;
                             if(n==1){
@@ -551,6 +557,11 @@ i.ban {
                     }
                 }
                 n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
             }
         }
     });
