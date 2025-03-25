@@ -6,7 +6,7 @@
   <link href="https://blog.hanqunfeng.com/atom.xml" rel="self"/>
   
   <link href="https://blog.hanqunfeng.com/"/>
-  <updated>2025-03-25T02:57:13.052Z</updated>
+  <updated>2025-03-25T08:23:28.882Z</updated>
   <id>https://blog.hanqunfeng.com/</id>
   
   <author>
@@ -15,6 +15,67 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux下Elasticsearch插件安装</title>
+    <link href="https://blog.hanqunfeng.com/2025/03/25/elasticsearch-03-plugins/"/>
+    <id>https://blog.hanqunfeng.com/2025/03/25/elasticsearch-03-plugins/</id>
+    <published>2025-03-25T13:30:05.000Z</published>
+    <updated>2025-03-25T08:23:28.882Z</updated>
+    
+    <content type="html"><![CDATA[<!-- **加粗** *斜体* ***加粗并斜体*** ~~删除线~~ ==突出显示== `突出显示(推荐)` ++下划线++ ~下标~ ^上标^ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference. 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600) +++ **点击折叠** 这是被隐藏的内容 +++::: tips success warning danger这里是容器内的内容:::% note info % success warning danger这里是容器内的内容% endnote %引用本地其它文章连接{} 大括号开始% post_link 文件名称(不包含.md) %大括号结束 --><h2 id="摘要">摘要</h2><ul class="lvl-0"><li class="lvl-2"><p>本文介绍如何在linux为Elasticsearch安装插件</p></li><li class="lvl-2"><p>Elasticsearch版本8.17.3</p></li></ul><span id="more"></span><h2 id="安装Elasticsearch核心库插件">安装Elasticsearch核心库插件</h2><ul class="lvl-0"><li class="lvl-2"><p>以安装 <code>analysis-icu</code> 这个分词插件为例</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入Elasticsearch安装目录，插件的安装路径在 plugins 目录下</span></span><br><span class="line"><span class="comment"># 安装插件</span></span><br><span class="line">bin/elasticsearch-plugin install analysis-icu</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>安装或卸载插件后，需要重启Elasticsearch服务</p></li></ul><h2 id="安装其它来源的插件">安装其它来源的插件</h2><ul class="lvl-0"><li class="lvl-2"><p>以安装 <code>analysis-ik</code> 这个中文分词插件为例</p></li><li class="lvl-2"><p>从<a href="https://release.infinilabs.com/analysis-ik/stable/">https://release.infinilabs.com/analysis-ik/stable/</a>找到对应版本的插件连接，这里以<code>8.17.3</code>为例</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.基于url安装插件</span></span><br><span class="line">bin/elasticsearch-plugin install https://release.infinilabs.com/analysis-ik/stable/elasticsearch-analysis-ik-8.17.3.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.基于本地文件安装插件，我们可以先将插件下载的本地目录</span></span><br><span class="line">wget https://release.infinilabs.com/analysis-ik/stable/elasticsearch-analysis-ik-8.17.3.zip -P /tmp/</span><br><span class="line">bin/elasticsearch-plugin install file:///tmp/elasticsearch-analysis-ik-8.17.3.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.可以将下载好的包解压到plugins目录下，然后重启Elasticsearch服务</span></span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/elasticsearch/elasticsearch-8.17.3/plugins/analysis-ik</span><br><span class="line">unzip elasticsearch-analysis-ik-8.17.3.zip -d /usr/local/elasticsearch/elasticsearch-8.17.3/plugins/analysis-ik</span><br></pre></td></tr></table></figure><h2 id="查看和卸载插件">查看和卸载插件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出所有插件</span></span><br><span class="line">bin/elasticsearch-plugin list</span><br><span class="line"><span class="comment"># 卸载插件</span></span><br><span class="line">bin/elasticsearch-plugin remove analysis-ik</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过curl命令查看插件信息</span></span><br><span class="line">curl -u elastic:123456 -k https://localhost:9200/_cat/plugins?v</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>安装或卸载插件后，需要重启Elasticsearch服务</p></li></ul><h2 id="analysis-ik-中文分词插件的使用"><code>analysis-ik</code> 中文分词插件的使用</h2><ul class="lvl-0"><li class="lvl-2"><p>测试分词效果</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ES的默认分词器是standard，会单字拆分</span></span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;analyzer&quot;</span>: <span class="string">&quot;standard&quot;</span>,</span><br><span class="line">    <span class="string">&quot;text&quot;</span>: <span class="string">&quot;中华人民共和国&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#analysis-ik的ik_smart分词器:会做最粗粒度的拆</span></span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;analyzer&quot;</span>: <span class="string">&quot;ik_smart&quot;</span>,</span><br><span class="line">    <span class="string">&quot;text&quot;</span>: <span class="string">&quot;中华人民共和国&quot;</span></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#analysis-ik的ik_max_word分词器:会将文本做最细粒度的拆分</span></span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span>,</span><br><span class="line">    <span class="string">&quot;text&quot;</span>: <span class="string">&quot;中华人民共和国&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>配置索引的分词器</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建索引，并指定默认分词器为ik_max_word</span></span><br><span class="line">PUT /test_index</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;settings&quot;</span> : &#123;</span><br><span class="line">        <span class="string">&quot;index&quot;</span> : &#123;</span><br><span class="line">            <span class="string">&quot;analysis.analyzer.default.type&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 查看索引setting信息</span></span><br><span class="line">GET /test_index/_settings</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>配置索引字段的分词器</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#创建索引</span></span><br><span class="line">PUT /index</span><br><span class="line"><span class="comment"># 指定content字段使用ik分词器</span></span><br><span class="line">POST /index/_mapping</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;properties&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;content&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>,</span><br><span class="line">      <span class="string">&quot;analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span>,</span><br><span class="line">      <span class="string">&quot;search_analyzer&quot;</span>: <span class="string">&quot;ik_smart&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#索引文档，也就是插入文档</span></span><br><span class="line">POST /index/_create/1</span><br><span class="line">&#123;<span class="string">&quot;content&quot;</span>:<span class="string">&quot;美国留给伊拉克的是个烂摊子吗&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">POST /index/_create/2</span><br><span class="line">&#123;<span class="string">&quot;content&quot;</span>:<span class="string">&quot;公安部：各地校车将享最高路权&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">POST /index/_create/3</span><br><span class="line">&#123;<span class="string">&quot;content&quot;</span>:<span class="string">&quot;中韩渔警冲突调查：韩警平均每天扣1艘中国渔船&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">POST /index/_create/4</span><br><span class="line">&#123;<span class="string">&quot;content&quot;</span>:<span class="string">&quot;中国驻洛杉矶领事馆遭亚裔男子枪击 嫌犯已自首&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#带高亮的查询</span></span><br><span class="line">POST /index/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;match&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;content&quot;</span>: <span class="string">&quot;中国&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&quot;highlight&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;pre_tags&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;&lt;tag1&gt;&quot;</span>,</span><br><span class="line">      <span class="string">&quot;&lt;tag2&gt;&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;post_tags&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;&lt;/tag1&gt;&quot;</span>,</span><br><span class="line">      <span class="string">&quot;&lt;/tag2&gt;&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;fields&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;content&quot;</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ --&gt;
+&lt;h2 id=&quot;摘要&quot;&gt;摘要&lt;/h2&gt;
+&lt;ul class=&quot;lvl-0&quot;&gt;
+&lt;li class=&quot;lvl-2&quot;&gt;
+&lt;p&gt;本文介绍如何在linux为Elasticsearch安装插件&lt;/p&gt;
+&lt;/li&gt;
+&lt;li class=&quot;lvl-2&quot;&gt;
+&lt;p&gt;Elasticsearch版本8.17.3&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="技术" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="elastic" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/elastic/"/>
+    
+    <category term="elasticsearch" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/elastic/elasticsearch/"/>
+    
+    
+    <category term="elasticsearch" scheme="https://blog.hanqunfeng.com/tags/elasticsearch/"/>
+    
+  </entry>
   
   <entry>
     <title>linux下安装Elasticsearch集群</title>
@@ -1041,72 +1102,6 @@
 &lt;/li&gt;
 &lt;li class=&quot;lvl-2&quot;&gt;
 &lt;p&gt;关于将Ansible Role发布到Galaxy的详细介绍可以参看 &lt;a href=&quot;/2024/03/26/ansible-role-publish/&quot; title=&quot;Ansible Role Publish To Galaxy&quot;&gt;Ansible Role Publish To Galaxy&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    
-    
-    
-    <category term="技术" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="linux" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/linux/"/>
-    
-    <category term="linux常用命令" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    
-    <category term="Ansible" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/Ansible/"/>
-    
-    
-    <category term="linux常用命令" scheme="https://blog.hanqunfeng.com/tags/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    
-    <category term="Ansible" scheme="https://blog.hanqunfeng.com/tags/Ansible/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Ansible Role Publish To Galaxy</title>
-    <link href="https://blog.hanqunfeng.com/2024/03/26/ansible-role-publish/"/>
-    <id>https://blog.hanqunfeng.com/2024/03/26/ansible-role-publish/</id>
-    <published>2024-03-26T13:30:05.000Z</published>
-    <updated>2024-04-03T03:45:36.903Z</updated>
-    
-    <content type="html"><![CDATA[<!-- **加粗** *斜体* ***加粗并斜体*** ~~删除线~~ ==突出显示== `突出显示(推荐)` ++下划线++ ~下标~ ^上标^ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference. 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600) +++ **点击折叠** 这是被隐藏的内容 +++::: tips success warning danger这里是容器内的内容:::% note info % success warning danger这里是容器内的内容% endnote % --><h2 id="摘要">摘要</h2><ul class="lvl-0"><li class="lvl-2"><p>本文介绍如何将Ansible Role发布到Galaxy。</p></li><li class="lvl-2"><p>关于Ansible的介绍可以参看 <a href="/2024/03/19/linux-command15-ansible/" title="Linux常用命令--Ansible">Linux常用命令--Ansible</a></p></li><li class="lvl-2"><p>关于将Ansible Collection发布到Galaxy的详细介绍可以参看 <a href="/2024/03/27/ansible-collection-publish/" title="Ansible Collection Publish To Galaxy">Ansible Collection Publish To Galaxy</a></p></li></ul><span id="more"></span><h2 id="创建Role">创建Role</h2><ul class="lvl-0"><li class="lvl-2"><p>在当前目录下创建一个名称为<code>mongodb-install</code>的role，实际上就是创建一个名称为<code>mongodb-install</code>的目录结构</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-galaxy init mongodb-install</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>创建完成后，目录结构如下：</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mongodb-install</span><br><span class="line">├── defaults</span><br><span class="line">│  └── main.yml</span><br><span class="line">├── files</span><br><span class="line">├── handlers</span><br><span class="line">│  └── main.yml</span><br><span class="line">├── meta</span><br><span class="line">│  └── main.yml</span><br><span class="line">├── README.md</span><br><span class="line">├── tasks</span><br><span class="line">│  └── main.yml</span><br><span class="line">├── templates</span><br><span class="line">├── tests</span><br><span class="line">│  ├── inventory</span><br><span class="line">│  └── test.yml</span><br><span class="line">└── vars</span><br><span class="line">   └── main.yml</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>编辑role，相关代码参考<a href="https://github.com/hanqunfeng/ansible-role-mongodb">https://github.com/hanqunfeng/ansible-role-mongodb</a></p></li><li class="lvl-2"><p>这里我们要注意两个文件</p></li></ul><blockquote><p><code>README.md</code>: 这里面配置的是role的描述信息，其会显示在<code>文档</code>一栏中<br><code>meta/main.yml</code>，这里面配置的是role的作者信息</p></blockquote><h2 id="上传Role到Github">上传Role到Github</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> mongodb-install</span><br><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init&quot;</span></span><br><span class="line">git branch -M main</span><br><span class="line">git remote add origin https://github.com/hanqunfeng/ansible-role-mongodb.git</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure><h2 id="发布Role到Galaxy">发布Role到Galaxy</h2><ul class="lvl-0"><li class="lvl-2"><p>登录<a href="https://galaxy.ansible.com/">https://galaxy.ansible.com/</a>，点击<code>登录</code>，使用Github账号登录。</p></li><li class="lvl-2"><p>导入Role<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/w1UxvL.png" alt=""></p></li><li class="lvl-2"><p>填写Role信息<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/OnIT3a.png" alt=""></p></li><li class="lvl-2"><p>查看导入状态<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/7Dghla.png" alt=""></p></li><li class="lvl-2"><p>搜索Role<br>此时我们在角色列表中搜索关键字<code>hanqunfeng</code>，就可以搜索到我们刚刚上传的那个role了<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/lx7rCg.png" alt=""></p></li><li class="lvl-2"><p>点击进去我们就可以查看角色的详细信息了</p></li></ul><h2 id="修改Role">修改Role</h2><ul class="lvl-0"><li class="lvl-2"><p>修改了role信息后，重新上传到github即可</p></li><li class="lvl-2"><p>如果同时修改了<code>README.md</code>等role信息，可以在galaxy中重新上传即可<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/PVNRGz.png" alt=""></p></li></ul><h2 id="安装Role">安装Role</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">$ ansible-galaxy role install hanqunfeng.mongodb-install</span><br><span class="line">Starting galaxy role install process</span><br><span class="line">- downloading role <span class="string">&#x27;mongodb-install&#x27;</span>, owned by hanqunfeng</span><br><span class="line">- downloading role from https://github.com/hanqunfeng/ansible-role-mongodb/archive/main.tar.gz</span><br><span class="line">- extracting hanqunfeng.mongodb-install to /Users/hanqf/.ansible/roles/hanqunfeng.mongodb-install</span><br><span class="line">- hanqunfeng.mongodb-install (main) was installed successfully</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新安装</span></span><br><span class="line">ansible-galaxy role install --force hanqunfeng.mongodb-install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看已安装的role</span></span><br><span class="line">ansible-galaxy role list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除</span></span><br><span class="line">$ ansible-galaxy role remove hanqunfeng.mongodb-install</span><br><span class="line">- successfully removed hanqunfeng.mongodb-install</span><br></pre></td></tr></table></figure><h2 id="使用Role">使用Role</h2><ul class="lvl-0"><li class="lvl-2"><p>在<code>playbook</code>中引用role</p></li></ul><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">test-mongo</span></span><br><span class="line">  <span class="attr">become:</span> <span class="literal">yes</span>  <span class="comment"># 切换到root用户下执行</span></span><br><span class="line">  <span class="attr">roles:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">hanqunfeng.mongodb-install</span></span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>执行playbook</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook -i hosts playbook.yml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换默认的变量</span></span><br><span class="line">ansible-playbook -i hosts --extra-vars <span class="string">&quot;mongo_port=27019&quot;</span> --extra-vars <span class="string">&quot;mongo_replica_set_name=rs1&quot;</span> playbook.yml</span><br></pre></td></tr></table></figure><h2 id="发布指定版本到Galaxy">发布指定版本到Galaxy</h2><ul class="lvl-0"><li class="lvl-2"><p>给角色代码打tag</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建tag，名称为 v1.0.0</span></span><br><span class="line">git tag -a v1.0.0 -m <span class="string">&quot;v1.0.0&quot;</span></span><br><span class="line"><span class="comment"># 提交tag</span></span><br><span class="line">git push origin v1.0.0</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>在galaxy中重新上传，注意此时在要指定tag名称<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/sESeVk.png" alt=""></p></li><li class="lvl-2"><p>上传成功后，就可以在galaxy中查看到对应的版本了<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/R18rBY.png" alt=""></p></li></ul><h2 id="下载指定版本的角色">下载指定版本的角色</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意role和版本号之间用逗号隔开，不加版本号，则下载最新版本</span></span><br><span class="line">$ ansible-galaxy role install hanqunfeng.mongodb-install,v1.0.0</span><br><span class="line">Starting galaxy role install process</span><br><span class="line">- downloading role <span class="string">&#x27;mongodb-install&#x27;</span>, owned by hanqunfeng</span><br><span class="line">- downloading role from https://github.com/hanqunfeng/ansible-role-mongodb/archive/v1.0.0.tar.gz</span><br><span class="line">- extracting hanqunfeng.mongodb-install to /Users/hanqf/.ansible/roles/hanqunfeng.mongodb-install</span><br><span class="line">- hanqunfeng.mongodb-install (v1.0.0) was installed successfully</span><br></pre></td></tr></table></figure><h2 id="搜索角色">搜索角色</h2><ul class="lvl-0"><li class="lvl-2"><p>除了在galaxy网站中搜索，还可以通过命令行搜索</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-galaxy search hanqunfeng</span><br><span class="line"></span><br><span class="line">Found 1 roles matching your search:</span><br><span class="line"></span><br><span class="line"> Name                       Description</span><br><span class="line"> ----                       -----------</span><br><span class="line"> hanqunfeng.mongodb-install CentOS 7&amp;8 MongoDB install role</span><br><span class="line"></span><br><span class="line"> <span class="comment"># 或者</span></span><br><span class="line"> ansible-galaxy role search hanqunfeng</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;!--
- **加粗**
- *斜体*
- ***加粗并斜体***
- ~~删除线~~
- ==突出显示==
- `突出显示(推荐)`
- ++下划线++
- ~下标~
- ^上标^
- 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
- 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
-
- +++ **点击折叠**
- 这是被隐藏的内容
- +++
-
-::: tips success warning danger
-这里是容器内的内容
-:::
-
-% note info % success warning danger
-这里是容器内的内容
-% endnote %
-
- --&gt;
-&lt;h2 id=&quot;摘要&quot;&gt;摘要&lt;/h2&gt;
-&lt;ul class=&quot;lvl-0&quot;&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;本文介绍如何将Ansible Role发布到Galaxy。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;关于Ansible的介绍可以参看 &lt;a href=&quot;/2024/03/19/linux-command15-ansible/&quot; title=&quot;Linux常用命令--Ansible&quot;&gt;Linux常用命令--Ansible&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;关于将Ansible Collection发布到Galaxy的详细介绍可以参看 &lt;a href=&quot;/2024/03/27/ansible-collection-publish/&quot; title=&quot;Ansible Collection Publish To Galaxy&quot;&gt;Ansible Collection Publish To Galaxy&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;</summary>
     
