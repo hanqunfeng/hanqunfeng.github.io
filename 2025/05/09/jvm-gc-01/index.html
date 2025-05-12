@@ -33,8 +33,9 @@
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/TEILZ9.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/Apr5aY.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/AaqBxm.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/bBUAYt.png">
 <meta property="article:published_time" content="2025-05-09T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-05-12T15:43:46.195Z">
+<meta property="article:modified_time" content="2025-05-12T16:14:07.769Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="jvm">
 <meta name="twitter:card" content="summary">
@@ -872,7 +873,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM-%E7%9A%84%E5%8F%82%E6%95%B0-%E4%B8%89%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">JVM 的参数(三类)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BB%93%E6%9E%84-HotSpot"><span class="nav-number">3.</span> <span class="nav-text">JVM虚拟机结构(HotSpot)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E8%A3%85%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88Class-Loading-Subsystem%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">类装载子系统（Class Loading Subsystem）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E%EF%BC%88Execution-Engine%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">字节码执行引擎（Execution Engine）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%88Java-Memory-Model%EF%BC%8CJMM%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">JVM 内存模型（Java Memory Model，JMM）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">垃圾回收器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%9E%83%E5%9C%BE"><span class="nav-number">4.1.</span> <span class="nav-text">什么是垃圾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E7%A7%8D%E7%B1%BB%EF%BC%9A"><span class="nav-number">4.2.</span> <span class="nav-text">垃圾回收器种类：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">垃圾回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-STW%EF%BC%88Stop-The-World%EF%BC%89"><span class="nav-number">4.3.1.</span> <span class="nav-text">什么是 STW（Stop-The-World）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">堆内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E4%BB%A3%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.1.</span> <span class="nav-text">分代模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">5.1.1.</span> <span class="nav-text">Parallel 垃圾回收器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-GC-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%A1%A8%EF%BC%88%E5%90%9E%E5%90%90%E9%87%8F%E4%BC%98%E5%85%88-GC%EF%BC%89"><span class="nav-number">5.1.2.</span> <span class="nav-text">Parallel GC 参数配置表（吞吐量优先 GC）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.2.</span> <span class="nav-text">分区模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">5.2.1.</span> <span class="nav-text">G1 垃圾回收器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#G1%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%88%86%E7%B1%BB"><span class="nav-number">5.2.1.1.</span> <span class="nav-text">G1垃圾收集分类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-%E6%94%B6%E9%9B%86%E5%99%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%A1%A8"><span class="nav-number">5.2.2.</span> <span class="nav-text">G1 收集器参数配置表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA-OutOfMemoryError%EF%BC%8C%E7%AE%80%E7%A7%B0-OOM"><span class="nav-number">6.</span> <span class="nav-text">内存溢出(OutOfMemoryError，简称 OOM)</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM-%E7%9A%84%E5%8F%82%E6%95%B0-%E4%B8%89%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">JVM 的参数(三类)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BB%93%E6%9E%84-HotSpot"><span class="nav-number">3.</span> <span class="nav-text">JVM虚拟机结构(HotSpot)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E8%A3%85%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88Class-Loading-Subsystem%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">类装载子系统（Class Loading Subsystem）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E%EF%BC%88Execution-Engine%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">字节码执行引擎（Execution Engine）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%88Java-Memory-Model%EF%BC%8CJMM%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">JVM 内存模型（Java Memory Model，JMM）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">垃圾回收器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%9E%83%E5%9C%BE"><span class="nav-number">4.1.</span> <span class="nav-text">什么是垃圾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E7%A7%8D%E7%B1%BB%EF%BC%9A"><span class="nav-number">4.2.</span> <span class="nav-text">垃圾回收器种类：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">垃圾回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-STW%EF%BC%88Stop-The-World%EF%BC%89"><span class="nav-number">4.3.1.</span> <span class="nav-text">什么是 STW（Stop-The-World）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">堆内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E4%BB%A3%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.1.</span> <span class="nav-text">分代模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">5.1.1.</span> <span class="nav-text">Parallel 垃圾回收器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-GC-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%A1%A8%EF%BC%88%E5%90%9E%E5%90%90%E9%87%8F%E4%BC%98%E5%85%88-GC%EF%BC%89"><span class="nav-number">5.1.2.</span> <span class="nav-text">Parallel GC 参数配置表（吞吐量优先 GC）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.2.</span> <span class="nav-text">分区模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">5.2.1.</span> <span class="nav-text">G1 垃圾回收器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#G1%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%88%86%E7%B1%BB"><span class="nav-number">5.2.1.1.</span> <span class="nav-text">G1垃圾收集分类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#G1-%E6%94%B6%E9%9B%86%E5%99%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%A1%A8"><span class="nav-number">5.2.1.2.</span> <span class="nav-text">G1 收集器参数配置表</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ZGC-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">5.2.2.</span> <span class="nav-text">ZGC 垃圾回收器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ZGC-%E6%94%B6%E9%9B%86%E5%99%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%A1%A8"><span class="nav-number">5.2.2.1.</span> <span class="nav-text">ZGC 收集器参数配置表</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA-OutOfMemoryError%EF%BC%8C%E7%AE%80%E7%A7%B0-OOM"><span class="nav-number">6.</span> <span class="nav-text">内存溢出(OutOfMemoryError，简称 OOM)</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1010,7 +1011,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-05-12 23:43:46" itemprop="dateModified" datetime="2025-05-12T23:43:46+08:00">2025-05-12</time>
+      <time title="修改时间：2025-05-13 00:14:07" itemprop="dateModified" datetime="2025-05-13T00:14:07+08:00">2025-05-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1058,14 +1059,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.9k</span>
+      <span>8.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>29 分钟</span>
+      <span>31 分钟</span>
     </span>
 
         </div>
@@ -1891,7 +1892,7 @@ CMS 已在 JDK 9 开始标记为弃用，JDK 14 完全移除，不推荐再使�
 <h2 id="堆内存结构">堆内存结构</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>不同的垃圾回收器决定了堆内存的结构不同，当总体上分为两种类型：分代模型和分区模型。</p>
+<p>不同的垃圾回收器决定了堆内存的结构不同，但总体上分为两种类型：分代模型和分区模型。</p>
 </li>
 </ul>
 <h3 id="分代模型">分代模型</h3>
@@ -2068,6 +2069,9 @@ JVM对于这种情况可以通过开启逃逸分析参数(-XX:+DoEscapeAnalysis)
 <p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/AaqBxm.png" alt="" width="900" height="300"></p>
 <ul class="lvl-0">
 <li class="lvl-2">
+<p>G1 属于 物理上分区，逻辑上分代，真正的分区模型是 <code>ZGC</code></p>
+</li>
+<li class="lvl-2">
 <p>G1将Java堆划分为多个大小相等的独立区域（Region），JVM最多可以有<code>2048</code>个Region。</p>
 </li>
 <li class="lvl-2">
@@ -2116,7 +2120,7 @@ YoungGC并不是说现有的Eden区放满了就会马上触发，G1会计算下�
 停止系统程序，然后采用单线程进行标记、清理和压缩整理，好空闲出来一批Region来供下一次MixedGC使用，这个过程是非常耗时的。(Shenandoah优化成多线程收集了)</p>
 </li>
 </ul>
-<h4 id="G1-收集器参数配置表">G1 收集器参数配置表</h4>
+<h5 id="G1-收集器参数配置表">G1 收集器参数配置表</h5>
 <table>
 <thead>
 <tr>
@@ -2185,6 +2189,155 @@ YoungGC并不是说现有的Eden区放满了就会马上触发，G1会计算下�
 <td><code>-XX:G1HeapWastePercent</code></td>
 <td>Mixed GC 回收目标：空闲 Region 达堆总量该百分比就结束混合回收</td>
 <td>5%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ZGC-垃圾回收器">ZGC 垃圾回收器</h4>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/bBUAYt.png" alt="" width="700" height="500"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>ZGC是一款JDK 11中新加入的具有实验性质的低延迟垃圾收集器，ZGC可以说源自于是Azul System公司开发的C4（Concurrent Continuously Compacting Collector） 收集器</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Supported</th>
+<th>Since</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux/x64</td>
+<td>✅</td>
+<td>JDK 11</td>
+<td></td>
+</tr>
+<tr>
+<td>Linux/AArch64</td>
+<td>✅</td>
+<td>JDK 13</td>
+<td></td>
+</tr>
+<tr>
+<td>macOS</td>
+<td>✅</td>
+<td>JDK 14</td>
+<td></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>✅</td>
+<td>JDK 14</td>
+<td>Requires Windows version 1803 (Windows 10 or Windows Server 2019) or later.</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>ZGC收集器是一款基于Region内存布局的，暂时不设分代的(jdk21后支持分代)，使用了读屏障、颜色指针等技术来实现可并发的标记-整理算法的，以低延迟为首要目标的一款垃圾收集器。</p>
+</li>
+<li class="lvl-2">
+<p>ZGC的Region可以具有大、中、小三类容量：</p>
+<ul class="lvl-2">
+<li class="lvl-6">小型Region（Small Region） ： 容量固定为2MB，用于放置小于256KB的小对象。</li>
+<li class="lvl-6">中型Region（Medium Region） ： 容量固定为32MB，用于放置大于等于256KB但小于4MB的对象。</li>
+<li class="lvl-6">大型Region（Large Region） ： 容量不固定，可以动态变化，但必须为2MB的整数倍，用于放置4MB或以上的大对象。</li>
+</ul>
+<blockquote>
+<p>每个大型Region中只会存放一个大对象，这也预示着虽然名字叫作“大型Region”，但它的实际容量完全有可能小于中型Region，最小容量可低至4MB。</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>ZGC 特点：</p>
+<ul class="lvl-2">
+<li class="lvl-6">支持极大堆（JDK 15 起支持最高 16TB）</li>
+<li class="lvl-6">GC 停顿时间通常低于 1ms（与堆大小基本无关）</li>
+<li class="lvl-6">适合低延迟、高吞吐、高可用的应用场景，如交易系统、广告推荐等</li>
+</ul>
+</li>
+</ul>
+<h5 id="ZGC-收集器参数配置表">ZGC 收集器参数配置表</h5>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+<th>默认值（如未特殊标注）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-XX:+UseZGC</code></td>
+<td>启用 ZGC 垃圾收集器</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>-XX:+UnlockExperimentalVMOptions</code></td>
+<td>解锁实验性参数（JDK 11~14 使用 ZGC 必须）</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>-XX:+UseLargePages</code></td>
+<td>启用大页内存（性能优化）</td>
+<td>false</td>
+</tr>
+<tr>
+<td><code>-XX:+UseTransparentHugePages</code></td>
+<td>启用透明大页（部分 Linux 上可结合使用）</td>
+<td>false</td>
+</tr>
+<tr>
+<td><code>-Xmx</code> / <code>-Xms</code></td>
+<td>设置最大/初始堆大小</td>
+<td>用户配置</td>
+</tr>
+<tr>
+<td><code>-XX:ZUncommitDelay=&lt;秒&gt;</code></td>
+<td>未使用内存释放回操作系统的延迟时间（ZGC 会自动释放内存）</td>
+<td>300（5分钟）</td>
+</tr>
+<tr>
+<td><code>-XX:SoftMaxHeapSize=&lt;大小&gt;</code></td>
+<td>软最大堆（Soft Heap Limit）：ZGC 尝试将使用的堆控制在该值以内</td>
+<td>默认等于 Xmx</td>
+</tr>
+<tr>
+<td><code>-XX:MaxHeapFreeRatio</code></td>
+<td>最大堆空闲比例（超过此比例可能触发内存释放）</td>
+<td>70</td>
+</tr>
+<tr>
+<td><code>-XX:MinHeapFreeRatio</code></td>
+<td>最小堆空闲比例（低于此比例可能触发扩容）</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>-XX:+ZGenerational</code></td>
+<td>启用 ZGC 分代收集（从 JDK 21 起支持，默认关闭）</td>
+<td>false（JDK 21+）</td>
+</tr>
+<tr>
+<td><code>-XX:+PrintGC</code> / <code>-Xlog:gc*</code></td>
+<td>开启 GC 日志输出</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>-XX:+ZProactive</code></td>
+<td>主动回收策略（在系统空闲时尝试回收）</td>
+<td>false</td>
+</tr>
+<tr>
+<td><code>-XX:ZCollectionInterval=&lt;秒&gt;</code></td>
+<td>主动回收之间的最小时间间隔（配合 ZProactive）</td>
+<td>默认值因版本而异</td>
+</tr>
+<tr>
+<td><code>-XX:+ZConcurrentRootsScan</code></td>
+<td>启用并发根扫描（优化初始标记阶段）</td>
+<td>JDK 17+ 默认启用</td>
 </tr>
 </tbody>
 </table>
@@ -2571,14 +2724,14 @@ YoungGC并不是说现有的Eden区放满了就会马上触发，G1会计算下�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">466k</span>
+    <span title="站点总字数">467k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">28:16</span>
+    <span title="站点阅读时长">28:18</span>
   </span>
 </div>
 <div class="busuanzi-count">
