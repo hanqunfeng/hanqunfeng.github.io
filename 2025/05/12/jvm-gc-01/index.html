@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍JVM的内存模型与垃圾回收机制   The Java® Virtual Machine Specification 版本jdk1.8">
+    <meta name="description" content="摘要   本文介绍JVM的内存模型与垃圾回收机制   JDK8 The Java® Virtual Machine Specification   JDK8的java指令的官⽅⽂档   JDK⼯具官⽹⽂档   JDK17的java指令的官⽅⽂档">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM 之 内存模型与垃圾回收机制(GC)">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/05/12/jvm-gc-01/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍JVM的内存模型与垃圾回收机制   The Java® Virtual Machine Specification 版本jdk1.8">
+<meta property="og:description" content="摘要   本文介绍JVM的内存模型与垃圾回收机制   JDK8 The Java® Virtual Machine Specification   JDK8的java指令的官⽅⽂档   JDK⼯具官⽹⽂档   JDK17的java指令的官⽅⽂档">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/cGMyEe.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/TEILZ9.png">
@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/LD51Zb.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/94yKcU.png">
 <meta property="article:published_time" content="2025-05-12T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-05-16T04:55:39.308Z">
+<meta property="article:modified_time" content="2025-05-16T15:17:42.954Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="jvm">
 <meta name="twitter:card" content="summary">
@@ -1015,7 +1015,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-05-16 12:55:39" itemprop="dateModified" datetime="2025-05-16T12:55:39+08:00">2025-05-16</time>
+      <time title="修改时间：2025-05-16 23:17:42" itemprop="dateModified" datetime="2025-05-16T23:17:42+08:00">2025-05-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1063,14 +1063,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>12k</span>
+      <span>13k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>43 分钟</span>
+      <span>49 分钟</span>
     </span>
 
         </div>
@@ -1113,7 +1113,16 @@ i.ban {
 <p>本文介绍JVM的内存模型与垃圾回收机制</p>
 </li>
 <li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">The Java® Virtual Machine Specification</a> 版本jdk1.8</p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">JDK8 The Java® Virtual Machine Specification</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html">JDK8的java指令的官⽅⽂档</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/index.html">JDK⼯具官⽹⽂档</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/java.html">JDK17的java指令的官⽅⽂档</a></p>
 </li>
 </ul>
 <span id="more"></span>
@@ -1124,7 +1133,7 @@ i.ban {
 <p>设置内存分配示例</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jdk1.8+</span></span><br><span class="line">java ‐Xms2048M ‐Xmx2048M ‐Xmn1024M ‐Xss512K ‐XX:MetaspaceSize=256M ‐XX:MaxMetaspaceSize=256M ‐jar server.jar</span><br><span class="line"><span class="comment"># jdk1.6/1.7</span></span><br><span class="line">java ‐Xms2048M ‐Xmx2048M ‐Xmn1024M ‐Xss512K ‐XX:PermSize=256M ‐XX:MaxPermSize=256M ‐jar server.jar</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jdk1.8+</span></span><br><span class="line">java ‐Xms2048M ‐Xmx2048M ‐Xmn1024M ‐Xss512K ‐XX:MetaspaceSize=128M ‐XX:MaxMetaspaceSize=256M ‐jar server.jar</span><br><span class="line"><span class="comment"># jdk1.6/1.7</span></span><br><span class="line">java ‐Xms2048M ‐Xmx2048M ‐Xmn1024M ‐Xss512K ‐XX:PermSize=128M ‐XX:MaxPermSize=256M ‐jar server.jar</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>各参数含义与默认值（针对 JDK 1.8）</p>
@@ -1161,12 +1170,12 @@ i.ban {
 </tr>
 <tr>
 <td><code>-XX:MetaspaceSize=256M</code></td>
-<td><strong>元空间初始大小</strong>（用于加载类的元数据，不再使用 PermGen）</td>
-<td>21MB（客户端）或 16MB（服务器端）,推荐配置为与  MaxMetaspaceSize 一致</td>
+<td><strong>元空间初始大小</strong>（用于加载类的元数据，不再使用 PermGen），达到该值后，JVM 会触发一次 GC，空间不够时会进行扩容，最大到  <code>MaxMetaspaceSize</code></td>
+<td>默认 21MB（客户端）或 16MB（服务器端），为避免频繁扩容导致的GC，可以设置的稍微大一些，比如<code>MaxMetaspaceSize</code>的一半，或干脆与<code>MaxMetaspaceSize</code>一样大</td>
 </tr>
 <tr>
 <td><code>-XX:MaxMetaspaceSize=256M</code></td>
-<td><strong>元空间最大大小</strong>，超过后触发 Full GC</td>
+<td><strong>元空间最大大小</strong>，接近设置值时会触发 Full GC</td>
 <td>无限制（默认只受物理内存约束） ，推荐配置一个合适的数值，比如8G的内存可以配置为256M</td>
 </tr>
 </tbody>
@@ -1439,7 +1448,7 @@ i.ban {
 <tr>
 <td><strong>Serial</strong></td>
 <td>分代模型</td>
-<td>单线程，新生代和老年代都使用 Serial，适用于小堆内存</td>
+<td>单线程，新生代和老年代都使用 Serial，适用于小堆内存, <code>已弃用</code></td>
 <td>JDK 1.2</td>
 <td><code>-XX:+UseSerialGC</code></td>
 <td>💾 小于 1GB</td>
@@ -1447,7 +1456,7 @@ i.ban {
 <tr>
 <td><strong>ParNew</strong></td>
 <td>分代模型</td>
-<td>Serial 的多线程版本，<strong>仅用于 CMS 新生代</strong></td>
+<td>Serial 的多线程版本，<strong>仅用于 CMS 新生代</strong>, <code>JDK11已弃用</code></td>
 <td>JDK 1.4</td>
 <td><code>-XX:+UseParNewGC -XX:+UseConcMarkSweepGC</code></td>
 <td>💾 1GB ~ 4GB</td>
@@ -1463,10 +1472,10 @@ i.ban {
 <tr>
 <td><strong>CMS（Concurrent Mark Sweep）</strong></td>
 <td>分代模型</td>
-<td>老年代并发标记-清除，低延迟，但存在碎片，<strong>已弃用</strong></td>
+<td>老年代并发标记-清除，低延迟，但存在碎片，<code>JDK14已弃用</code></td>
 <td>JDK 1.4</td>
 <td><code>-XX:+UseConcMarkSweepGC</code></td>
-<td>💾 2GB ~ 8GB（已过时）</td>
+<td>💾 2GB ~ 8GB</td>
 </tr>
 <tr>
 <td><strong>G1（Garbage First）</strong></td>
@@ -1496,7 +1505,6 @@ i.ban {
 </table>
 <blockquote>
 <p>对于 CMS，启用后会自动使用 ParNew 作为新生代回收器（除非显式禁止）。<br>
-CMS 已在 JDK 9 开始标记为弃用，JDK 14 完全移除，不推荐再使用。<br>
 对于 Parallel GC 启用 <code>-XX:+UseParallelGC</code>（新生代）会自动启用 <code>-XX:+UseParallelOldGC</code>（老年代）。<br>
 对于ZGC，jdk15以前最大支持4T内存，之后最大支持16T内存。</p>
 </blockquote>
@@ -1927,7 +1935,10 @@ CMS 已在 JDK 9 开始标记为弃用，JDK 14 完全移除，不推荐再使�
 <p>G1(Garbage-First) 属于 物理上分区，逻辑上分代，真正的分区模型是 <code>ZGC</code>（jdk21后也支持分代）</p>
 </li>
 <li class="lvl-2">
-<p>G1将Java堆划分为多个大小相等的独立区域（Region），在JDK10以前，JVM最多可以有<code>2048</code>个Region，每个 Region 的大小是 2^n MB，并且落在 1MB 到 32MB 之间，这就导致G1最大支持64G 的堆 (<code>2048 Regions × 32MB = 64GB</code>)，在JDK10以后，G1 支持 更多 Region（最多约 32,768 个），而Region 大小仍是 1MB～32MB 的 2 的幂，使其最大可以支持 1T  的堆。JDK17开始，HotSpot JVM 已改进 G1 的 Region 映射方式（如提升每个Region的大小），可以进一步提升支持的堆大小上限。但堆越大，FullGC就越慢，建议 <code>&gt;1T</code> 的堆使用<code>ZGC</code>或<code>Shenandoah GC</code>。</p>
+<p>G1将Java堆划分为多个大小相等的Region，Region大小是2的幂，范围在1MB到32MB之间。JDK9之前默认最多支持2048个Region，这就导致G1最大支持64G 的堆 (<code>2048 Regions × 32MB = 64GB</code>)，JDK10之后的版本可支持更多Region数量，JDK17进一步优化了Region映射机制，提升了大堆场景下的性能，使其可以支持更大的内存，但对于超大堆（&gt;1T），考虑到GC暂停时间，建议使用ZGC或Shenandoah GC。</p>
+</li>
+<li class="lvl-2">
+<p>Region一旦被回收，重新分配时可以是任意类型，比如原先是<code>Eden</code>，那么重新分配时可以是<code>Old</code>，反之亦然。</p>
 </li>
 <li class="lvl-2">
 <p>一般Region大小由JVM自动计算，当然也可以用参数<code>-XX:G1HeapRegionSize</code>手动指定Region大小，但是推荐默认的计算方式。</p>
@@ -2068,7 +2079,7 @@ Safepoint 不是任意位置都可以停，它只出现在字节码中一些特�
 </tr>
 <tr>
 <td><code>-XX:InitiatingHeapOccupancyPercent</code></td>
-<td>整个堆的使用率超过该值触发 Mixed GC</td>
+<td>老年代的使用率超过该值触发 Mixed GC</td>
 <td>45%</td>
 </tr>
 <tr>
@@ -2077,14 +2088,39 @@ Safepoint 不是任意位置都可以停，它只出现在字节码中一些特�
 <td>85%</td>
 </tr>
 <tr>
-<td><code>-XX:G1MixedGCCountTarget</code></td>
-<td>每次 Mixed GC 的最大回收轮次</td>
-<td>8</td>
-</tr>
-<tr>
 <td><code>-XX:G1HeapWastePercent</code></td>
 <td>Mixed GC 回收目标：空闲 Region 达堆总量该百分比就结束混合回收</td>
 <td>5%</td>
+</tr>
+<tr>
+<td><code>-XX:G1ReservePercent</code></td>
+<td>为满足停顿时间目标保留的堆空间比例，是一种空间换时间的策略，在内存不足时可能造成内存更加紧张</td>
+<td>10%</td>
+</tr>
+<tr>
+<td><code>-XX:G1UseAdaptiveIHOP</code></td>
+<td>是否启用自适应IHOP，启用后G1会在初始采样后自动调整IHOP值</td>
+<td>true</td>
+</tr>
+<tr>
+<td><code>-XX:G1AdaptiveIHOPNumInitialSamples</code></td>
+<td>指定前几次GC活动按IHOP参数计算</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>-XX:SoftRefLRUPolicyMSPerMB</code></td>
+<td>每MB堆内存中软引用的过期时间(ms)</td>
+<td>1000</td>
+</tr>
+<tr>
+<td><code>-XX:G1OldCSetRegionThresholdPercent</code></td>
+<td>设置一次混合GC中需要清理的Old区的内存比例，调大可降低G1频率但会增加每次GC时间</td>
+<td>10%</td>
+</tr>
+<tr>
+<td><code>-XX:G1MixedGCCountTarget</code></td>
+<td>设置G1垃圾回收器的线程上限，HotSpot会根据清理目标自动计算所需线程数，但不会超过此上限</td>
+<td>8</td>
 </tr>
 </tbody>
 </table>
@@ -2635,7 +2671,7 @@ D -- 否 --&gt; I[直接使用当前引用访问对象]
 <tbody>
 <tr>
 <td><code>-XX:+PrintGC</code></td>
-<td>打印基本 GC 信息（建议配合 <code>-XX:+PrintGCDetails</code> 使用）</td>
+<td>打印基本 GC 信息（建议配合 <code>-XX:+PrintGCDetails</code> 使用）,与<code>-verbose:gc</code>等价</td>
 </tr>
 <tr>
 <td><code>-XX:+PrintGCDetails</code></td>
@@ -2674,60 +2710,508 @@ D -- 否 --&gt; I[直接使用当前引用访问对象]
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>GC日志相关参数(JDK9+)</p>
-</li>
+<ul class="lvl-2">
+<li class="lvl-6"><code>-Xlog</code> 是用于配置 JVM 日志记录的参数，它是从 JDK 9 开始引入的统一日志框架（Unified Logging）的一部分。</li>
+<li class="lvl-6">通过 -Xlog 选项，你可以控制日志的 标签（tags）、输出级别（level）、输出位置（output） 等内容。</li>
+<li class="lvl-6">基本格式</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Xlog:gc*:file=/var/log/app/gc.log:time,<span class="built_in">uptime</span>,level,tags:filecount=5,filesize=20M</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Xlog[:[tag1[,tag2...]][[:level][:[output][:[decorators][:rotation]]]]]</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">常见 Tags（标签）</li>
+</ul>
 <table>
 <thead>
 <tr>
-<th>部分</th>
+<th>类别</th>
+<th>标签</th>
 <th>含义</th>
-<th>说明</th>
+<th>用途示例</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>gc*</code></td>
-<td>日志类别</td>
-<td>表示记录所有 GC 相关日志（如 gc、gc+start、gc+heap 等）。<code>*</code> 是通配符。</td>
+<td><strong>类加载</strong></td>
+<td><code>classload</code></td>
+<td>JVM 类加载活动的总体信息</td>
+<td>观察类加载失败或重复加载</td>
 </tr>
 <tr>
-<td><code>file=/var/log/app/gc.log</code></td>
-<td>输出路径</td>
-<td>将 GC 日志输出到指定路径，而不是控制台。可以是相对或绝对路径。</td>
+<td></td>
+<td><code>class+load</code></td>
+<td>显示每个类加载过程细节</td>
+<td>定位类加载异常、热加载分析</td>
 </tr>
 <tr>
-<td><code>time</code></td>
-<td>日志时间戳</td>
-<td>添加格式化时间（如 2025-05-12T10:21:33.123+0800）。便于定位具体时间。</td>
+<td></td>
+<td><code>class+unload</code></td>
+<td>记录类卸载事件</td>
+<td>分析类卸载时机或内存释放情况</td>
 </tr>
 <tr>
-<td><code>uptime</code></td>
-<td>JVM 启动以来的时间戳</td>
-<td>显示 GC 发生时距离 JVM 启动的毫秒数（例如 <code>3.254s</code>）。有助于调试启动期间的问题。</td>
+<td><strong>垃圾回收</strong></td>
+<td><code>gc</code></td>
+<td>总体 GC 活动信息</td>
+<td>GC 调优入门使用</td>
 </tr>
 <tr>
-<td><code>level</code></td>
-<td>日志级别</td>
-<td>显示日志级别（info、debug、warning 等），默认 info。</td>
+<td></td>
+<td><code>gc+start</code></td>
+<td>GC 事件开始时间与类型</td>
+<td>查看 GC 频率与触发点</td>
 </tr>
 <tr>
-<td><code>tags</code></td>
-<td>日志标签</td>
-<td>显示日志的模块标签，如 <code>[gc,start]</code>，帮助快速定位类别。</td>
+<td></td>
+<td><code>gc+heap</code></td>
+<td>GC 前后的堆使用情况</td>
+<td>分析堆使用与分区占比</td>
 </tr>
 <tr>
-<td><code>filecount=5</code></td>
-<td>文件轮转个数</td>
-<td>最多保留 5 个日志文件（当前日志 + 4 个历史）。</td>
+<td></td>
+<td><code>gc+phases</code></td>
+<td>GC 内部阶段细节</td>
+<td>G1/ZGC 等调试用</td>
 </tr>
 <tr>
-<td><code>filesize=20M</code></td>
-<td>单文件最大大小</td>
-<td>每个日志文件最大 20MB，超出时自动滚动到下一个文件。</td>
+<td></td>
+<td><code>gc+age</code></td>
+<td>年龄分布情况</td>
+<td>判断对象晋升路径、老年代压力</td>
+</tr>
+<tr>
+<td></td>
+<td><code>gc+ergo</code></td>
+<td>GC 的自适应调整决策</td>
+<td>查看线程、堆大小自动调整逻辑</td>
+</tr>
+<tr>
+<td><strong>JIT 编译</strong></td>
+<td><code>jit</code></td>
+<td>JIT 编译日志入口</td>
+<td>性能热点方法分析</td>
+</tr>
+<tr>
+<td></td>
+<td><code>compiler</code></td>
+<td>显示方法编译、时间等</td>
+<td>判断是否有方法未被优化</td>
+</tr>
+<tr>
+<td></td>
+<td><code>codecache</code></td>
+<td>已编译代码存储区使用情况</td>
+<td>判断是否达到缓存上限</td>
+</tr>
+<tr>
+<td></td>
+<td><code>nmethod</code></td>
+<td>JIT 生成的 native 方法生命周期</td>
+<td>观察 native 代码生成与卸载</td>
+</tr>
+<tr>
+<td><strong>内存</strong></td>
+<td><code>memory</code></td>
+<td>总体内存使用情况</td>
+<td>诊断内存泄漏或溢出</td>
+</tr>
+<tr>
+<td></td>
+<td><code>gc+heap</code></td>
+<td>堆结构与占用情况</td>
+<td>与 GC 联合分析使用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>os+memory</code></td>
+<td>JVM 与操作系统间的内存交互</td>
+<td>判断是否系统层内存申请失败</td>
+</tr>
+<tr>
+<td><strong>线程</strong></td>
+<td><code>thread</code></td>
+<td>线程的创建、终止、状态变化</td>
+<td>线程泄漏或频繁创建排查</td>
+</tr>
+<tr>
+<td></td>
+<td><code>safepoint</code></td>
+<td>JVM 进入/退出 safepoint 的信息</td>
+<td>分析 STW 停顿时间与频率</td>
+</tr>
+<tr>
+<td><strong>锁与同步</strong></td>
+<td><code>synchronization</code></td>
+<td>锁竞争、获取和释放信息</td>
+<td>分析性能瓶颈中的锁争用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>monitorinflation</code></td>
+<td>轻量级锁升级为重量级锁过程</td>
+<td>排查锁膨胀导致的延迟问题</td>
+</tr>
+<tr>
+<td><strong>操作系统交互</strong></td>
+<td><code>os</code></td>
+<td>JVM 与操作系统交互日志</td>
+<td>常规系统资源请求信息</td>
+</tr>
+<tr>
+<td></td>
+<td><code>os+thread</code></td>
+<td>OS 层级线程管理信息</td>
+<td>高并发时线程绑定与调度分析</td>
+</tr>
+<tr>
+<td></td>
+<td><code>os+cpu</code></td>
+<td>CPU 使用与分布情况</td>
+<td>排查高 CPU 使用的问题</td>
+</tr>
+<tr>
+<td><strong>类元数据</strong></td>
+<td><code>metaspace</code></td>
+<td>元空间内存使用与变化</td>
+<td>排查 Metaspace OOM</td>
+</tr>
+<tr>
+<td></td>
+<td><code>cds</code></td>
+<td>类共享数据（CDS）日志</td>
+<td>分析类加载加速是否生效</td>
+</tr>
+<tr>
+<td><strong>安全</strong></td>
+<td><code>security</code></td>
+<td>安全相关操作日志</td>
+<td>权限检查失败、密钥加载等调试</td>
+</tr>
+<tr>
+<td></td>
+<td><code>module</code></td>
+<td>模块系统（JPMS）相关日志</td>
+<td>模块访问控制失败分析</td>
+</tr>
+<tr>
+<td><strong>其他</strong></td>
+<td><code>start</code></td>
+<td>JVM 启动流程日志</td>
+<td>启动阶段慢、出错时使用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>init</code></td>
+<td>各子系统初始化过程</td>
+<td>定位子系统启动顺序与异常</td>
+</tr>
+<tr>
+<td></td>
+<td><code>jni</code></td>
+<td>Java 调用 native 方法日志</td>
+<td>JNI 崩溃、性能问题分析</td>
+</tr>
+<tr>
+<td></td>
+<td><code>classpath</code></td>
+<td>类路径加载详情</td>
+<td>类找不到、路径冲突等问题排查</td>
+</tr>
+<tr>
+<td></td>
+<td><code>exceptions</code></td>
+<td>异常信息及堆栈打印</td>
+<td>捕获未处理异常、频繁抛错分析</td>
 </tr>
 </tbody>
 </table>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p>Level（级别）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>含义说明</th>
+<th>用途示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>off</code></td>
+<td>关闭日志记录</td>
+<td>完全禁用指定标签的日志输出</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>严重错误，仅记录影响系统运行的错误信息</td>
+<td>捕获崩溃、严重故障</td>
+</tr>
+<tr>
+<td><code>warning</code></td>
+<td>潜在问题，可能影响稳定性</td>
+<td>记录可能的内存、配置问题</td>
+</tr>
+<tr>
+<td><code>info</code></td>
+<td>常规信息（默认级别）</td>
+<td>日常运行日志，如 GC 次数</td>
+</tr>
+<tr>
+<td><code>debug</code></td>
+<td>更详细的调试信息，适用于问题诊断</td>
+<td>跟踪行为变化或代码路径</td>
+</tr>
+<tr>
+<td><code>trace</code></td>
+<td>最详细的信息，记录几乎所有细节</td>
+<td>深度调试，如方法级别跟踪</td>
+</tr>
+<tr>
+<td><code>all</code></td>
+<td>打印所有级别的日志（包括 trace 及以上）</td>
+<td>全量日志输出，用于完全监控</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p>Output（输出位置）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>输出位置</th>
+<th>含义说明</th>
+<th>示例用法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stdout</code></td>
+<td>标准输出（默认）</td>
+<td><code>-Xlog:gc=info:stdout</code></td>
+</tr>
+<tr>
+<td><code>stderr</code></td>
+<td>标准错误输出</td>
+<td><code>-Xlog:gc=info:stderr</code></td>
+</tr>
+<tr>
+<td><code>file=路径</code></td>
+<td>输出到指定文件路径（自动创建文件）</td>
+<td><code>-Xlog:gc:file=gc.log</code></td>
+</tr>
+<tr>
+<td>多个输出用逗号分隔</td>
+<td>可同时输出到多个位置</td>
+<td><code>-Xlog:gc:file=gc.log,stdout</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p>Decorators（装饰器）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>装饰器</th>
+<th>含义说明</th>
+<th>示例输出片段（含该装饰器时）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>time</code></td>
+<td>显示当前系统时间（wall-clock time）</td>
+<td><code>2025-05-16T10:45:12.123+0800</code></td>
+</tr>
+<tr>
+<td><code>uptime</code></td>
+<td>显示 JVM 启动以来的运行时间（毫秒）</td>
+<td><code>5.123s</code>（表示已运行 5.123 秒）</td>
+</tr>
+<tr>
+<td><code>level</code></td>
+<td>显示日志级别（如 info, warning 等）</td>
+<td><code>[info]</code>, <code>[debug]</code></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>显示日志标签</td>
+<td><code>[gc]</code>, <code>[class,load]</code></td>
+</tr>
+<tr>
+<td><code>tid</code></td>
+<td>显示线程 ID</td>
+<td><code>tid=0x00007fddc4012800</code></td>
+</tr>
+<tr>
+<td><code>hostname</code></td>
+<td>显示主机名</td>
+<td><code>host=example.local</code></td>
+</tr>
+<tr>
+<td><code>pid</code></td>
+<td>显示当前 JVM 进程 ID</td>
+<td><code>pid=12345</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p>Rotation (日志轮转设置)</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>设置参数</th>
+<th>含义说明</th>
+<th>示例值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filecount=n</code></td>
+<td>保留的日志文件数量（最大文件轮转数）</td>
+<td><code>filecount=5</code></td>
+</tr>
+<tr>
+<td><code>filesize=n</code></td>
+<td>单个日志文件的最大大小（支持单位：k/m/g）</td>
+<td><code>filesize=10m</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p>示例：</p>
+</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Xlog:gc*:file=/var/log/app/gc.log:time,<span class="built_in">uptime</span>,level,tags:filecount=5,filesize=20M</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tag</code></td>
+<td><code>gc*</code></td>
+<td>匹配所有以 <code>gc</code> 开头的标签（如 <code>gc+heap</code> 等）</td>
+</tr>
+<tr>
+<td><code>level</code></td>
+<td><em>省略</em></td>
+<td>默认是 <code>info</code></td>
+</tr>
+<tr>
+<td><code>output</code></td>
+<td><code>file=/var/log/app/gc.log</code></td>
+<td>日志写入该文件</td>
+</tr>
+<tr>
+<td><code>decorators</code></td>
+<td><code>time,uptime,level,tags</code></td>
+<td>日志前缀包含时间、启动时间、日志级别、标签</td>
+</tr>
+<tr>
+<td><code>rotation</code></td>
+<td><code>filecount=5,filesize=20M</code></td>
+<td>最多保留 5 个日志文件，单个文件最大 20MB</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p>日志文件中可以使用变量</p>
+</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Xlog:gc*:file=gc_%p_%t.log</span><br></pre></td></tr></table></figure>
+<p><strong>常用变量表</strong></p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%p</td>
+<td>进程ID（Process ID）</td>
+</tr>
+<tr>
+<td>%t</td>
+<td>时间戳（代表日志文件创建时的时间戳）</td>
+</tr>
+<tr>
+<td>%h</td>
+<td>主机名（Hostname）</td>
+</tr>
+<tr>
+<td>%n</td>
+<td>序列号，从0开始，每创建新文件加1</td>
+</tr>
+<tr>
+<td>%u</td>
+<td>唯一标识符，用于解决文件名冲突</td>
+</tr>
+<tr>
+<td>%i</td>
+<td>当多个JVM进程使用相同的文件名模式时的区分计数器</td>
+</tr>
+</tbody>
+</table>
+<p><strong>时间相关变量表</strong></p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%Y</td>
+<td>年（Year）</td>
+</tr>
+<tr>
+<td>%m</td>
+<td>月（Month）</td>
+</tr>
+<tr>
+<td>%d</td>
+<td>日（Day）</td>
+</tr>
+<tr>
+<td>%H</td>
+<td>小时（Hour）</td>
+</tr>
+<tr>
+<td>%M</td>
+<td>分钟（Minute）</td>
+</tr>
+<tr>
+<td>%S</td>
+<td>秒（Second）</td>
+</tr>
+</tbody>
+</table>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础配置</span></span><br><span class="line">-Xlog:gc*:file=gc_%p_%Y%m%d_%H%M%S.<span class="built_in">log</span>:time,<span class="built_in">uptime</span>,level,tags:filecount=5,filesize=20M</span><br><span class="line"></span><br><span class="line"><span class="comment"># 详细GC日志配置</span></span><br><span class="line">-Xlog:gc*=debug:file=gc_%p_%t.log:time,<span class="built_in">uptime</span>,level,tags:filecount=10,filesize=50M</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多目标输出</span></span><br><span class="line">-Xlog:gc*=info:file=gc.log::filecount=5,filesize=20M -Xlog:gc*=debug:file=gc_detailed.log</span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p>对于GC日志的分析<br>
+人工分析还是太复杂了，可以使用<a target="_blank" rel="noopener" href="https://gceasy.io">GCEasy.io</a>，每个月免费5次。</p>
+</li>
+</ul>
 
     </div>
 
@@ -2867,14 +3351,14 @@ D -- 否 --&gt; I[直接使用当前引用访问对象]
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">478k</span>
+    <span title="站点总字数">479k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">28:57</span>
+    <span title="站点阅读时长">29:03</span>
   </span>
 </div>
 <div class="busuanzi-count">
