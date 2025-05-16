@@ -29,16 +29,17 @@
 <meta property="og:site_name" content="飘逸峰的博客">
 <meta property="og:description" content="摘要   本文介绍JVM的类加载器   The Java® Virtual Machine Specification 版本jdk1.8">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/0QoWW8.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/weBeGe.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/ftDnCj.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/50fvA9.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/9vkhLN.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/eGKhDn.png">
 <meta property="article:published_time" content="2025-05-08T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-05-09T07:27:56.853Z">
+<meta property="article:modified_time" content="2025-05-16T08:48:48.179Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="jvm">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/0QoWW8.png">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/weBeGe.png">
 
 
 <link rel="canonical" href="https://blog.hanqunfeng.com/2025/05/08/jvm-classloader-01/">
@@ -1010,7 +1011,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-05-09 15:27:56" itemprop="dateModified" datetime="2025-05-09T15:27:56+08:00">2025-05-09</time>
+      <time title="修改时间：2025-05-16 16:48:48" itemprop="dateModified" datetime="2025-05-16T16:48:48+08:00">2025-05-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1058,7 +1059,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>6.5k</span>
+      <span>6.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1113,7 +1114,7 @@ i.ban {
 </ul>
 <span id="more"></span>
 <h2 id="类加载器">类加载器</h2>
-<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/0QoWW8.png" alt="" width="900" height="600"></p>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/weBeGe.png" alt="" width="1200" height="400"></p>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>左侧是JDK中实现的类加载器，通过<code>parent</code>属性形成⽗⼦关系。应⽤中⾃定义的类加载器的<code>parent</code>都是<br>
@@ -1167,30 +1168,100 @@ i.ban {
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>在 Java 中，每个类加载器都有自己的类路径（Classpath）去查找类文件。下面是几个主要的类加载器以及它们的默认查找路径：</p>
-<ul class="lvl-2">
-<li class="lvl-4">Bootstrap ClassLoader (启动类加载器)：<br>
-这个加载器是用 <code>native</code> 代码实现的，用于加载核心 Java 类库。它没有父类加载器。<br>
-查找路径通常是<code>&lt;JAVA_HOME&gt;/jre/lib</code>目录下的核心运行时库，例如rt.jar等，或是由<code>sun.boot.class.path</code>系统属性指定的路径。</li>
-<li class="lvl-4">Extension ClassLoader (扩展类加载器)：ExtClassLoader<br>
-这个类加载器加载的是 Java 平台扩展的一些类，这些通常位于<code>&lt;JAVA_HOME&gt;/jre/lib/ext</code>目录下或是由<code>java.ext.dirs</code>系统属性指定的路径。<br>
-它的父类加载器是 Bootstrap ClassLoader。</li>
-<li class="lvl-4">Application ClassLoader (应用类加载器，也称为系统类加载器)：AppClassLoader<br>
-负责加载应用程序的主类路径 (Classpath) 中定义的应用程序类。<br>
-默认查找路径包括<code>-classpath</code>、<code>-cp</code>命令行参数、<code>CLASSPATH</code>环境变量或者是由<code>java.class.path</code>系统属性所指定的路径。<br>
-如果上述都未设置，那么它会查找当前目录 <code>(.)</code>。<br>
-其父类加载器为 Extension ClassLoader。</li>
-<li class="lvl-4">自定义类加载器：<br>
-任何基于<code>java.lang.ClassLoader</code>的子类都可以是自定义类加载器。<br>
-自定义类加载器可以选择性地重写<code>findClass()</code>方法以实现特定的类文件读取逻辑，这样可以控制从哪里加载类文件，比如从网络、数据库或甚至是加密格式获取类。<br>
-默认情况下，如果没有特殊指定，自定义类加载器的查找路径与其父类加载器相同。用户可以根据需要设定其搜索路径。</li>
-</ul>
 </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类加载器名称</th>
+<th>类名 / 别名</th>
+<th>父类加载器</th>
+<th>加载内容描述</th>
+<th>默认查找路径 / 系统属性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>启动类加载器</strong></td>
+<td>BootstrapClassLoader</td>
+<td>无</td>
+<td>加载 <strong>核心 Java 类库</strong></td>
+<td><code>&lt;JAVA_HOME&gt;/jre/lib/rt.jar</code>（JDK8 及之前）或 <code>sun.boot.class.path</code> 指定路径</td>
+</tr>
+<tr>
+<td><strong>扩展类加载器</strong></td>
+<td>ExtClassLoader</td>
+<td>BootstrapClassLoader</td>
+<td>加载 Java 平台扩展类库</td>
+<td><code>&lt;JAVA_HOME&gt;/jre/lib/ext</code> 或由 <code>java.ext.dirs</code> 系统属性指定</td>
+</tr>
+<tr>
+<td><strong>应用类加载器</strong></td>
+<td>AppClassLoader</td>
+<td>ExtClassLoader</td>
+<td>加载 <strong>应用程序类</strong>（用户编写的代码）</td>
+<td><code>-classpath</code>、<code>-cp</code> 参数、<code>CLASSPATH</code> 环境变量、<code>java.class.path</code> 属性、当前目录 (.)</td>
+</tr>
+<tr>
+<td><strong>自定义类加载器</strong></td>
+<td>用户自定义</td>
+<td>可指定</td>
+<td>可通过继承 <code>ClassLoader</code> 并重写 <code>findClass()</code> 方法实现自定义类加载逻辑，如从网络、数据库等加载类文件</td>
+<td>默认继承父加载器查找路径，也可自定义</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
 <li class="lvl-2">
 <p>需要注意的是，除了 Bootstrap ClassLoader 外，其他的所有类加载器最终都是java.lang.ClassLoader的子类，并且每个类加载器实例都有一个直接的父类加载器。如果你创建了一个新的类加载器，它将继承 Application ClassLoader 作为它的父类，除非你在创建时指定了不同的父类加载器。</p>
 </li>
 <li class="lvl-2">
-<p>此外，Java 9 引入了模块化系统后，类加载机制也有了一些变化，对于模块路径上的类加载，会使用新的层次结构来处理，这使得类加载过程更加灵活同时保持了向后的兼容性。不过，对于传统的类路径上的类加载，双亲委派模型仍然适用。</p>
+<p>此外，Java 9 引入了模块化系统后，类加载机制也有了一些变化，对于模块路径上的类加载，会使用新的层次结构来处理，这使得类加载过程更加灵活同时保持了向后的兼容性。不过，对于传统的类路径上的类加载，双亲委派模型仍然适用。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/50fvA9.png" alt="" width="1200" height="400"></p>
 </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类加载器名称</th>
+<th>类名 / 别名</th>
+<th>父类加载器</th>
+<th>加载模块范围</th>
+<th>默认查找路径 / 模块来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>引导类加载器</strong></td>
+<td><code>BootstrapClassLoader</code></td>
+<td>无</td>
+<td>加载 <code>java.*</code> 模块，例如 <code>java.base</code>（包含 <code>java.lang</code>, <code>java.util</code> 等）</td>
+<td><code>$JAVA_HOME/jmods</code> 中的模块文件，核心模块由 JVM 启动时直接加载</td>
+</tr>
+<tr>
+<td><strong>平台类加载器</strong></td>
+<td><code>PlatformClassLoader</code></td>
+<td>BootstrapClassLoader</td>
+<td>加载 <code>jdk.*</code>、<code>javafx.*</code> 等平台扩展模块</td>
+<td><code>$JAVA_HOME/jmods</code>，模块名为 <code>jdk.*</code>、<code>javafx.*</code> 等；</td>
+</tr>
+<tr>
+<td><strong>应用类加载器</strong></td>
+<td><code>AppClassLoader</code></td>
+<td>PlatformClassLoader</td>
+<td>加载应用模块（用户代码），包括模块路径 <code>--module-path</code> 和类路径 <code>-classpath</code> 下的类</td>
+<td>应用程序编写的模块或类，来自命令行 <code>--module-path</code>、<code>-classpath</code> 参数、<code>CLASSPATH</code> 环境变量等</td>
+</tr>
+<tr>
+<td><strong>自定义类加载器</strong></td>
+<td>用户自定义</td>
+<td>可指定父加载器</td>
+<td>加载非标准位置的类，可用于插件、网络加载、加密类加载等</td>
+<td>默认遵循双亲委派，可重写 <code>findClass()</code> 实现自定义路径查找或其他数据源，如网络、数据库、加密文件等</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
 <li class="lvl-2">
 <p>在代码中查看类加载路径</p>
 </li>
