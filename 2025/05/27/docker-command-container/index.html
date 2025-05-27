@@ -22,27 +22,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍 Linux 下的 Docker 安装方法，本文以 CentOS 8 为例。   windows、macos、ubuntu等桌面系统请安装 Docker Desktop。   阿里云专有服务器参考：阿里云专有服务器如何安装Docker   腾讯云专有服务器参考：腾讯云专有服务器如何安装Docker   AWS专有服务器参考：AWS专有服务器如何安装Docker   Docker">
+    <meta name="description" content="摘要   本文介绍 Docker 命令 中 容器管理 相关命令   Docker官方文档">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux 安装 Docker">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2025/05/20/docker-install-01/index.html">
+<meta property="og:title" content="Docker 命令 之 容器管理">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/05/27/docker-command-container/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 Linux 下的 Docker 安装方法，本文以 CentOS 8 为例。   windows、macos、ubuntu等桌面系统请安装 Docker Desktop。   阿里云专有服务器参考：阿里云专有服务器如何安装Docker   腾讯云专有服务器参考：腾讯云专有服务器如何安装Docker   AWS专有服务器参考：AWS专有服务器如何安装Docker   Docker">
+<meta property="og:description" content="摘要   本文介绍 Docker 命令 中 容器管理 相关命令   Docker官方文档">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-05-20T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-05-26T10:07:03.038Z">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/19n9NJ.png">
+<meta property="article:published_time" content="2025-05-27T13:30:05.000Z">
+<meta property="article:modified_time" content="2025-05-27T10:42:27.478Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/19n9NJ.png">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2025/05/20/docker-install-01/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/05/27/docker-command-container/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/05/20/docker-install-01/","path":"2025/05/20/docker-install-01/","title":"Linux 安装 Docker"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/05/27/docker-command-container/","path":"2025/05/27/docker-command-container/","title":"Docker 命令 之 容器管理"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Linux 安装 Docker | 飘逸峰的博客</title>
+<title>Docker 命令 之 容器管理 | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -867,7 +869,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">Docker 安装</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.</span> <span class="nav-text">容器的生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-container-%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">docker container : 容器管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-create-%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8%EF%BC%8C%E4%BD%86%E4%B8%8D%E5%90%AF%E5%8A%A8"><span class="nav-number">3.1.</span> <span class="nav-text">docker create : 创建容器，但不启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-start-%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8"><span class="nav-number">3.2.</span> <span class="nav-text">docker start : 启动一个容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-run-%E5%88%9B%E5%BB%BA%E5%B9%B6%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">docker run : 创建并启动一个容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stop-%E5%81%9C%E6%AD%A2%E5%AE%B9%E5%99%A8%EF%BC%8C%E5%AE%B9%E5%99%A8%E4%BC%98%E9%9B%85%E9%80%80%E5%87%BA"><span class="nav-number">3.4.</span> <span class="nav-text">docker stop : 停止容器，容器优雅退出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-kill-%E5%BC%BA%E5%88%B6%E5%81%9C%E6%AD%A2%E5%AE%B9%E5%99%A8"><span class="nav-number">3.5.</span> <span class="nav-text">docker kill : 强制停止容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-restart-%E9%87%8D%E5%90%AF%E5%AE%B9%E5%99%A8"><span class="nav-number">3.6.</span> <span class="nav-text">docker restart : 重启容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-pause-%E6%9A%82%E5%81%9C%E5%AE%B9%E5%99%A8"><span class="nav-number">3.7.</span> <span class="nav-text">docker pause : 暂停容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-unpause-%E6%81%A2%E5%A4%8D%E5%AE%B9%E5%99%A8"><span class="nav-number">3.8.</span> <span class="nav-text">docker unpause : 恢复容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-ps-%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E5%88%97%E8%A1%A8"><span class="nav-number">3.9.</span> <span class="nav-text">docker ps : 查看容器列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-inspect-%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E4%BF%A1%E6%81%AF"><span class="nav-number">3.10.</span> <span class="nav-text">docker inspect : 查看容器信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-logs-%E8%8E%B7%E5%8F%96%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97"><span class="nav-number">3.11.</span> <span class="nav-text">docker logs : 获取容器日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-exec-%E5%9C%A8%E5%B7%B2%E7%BB%8F%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8%E4%B8%AD%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">3.12.</span> <span class="nav-text">docker exec : 在已经运行的容器中执行命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-rename-%E9%87%8D%E5%91%BD%E5%90%8D%E5%AE%B9%E5%99%A8"><span class="nav-number">3.13.</span> <span class="nav-text">docker rename : 重命名容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-cp-%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%AE%BF%E4%B8%BB%E6%9C%BA%E9%97%B4%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6"><span class="nav-number">3.14.</span> <span class="nav-text">docker cp : 容器与宿主机间复制文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-rm-%E5%88%A0%E9%99%A4%E5%AE%B9%E5%99%A8"><span class="nav-number">3.15.</span> <span class="nav-text">docker rm : 删除容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-container-prune-%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E5%81%9C%E6%AD%A2%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="nav-number">3.16.</span> <span class="nav-text">docker container prune : 删除所有停止的容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-update-%E6%9B%B4%E6%96%B0%E5%AE%B9%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">3.17.</span> <span class="nav-text">docker update : 更新容器配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stats-%E6%98%BE%E7%A4%BA%E5%AE%B9%E5%99%A8%E7%9A%84%E5%AE%9E%E6%97%B6%E8%B5%84%E6%BA%90%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="nav-number">3.18.</span> <span class="nav-text">docker stats : 显示容器的实时资源使用情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-top-%E6%9F%A5%E7%9C%8B%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E8%BF%9B%E7%A8%8B"><span class="nav-number">3.19.</span> <span class="nav-text">docker top :  查看正在运行的进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-port-%E5%88%97%E5%87%BA%E6%8C%87%E5%AE%9A%E7%9A%84%E5%AE%B9%E5%99%A8%E7%9A%84%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84"><span class="nav-number">3.20.</span> <span class="nav-text">docker port : 列出指定的容器的端口映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-diff-%E5%88%97%E5%87%BA%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E5%AF%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="nav-number">3.21.</span> <span class="nav-text">docker diff : 列出容器运行时对文件系统的修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-commit-%E4%BB%8E%E5%AE%B9%E5%99%A8%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E9%95%9C%E5%83%8F"><span class="nav-number">3.22.</span> <span class="nav-text">docker commit : 从容器创建一个新的镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-export-%E5%AF%BC%E5%87%BA%E5%AE%B9%E5%99%A8%E5%86%85%E5%AE%B9%E4%B8%BA-tar-%E6%96%87%E4%BB%B6"><span class="nav-number">3.23.</span> <span class="nav-text">docker export : 导出容器内容为 tar 文件</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -882,7 +884,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-count">175</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -960,7 +962,7 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/05/22/docker-command-01/" rel="bookmark">
+      <a class="popular-posts-link" href="/2025/05/22/docker-command-image/" rel="bookmark">
         <time class="popular-posts-time">2025-05-22</time>
         <br>
       Docker 命令 之 镜像管理
@@ -974,6 +976,13 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/20/docker-install/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-20</time>
+        <br>
+      Linux 安装 Docker
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2021/06/24/rocketmq-docker/" rel="bookmark">
         <time class="popular-posts-time">2021-06-24</time>
         <br>
@@ -981,7 +990,7 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/05/26/docker-dockerfile-01/" rel="bookmark">
+      <a class="popular-posts-link" href="/2025/05/26/docker-dockerfile/" rel="bookmark">
         <time class="popular-posts-time">2025-05-26</time>
         <br>
       Docker 命令 之 Dockerfile
@@ -1007,7 +1016,7 @@ i.ban {
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/05/20/docker-install-01/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/05/27/docker-command-container/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -1020,12 +1029,12 @@ i.ban {
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Linux 安装 Docker | 飘逸峰的博客">
+      <meta itemprop="name" content="Docker 命令 之 容器管理 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Linux 安装 Docker
+          Docker 命令 之 容器管理
         </h1>
 
         <div class="post-meta-container">
@@ -1035,15 +1044,9 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-05-20 21:30:05" itemprop="dateCreated datePublished" datetime="2025-05-20T21:30:05+08:00">2025-05-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-05-26 18:07:03" itemprop="dateModified" datetime="2025-05-26T18:07:03+08:00">2025-05-26</time>
+      <time title="创建时间：2025-05-27 21:30:05 / 修改时间：18:42:27" itemprop="dateCreated datePublished" datetime="2025-05-27T21:30:05+08:00">2025-05-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1079,7 +1082,7 @@ i.ban {
 </div>
 
 
-    <span id="/2025/05/20/docker-install-01/" class="leancloud_visitors" data-flag-title="Linux 安装 Docker" title="阅读次数">
+    <span id="/2025/05/27/docker-command-container/" class="leancloud_visitors" data-flag-title="Docker 命令 之 容器管理" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -1091,14 +1094,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.2k</span>
+      <span>3.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>8 分钟</span>
+      <span>14 分钟</span>
     </span>
 
         </div>
@@ -1138,187 +1141,597 @@ i.ban {
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>本文介绍 Linux 下的 Docker 安装方法，本文以 CentOS 8 为例。</p>
-</li>
-<li class="lvl-2">
-<p>windows、macos、ubuntu等桌面系统请安装 <a target="_blank" rel="noopener" href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a>。</p>
-</li>
-<li class="lvl-2">
-<p>阿里云专有服务器参考：<a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/ecs/use-cases/install-and-use-docker">阿里云专有服务器如何安装Docker</a></p>
-</li>
-<li class="lvl-2">
-<p>腾讯云专有服务器参考：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/1207/45596">腾讯云专有服务器如何安装Docker</a></p>
-</li>
-<li class="lvl-2">
-<p>AWS专有服务器参考：<a href="/2025/05/19/docker-install-aws/" title="AWS专有服务器如何安装Docker">AWS专有服务器如何安装Docker</a></p>
+<p>本文介绍 Docker 命令 中 容器管理 相关命令</p>
 </li>
 <li class="lvl-2">
 <p><a target="_blank" rel="noopener" href="https://docs.docker.com">Docker官方文档</a></p>
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="Docker-安装">Docker 安装</h2>
+<h2 id="容器的生命周期">容器的生命周期</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>全新安装前需要先卸载旧版本，卸载<code>docker</code>也可以按照如下方式操作</p>
-</li>
+<p>容器可能处于以下几种状态：</p>
+<ul class="lvl-2">
+<li class="lvl-5">初建（created）</li>
+<li class="lvl-5">运行（running）</li>
+<li class="lvl-5">暂停（paused）</li>
+<li class="lvl-5">停止（stopped）</li>
+<li class="lvl-5">删除（deleted）</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除Docker相关源</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -f /etc/yum.repos.d/docker*.repo</span><br><span class="line"><span class="comment"># 删除Docker相关软件包，dnf可能会报告您没有安装这些软件包。</span></span><br><span class="line"><span class="comment"># 卸载docker旧版本</span></span><br><span class="line"><span class="built_in">sudo</span> dnf -y remove \</span><br><span class="line">               docker \</span><br><span class="line">               docker-client \</span><br><span class="line">               docker-client-latest \</span><br><span class="line">               docker-common \</span><br><span class="line">               docker-latest \</span><br><span class="line">               docker-latest-logrotate \</span><br><span class="line">               docker-logrotate \</span><br><span class="line">               docker-engine</span><br><span class="line"><span class="comment"># 卸载docker新版本</span></span><br><span class="line"><span class="built_in">sudo</span> dnf -y remove \</span><br><span class="line">            docker-ce \</span><br><span class="line">            containerd.io \</span><br><span class="line">            docker-ce-rootless-extras \</span><br><span class="line">            docker-buildx-plugin \</span><br><span class="line">            docker-ce-cli \</span><br><span class="line">            docker-compose-plugin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除Docker数据,镜像、容器、卷和网络</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf /var/lib/docker</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf /var/lib/containerd</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>设置docker存储库</p>
 </li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dnf -y install dnf-plugins-core</span><br><span class="line"><span class="comment"># 海外，添加Docker的官方存储库</span></span><br><span class="line"><span class="built_in">sudo</span> dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"><span class="comment"># 国内，添加阿里云的存储库</span></span><br><span class="line"><span class="built_in">sudo</span> dnf config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
 <li class="lvl-2">
-<p>安装 Docker</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装最新版本，升级 docker 时也是执行如下命令</span></span><br><span class="line"><span class="built_in">sudo</span> dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装指定版本</span></span><br><span class="line"><span class="comment"># 先查看所有版本</span></span><br><span class="line"><span class="built_in">sudo</span> dnf list docker-ce --showduplicates | <span class="built_in">sort</span> -r</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">docker-ce.x86_64               3:26.1.3-1.el8                  docker-ce-stable</span><br><span class="line">docker-ce.x86_64               3:26.1.3-1.el8                  @docker-ce-stable</span><br><span class="line">docker-ce.x86_64               3:26.1.2-1.el8                  docker-ce-stable</span><br><span class="line">docker-ce.x86_64               3:26.1.1-1.el8                  docker-ce-stable</span><br><span class="line">docker-ce.x86_64               3:26.1.0-1.el8                  docker-ce-stable</span><br><span class="line">…………………………</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装指定版本，这里 VERSION_STRING 为版本号，例如 3:26.1.3-1.el8</span></span><br><span class="line"><span class="built_in">sudo</span> dnf install docker-ce-&lt;VERSION_STRING&gt; docker-ce-cli-&lt;VERSION_STRING&gt; containerd.io docker-buildx-plugin docker-compose-plugin</span><br><span class="line"><span class="comment">## 比如</span></span><br><span class="line"><span class="built_in">sudo</span> dnf install docker-ce-3:26.1.3-1.el8 docker-ce-cli-3:26.1.3-1.el8 containerd.io docker-buildx-plugin docker-compose-plugin</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>启动 Docker</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置Docker守护进程在系统启动时自动启动</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> docker</span><br><span class="line"><span class="comment"># 启动Docker</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start docker</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>验证 Docker 安装</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker -v <span class="comment"># Docker version 26.1.3, build b72abbb</span></span><br><span class="line"><span class="comment"># 显示 Docker 基本信息，包括版本信息，插件信息，镜像加速信息等等。</span></span><br><span class="line">docker info</span><br><span class="line"><span class="comment"># 运行hello-world镜像，此时国内会提示访问失败，需要添加国内镜像源</span></span><br><span class="line"><span class="built_in">sudo</span> docker run hello-world</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>添加国内镜像源</p>
-</li>
-</ul>
-<blockquote>
-<p>目前国内大部分的Docker镜像源都关闭了，另外阿里云的Docker镜像源只允许在阿里云的机器上使用。<br>
-参考：<a target="_blank" rel="noopener" href="https://blog.xuanyuan.me/archives/1154">Docker/DockerHub 国内镜像源/加速列表</a><br>
-注意：国内镜像源的更新会比官网滞后，但只要不是获取最新版本基本上是够用的。</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/docker/daemon.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">    &quot;registry-mirrors&quot;: [</span></span><br><span class="line"><span class="string">        &quot;https://docker.1ms.run&quot;,</span></span><br><span class="line"><span class="string">        &quot;https://docker.xuanyuan.me&quot;</span></span><br><span class="line"><span class="string">    ]</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启Docker</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过如下命令查看是否配置生效，查看 Registry Mirrors 中的配置</span></span><br><span class="line">docker info</span><br><span class="line"><span class="comment"># 验证国内镜像源</span></span><br><span class="line"><span class="built_in">sudo</span> docker run hello-world</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>Docker命令自动补全，参考：<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/cli/completion/">官方文档</a></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用的bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装bash-completion</span></span><br><span class="line"><span class="built_in">sudo</span> dnf install bash-completion -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加自动补全到当前登录用户</span></span><br><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOT &gt;&gt; ~/.bashrc</span></span><br><span class="line"><span class="string">if [ -f /etc/bash_completion ]; then</span></span><br><span class="line"><span class="string">    . /etc/bash_completion</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string">EOT</span></span><br><span class="line"><span class="comment"># 刷新bash</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建自动补全文件</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.local/share/bash-completion/completions</span><br><span class="line">docker completion bash &gt; ~/.local/share/bash-completion/completions/docker</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动一个新的bash</span></span><br><span class="line"><span class="built_in">exec</span> bash</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>/var/lib/docker</code> 用于存储 Docker 运行时生成的数据，如镜像、容器、网络、卷、配置文件、日志等，其目录结构说明如下：</p>
+<p>各生命周期之间的转换关系如图所示：<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/19n9NJ.png" alt=""></p>
 </li>
 </ul>
 <table>
 <thead>
 <tr>
-<th>目录名</th>
-<th>作用说明</th>
+<th>命令/情况</th>
+<th>说明</th>
+<th>容器状态变更</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>buildkit/</code></td>
-<td>存放 Docker BuildKit 构建缓存和状态信息；构建镜像时的中间文件和上下文会存于此，空间占用可能较大。</td>
+<td><code>docker create</code></td>
+<td>创建容器后，不立即启动运行，容器进入初建状态</td>
+<td>初建状态</td>
 </tr>
 <tr>
-<td><code>containers/</code></td>
-<td>每个容器一个子目录，包含配置文件和运行日志（如 <code>container.log</code>），用于容器的运行状态记录和管理。</td>
+<td><code>docker run</code></td>
+<td>创建容器，并立即启动运行，进入运行状态</td>
+<td>初建 → 运行</td>
 </tr>
 <tr>
-<td><code>engine-id</code></td>
-<td>存储 Docker 引擎的唯一 ID，Docker 安装时生成，常用于 swarm 节点识别。</td>
+<td><code>docker start</code></td>
+<td>启动已创建的容器，容器转为运行状态</td>
+<td>停止 → 运行</td>
 </tr>
 <tr>
-<td><code>image/</code></td>
-<td>镜像的元数据（不含实际 layer 数据），组织镜像的结构、标签、驱动等信息。</td>
+<td><code>docker stop</code></td>
+<td>停止正在运行的容器，容器转入停止状态</td>
+<td>运行 → 停止</td>
 </tr>
 <tr>
-<td><code>network/</code></td>
-<td>网络配置及状态信息，如默认 <code>bridge</code> 网络、自定义网络配置等。</td>
+<td><code>docker kill</code></td>
+<td>强制终止容器，相当于“断电”，容易丢失数据，不建议轻易使用</td>
+<td>运行 → 停止（非正常）</td>
 </tr>
 <tr>
-<td><code>overlay2/</code></td>
-<td>镜像和容器实际的数据层（overlay2 是存储驱动），包含所有联合文件系统层，是 Docker 中最大的空间使用者。</td>
+<td><code>docker restart</code></td>
+<td>重启容器，容器重新进入运行状态</td>
+<td>运行 → 停止 → 运行</td>
 </tr>
 <tr>
-<td><code>plugins/</code></td>
-<td>存放 Docker 插件（如网络、卷插件）的配置和数据，一般为空，除非使用了扩展插件。</td>
+<td><code>docker pause</code></td>
+<td>暂停容器内所有进程，容器进入暂停状态</td>
+<td>运行 → 暂停</td>
 </tr>
 <tr>
-<td><code>runtimes/</code></td>
-<td>支持的 OCI runtime 配置目录，如默认的 <code>runc</code>，也可能包含其他 runtime（如 <code>kata</code>, <code>gvisor</code>）。</td>
+<td><code>docker unpause</code></td>
+<td>取消暂停状态，容器恢复运行</td>
+<td>暂停 → 运行</td>
 </tr>
 <tr>
-<td><code>swarm/</code></td>
-<td>Docker swarm 模式下的集群元数据与节点状态，仅在初始化 swarm 后存在实际数据。</td>
+<td><code>docker rm</code></td>
+<td>删除容器，容器转入删除状态</td>
+<td>任意 → 删除</td>
 </tr>
 <tr>
-<td><code>tmp/</code></td>
-<td>Docker 的临时文件目录，如镜像下载缓存、挂载操作中的临时文件，通常可以清理但需小心。</td>
+<td>Killed by out-of-memory (OOM)</td>
+<td>宿主机内存耗尽，容器被系统终止，此为非计划终止；建议杀死内存占用最高的容器</td>
+<td>运行 → 停止（异常）</td>
 </tr>
 <tr>
-<td><code>volumes/</code></td>
-<td>Docker 卷的数据目录，每个卷一个子目录，卷中的持久化数据实际存放于此。</td>
+<td>Container process exited</td>
+<td>容器进程异常终止后，进入“是否重启”判断流程：是则执行 <code>start</code> 进入运行；否则保持停止状态</td>
+<td>异常 → 停止或运行</td>
 </tr>
 </tbody>
 </table>
+<h2 id="docker-container-容器管理"><code>docker container</code> : 容器管理</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>/var/lib/containerd</code> 是 Containerd 守护进程的默认数据存储目录。Containerd 是 Docker 和其他容器平台（如 Kubernetes）底层的 容器运行时（Container Runtime），负责拉取镜像、管理容器生命周期、挂载文件系统等操作。其目录结构说明如下：</p>
+<p><code>docker container --help</code></p>
 </li>
 </ul>
 <table>
 <thead>
 <tr>
-<th>目录名</th>
-<th>作用说明</th>
+<th>命令</th>
+<th>说明</th>
+<th>别名</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>io.containerd.content.v1.content/</code></td>
-<td>存储镜像 layer 的实际二进制内容（blob），遵循 OCI 镜像规范，是镜像和容器文件系统的数据来源。</td>
+<td>attach</td>
+<td>将本地的标准输入、输出和错误流附加到一个正在运行的容器上</td>
+<td>docker attach</td>
 </tr>
 <tr>
-<td><code>io.containerd.metadata.v1.bolt/</code></td>
-<td>使用 BoltDB 存储 containerd 的元数据（如镜像信息、容器状态、快照引用等），是 containerd 的核心元数据数据库。</td>
+<td>commit</td>
+<td>根据容器的更改创建一个新的镜像</td>
+<td>docker commit</td>
 </tr>
 <tr>
-<td><code>io.containerd.runtime.v1.linux/</code></td>
-<td>存储旧版（v1 API）运行时容器信息，目前已逐步被 <code>v2</code> 接口取代，仅在向后兼容场景中存在。</td>
+<td>cp</td>
+<td>在容器和本地文件系统之间复制文件/文件夹</td>
+<td>docker cp</td>
 </tr>
 <tr>
-<td><code>io.containerd.runtime.v2.task/</code></td>
-<td>存储 v2 运行时接口下容器的运行时状态，如容器进程的 shim、PID、日志路径等，是容器实际运行时所依赖的。</td>
+<td>create</td>
+<td>创建一个新的容器</td>
+<td>docker create</td>
 </tr>
 <tr>
-<td><code>io.containerd.snapshotter.v1.native/</code></td>
-<td>使用 native 模式存储的容器快照（文件系统层），直接复制底层文件；性能较差，占用空间较大，主要用于测试或特定用途。</td>
+<td>diff</td>
+<td>检查容器文件系统上的文件或目录的更改</td>
+<td>docker diff</td>
 </tr>
 <tr>
-<td><code>io.containerd.snapshotter.v1.overlayfs/</code></td>
-<td>使用 overlayfs 模式存储容器的文件系统快照（镜像层和容器层）；这是生产环境默认的高效存储驱动。</td>
+<td>exec</td>
+<td>在正在运行的容器中执行命令</td>
+<td>docker exec</td>
 </tr>
 <tr>
-<td><code>tmpmounts/</code></td>
-<td>临时挂载点目录，containerd 用于镜像解包、中间构建过程中的挂载操作，通常是构建或运行过程的临时数据。</td>
+<td>export</td>
+<td>将容器的文件系统导出为 tar 归档文件</td>
+<td>docker export</td>
+</tr>
+<tr>
+<td>inspect</td>
+<td>显示一个或多个容器的详细信息</td>
+<td>可以使用 <code>docker inspect</code></td>
+</tr>
+<tr>
+<td>kill</td>
+<td>终止一个或多个正在运行的容器</td>
+<td>docker kill</td>
+</tr>
+<tr>
+<td>logs</td>
+<td>获取容器的日志</td>
+<td>docker logs</td>
+</tr>
+<tr>
+<td>ls</td>
+<td>列出容器</td>
+<td>docker ps</td>
+</tr>
+<tr>
+<td>pause</td>
+<td>暂停一个或多个容器内的所有进程</td>
+<td>docker pause</td>
+</tr>
+<tr>
+<td>port</td>
+<td>列出容器的端口映射或特定的端口映射</td>
+<td>docker port</td>
+</tr>
+<tr>
+<td>prune</td>
+<td>删除所有已停止的容器</td>
+<td></td>
+</tr>
+<tr>
+<td>rename</td>
+<td>重命名一个容器</td>
+<td>docker rename</td>
+</tr>
+<tr>
+<td>restart</td>
+<td>重启一个或多个容器</td>
+<td>docker restart</td>
+</tr>
+<tr>
+<td>rm</td>
+<td>删除一个或多个容器</td>
+<td>docker rm</td>
+</tr>
+<tr>
+<td>run</td>
+<td>根据镜像创建并运行一个新容器</td>
+<td>docker run</td>
+</tr>
+<tr>
+<td>start</td>
+<td>启动一个或多个已停止的容器</td>
+<td>docker start</td>
+</tr>
+<tr>
+<td>stats</td>
+<td>实时显示容器资源使用统计信息</td>
+<td>docker stats</td>
+</tr>
+<tr>
+<td>stop</td>
+<td>停止一个或多个正在运行的容器</td>
+<td>docker stop</td>
+</tr>
+<tr>
+<td>top</td>
+<td>显示容器中运行的进程</td>
+<td>docker top</td>
+</tr>
+<tr>
+<td>unpause</td>
+<td>取消暂停一个或多个容器内的所有进程</td>
+<td>docker unpause</td>
+</tr>
+<tr>
+<td>update</td>
+<td>更新一个或多个容器的配置</td>
+<td>docker update</td>
+</tr>
+<tr>
+<td>wait</td>
+<td>阻塞直到一个或多个容器停止，然后打印其退出代码</td>
+<td>docker wait</td>
 </tr>
 </tbody>
 </table>
-<div class="tips">
-<p><em><strong>MacOS/Windows下无法查看<code>/var/lib/docker</code>的解决方法</strong></em></p>
-<ul class="lvl-1">
-<li class="lvl-2">在 MacOS/Windows 上使用Docker时，是启动了一个虚拟机来运行docker的，由于其运行在虚拟机内部，直接查找<code>/var/lib/docker</code>路径是无效的。</li>
-<li class="lvl-2">解决方法如下：</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>运行 <code>docker container COMMAND --help</code> 可获取某个命令的更多信息。</p>
+</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动一个临时容器，并进入其内部</span></span><br><span class="line">docker run --<span class="built_in">rm</span> -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh</span><br><span class="line"><span class="comment">## 说明</span></span><br><span class="line">--it</span><br><span class="line">    交互式地运行容器,并分配一个伪终端</span><br><span class="line"></span><br><span class="line">--<span class="built_in">rm</span></span><br><span class="line">    退出容器时，自动删除容器</span><br><span class="line"></span><br><span class="line">--privileged</span><br><span class="line">    给容器特权权限，这意味着容器几乎拥有宿主机的所有能力，能访问 /dev、修改内核参数等。非常强大但也很危险。</span><br><span class="line"></span><br><span class="line">--pid=host</span><br><span class="line">    容器共享宿主机的进程命名空间（PID Namespace）。</span><br><span class="line">    这使得容器可以看到并访问宿主机的所有进程（包括 PID 1，即系统 init 进程）。</span><br><span class="line"></span><br><span class="line">debian</span><br><span class="line">    使用的基础镜像是 Debian，容器里运行的是这个系统。</span><br><span class="line"></span><br><span class="line">nsenter -t 1 -m -u -n -i sh</span><br><span class="line">    这是容器内部运行的命令，用来进入宿主机的命名空间：</span><br><span class="line">        nsenter：Linux 工具，用于进入其他进程的命名空间。</span><br><span class="line">        -t 1：指定目标进程的 PID 是 1（宿主机的 init 或 systemd）。</span><br><span class="line">        -m：进入目标进程的 Mount Namespace（文件系统挂载）。</span><br><span class="line">        -u：进入目标的 UTS Namespace（主机名等）。</span><br><span class="line">        -n：进入目标的 Network Namespace（网络）。</span><br><span class="line">        -i：进入目标的 IPC Namespace（进程间通信）。</span><br><span class="line">        sh：在这些命名空间中执行一个 shell。</span><br></pre></td></tr></table></figure>
-<ul class="lvl-1">
-<li class="lvl-2">这个命令启动一个基于 Debian 的容器，给它所有特权，让它能看到宿主机的进程，然后使用 nsenter 进入 PID 为 1 的所有命名空间（相当于进入宿主机的视角），最后启动一个 sh，你就在容器里 “变成了宿主机”。</li>
-<li class="lvl-2">这样，你就可以在这个容器中查看<code>/var/lib/docker</code>目录了。</li>
+<h3 id="docker-create-创建容器，但不启动"><code>docker create</code> : 创建容器，但不启动</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker create \</span><br><span class="line">    --name my-container \ <span class="comment"># 容器名</span></span><br><span class="line">    -e MY_ENV_VAR=my-value \ <span class="comment"># 设置环境变量</span></span><br><span class="line">    -p 80:80 \ <span class="comment"># 映射端口，格式：宿主机端口:容器端口</span></span><br><span class="line">    -v /path/to/my/dir:/path/in/container \ <span class="comment"># 映射目录，格式：宿主机目录:容器目录</span></span><br><span class="line">    --restart always \ <span class="comment"># 设置重启策略</span></span><br><span class="line">    nginx:latest \ <span class="comment"># 镜像名，镜像不存在时会自动下载</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>docker create</code> 与 <code>docker run</code> 的参数基本一致，具体查看下面 <code>docker run</code> 中的介绍。</p>
+</li>
 </ul>
-</div>
+<h3 id="docker-start-启动一个容器"><code>docker start</code> : 启动一个容器</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>启动一个容器，容器必须已经创建，并且处于停止状态。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 语法：docker start &lt;container_id|container_name&gt;</span></span><br><span class="line">$ docker start my-container</span><br></pre></td></tr></table></figure>
+<h3 id="docker-run-创建并启动一个容器"><code>docker run</code> : 创建并启动一个容器</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>相当于<code>docker create</code> + <code>docker start</code></p>
+</li>
+<li class="lvl-2">
+<p>常用参数说明</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-d</code>, <code>--detach</code></td>
+<td>后台运行容器（即“守护态”），<code>run</code>独有</td>
+<td><code>docker run -d nginx</code></td>
+</tr>
+<tr>
+<td><code>-it</code></td>
+<td>交互式运行容器并分配终端（常用于调试）</td>
+<td><code>docker run -it ubuntu bash</code></td>
+</tr>
+<tr>
+<td><code>--name</code></td>
+<td>指定容器名称</td>
+<td><code>docker run --name my-nginx nginx</code></td>
+</tr>
+<tr>
+<td><code>--rm</code></td>
+<td>容器退出时自动删除</td>
+<td><code>docker run --rm ubuntu</code></td>
+</tr>
+<tr>
+<td><code>-p</code>, <code>--publish</code></td>
+<td>端口映射（宿主机:容器）</td>
+<td><code>docker run -p 8080:80 nginx</code></td>
+</tr>
+<tr>
+<td><code>-P</code>, <code>--publish-all</code></td>
+<td>自动随机映射容器内部所有暴露端口到宿主机端口</td>
+<td><code>docker run -P nginx</code></td>
+</tr>
+<tr>
+<td><code>-v</code>, <code>--volume</code></td>
+<td>挂载卷（宿主机目录:容器目录）</td>
+<td><code>docker run -v /data:/app/data myapp</code></td>
+</tr>
+<tr>
+<td><code>--mount</code></td>
+<td>更灵活的挂载方式（推荐新项目使用）</td>
+<td><code>docker run --mount type=bind,source=/host,target=/container nginx</code></td>
+</tr>
+<tr>
+<td><code>--env</code>, <code>-e</code></td>
+<td>设置环境变量</td>
+<td><code>docker run -e ENV=prod myapp</code></td>
+</tr>
+<tr>
+<td><code>--env-file</code></td>
+<td>从文件中加载多个环境变量</td>
+<td><code>docker run --env-file .env myapp</code></td>
+</tr>
+<tr>
+<td><code>--network</code></td>
+<td>设置容器使用的网络模式</td>
+<td><code>docker run --network host myapp</code></td>
+</tr>
+<tr>
+<td><code>--restart</code></td>
+<td>设置容器的自动重启策略</td>
+<td><code>docker run --restart=always myapp</code></td>
+</tr>
+<tr>
+<td><code>--privileged</code></td>
+<td>给予容器更多的权限（如访问 host 设备）</td>
+<td><code>docker run --privileged myapp</code></td>
+</tr>
+<tr>
+<td><code>--entrypoint</code></td>
+<td>覆盖镜像默认的 ENTRYPOINT</td>
+<td><code>docker run --entrypoint /bin/bash myapp</code></td>
+</tr>
+<tr>
+<td><code>-u</code>, <code>--user</code></td>
+<td>指定容器内运行的用户（格式：UID 或 UID:GID）</td>
+<td><code>docker run --user 1000:1000 myapp</code></td>
+</tr>
+<tr>
+<td><code>-c</code>, <code>--cpu-shares</code></td>
+<td>设置 CPU 权重（相对值）</td>
+<td><code>docker run --cpu-shares=512 myapp</code></td>
+</tr>
+<tr>
+<td><code>-m</code>, <code>--memory</code></td>
+<td>限制容器最大内存（如 <code>512m</code>, <code>1g</code>）</td>
+<td><code>docker run --memory=512m myapp</code></td>
+</tr>
+<tr>
+<td><code>-h</code>,<code> --hostname</code></td>
+<td>设置容器主机名</td>
+<td><code>docker run -h myhost myapp</code></td>
+</tr>
+<tr>
+<td><code>--link</code>(不推荐)</td>
+<td>创建链接到其他容器，更推荐使用 <code>--network</code></td>
+<td><code>docker run --link myapp myapp2</code></td>
+</tr>
+<tr>
+<td><code>--cpus</code></td>
+<td>限制容器使用的CPU核数</td>
+<td><code>docker run --cpus=&quot;1.5&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>--network</code> 网络模式类型</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>含义</th>
+<th>特点/适用场景</th>
+<th>是否允许端口映射</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bridge</code></td>
+<td>默认网络类型（用户自定义或 Docker 默认桥接网络）</td>
+<td>容器通过虚拟网桥连接，可相互通信；适用于单主机部署</td>
+<td>✅ 是</td>
+</tr>
+<tr>
+<td><code>host</code></td>
+<td>容器与宿主机共享网络栈</td>
+<td>没有网络隔离，容器使用宿主机的 IP 和端口，性能高，适合对网络要求高的服务</td>
+<td>❌ 否</td>
+</tr>
+<tr>
+<td><code>none</code></td>
+<td>容器没有网络接口</td>
+<td>完全隔离；适用于需要完全控制网络的场景或测试网络不可达性</td>
+<td>❌ 否</td>
+</tr>
+<tr>
+<td><code>&lt;user-defined&gt;</code></td>
+<td>用户自定义的网络名称，通过 <code>docker network create</code> 创建</td>
+<td>支持容器名称互解析（DNS），适合多容器通信场景，如 Docker Compose</td>
+<td>✅ 是</td>
+</tr>
+<tr>
+<td><code>container:&lt;name|id&gt;</code></td>
+<td>与另一个容器共享网络命名空间</td>
+<td>两个容器共享 IP 和端口，适用于主-辅容器模式，如 sidecar 容器共享主容器网络</td>
+<td>❌ 否</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用默认 bridge 网络</span></span><br><span class="line">docker run -p 8080:80 --network bridge --name my-nginx nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 与宿主机共享网络，不能使用-p</span></span><br><span class="line">docker run --network host nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不使用任何网络，不能使用-p</span></span><br><span class="line">docker run --network none nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用已创建的自定义网络，相同网络命名空间下的容器，可以通过容器 名称或ID 互相访问</span></span><br><span class="line">docker network create nginx_net</span><br><span class="line">docker run -p 8080:80 --network nginx_net nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 与另一个容器共享网络命名空间，不能使用-p，并且此时新启动的容器占用的端口不能与要连接的容器端口一致，否则将启动失败</span></span><br><span class="line">docker run --network container:my-nginx busybox</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>--restart</code> 重启策略</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>no</code>（默认）</td>
+<td>容器退出后不会自动重启</td>
+</tr>
+<tr>
+<td><code>always</code></td>
+<td>无论退出状态码如何，容器总是自动重启</td>
+</tr>
+<tr>
+<td><code>unless-stopped</code></td>
+<td>容器总是自动重启，除非用户手动停止它</td>
+</tr>
+<tr>
+<td><code>on-failure[:N]</code></td>
+<td>仅在容器非 0 状态码退出时自动重启（可选设置最大重启次数 N）</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 容器非正常退出时自动重启</span></span><br><span class="line">docker run --restart on-failure my-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最多重启 5 次</span></span><br><span class="line">docker run --restart on-failure:5 my-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 总是重启（即使你重启 Docker 服务后）</span></span><br><span class="line">docker run --restart always my-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 除非手动停止，否则一直重启</span></span><br><span class="line">docker run --restart unless-stopped my-app</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>--cpu-shares</code> : 设置容器的 CPU 相对权重，即在 CPU 资源竞争时的相对优先级，默认值为 1024。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 容器1，权重 1024（默认）</span></span><br><span class="line">docker run -d --name c1 --cpu-shares 1024 nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 容器2，权重 512（优先级低）</span></span><br><span class="line">docker run -d --name c2 --cpu-shares 512 nginx</span><br><span class="line"></span><br><span class="line"><span class="comment">## 说明：</span></span><br><span class="line">  <span class="comment"># c1的权重1024，c2的权重512,不是绝对限制，而是分配比例</span></span><br><span class="line">  <span class="comment"># 该权重表示容器在 CPU 竞争下，权重越高则优先级越高，会尽可能使用 CPU 资源。</span></span><br><span class="line">  <span class="comment"># 如果这两个容器都运行在 CPU 忙碌的环境下(只有在 多容器共享 CPU 且竞争资源 的情况下才生效)：</span></span><br><span class="line">    <span class="comment"># c1 将获得大约 2/3 的 CPU 时间</span></span><br><span class="line">    <span class="comment"># c2 将获得大约 1/3 的 CPU 时间</span></span><br><span class="line">  <span class="comment"># 如果系统 CPU 空闲，所有容器都可以使用 100% 的 CPU。</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>docker run</code> 示例</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动一个nginx 容器</span></span><br><span class="line">docker run -d -p 80:80 --name nginx nginx</span><br><span class="line"><span class="comment"># 替换nginx镜像默认的启动命令，nginx 镜像默认启动 nginx 服务，此命令会改为执行 nginx -v 显示版本号</span></span><br><span class="line">docker run --name test_nginx --entrypoint <span class="string">&quot;&quot;</span> nginx nginx -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行脚本或命令，这里添加 --rm 参数，表示运行结束后自动删除容器</span></span><br><span class="line">docker run --<span class="built_in">rm</span> ubuntu bash -c <span class="string">&quot;apt update &amp;&amp; apt install -y curl&quot;</span></span><br><span class="line"><span class="comment"># 交互式执行 shell 命令，执行命令后会进入容器的shell</span></span><br><span class="line">docker run --<span class="built_in">rm</span> -it ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+<h3 id="docker-stop-停止容器，容器优雅退出"><code>docker stop</code> : 停止容器，容器优雅退出</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停止容器，通过容器名称</span></span><br><span class="line">docker stop test_nginx</span><br><span class="line"><span class="comment"># 停止容器，通过容器ID</span></span><br><span class="line">docker stop 5d7c0c5d5c0c</span><br><span class="line"><span class="comment"># 停止所有正在运行的容器</span></span><br><span class="line">docker stop $(docker ps -q)</span><br><span class="line"><span class="comment"># 等待5秒后强制关闭</span></span><br><span class="line">docker stop -t 5 test_nginx</span><br></pre></td></tr></table></figure>
+<h3 id="docker-kill-强制停止容器"><code>docker kill</code> : 强制停止容器</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>当容器完全卡死、挂起、不响应 <code>stop</code> 命令时使用</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">kill</span> test_nginx</span><br><span class="line">docker <span class="built_in">kill</span> 5d7c0c5d5c0c</span><br><span class="line">docker <span class="built_in">kill</span> $(docker ps -q)</span><br></pre></td></tr></table></figure>
+<h3 id="docker-restart-重启容器"><code>docker restart</code> : 重启容器</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker restart test_nginx</span><br><span class="line">docker restart 5d7c0c5d5c0c</span><br><span class="line">docker restart $(docker ps -q)</span><br></pre></td></tr></table></figure>
+<h3 id="docker-pause-暂停容器"><code>docker pause</code> : 暂停容器</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>暂停后宿主机将不再为容器分配CPU时间片，但内存依然有效，你可以理解为此时为容器保存了快照</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pause test_nginx</span><br><span class="line">docker pause 5d7c0c5d5c0c</span><br><span class="line">docker pause $(docker ps -q)</span><br></pre></td></tr></table></figure>
+<h3 id="docker-unpause-恢复容器"><code>docker unpause</code> : 恢复容器</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker unpause test_nginx</span><br><span class="line">docker unpause 5d7c0c5d5c0c</span><br><span class="line">docker unpause $(docker ps -q)</span><br></pre></td></tr></table></figure>
+<h3 id="docker-ps-查看容器列表"><code>docker ps</code> : 查看容器列表</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示所有正在运行的容器</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="comment"># 显示所有容器</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="comment"># 显示所有正在运行的容器的ID</span></span><br><span class="line">docker ps -q</span><br><span class="line"><span class="comment"># 不截断输出，此时 COMMAND 列会显示完整的命令</span></span><br><span class="line">docker ps -notrunc</span><br><span class="line"><span class="comment"># 显示最近创建的5条容器</span></span><br><span class="line">docker ps -n 5</span><br><span class="line"><span class="comment"># 过滤器，显示状态为exited的容器</span></span><br><span class="line">docker ps -a --filter <span class="string">&quot;status=exited&quot;</span></span><br><span class="line"><span class="comment"># 指定模板，只显示 ID 和 Names</span></span><br><span class="line">docker ps --format <span class="string">&quot;&#123;&#123;.ID&#125;&#125;: &#123;&#123;.Names&#125;&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="docker-inspect-查看容器信息"><code>docker inspect</code> : 查看容器信息</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看容器信息</span></span><br><span class="line">docker inspect &lt;container_id&gt;</span><br><span class="line"><span class="comment"># 获取容器名称</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;.Name&#125;&#125;&#x27;</span> &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器镜像</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;.Config.Image&#125;&#125;&#x27;</span> &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器环境变量</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;.Config.Env&#125;&#125;&#x27;</span> &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器状态，前面的 json 表示输出为 json 格式</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;json .State&#125;&#125;&#x27;</span> &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器内存限制</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;.HostConfig.Memory&#125;&#125;&#x27;</span> &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器label</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;json .Config.Labels&#125;&#125;&#x27;</span> &lt;container_id | container_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="docker-logs-获取容器日志"><code>docker logs</code> : 获取容器日志</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取容器日志</span></span><br><span class="line">docker logs &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器实时日志</span></span><br><span class="line">docker logs -f &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器最新的 10 行日志</span></span><br><span class="line">docker logs -n 10 &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器的带时间戳的日志</span></span><br><span class="line">docker logs -t &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器的日志，从 1 小时前开始</span></span><br><span class="line">docker logs --since 1h &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器的日志，直到 1 小时前</span></span><br><span class="line">docker logs --<span class="keyword">until</span> 1h &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器的详细日志</span></span><br><span class="line">docker logs --details &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 获取容器的日志，从 2 小时前开始，直到 1 小时前</span></span><br><span class="line">docker logs --since 2h --<span class="keyword">until</span> 1h &lt;container_id | container_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="docker-exec-在已经运行的容器中执行命令"><code>docker exec</code> : 在已经运行的容器中执行命令</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在已经运行的容器中执行命令</span></span><br><span class="line">docker <span class="built_in">exec</span> &lt;container_id | container_name&gt; &lt;<span class="built_in">command</span>&gt;</span><br><span class="line"><span class="comment"># 进入容器shell</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;container_id | container_name&gt; bash</span><br></pre></td></tr></table></figure>
+<h3 id="docker-rename-重命名容器"><code>docker rename</code> : 重命名容器</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rename &lt;old_container_name&gt; &lt;new_container_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="docker-cp-容器与宿主机间复制文件"><code>docker cp</code> : 容器与宿主机间复制文件</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 宿主机 -&gt; 容器</span></span><br><span class="line"><span class="comment"># docker cp &lt;host_path&gt; &lt;container_id | container_name&gt;:&lt;container_path&gt;</span></span><br><span class="line">docker <span class="built_in">cp</span> ./docker-command-container.md nginx:/tmp</span><br><span class="line"><span class="comment"># 容器 -&gt; 宿主机</span></span><br><span class="line"><span class="comment"># docker cp &lt;container_id | container_name&gt;:&lt;container_path&gt; &lt;host_path&gt;</span></span><br><span class="line">docker <span class="built_in">cp</span> nginx:/tmp/docker-command-container.md ./</span><br></pre></td></tr></table></figure>
+<h3 id="docker-rm-删除容器"><code>docker rm</code> : 删除容器</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除指定容器</span></span><br><span class="line">docker <span class="built_in">rm</span> &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 删除所有容器</span></span><br><span class="line">docker <span class="built_in">rm</span> $(docker ps -aq)</span><br></pre></td></tr></table></figure>
+<h3 id="docker-container-prune-删除所有停止的容器"><code>docker container prune</code> : 删除所有停止的容器</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container prune</span><br></pre></td></tr></table></figure>
+<h3 id="docker-update-更新容器配置"><code>docker update</code> : 更新容器配置</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新指定容器的CPU核数和内存大小</span></span><br><span class="line">docker update --cpus=2 --memory=2g &lt;container_id | container_name&gt;</span><br><span class="line"><span class="comment"># 更新指定容器自动重启</span></span><br><span class="line">docker update --restart=always &lt;container_id | container_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="docker-stats-显示容器的实时资源使用情况"><code>docker stats</code> : 显示容器的实时资源使用情况</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示所有容器的实时资源使用情况</span></span><br><span class="line">docker stats</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">CONTAINER ID   NAME         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O     PIDS</span><br><span class="line">15caf520e3a5   nginx        0.00%     10.22MiB / 7.752GiB   0.13%     6.38kB / 2.61kB   0B / 28.7kB   13</span><br><span class="line">b680087420b8   dockge       0.01%     199.5MiB / 7.752GiB   2.51%     6.44kB / 1.48kB   94.8MB / 0B   24</span><br><span class="line">861dd9c1475f   remote-api   0.00%     4.188MiB / 7.752GiB   0.05%     2.77kB / 126B     3.31MB / 0B   1</span><br><span class="line"><span class="comment">### CONTAINER ID 与 NAME：容器 ID 与名称。</span></span><br><span class="line"><span class="comment">### CPU % 与 MEM %：容器使用的 CPU 和内存的百分比。</span></span><br><span class="line"><span class="comment">### MEM USAGE / LIMIT：容器正在使用的总内存，以及允许使用的内存总量。</span></span><br><span class="line"><span class="comment">### NET I/O：容器通过其网络接口发送和接收的数据量。</span></span><br><span class="line"><span class="comment">### BLOCK I/O：容器从主机上的块设备读取和写入的数据量。</span></span><br><span class="line"><span class="comment">### PIDs：容器创建的进程或线程数。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出所有容器的资源使用情况，包括运行和停止的</span></span><br><span class="line">docker stats -a</span><br><span class="line"></span><br><span class="line"><span class="comment"># 展示当前状态就直接退出了，不再实时更新。</span></span><br><span class="line">docker stats --no-stream</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定输出模板，这里加不加 table 都可以</span></span><br><span class="line">docker stats --no-stream --format <span class="string">&quot;table &#123;&#123;.Name&#125;&#125;\t&#123;&#123;.CPUPerc&#125;&#125;\t&#123;&#123;.MemUsage&#125;&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出json格式</span></span><br><span class="line">docker stats --no-stream --format json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定容器</span></span><br><span class="line">docker stats &lt;container_id | container_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="docker-top-查看正在运行的进程"><code>docker top</code> :  查看正在运行的进程</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker top &lt;container_id | container_name&gt; [ps options]</span></span><br><span class="line">docker top nginx</span><br></pre></td></tr></table></figure>
+<h3 id="docker-port-列出指定的容器的端口映射"><code>docker port</code> : 列出指定的容器的端口映射</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker port &lt;container_id | container_name&gt;</span></span><br><span class="line">$ docker port nginx</span><br><span class="line">80/tcp -&gt; 0.0.0.0:8081</span><br></pre></td></tr></table></figure>
+<h3 id="docker-diff-列出容器运行时对文件系统的修改"><code>docker diff</code> : 列出容器运行时对文件系统的修改</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker diff &lt;container_id | container_name&gt;</span></span><br><span class="line">$ docker diff nginx</span><br><span class="line">C /root</span><br><span class="line">A /root/.bash_history</span><br><span class="line">C /run</span><br><span class="line">A /run/nginx.pid</span><br><span class="line">C /tmp</span><br><span class="line">A /tmp/demo.py</span><br><span class="line">C /var</span><br><span class="line">C /var/cache</span><br><span class="line">C /var/cache/nginx</span><br><span class="line">A /var/cache/nginx/client_temp</span><br><span class="line">A /var/cache/nginx/fastcgi_temp</span><br><span class="line">A /var/cache/nginx/proxy_temp</span><br><span class="line">A /var/cache/nginx/scgi_temp</span><br><span class="line">A /var/cache/nginx/uwsgi_temp</span><br><span class="line">C /etc</span><br><span class="line">C /etc/nginx</span><br><span class="line">C /etc/nginx/conf.d</span><br><span class="line">C /etc/nginx/conf.d/default.conf</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>前缀含义说明：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>标志</th>
+<th>含义</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td><strong>Added（新增）</strong></td>
+<td>文件或目录是容器运行后新增的</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td><strong>Changed（修改）</strong></td>
+<td>文件或目录是已有的，但内容或元数据（如权限、时间戳等）被修改了</td>
+</tr>
+<tr>
+<td><code>D</code></td>
+<td><strong>Deleted（删除）</strong></td>
+<td>文件或目录是存在于原镜像中的，但在容器中被删除</td>
+</tr>
+</tbody>
+</table>
+<h3 id="docker-commit-从容器创建一个新的镜像"><code>docker commit</code> : 从容器创建一个新的镜像</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker commit &lt;container_id | container_name&gt; [image_name[:tag]]</span></span><br><span class="line">docker commit nginx nginx:v1.0</span><br></pre></td></tr></table></figure>
+<h3 id="docker-export-导出容器内容为-tar-文件"><code>docker export</code> : 导出容器内容为 tar 文件</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">export</span> nginx &gt; nginx.tar</span><br><span class="line">dcoker <span class="built_in">export</span> -o nginx.tar nginx</span><br><span class="line">docker <span class="built_in">export</span> nginx | gzip &gt; nginx.tar.gz</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Docker Export / Save / Commit 命令对比与导入方式一览表</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>操作对象</th>
+<th>输出内容</th>
+<th>是否包含历史层（镜像层）</th>
+<th>是否保留元数据（标签、命令等）</th>
+<th>典型用途</th>
+<th>导入命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docker export</code></td>
+<td><strong>容器</strong></td>
+<td>容器的文件系统（tar 归档）</td>
+<td>❌ 否</td>
+<td>❌ 否</td>
+<td>备份容器文件系统或迁移容器状态</td>
+<td><code>docker import &lt;tar&gt; &lt;image:tag&gt;</code></td>
+</tr>
+<tr>
+<td><code>docker save</code></td>
+<td><strong>镜像</strong></td>
+<td>镜像的完整内容（含所有层的 tar）</td>
+<td>✅ 是</td>
+<td>✅ 是</td>
+<td>分发或备份镜像</td>
+<td><code>docker load &lt; &lt;tar&gt;</code></td>
+</tr>
+<tr>
+<td><code>docker commit</code></td>
+<td><strong>容器</strong></td>
+<td>创建一个新的镜像</td>
+<td>✅ 是（但只一层）</td>
+<td>✅ 是</td>
+<td>将当前容器状态打包成新镜像</td>
+<td>不适用（直接生成镜像）</td>
+</tr>
+</tbody>
+</table>
 
     </div>
 
@@ -1363,7 +1776,7 @@ i.ban {
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2025/05/20/docker-install-01/" title="Linux 安装 Docker">https://blog.hanqunfeng.com/2025/05/20/docker-install-01/</a>
+      <a href="https://blog.hanqunfeng.com/2025/05/27/docker-command-container/" title="Docker 命令 之 容器管理">https://blog.hanqunfeng.com/2025/05/27/docker-command-container/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1416,14 +1829,11 @@ i.ban {
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2025/05/19/docker-install-aws/" rel="prev" title="AWS专有服务器如何安装Docker">
-                  <i class="fa fa-angle-left"></i> AWS专有服务器如何安装Docker
+                <a href="/2025/05/26/docker-dockerfile/" rel="prev" title="Docker 命令 之 Dockerfile">
+                  <i class="fa fa-angle-left"></i> Docker 命令 之 Dockerfile
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2025/05/22/docker-command-01/" rel="next" title="Docker 命令 之 镜像管理">
-                  Docker 命令 之 镜像管理 <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -1458,14 +1868,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">490k</span>
+    <span title="站点总字数">495k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">29:43</span>
+    <span title="站点阅读时长">30:01</span>
   </span>
 </div>
 <div class="busuanzi-count">
