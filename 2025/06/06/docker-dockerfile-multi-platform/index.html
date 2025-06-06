@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/WdmJx0.png">
 <meta property="article:published_time" content="2025-06-06T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-06-06T12:18:32.770Z">
+<meta property="article:modified_time" content="2025-06-06T12:33:08.736Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -1046,7 +1046,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-06 21:30:05 / 修改时间：20:18:32" itemprop="dateCreated datePublished" datetime="2025-06-06T21:30:05+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-06 21:30:05 / 修改时间：20:33:08" itemprop="dateCreated datePublished" datetime="2025-06-06T21:30:05+08:00">2025-06-06</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1094,14 +1094,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.5k</span>
+      <span>2.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
+      <span>10 分钟</span>
     </span>
 
         </div>
@@ -1257,7 +1257,42 @@ i.ban {
 <p>创建基于 <code>docker-container</code> 驱动的Buildx实例</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建并切换到名为mybuilder的构建器实例</span></span><br><span class="line">docker buildx create --name mybuilder --use --driver docker-container</span><br><span class="line"><span class="comment"># 激活当前构建器，此时看到其Driver为docker-container，这个命令第一次执行时可能会提示错误，不过不用管，再次运行就正常了</span></span><br><span class="line">docker buildx inspect --bootstrap</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Name:          mybuilder</span><br><span class="line">Driver:        docker-container</span><br><span class="line">……………………………………</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时会启动一个名称为`buildx_buildkit_mybuilder0`的容器，每创建一个构建器实例，就会启动一个名称为`buildx_buildkit_xxx`的容器，删除构建器时，其对应的容器也会被删除</span></span><br><span class="line">docker ps</span><br><span class="line">CONTAINER ID   IMAGE                           COMMAND                   CREATED             STATUS                       PORTS                    NAMES</span><br><span class="line">0ab9cab9ec9b   moby/buildkit:buildx-stable-1   <span class="string">&quot;buildkitd --allow-i…&quot;</span>   About an hour ago   Up About an hour                                      buildx_buildkit_mybuilder0</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建并切换到名为mybuilder的构建器实例</span></span><br><span class="line">docker buildx create --name mybuilder --use --driver docker-container</span><br><span class="line"><span class="comment"># 查看当前构建器信息，--bootstrap：查看前确保构建器已启动 ，此时看到其Driver为docker-container，这个命令第一次执行时可能会提示错误，不过不用管，再次运行就正常了</span></span><br><span class="line">docker buildx inspect --bootstrap</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Name:          mybuilder</span><br><span class="line">Driver:        docker-container</span><br><span class="line">……………………………………</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时会启动一个名称为`buildx_buildkit_mybuilder0`的容器，每创建一个构建器实例，就会启动一个名称为`buildx_buildkit_xxx`的容器，删除构建器时，其对应的容器也会被删除</span></span><br><span class="line">docker ps</span><br><span class="line">CONTAINER ID   IMAGE                           COMMAND                   CREATED             STATUS                       PORTS                    NAMES</span><br><span class="line">0ab9cab9ec9b   moby/buildkit:buildx-stable-1   <span class="string">&quot;buildkitd --allow-i…&quot;</span>   About an hour ago   Up About an hour                                      buildx_buildkit_mybuilder0</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>buildx_buildkit_xxx</code>这个容器就是一个 BuildKit 守护进程容器，它是执行 buildx 构建任务的实际工作引擎。其对应的镜像为<code>moby/buildkit:buildx-stable-1</code>，容器会在执行<code>docker buildx build</code> 或 <code>docker buildx inspect --bootstrap</code> 时启动</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>👷 执行构建任务</td>
+<td>真正执行 <code>buildx build</code> 指令里的构建过程，比如多阶段构建、缓存处理、跨平台编译等</td>
+</tr>
+<tr>
+<td>📦 拉取镜像</td>
+<td>拉取 <code>Dockerfile</code> 中的基础镜像</td>
+</tr>
+<tr>
+<td>📤 上传/导出镜像</td>
+<td>支持导出为 <code>docker image</code>, <code>tar</code>, 推送到远程 registry</td>
+</tr>
+<tr>
+<td>🪣 管理缓存</td>
+<td>管理构建缓存（中间镜像、层等）以加速后续构建</td>
+</tr>
+<tr>
+<td>🌍 支持多平台</td>
+<td>通过 QEMU 或交叉编译器支持跨平台（如构建 <code>arm64</code> 镜像）</td>
+</tr>
+</tbody>
+</table>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>在国内环境使用时，如果不能科学上网，当我们在构建镜像时会提示无法拉取基础镜像，即便我们已经在<code>/etc/docker/daemon.json</code>中配置了国内的镜像源也不行，这是因为<code>docker buildx</code> 使用的是 BuildKit，它的行为不同于传统的 <code>docker build</code></p>
@@ -1469,7 +1504,7 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">514k</span>
+    <span title="站点总字数">515k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
