@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 Docker 命令 中 镜像管理 相关命令   Docker官方文档   Application programming interfaces (APIs)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-22T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-06-06T12:18:17.868Z">
+<meta property="article:modified_time" content="2025-06-06T15:55:09.605Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -1050,7 +1050,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 20:18:17" itemprop="dateModified" datetime="2025-06-06T20:18:17+08:00">2025-06-06</time>
+      <time title="修改时间：2025-06-06 23:55:09" itemprop="dateModified" datetime="2025-06-06T23:55:09+08:00">2025-06-06</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1098,7 +1098,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.8k</span>
+      <span>3.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1279,9 +1279,18 @@ i.ban {
 <div class="tips">
 <p><em><strong>如何获取镜像tag</strong></em></p>
 <ul class="lvl-1">
-<li class="lvl-2">docker 命令中没有提供直接获取镜像tag的命令，如果不想到<code>dockerhub</code>上查看，可以通过如下方式获取(需要科学上网)：</li>
+<li class="lvl-2">docker 命令中没有提供直接获取镜像tag的命令，如果不想到<code>dockerhub</code>上查看，可以通过如下方式获取</li>
+<li class="lvl-2">通过dockerhub的api接口获取(需要科学上网)</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只显示tag名称，官方镜像替换 nginx，非官方镜像替换 libryary/nginx，page_size=5表示每页5条数据，page=1表示第一页（默认为1）</span></span><br><span class="line">curl -s <span class="string">&quot;https://registry.hub.docker.com/v2/repositories/library/nginx/tags?page_size=5&amp;page=1&quot;</span> | jq <span class="string">&#x27;.results[].name&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 也可以使用如下url，两者效果相同</span></span><br><span class="line"><span class="comment">## https://hub.docker.com/v2/namespaces/&#123;namespace&#125;/repositories/&#123;repository&#125;/tags?page_size=5&amp;page=1</span></span><br><span class="line"><span class="comment">## 示例：https://hub.docker.com/v2/namespaces/library/repositories/nginx/tags?page_size=1&amp;page=1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出json格式，并显示最后更新时间和镜像大小</span></span><br><span class="line">curl -s <span class="string">&quot;https://registry.hub.docker.com/v2/repositories/library/nginx/tags?page_size=5&amp;page=1&quot;</span> | jq <span class="string">&#x27;.results[] | &#123;name,last_updated,full_size&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出表格格式，并格式化输出</span></span><br><span class="line">curl -s <span class="string">&quot;https://registry.hub.docker.com/v2/repositories/library/nginx/tags?page_size=5&amp;page=1&quot;</span> \</span><br><span class="line">| jq -r <span class="string">&#x27;.results[] |</span></span><br><span class="line"><span class="string">  &quot;\(.name)\t\t\(.last_updated | sub(&quot;T&quot;; &quot; &quot;) | sub(&quot;\\..*&quot;; &quot;&quot;))\t\t\(((.full_size / 1024 / 1024 * 100 | round)/100) | tostring) MB&quot;&#x27;</span> \</span><br><span class="line">  | awk <span class="string">&#x27;&#123;printf &quot;%-30s %-20s %8.2f MB\n&quot;, $1, $2&quot; &quot;$3, $4&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-1">
+<li class="lvl-2">通过<a target="_blank" rel="noopener" href="https://github.com/containers/skopeo">skopeo</a>工具获取</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里使用容器的方式(需要科学上网)</span></span><br><span class="line">docker run --<span class="built_in">rm</span> quay.io/skopeo/stable:latest inspect --override-os linux  docker://docker.io/nginx | jq <span class="string">&#x27;.RepoTags[]&#x27;</span></span><br><span class="line"><span class="comment"># 将`docker.io`替换为镜像源`docker.1ms.run`，不需要科学上网</span></span><br><span class="line">docker run --<span class="built_in">rm</span> quay.io/skopeo/stable:latest inspect --override-os linux  docker://docker.1ms.run/nginx | jq <span class="string">&#x27;.RepoTags[]&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-1">
+<li class="lvl-2">为了方便使用可以编写一个脚本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt; <span class="string">EOF &gt; docker_tags</span></span><br><span class="line"><span class="string">#!/bin/bash</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 用法提示</span></span><br><span class="line"><span class="string">if [ -z &quot;$1&quot; ]; then</span></span><br><span class="line"><span class="string">  echo &quot;用法: $0 &lt;镜像名称，例如 nginx 或 library/nginx&gt;&quot;</span></span><br><span class="line"><span class="string">  exit 1</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">IMAGE_NAME=$1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 使用 skopeo 获取镜像信息并解析标签列表</span></span><br><span class="line"><span class="string">docker run --rm quay.io/skopeo/stable:latest \</span></span><br><span class="line"><span class="string">  inspect --override-os linux docker://docker.1ms.run/$IMAGE_NAME \</span></span><br><span class="line"><span class="string">  | jq &#x27;.RepoTags[]&#x27;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="built_in">chmod</span> +x docker_tags</span><br><span class="line"><span class="comment"># 使用</span></span><br><span class="line">docker_tags nginx</span><br></pre></td></tr></table></figure>
 </div>
 <h3 id="docker-images-列出镜像"><code>docker images</code> : 列出镜像</h3>
 <ul class="lvl-0">
@@ -1559,7 +1568,7 @@ i.ban {
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">31:11</span>
+    <span title="站点阅读时长">31:12</span>
   </span>
 </div>
 <div class="busuanzi-count">
