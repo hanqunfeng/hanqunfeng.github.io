@@ -30,8 +30,9 @@
 <meta property="og:description" content="摘要   本文介绍 Docker 命令 中 Dockerfile 多平台构建的使用方法   Docker官方文档   Dockerfile官方文档   Multi-platform builds">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/WdmJx0.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/5azhzj.png">
 <meta property="article:published_time" content="2025-06-06T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-06-06T15:39:41.051Z">
+<meta property="article:modified_time" content="2025-06-07T02:59:56.233Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -869,7 +870,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFDockerfile-%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BA%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">什么是Dockerfile 多平台构建？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-docker-buildx-plugin"><span class="nav-number">3.</span> <span class="nav-text">安装 docker-buildx-plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-buildx-%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">docker buildx 基本命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E8%AE%A9Docker%E6%94%AF%E6%8C%81%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BA%EF%BC%8C%E9%9C%80%E8%A6%81%E6%BB%A1%E8%B6%B3%E4%BB%A5%E4%B8%8B%E5%87%A0%E4%B8%AA%E6%9D%A1%E4%BB%B6%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">要让Docker支持多平台构建，需要满足以下几个条件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E5%86%85%E6%A0%B8%E5%BC%80%E5%90%AF%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84%E6%94%AF%E6%8C%81"><span class="nav-number">6.</span> <span class="nav-text">Linux内核开启多处理器架构支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%97%B6%E4%BD%BF%E7%94%A8%E5%9F%BA%E4%BA%8Edocker-container%E9%A9%B1%E5%8A%A8%E7%9A%84Buildx%E5%AE%9E%E4%BE%8B"><span class="nav-number">7.</span> <span class="nav-text">构建时使用基于docker-container驱动的Buildx实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8docker-buildx-build%E5%91%BD%E4%BB%A4%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F%EF%BC%8C%E6%9E%84%E5%BB%BA%E5%91%BD%E4%BB%A4%E5%BF%85%E9%A1%BB%E6%8C%87%E5%AE%9A-platform%E5%8F%82%E6%95%B0"><span class="nav-number">8.</span> <span class="nav-text">使用docker buildx build命令构建镜像，构建命令必须指定--platform参数</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFDockerfile-%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BA%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">什么是Dockerfile 多平台构建？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-docker-buildx-plugin"><span class="nav-number">3.</span> <span class="nav-text">安装 docker-buildx-plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-buildx-%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">docker buildx 基本命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E8%AE%A9Docker%E6%94%AF%E6%8C%81%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BA%EF%BC%8C%E9%9C%80%E8%A6%81%E6%BB%A1%E8%B6%B3%E4%BB%A5%E4%B8%8B%E5%87%A0%E4%B8%AA%E6%9D%A1%E4%BB%B6%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">要让Docker支持多平台构建，需要满足以下几个条件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E5%86%85%E6%A0%B8%E5%BC%80%E5%90%AF%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84%E6%94%AF%E6%8C%81"><span class="nav-number">6.</span> <span class="nav-text">Linux内核开启多处理器架构支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%97%B6%E4%BD%BF%E7%94%A8%E5%9F%BA%E4%BA%8Edocker-container%E9%A9%B1%E5%8A%A8%E7%9A%84Buildx%E5%AE%9E%E4%BE%8B"><span class="nav-number">7.</span> <span class="nav-text">构建时使用基于docker-container驱动的Buildx实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8docker-buildx-build%E5%91%BD%E4%BB%A4%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F%EF%BC%8C%E6%9E%84%E5%BB%BA%E5%91%BD%E4%BB%A4%E5%BF%85%E9%A1%BB%E6%8C%87%E5%AE%9A-platform%E5%8F%82%E6%95%B0"><span class="nav-number">8.</span> <span class="nav-text">使用docker buildx build命令构建镜像，构建命令必须指定--platform参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%B8%80%EF%BC%9A%E5%8D%95%E9%98%B6%E6%AE%B5%E6%9E%84%E5%BB%BA"><span class="nav-number">8.1.</span> <span class="nav-text">示例一：单阶段构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C%EF%BC%9A%E5%A4%9A%E9%98%B6%E6%AE%B5%E6%9E%84%E5%BB%BA"><span class="nav-number">8.2.</span> <span class="nav-text">示例二：多阶段构建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%B0%86%E6%9E%84%E5%BB%BA%E5%A5%BD%E7%9A%84%E5%A4%9A%E4%B8%AA%E5%8D%95%E5%B9%B3%E5%8F%B0%E9%95%9C%E5%83%8F%E5%8F%91%E5%B8%83%E4%B8%BA%E4%B8%80%E4%B8%AA%E5%A4%9A%E5%B9%B3%E5%8F%B0%E9%95%9C%E5%83%8F"><span class="nav-number">9.</span> <span class="nav-text">如何将构建好的多个单平台镜像发布为一个多平台镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4-BuildKit%EF%BC%88Buildx%EF%BC%89%E6%9E%84%E5%BB%BA%E8%BF%87%E7%A8%8B%E4%B8%AD%E4%BA%A7%E7%94%9F%E7%9A%84%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE"><span class="nav-number">10.</span> <span class="nav-text">移除 BuildKit（Buildx）构建过程中产生的缓存数据</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -983,17 +984,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/06/05/docker-remote-connection/" rel="bookmark">
-        <time class="popular-posts-time">2025-06-05</time>
-        <br>
-      Docker 之 远程连接
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/05/28/docker-command-volume/" rel="bookmark">
         <time class="popular-posts-time">2025-05-28</time>
         <br>
       Docker 命令 之 数据卷(Volume)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/05/docker-remote-connection/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-05</time>
+        <br>
+      Docker 之 远程连接
       </a>
     </li>
   </ul>
@@ -1044,9 +1045,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-06-06 21:30:05 / 修改时间：23:39:41" itemprop="dateCreated datePublished" datetime="2025-06-06T21:30:05+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-06 21:30:05" itemprop="dateCreated datePublished" datetime="2025-06-06T21:30:05+08:00">2025-06-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-07 10:59:56" itemprop="dateModified" datetime="2025-06-07T10:59:56+08:00">2025-06-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1094,14 +1101,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.7k</span>
+      <span>3.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>10 分钟</span>
+      <span>13 分钟</span>
     </span>
 
         </div>
@@ -1226,6 +1233,18 @@ i.ban {
 <td><code>docker buildx rm</code></td>
 <td>删除构建器</td>
 </tr>
+<tr>
+<td><code>docker buildx du</code></td>
+<td>查看构建器使用的磁盘空间</td>
+</tr>
+<tr>
+<td><code>docker buildx prune</code></td>
+<td>删除构建过程中产生的缓存</td>
+</tr>
+<tr>
+<td><code>docker buildx version</code></td>
+<td>查看 Docker Buildx 的版本信息</td>
+</tr>
 </tbody>
 </table>
 <h2 id="要让Docker支持多平台构建，需要满足以下几个条件：">要让Docker支持多平台构建，需要满足以下几个条件：</h2>
@@ -1331,6 +1350,7 @@ i.ban {
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 BuildKit 配置文件 buildkitd.toml</span></span><br><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF &gt; buildkitd.toml</span></span><br><span class="line"><span class="string">[registry.&quot;docker.io&quot;]</span></span><br><span class="line"><span class="string">  mirrors = [&quot;https://docker.1ms.run&quot;]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[worker.oci]</span></span><br><span class="line"><span class="string">  gc = true</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 BuildKit 构建器，并指定配置文件</span></span><br><span class="line">docker buildx create --name mybuilder --use --driver docker-container --config ./buildkitd.toml</span><br><span class="line">docker buildx inspect --bootstrap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果存在同名的构建器，则删除它后再创建</span></span><br><span class="line">docker buildx <span class="built_in">rm</span> mybuilder</span><br><span class="line">docker buildx create --name mybuilder --use --driver docker-container --config ./buildkitd.toml</span><br><span class="line">docker buildx inspect --bootstrap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看构建器列表</span></span><br><span class="line">docker buildx <span class="built_in">ls</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">NAME/NODE        DRIVER/ENDPOINT                   STATUS    BUILDKIT   PLATFORMS</span><br><span class="line">mybuilder*       docker-container</span><br><span class="line"> \_ mybuilder0    \_ unix:///var/run/docker.sock   running   v0.21.1    linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/amd64/v4, linux/arm64, linux/riscv64, linux/ppc64le, linux/s390x, linux/386, linux/mips64le, linux/mips64, linux/loong64, linux/arm/v7, linux/arm/v6</span><br><span class="line">default          docker</span><br><span class="line"> \_ default       \_ default                       running   v0.13.2    linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/amd64/v4, linux/386, linux/arm64, linux/riscv64, linux/ppc64le, linux/s390x, linux/mips64le, linux/mips64, linux/loong64, linux/arm/v7, linux/arm/v6</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果要切换回默认的构建器，请执行以下命令</span></span><br><span class="line">docker buildx use default</span><br></pre></td></tr></table></figure>
 <h2 id="使用docker-buildx-build命令构建镜像，构建命令必须指定-platform参数">使用<code>docker buildx build</code>命令构建镜像，构建命令必须指定<code>--platform</code>参数</h2>
+<h3 id="示例一：单阶段构建">示例一：单阶段构建</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>我们依旧以一个springboot项目为例，其Dockerfile如下：</p>
@@ -1357,10 +1377,10 @@ i.ban {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">docker buildx build --platform linux/arm64 -t <span class="string">&quot;app.arm64&quot;</span> --load .</span><br><span class="line">docker buildx build --platform linux/amd64 -t <span class="string">&quot;app.amd64&quot;</span> --load .</span><br><span class="line"><span class="comment"># 列出镜像</span></span><br><span class="line">docker images</span><br><span class="line"><span class="comment">## 输出结果</span></span><br><span class="line">REPOSITORY              TAG                IMAGE ID       CREATED        SIZE</span><br><span class="line">app.amd64               latest             859162438372   2 hours ago    431MB</span><br><span class="line">app.arm64               latest             0058c70dd16e   2 hours ago    426MB</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看构建后镜像的架构</span></span><br><span class="line">docker inspect app.amd64 | jq <span class="string">&#x27;.[0].Architecture&#x27;</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line"><span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 我们也可以将构建后的镜像输出到本地目录</span></span><br><span class="line">docker buildx build --platform linux/amd64 -t <span class="string">&quot;app.amd64&quot;</span> --output <span class="built_in">type</span>=<span class="built_in">local</span>,dest=./app.amd64.tar .</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>--load</code>和 <code>--output</code>都不支持一个镜像多种架构，要构建像<code>openjdk:17-slim</code>这种支持多架构的镜像必须使用<code>--push</code>，即推送到远程仓库</p>
+<p><code>--load</code>和 <code>--output</code>都不支持一个镜像多种架构，要构建像<code>openjdk:17-slim</code>这种支持多架构的镜像可以使用<code>--push</code>，一步就推送到远程仓库</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建多架构镜像，--push 是必须的：多平台构建的镜像不能只保存到本地，必须推送到远程 registry 才能合并架构。</span></span><br><span class="line"><span class="comment"># 这里以推送到 docker hub 为例</span></span><br><span class="line"><span class="comment"># 登录 docker hup</span></span><br><span class="line">docker login -u hanqunfeng</span><br><span class="line"><span class="comment"># 构建</span></span><br><span class="line">docker buildx build --platform linux/amd64,linux/arm64 -t hanqunfeng/app:latest --push .</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建多架构镜像，--push 可以一步做到：多平台构建的镜像不能只保存到本地，必须推送到远程 registry 才能合并架构。</span></span><br><span class="line"><span class="comment"># 这里以推送到 docker hub 为例</span></span><br><span class="line"><span class="comment"># 登录 docker hup</span></span><br><span class="line">docker login -u hanqunfeng</span><br><span class="line"><span class="comment"># 构建，注意这里的镜像名称要加上你的dockerhub的命名空间，--platform 指定构建的架构，可以指定多个，需要Dockerfile配置基础镜像支持对应的架构</span></span><br><span class="line">docker buildx build --platform linux/amd64,linux/arm64 -t hanqunfeng/app:latest --push .</span><br></pre></td></tr></table></figure>
 <p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/WdmJx0.png" alt=""></p>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1368,7 +1388,94 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉取指定架构镜像，不指定 --platform 参数，默认拉取当前架构的镜像</span></span><br><span class="line">docker pull --platform=linux/arm64 hanqunfeng/app:latest</span><br></pre></td></tr></table></figure>
-
+<h3 id="示例二：多阶段构建">示例二：多阶段构建</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>要求每个阶段中的基础镜像都要支持多架构</p>
+</li>
+</ul>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一阶段：获取代码</span></span><br><span class="line"><span class="keyword">FROM</span> alpine/git AS fetcher</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /workspace/application</span></span><br><span class="line"><span class="comment"># 将替换为实际的Git仓库URL和分支/标签</span></span><br><span class="line"><span class="keyword">ARG</span> GIT_REPOSITORY=https://gitee.com/hanqunfeng/springbootweb.git</span><br><span class="line"><span class="keyword">ARG</span> GIT_BRANCH=master</span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> git <span class="built_in">clone</span> -b <span class="variable">$&#123;GIT_BRANCH&#125;</span> <span class="variable">$&#123;GIT_REPOSITORY&#125;</span> .</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二阶段：使用Maven环境进行构建</span></span><br><span class="line"><span class="keyword">FROM</span> maven:<span class="number">3.8</span>.<span class="number">4</span>-openjdk-<span class="number">17</span> AS builder</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /workspace/application</span></span><br><span class="line"><span class="comment"># 从第一阶段复制代码</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> --from=fetcher /workspace/application .</span></span><br><span class="line"><span class="comment"># 使用Maven清理并打包</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> mvn clean package -DskipTests</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第三阶段：创建最终的运行环境</span></span><br><span class="line"><span class="keyword">FROM</span> openjdk:<span class="number">17</span>-slim</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"><span class="comment"># 设置运行时环境变量</span></span><br><span class="line"><span class="keyword">ENV</span> JAVA_OPTS=<span class="string">&quot;-Xms1024M -Xmx1024M -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=128M&quot;</span></span><br><span class="line"><span class="comment"># 将第二阶段生成的目标文件复制到这里。注意这里假设你的spring boot工程打成的jar名是target/app.jar</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> --from=builder /workspace/application/target/app.jar app.jar</span></span><br><span class="line"><span class="comment"># 暴露端口（如果需要的话）。请根据实际情况修改端口号</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"><span class="comment"># 声明一个卷挂载点，运行容器时可将该路径映射到宿主机，实现数据持久化</span></span><br><span class="line"><span class="keyword">VOLUME</span><span class="language-bash"> [<span class="string">&quot;/app/logs&quot;</span>]</span></span><br><span class="line"><span class="comment"># 设置容器启动时的主命令（ENTRYPOINT 不会被 docker run 参数覆盖）</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;java <span class="variable">$JAVA_OPTS</span> -jar app.jar&quot;</span>]</span></span><br><span class="line"><span class="comment"># CMD 提供默认的运行参数，可以被 docker run 覆盖</span></span><br><span class="line"><span class="comment"># 这里通过 Spring Boot 参数设置启动环境和端口号</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;--spring.profiles.active=app&quot;</span>, <span class="string">&quot;--server.port=8080&quot;</span>]</span></span><br><span class="line"><span class="comment"># 这里使用的是 ENTRYPOINT + CMD 的混合模式</span></span><br><span class="line"><span class="comment"># 完整命令： java $JAVA_OPTS -jar app.jar --spring.profiles.active=app --server.port=8080</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>构建镜像</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建多平台镜像并发布到dockerhub</span></span><br><span class="line">docker buildx build --platform linux/amd64,linux/arm64 -t hanqunfeng/springboot:latest --push .</span><br></pre></td></tr></table></figure>
+<h2 id="如何将构建好的多个单平台镜像发布为一个多平台镜像">如何将构建好的多个单平台镜像发布为一个多平台镜像</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果你已经分别构建好单平台镜像，也可以用 <code>docker buildx imagetools create</code> 来合并</p>
+</li>
+<li class="lvl-2">
+<p>以上面创建的两个单平台镜像为例</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出镜像</span></span><br><span class="line">docker images</span><br><span class="line"><span class="comment">## 输出结果</span></span><br><span class="line">REPOSITORY              TAG                IMAGE ID       CREATED        SIZE</span><br><span class="line">app.amd64               latest             859162438372   2 hours ago    431MB</span><br><span class="line">app.arm64               latest             0058c70dd16e   2 hours ago    426MB</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一定要推送单平台镜像到远程仓库，否则无法完成合并</span></span><br><span class="line">docker tag app.amd64 hanqunfeng/app:amd64</span><br><span class="line">docker push hanqunfeng/app:amd64</span><br><span class="line"></span><br><span class="line">docker tag app.arm64 hanqunfeng/app:arm64</span><br><span class="line">docker push hanqunfeng/app:arm64</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并，创建多平台镜像指向（manifest list）</span></span><br><span class="line">docker buildx imagetools create \</span><br><span class="line">  --tag hanqunfeng/app:latest \</span><br><span class="line">   hanqunfeng/app:amd64 \</span><br><span class="line">   hanqunfeng/app:arm64</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/5azhzj.png" alt=""></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果不需要单平台镜像，可以在dockerhub上删除即可。</p>
+</li>
+</ul>
+<h2 id="移除-BuildKit（Buildx）构建过程中产生的缓存数据">移除 BuildKit（Buildx）构建过程中产生的缓存数据</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>BuildKit（Buildx）构建过程会产生缓存数据，包括未使用的中间镜像、构建层等。对于频繁使用 Docker 构建的开发者来说，这些缓存会逐渐占用大量磁盘空间。</p>
+</li>
+<li class="lvl-2">
+<p>可以通过该命令查看缓存占用磁盘空间的大小</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker buildx <span class="built_in">du</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>docker buildx prune</code> 是一个用于 清理 Docker Buildx 构建缓存 的命令，常用于释放磁盘空间。</p>
+</li>
+<li class="lvl-2">
+<p>命令语法</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker buildx prune [OPTIONS]</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>OPTIONS</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-a</code>, <code>--all</code></td>
+<td><strong>包括内部/前端镜像</strong>。默认只删除无用缓存，加上该参数会清除更多缓存内容，包括可能仍可用的内容（更彻底）。</td>
+</tr>
+<tr>
+<td><code>--builder string</code></td>
+<td>指定使用哪个 builder 实例（可通过 <code>docker buildx ls</code> 查看当前有哪些 builder）。</td>
+</tr>
+<tr>
+<td><code>--filter filter</code></td>
+<td>设定清理条件，例如：<code>until=24h</code> 表示只删除 24 小时前的缓存。</td>
+</tr>
+<tr>
+<td><code>-f</code>, <code>--force</code></td>
+<td><strong>不提示确认，直接执行清理操作</strong>。常用于脚本中。</td>
+</tr>
+<tr>
+<td><code>--keep-storage bytes</code></td>
+<td>保留指定大小的缓存空间，其余删除（如：<code>--keep-storage 5GB</code>）。</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td>输出更详细的清理信息。</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除所有未使用的缓存，并跳过确认提示</span></span><br><span class="line">docker buildx prune -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只删除 24 小时前的缓存，保留 10GB 的缓存空间</span></span><br><span class="line">docker buildx prune --filter <span class="string">&quot;until=24h&quot;</span> --keep-storage 10GB</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -1504,14 +1611,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">515k</span>
+    <span title="站点总字数">516k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">31:12</span>
+    <span title="站点阅读时长">31:16</span>
   </span>
 </div>
 <div class="busuanzi-count">
