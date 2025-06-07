@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/WdmJx0.png">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/5azhzj.png">
 <meta property="article:published_time" content="2025-06-06T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-06-07T02:59:56.233Z">
+<meta property="article:modified_time" content="2025-06-07T11:32:29.230Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -1053,7 +1053,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-07 10:59:56" itemprop="dateModified" datetime="2025-06-07T10:59:56+08:00">2025-06-07</time>
+      <time title="修改时间：2025-06-07 19:32:29" itemprop="dateModified" datetime="2025-06-07T19:32:29+08:00">2025-06-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1108,7 +1108,7 @@ i.ban {
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>13 分钟</span>
+      <span>14 分钟</span>
     </span>
 
         </div>
@@ -1374,7 +1374,7 @@ i.ban {
 <p>替换支持多架构的镜像后重新构建镜像就会成功</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">docker buildx build --platform linux/arm64 -t <span class="string">&quot;app.arm64&quot;</span> --load .</span><br><span class="line">docker buildx build --platform linux/amd64 -t <span class="string">&quot;app.amd64&quot;</span> --load .</span><br><span class="line"><span class="comment"># 列出镜像</span></span><br><span class="line">docker images</span><br><span class="line"><span class="comment">## 输出结果</span></span><br><span class="line">REPOSITORY              TAG                IMAGE ID       CREATED        SIZE</span><br><span class="line">app.amd64               latest             859162438372   2 hours ago    431MB</span><br><span class="line">app.arm64               latest             0058c70dd16e   2 hours ago    426MB</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看构建后镜像的架构</span></span><br><span class="line">docker inspect app.amd64 | jq <span class="string">&#x27;.[0].Architecture&#x27;</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line"><span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 我们也可以将构建后的镜像输出到本地目录</span></span><br><span class="line">docker buildx build --platform linux/amd64 -t <span class="string">&quot;app.amd64&quot;</span> --output <span class="built_in">type</span>=<span class="built_in">local</span>,dest=./app.amd64.tar .</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">docker buildx build --platform linux/arm64 -t <span class="string">&quot;app.arm64&quot;</span> --load .</span><br><span class="line">docker buildx build --platform linux/amd64 -t <span class="string">&quot;app.amd64&quot;</span> --load .</span><br><span class="line"><span class="comment"># 列出镜像</span></span><br><span class="line">docker images</span><br><span class="line"><span class="comment">## 输出结果</span></span><br><span class="line">REPOSITORY              TAG                IMAGE ID       CREATED        SIZE</span><br><span class="line">app.amd64               latest             859162438372   2 hours ago    431MB</span><br><span class="line">app.arm64               latest             0058c70dd16e   2 hours ago    426MB</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看构建后镜像的架构</span></span><br><span class="line">docker inspect app.amd64 | jq <span class="string">&#x27;.[0].Architecture&#x27;</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line"><span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 我们也可以将构建后的镜像输出到本地目录</span></span><br><span class="line">docker buildx build --platform linux/amd64 -t <span class="string">&quot;app.amd64&quot;</span> --output <span class="built_in">type</span>=docker,dest=./app.amd64.tar .</span><br><span class="line"><span class="comment"># 然后再将镜像导入到本地镜像仓库中</span></span><br><span class="line">docker load -i app.amd64.tar</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>--load</code>和 <code>--output</code>都不支持一个镜像多种架构，要构建像<code>openjdk:17-slim</code>这种支持多架构的镜像可以使用<code>--push</code>，一步就推送到远程仓库</p>
