@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 Docker Swarm 的 服务管理   Docker官方文档   Docker Swarm 官方文档">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-10T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-06-10T09:08:59.330Z">
+<meta property="article:modified_time" content="2025-06-10T10:07:38.347Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -882,7 +882,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">182</span>
+          <span class="site-state-item-count">183</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1044,7 +1044,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-10 21:30:05 / 修改时间：17:08:59" itemprop="dateCreated datePublished" datetime="2025-06-10T21:30:05+08:00">2025-06-10</time>
+      <time title="创建时间：2025-06-10 21:30:05 / 修改时间：18:07:38" itemprop="dateCreated datePublished" datetime="2025-06-10T21:30:05+08:00">2025-06-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1092,7 +1092,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4k</span>
+      <span>4.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1492,6 +1492,7 @@ replicated 和 global 模式适用于持续运行的服务，Swarm 会自动重�
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先在manager节点上创建一个 overlay 网络（适用于 Swarm 模式）</span></span><br><span class="line">docker network create --driver overlay my-overlay-net</span><br><span class="line"><span class="comment"># 创建驱动类型为 overlay 的网络，会立即同步所有 manager 节点，但不会同步到 worker 节点，只有当任务被分配到 worker 节点时，该网络才会同步到 worker 节点</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建服务并加入该网络</span></span><br><span class="line">docker service create \</span><br><span class="line">  --name web-service \</span><br><span class="line">  --network my-overlay-net \</span><br><span class="line">  --replicas 5 \</span><br><span class="line">  nginx</span><br><span class="line">  <span class="comment"># --network: 指定服务运行时连接到该网络，这样在同一个网络中的服务之间可以使用 服务名互相访问，实现服务发现和负载均衡。</span></span><br></pre></td></tr></table></figure>
 <div class="tips">
 <p><em><strong>小贴士</strong></em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker network <span class="built_in">ls</span></span><br><span class="line">NETWORK ID     NAME              DRIVER    SCOPE</span><br><span class="line">6b7aadbbd180   bridge            bridge    <span class="built_in">local</span></span><br><span class="line">5ddadf5d0608   docker_gwbridge   bridge    <span class="built_in">local</span></span><br><span class="line">21c6f5b1bedd   host              host      <span class="built_in">local</span></span><br><span class="line">idx465x3jg68   ingress           overlay   swarm</span><br><span class="line">a770c5ad4b13   none              null      <span class="built_in">local</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-1">
 <li class="lvl-2">初始化Swarm集群后，会创建一个默认的 overlay 网络: ingress，如果我们创建服务时没有指定网络，那么服务就会加入 ingress 网络。</li>
 <li class="lvl-2">但是这个默认的 ingress 网络并不能用于服务之间通过服务名称互相访问，但可以通过IP或Hostname访问服务。</li>
@@ -1818,6 +1819,9 @@ replicated 和 global 模式适用于持续运行的服务，Swarm 会自动重�
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2025/06/11/docker-swarm-overlay/" rel="next" title="Docker Swarm 之 网络(Overlay)">
+                  Docker Swarm 之 网络(Overlay) <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -1852,14 +1856,14 @@ replicated 和 global 模式适用于持续运行的服务，Swarm 会自动重�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">526k</span>
+    <span title="站点总字数">529k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">31:54</span>
+    <span title="站点阅读时长">32:02</span>
   </span>
 </div>
 <div class="busuanzi-count">
