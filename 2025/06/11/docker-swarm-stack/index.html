@@ -22,25 +22,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="分享成长与快乐的地方">
-<meta property="og:type" content="website">
-<meta property="og:title" content="飘逸峰的博客">
-<meta property="og:url" content="https://blog.hanqunfeng.com/archives/2024/08/index.html">
+    <meta name="description" content="摘要   本文介绍 Docker Swarm 的 栈管理   Docker官方文档   Docker Swarm 官方文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Swarm 之 栈(Stack)">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/06/11/docker-swarm-stack/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="分享成长与快乐的地方">
+<meta property="og:description" content="摘要   本文介绍 Docker Swarm 的 栈管理   Docker官方文档   Docker Swarm 官方文档">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-11T14:30:05.000Z">
+<meta property="article:modified_time" content="2025-06-11T09:48:48.661Z">
 <meta property="article:author" content="飘逸峰">
-<meta property="article:tag" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+<meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/archives/2024/08/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/06/11/docker-swarm-stack/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"archives/2024/08/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/06/11/docker-swarm-stack/","path":"2025/06/11/docker-swarm-stack/","title":"Docker Swarm 之 栈(Stack)"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>归档 | 飘逸峰的博客</title>
+<title>Docker Swarm 之 栈(Stack) | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -65,7 +67,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
 <style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -86,7 +88,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">飘逸峰的博客</h1>
+      <p class="site-title">飘逸峰的博客</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
@@ -852,7 +854,7 @@ i.ban {
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -865,6 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Stack简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack-%E9%80%9A%E5%B8%B8%E7%94%A8-Docker-Compose-%E6%96%87%E4%BB%B6%EF%BC%88YAML-%E6%A0%BC%E5%BC%8F%EF%BC%89-%E6%8F%8F%E8%BF%B0"><span class="nav-number">3.</span> <span class="nav-text">Stack 通常用 Docker Compose 文件（YAML 格式） 描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">Stack 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-config-%E8%BE%93%E5%87%BA%E6%9C%80%E7%BB%88%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">docker stack config: 输出最终的配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-deploy-%E9%83%A8%E7%BD%B2-stack"><span class="nav-number">4.2.</span> <span class="nav-text">docker stack deploy: 部署 stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-ls-%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89-stack"><span class="nav-number">4.3.</span> <span class="nav-text">docker stack ls: 列出所有 stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-services-%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.4.</span> <span class="nav-text">docker stack services:  查看服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-ps-%E5%88%97%E5%87%BA-stack-%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89%E6%9C%8D%E5%8A%A1%E5%AE%9E%E4%BE%8B"><span class="nav-number">4.5.</span> <span class="nav-text">docker stack ps: 列出 stack 下的所有服务实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-rm-%E5%81%9C%E6%AD%A2%E5%B9%B6%E5%88%A0%E9%99%A4-stack"><span class="nav-number">4.6.</span> <span class="nav-text">docker stack rm: 停止并删除 stack</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -950,76 +953,511 @@ i.ban {
         </ul>
       </div>
     </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/22/docker-command-image/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-22</time>
+        <br>
+      Docker 命令 之 镜像(Image)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/19/docker-install-aws/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-19</time>
+        <br>
+      AWS专有服务器如何安装Docker
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/28/docker-command-volume/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-28</time>
+        <br>
+      Docker 命令 之 数据卷(Volume)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/04/docker-compose/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-04</time>
+        <br>
+      Docker 命令 之 docker compose
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/05/docker-remote-connection/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-05</time>
+        <br>
+      Docker 之 远程连接
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
   </aside>
 
 
     </div>
 
-    <div class="main-inner archive posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        
-        <span class="collection-header">非常好! 目前共计 184 篇日志。 继续努力。</span>
-      </div>
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/06/11/docker-swarm-stack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Docker Swarm 之 栈(Stack) | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker Swarm 之 栈(Stack)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2024<span class="collection-year-count">25</span></span>
+
+      <time title="创建时间：2025-06-11 22:30:05 / 修改时间：17:48:48" itemprop="dateCreated datePublished" datetime="2025-06-11T22:30:05+08:00">2025-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2025/06/11/docker-swarm-stack/" class="leancloud_visitors" data-flag-title="Docker Swarm 之 栈(Stack)" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍 Docker Swarm 的 栈管理</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com">Docker官方文档</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/swarm/">Docker Swarm 官方文档</a></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="Stack简介">Stack简介</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>前面我们在Swarm中创建服务都是通过Service，每次创建一个，有没有类似<code>docker compose</code>的方式来创建多个服务呢？Docker Swarm为我们提供了Stack</p>
+</li>
+<li class="lvl-2">
+<p>在 Docker Swarm 中，Stack（栈） 是用来定义和部署一组相关服务的集合。你可以把它看成是一个应用的整体，由多个服务（service）、网络（network）、卷（volume）等组成。</p>
+</li>
+</ul>
+<h2 id="Stack-通常用-Docker-Compose-文件（YAML-格式）-描述">Stack 通常用 Docker Compose 文件（YAML 格式） 描述</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Stack 完全兼容 Docker Compose 文件，并可以在 compose 文件中声明副本集等与Service相关的配置项。</p>
+</li>
+<li class="lvl-2">
+<p>我用表格总结一下二者的差异，重点放在「Stack 支持的配置」上：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>Docker Compose (本地)</th>
+<th>Docker Stack (Swarm 集群)</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>✅</td>
+<td>❌</td>
+<td>Stack 不支持 name  属性</td>
+</tr>
+<tr>
+<td><code>build</code></td>
+<td>✅</td>
+<td>❌</td>
+<td>Stack 不支持 build 属性，只能使用image</td>
+</tr>
+<tr>
+<td><code>deploy</code></td>
+<td>❌（部分支持，通常被忽略）</td>
+<td>✅（核心支持）</td>
+<td>Stack 支持用 <code>deploy</code> 定义副本数、资源限制、更新策略等</td>
+</tr>
+<tr>
+<td><code>deploy.replicas</code></td>
+<td>❌</td>
+<td>✅</td>
+<td>定义服务副本数</td>
+</tr>
+<tr>
+<td><code>deploy.resources</code></td>
+<td>❌</td>
+<td>✅</td>
+<td>定义 CPU、内存限制</td>
+</tr>
+<tr>
+<td><code>deploy.placement</code></td>
+<td>❌</td>
+<td>✅</td>
+<td>定义服务调度策略（在哪些节点上运行）</td>
+</tr>
+<tr>
+<td><code>deploy.update_config</code></td>
+<td>❌</td>
+<td>✅</td>
+<td>定义滚动更新的参数</td>
+</tr>
+<tr>
+<td><code>deploy.restart_policy</code></td>
+<td>❌</td>
+<td>✅</td>
+<td>定义重启策略</td>
+</tr>
+<tr>
+<td><code>deploy.mode</code></td>
+<td>❌</td>
+<td>✅</td>
+<td><code>replicated</code> 或 <code>global</code></td>
+</tr>
+<tr>
+<td><code>depends_on</code></td>
+<td>✅</td>
+<td>🚫（被忽略）</td>
+<td>Stack 不支持容器启动顺序控制</td>
+</tr>
+<tr>
+<td><code>build</code></td>
+<td>✅</td>
+<td>🚫（被忽略）</td>
+<td>Stack 不支持直接构建镜像，只能用已存在的镜像</td>
+</tr>
+<tr>
+<td><code>network.external</code></td>
+<td>✅</td>
+<td>✅</td>
+<td>都支持外部网络</td>
+</tr>
+<tr>
+<td><code>volumes.external</code></td>
+<td>✅</td>
+<td>✅</td>
+<td>都支持外部卷</td>
+</tr>
+<tr>
+<td><code>configs</code></td>
+<td>🚫</td>
+<td>✅</td>
+<td>Stack 支持 Config 对象，适合配置文件管理</td>
+</tr>
+<tr>
+<td><code>secrets</code></td>
+<td>🚫</td>
+<td>✅</td>
+<td>Stack 支持 Secrets，用于安全存储敏感信息</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>以<code>Portainer</code>的stack配置文件为例</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L https://downloads.portainer.io/ce-lts/portainer-agent-stack.yml -o portainer-agent-stack.yml</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.2&quot;</span> <span class="comment">#  docker-compose版本，新版的docker已经不需要配置版本号了</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">agent:</span>  <span class="comment"># agent服务</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">portainer/agent:lts</span> <span class="comment"># 镜像，不能使用 Dockerfile</span></span><br><span class="line">    <span class="attr">volumes:</span>  <span class="comment"># 挂载卷</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/var/lib/docker/volumes:/var/lib/docker/volumes</span></span><br><span class="line">    <span class="attr">networks:</span> <span class="comment"># 挂载网络，必须是 overlay</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">agent_network</span></span><br><span class="line">    <span class="attr">deploy:</span>   <span class="comment"># 部署策略，service 特有属性</span></span><br><span class="line">      <span class="attr">mode:</span> <span class="string">global</span> <span class="comment"># 全局模式</span></span><br><span class="line">      <span class="attr">placement:</span> <span class="comment"># 部署条件</span></span><br><span class="line">        <span class="attr">constraints:</span> [<span class="string">node.platform.os</span> <span class="string">==</span> <span class="string">linux</span>] <span class="comment">#  运行在linux节点</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">portainer:</span> <span class="comment">#  portainer服务</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">portainer/portainer-ce:lts</span> <span class="comment">#  镜像</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">-H</span> <span class="string">tcp://tasks.agent:9001</span> <span class="string">--tlsskipverify</span> <span class="comment">#  启动参数</span></span><br><span class="line">    <span class="attr">ports:</span> <span class="comment"># 端口映射</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9443:9443&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9000:9000&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8000:8000&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span> <span class="comment">#  挂载卷</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">portainer_data:/data</span></span><br><span class="line">    <span class="attr">networks:</span> <span class="comment"># 挂载网络，与agent服务网络一致</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">agent_network</span></span><br><span class="line">    <span class="attr">deploy:</span> <span class="comment">#  部署配置</span></span><br><span class="line">      <span class="attr">mode:</span> <span class="string">replicated</span> <span class="comment"># 副本模式</span></span><br><span class="line">      <span class="attr">replicas:</span> <span class="number">1</span> <span class="comment">#  副本数量</span></span><br><span class="line">      <span class="attr">placement:</span> <span class="comment">#  部署条件</span></span><br><span class="line">        <span class="attr">constraints:</span> [<span class="string">node.role</span> <span class="string">==</span> <span class="string">manager</span>] <span class="comment">#  节点角色为manager</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span> <span class="comment">#  网络声明</span></span><br><span class="line">  <span class="attr">agent_network:</span> <span class="comment">#  网络名称</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">overlay</span> <span class="comment">#  网络驱动</span></span><br><span class="line">    <span class="attr">attachable:</span> <span class="literal">true</span> <span class="comment"># 允许容器加入</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span> <span class="comment">#  挂载卷声明</span></span><br><span class="line">  <span class="attr">portainer_data:</span> <span class="comment">#  挂载卷名称</span></span><br></pre></td></tr></table></figure>
+<h2 id="Stack-命令">Stack 命令</h2>
+<table>
+<thead>
+<tr>
+<th>子命令</th>
+<th>中文说明</th>
+<th>示例命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>config</code></td>
+<td>输出最终的配置文件（经过合并与变量替换后）</td>
+<td><code>docker stack config -c docker-compose.yml</code></td>
+</tr>
+<tr>
+<td><code>deploy</code></td>
+<td>部署新 stack 或更新已有 stack</td>
+<td><code>docker stack deploy -c docker-compose.yml mystack</code></td>
+</tr>
+<tr>
+<td><code>ls</code></td>
+<td>列出所有已部署的 stack</td>
+<td><code>docker stack ls</code></td>
+</tr>
+<tr>
+<td><code>ps</code></td>
+<td>查看 stack 中的所有任务（即各个容器实例）</td>
+<td><code>docker stack ps mystack</code></td>
+</tr>
+<tr>
+<td><code>rm</code></td>
+<td>删除一个或多个 stack</td>
+<td><code>docker stack rm mystack</code></td>
+</tr>
+<tr>
+<td><code>services</code></td>
+<td>列出某个 stack 中的所有服务</td>
+<td><code>docker stack services mystack</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="docker-stack-config-输出最终的配置文件"><code>docker stack config</code>: 输出最终的配置文件</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此命令也可以用来验证compose文件格式是否正确</span></span><br><span class="line">docker stack config -c portainer-agent-stack.yml</span><br></pre></td></tr></table></figure>
+<h3 id="docker-stack-deploy-部署-stack"><code>docker stack deploy</code>: 部署 stack</h3>
+<ul class="lvl-0">
+<li class="lvl-3">
+<p><code>docker stack deploy</code> == <code>docker stack up</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker stack deploy -c portainer-agent-stack.yml portainer</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Creating network portainer_agent_network</span><br><span class="line">Creating service portainer_agent</span><br><span class="line">Creating service portainer_portainer</span><br></pre></td></tr></table></figure>
+<h3 id="docker-stack-ls-列出所有-stack"><code>docker stack ls</code>: 列出所有 stack</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>docker stack ls</code> == <code>docker stack list</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker stack <span class="built_in">ls</span></span><br><span class="line"><span class="comment">## 输出，stack名称为portainer，其内部有两个服务，agent和portainer</span></span><br><span class="line">NAME        SERVICES</span><br><span class="line">portainer   2</span><br></pre></td></tr></table></figure>
+<h3 id="docker-stack-services-查看服务"><code>docker stack services</code>:  查看服务</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker stack services portainer</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">ID             NAME                  MODE         REPLICAS   IMAGE                        PORTS</span><br><span class="line">h5foyujr6jq9   portainer_agent       global       5/5        portainer/agent:lts</span><br><span class="line">zcek2jtloe09   portainer_portainer   replicated   1/1        portainer/portainer-ce:lts   *:8000-&gt;8000/tcp, *:9000-&gt;9000/tcp, *:9443-&gt;9443/tcp</span><br><span class="line"></span><br><span class="line"><span class="comment">## 等效</span></span><br><span class="line">docker service <span class="built_in">ls</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">ID             NAME                  MODE         REPLICAS   IMAGE                        PORTS</span><br><span class="line">h5foyujr6jq9   portainer_agent       global       5/5        portainer/agent:lts</span><br><span class="line">zcek2jtloe09   portainer_portainer   replicated   1/1        portainer/portainer-ce:lts   *:8000-&gt;8000/tcp, *:9000-&gt;9000/tcp, *:9443-&gt;9443/tcp</span><br></pre></td></tr></table></figure>
+<h3 id="docker-stack-ps-列出-stack-下的所有服务实例"><code>docker stack ps</code>: 列出 stack 下的所有服务实例</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">docker stack ps portainer</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">ID             NAME                                        IMAGE                        NODE       DESIRED STATE   CURRENT STATE            ERROR     PORTS</span><br><span class="line">wshk9s6gyxh1   portainer_agent.hvzkh3ip5ef8gx973z1ywahbu   portainer/agent:lts          worker2    Running         Running 30 seconds ago</span><br><span class="line">n3jjzmr2fcv9   portainer_agent.kp2zerd28xgz5mmglnje0jp22   portainer/agent:lts          manager1   Running         Running 59 seconds ago</span><br><span class="line">24yy1ew3tiya   portainer_agent.oymi74epagdqeprah7s81tsa2   portainer/agent:lts          manager2   Running         Running 3 minutes ago</span><br><span class="line">kpo4hhdvwcwd   portainer_agent.r7388xl84nczjtnf53pwh7hla   portainer/agent:lts          manager3   Running         Running 35 seconds ago</span><br><span class="line">t8xjbotfuas0   portainer_agent.xkww4853bbdgv7bv8771xibob   portainer/agent:lts          worker1    Running         Running 48 seconds ago</span><br><span class="line">qox3kqypon69   portainer_portainer.1                       portainer/portainer-ce:lts   manager2   Running         Running 2 minutes ago</span><br><span class="line"></span><br><span class="line"><span class="comment">## 等效</span></span><br><span class="line">docker service ps portainer_agent portainer_portainer</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">ID             NAME                                        IMAGE                        NODE       DESIRED STATE   CURRENT STATE            ERROR     PORTS</span><br><span class="line">wshk9s6gyxh1   portainer_agent.hvzkh3ip5ef8gx973z1ywahbu   portainer/agent:lts          worker2    Running         Running 7 minutes ago</span><br><span class="line">n3jjzmr2fcv9   portainer_agent.kp2zerd28xgz5mmglnje0jp22   portainer/agent:lts          manager1   Running         Running 8 minutes ago</span><br><span class="line">24yy1ew3tiya   portainer_agent.oymi74epagdqeprah7s81tsa2   portainer/agent:lts          manager2   Running         Running 10 minutes ago</span><br><span class="line">kpo4hhdvwcwd   portainer_agent.r7388xl84nczjtnf53pwh7hla   portainer/agent:lts          manager3   Running         Running 7 minutes ago</span><br><span class="line">t8xjbotfuas0   portainer_agent.xkww4853bbdgv7bv8771xibob   portainer/agent:lts          worker1    Running         Running 7 minutes ago</span><br><span class="line">qox3kqypon69   portainer_portainer.1                       portainer/portainer-ce:lts   manager2   Running         Running 10 minutes ago</span><br></pre></td></tr></table></figure>
+<h3 id="docker-stack-rm-停止并删除-stack"><code>docker stack rm</code>: 停止并删除 stack</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>docker stack rm</code> == <code>docker stack remove</code> == <code>docker stack down</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stack <span class="built_in">rm</span> portainer</span><br></pre></td></tr></table></figure>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2024-08-02T21:30:05+08:00"
-              content="2024-08-02">
-          08-02
-        </time>
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
       </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2024/08/02/gradle-depoly-maven-center-repository-new/" itemprop="url">
-            <span itemprop="name">发布Jar到Maven中央仓库--Gradle版(最新方式)</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2024-08-01T21:30:05+08:00"
-              content="2024-08-01">
-          08-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2024/08/01/mvn-depoly-maven-center-repository-new/" itemprop="url">
-            <span itemprop="name">发布Jar到Maven中央仓库--Maven版(最新方式)</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-
-    </div>
   </div>
-  
-  
-  
+</div>
 
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2025/06/11/docker-swarm-stack/" title="Docker Swarm 之 栈(Stack)">https://blog.hanqunfeng.com/2025/06/11/docker-swarm-stack/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"><i class="fa fa-tag"></i> docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/11/docker-swarm-overlay/" rel="prev" title="Docker Swarm 之 网络(Overlay)">
+                  <i class="fa fa-angle-left"></i> Docker Swarm 之 网络(Overlay)
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -1280,5 +1718,5 @@ darkmode.showWidget();
 
 
 </div>
-</body>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
 </html>
