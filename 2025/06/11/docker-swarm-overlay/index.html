@@ -29,13 +29,13 @@
 <meta property="og:site_name" content="飘逸峰的博客">
 <meta property="og:description" content="摘要   本文介绍 Docker Swarm 的 网络(Overlay)   Docker官方文档   Docker Swarm 官方文档">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/YvRbJE.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/9UVZzm.png">
 <meta property="article:published_time" content="2025-06-11T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-06-10T14:15:07.447Z">
+<meta property="article:modified_time" content="2025-06-11T03:08:45.420Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/YvRbJE.png">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/9UVZzm.png">
 
 
 <link rel="canonical" href="https://blog.hanqunfeng.com/2025/06/11/docker-swarm-overlay/">
@@ -869,7 +869,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Overlay-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Overlay 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swarm-%E4%B8%AD%E7%9A%84-overlay-%E7%BD%91%E7%BB%9C"><span class="nav-number">3.</span> <span class="nav-text">Swarm 中的 overlay 网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-gwbridge"><span class="nav-number">3.1.</span> <span class="nav-text">docker_gwbridge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ingress"><span class="nav-number">3.2.</span> <span class="nav-text">ingress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#overlay%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">overlay总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Boverlay%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">4.</span> <span class="nav-text">查看overlay网络中的负载均衡</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Overlay-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Overlay 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swarm-%E4%B8%AD%E7%9A%84-overlay-%E7%BD%91%E7%BB%9C"><span class="nav-number">3.</span> <span class="nav-text">Swarm 中的 overlay 网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-gwbridge"><span class="nav-number">3.1.</span> <span class="nav-text">docker_gwbridge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ingress"><span class="nav-number">3.2.</span> <span class="nav-text">ingress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#overlay%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">overlay总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Boverlay%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">4.</span> <span class="nav-text">查看overlay网络中的负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VXLAN%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">VXLAN是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-VXLAN%EF%BC%9F"><span class="nav-number">5.1.</span> <span class="nav-text">为什么需要 VXLAN？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VXLAN-%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">VXLAN 核心原理</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -983,10 +983,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/05/28/docker-command-volume/" rel="bookmark">
-        <time class="popular-posts-time">2025-05-28</time>
+      <a class="popular-posts-link" href="/2025/06/09/docker-swarm-node/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-09</time>
         <br>
-      Docker 命令 之 数据卷(Volume)
+      Docker Swarm 之 节点(Node)
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1044,15 +1044,9 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-11 21:30:05" itemprop="dateCreated datePublished" datetime="2025-06-11T21:30:05+08:00">2025-06-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-10 22:15:07" itemprop="dateModified" datetime="2025-06-10T22:15:07+08:00">2025-06-10</time>
+      <time title="创建时间：2025-06-11 21:30:05 / 修改时间：11:08:45" itemprop="dateCreated datePublished" datetime="2025-06-11T21:30:05+08:00">2025-06-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1100,14 +1094,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.3k</span>
+      <span>3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>8 分钟</span>
+      <span>11 分钟</span>
     </span>
 
         </div>
@@ -1239,10 +1233,10 @@ i.ban {
 <p>实际上Swarm中的所有容器都有两个网卡，一块对接宿主机上的 <code>261: docker_gwbridge</code>，另一块对接<code>/var/run/docker/netns/1-idx465x3jg</code>中的 <code>2: br0</code>。</p>
 </li>
 <li class="lvl-2">
-<p>当请求到达宿主机时，会通过<code>enp0s5</code>转发到<code>docker_gwbridge</code>，然后先被转到<code>ingress-sbox</code>容器，然后再经过其转发到<code>br0</code>网关，再由它负责查找目标容器。如果目标容器不在本节点，则通过<code>vxlan0</code>网络接口转发到其它节点进行查找。</p>
+<p>当请求到达宿主机时，会通过<code>enp0s5</code>转发到<code>docker_gwbridge</code>，然后先被转到<code>ingress-sbox</code>容器，然后再经过其转发到<code>br0</code>网关，再由它负责查找目标容器。如果目标容器不在本节点，则通过<code>vxlan0</code>网络接口转发到其它节点进行查找，中间经过一系列的网络地址转换。</p>
 </li>
 </ul>
-<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/YvRbJE.png" alt=""></p>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/9UVZzm.png" alt=""></p>
 <h2 id="查看overlay网络中的负载均衡">查看overlay网络中的负载均衡</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1252,17 +1246,66 @@ i.ban {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker service create --name my-nginx --replicas 5 --publish 80:80 nginx</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>查看<code>ingress_sbox</code>的<code>iptables</code>数据链</p>
+<p>查看<code>ingress_sbox</code>的<code>iptables</code>数据链中的 mangle 表</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">nsenter --net=/var/run/docker/netns/ingress_sbox iptables -nvL -t mangle</span><br><span class="line"><span class="comment">## 输出结果，这里看到 PREROUTING 链中有一条监听80端口的规则，其被打了Mark标记: 0x105，换算为10进制：261</span></span><br><span class="line">Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)</span><br><span class="line"> pkts bytes target     prot opt <span class="keyword">in</span>     out     <span class="built_in">source</span>               destination</span><br><span class="line">    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80 MARK <span class="built_in">set</span> 0x105</span><br><span class="line"></span><br><span class="line">Chain INPUT (policy ACCEPT 0 packets, 0 bytes)</span><br><span class="line"> pkts bytes target     prot opt <span class="keyword">in</span>     out     <span class="built_in">source</span>               destination</span><br><span class="line">    0     0 MARK       all  --  *      *       0.0.0.0/0            10.0.0.33            MARK <span class="built_in">set</span> 0x105</span><br><span class="line"></span><br><span class="line">Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)</span><br><span class="line"> pkts bytes target     prot opt <span class="keyword">in</span>     out     <span class="built_in">source</span>               destination</span><br><span class="line"></span><br><span class="line">Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)</span><br><span class="line"> pkts bytes target     prot opt <span class="keyword">in</span>     out     <span class="built_in">source</span>               destination</span><br><span class="line"></span><br><span class="line">Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)</span><br><span class="line"> pkts bytes target     prot opt <span class="keyword">in</span>     out     <span class="built_in">source</span>               destination</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>通过<code>ipvsadm</code>查看ipvs信息</p>
+<p>通过<code>ipvsadm</code>查看负载均衡信息</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果没有ipvsadm，则安装</span></span><br><span class="line">dnf install ipvsadm -y</span><br><span class="line"><span class="comment"># 查看ipvs信息</span></span><br><span class="line">nsenter --net=/var/run/docker/netns/ingress_sbox ipvsadm -Ln</span><br><span class="line"><span class="comment">## 输出，可以看到 FWM 261 rr，这里rr表示轮询</span></span><br><span class="line">IP Virtual Server version 1.2.1 (size=4096)</span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br><span class="line">FWM  261 rr</span><br><span class="line">  -&gt; 10.0.0.34:0                  Masq    1      0          0</span><br><span class="line">  -&gt; 10.0.0.35:0                  Masq    1      0          0</span><br><span class="line">  -&gt; 10.0.0.36:0                  Masq    1      0          0</span><br><span class="line">  -&gt; 10.0.0.37:0                  Masq    1      0          0</span><br><span class="line">  -&gt; 10.0.0.38:0                  Masq    1      0          0</span><br></pre></td></tr></table></figure>
-
+<blockquote>
+<p>ipvsadm 是 Linux 下管理 IPVS（IP Virtual Server）负载均衡器的命令之一</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果没有ipvsadm，则安装</span></span><br><span class="line">dnf install ipvsadm -y</span><br><span class="line"><span class="comment"># 查看ipvs信息</span></span><br><span class="line">nsenter --net=/var/run/docker/netns/ingress_sbox ipvsadm -Ln</span><br><span class="line"><span class="comment"># -L：表示列出当前 IPVS 的规则和状态（List）。</span></span><br><span class="line"><span class="comment"># -n：表示以数字方式显示地址和端口，而不进行 DNS 解析或端口名解析（即：IP 和端口号以数字显示，更直观，也更快）。</span></span><br><span class="line"><span class="comment">## 输出，可以看到 FWM 261 rr，这里rr表示轮询</span></span><br><span class="line">IP Virtual Server version 1.2.1 (size=4096)</span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br><span class="line">FWM  261 rr</span><br><span class="line">  -&gt; 10.0.0.34:0                  Masq    1      0          0</span><br><span class="line">  -&gt; 10.0.0.35:0                  Masq    1      0          0</span><br><span class="line">  -&gt; 10.0.0.36:0                  Masq    1      0          0</span><br><span class="line">  -&gt; 10.0.0.37:0                  Masq    1      0          0</span><br><span class="line">  -&gt; 10.0.0.38:0                  Masq    1      0          0</span><br><span class="line"><span class="comment">## 输出解释</span></span><br><span class="line"><span class="comment"># Prot: 协议（TCP/UDP）,这里是 FWM，表示Firewall Mark（防火墙标记）模式</span></span><br><span class="line"><span class="comment"># LocalAddress:Port: 本地地址和端口号，这里是 261 ，这是防火墙标记值（mark 值）,就是上面看到的那个16进制 0x105</span></span><br><span class="line"><span class="comment"># Scheduler: 调度算法，这里是 rr，表示轮询(round-robin)，调度算法还有 wrr（加权轮询）、lc（最少连接）等</span></span><br><span class="line"><span class="comment"># RemoteAddress:Port: 远程地址和端口号，这里是 10.0.0.34:0，表示负载均衡到的第一个节点，后面同理</span></span><br><span class="line"><span class="comment"># Forward: 转发策略，这里是 Masq，表示将负载均衡到的节点的IP地址转换成宿主机的IP地址，即 Masquerade（伪装）。转发方式（如：Masq、Tunnel、Direct Route）</span></span><br><span class="line"><span class="comment"># Weight: 权重，这里是 1，表示负载均衡到的节点的权重，默认为 1</span></span><br><span class="line"><span class="comment"># ActiveConn: 当前活动连接数，这里是 0</span></span><br><span class="line"><span class="comment"># InActConn: 当前不活动连接数（等待关闭的连接），这里是 0</span></span><br></pre></td></tr></table></figure>
+<h2 id="VXLAN是什么？">VXLAN是什么？</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>VXLAN（Virtual Extensible LAN）是 Cisco 公司开发的一种虚拟局域网（VLAN）技术，它可以将多个 VLAN 逻辑分组，并使用单个物理网络进行管理。VXLAN 的主要作用是提高网络性能和扩展性。</p>
+</li>
+<li class="lvl-2">
+<p>它本质上是一种 网络封装协议（overlay protocol），用来在已有的 IP 网络之上，构建二层（L2）虚拟网络。</p>
+</li>
+</ul>
+<h3 id="为什么需要-VXLAN？">为什么需要 VXLAN？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在传统数据中心或云计算中，经常有这样的需求：</p>
+<ul class="lvl-2">
+<li class="lvl-6">跨不同物理网络或子网，部署在不同服务器上的虚拟机或容器，要能像在同一个二层网络里一样直接通信。</li>
+<li class="lvl-6">VLAN（802.1Q）提供的二层隔离能力只有 12 bit VLAN ID（最多 4096 个 VLAN），在大型数据中心远远不够用。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>数据中心想要更好的弹性、跨区域部署、容器编排、大规模租户隔离。</p>
+</li>
+</ul>
+<h3 id="VXLAN-核心原理">VXLAN 核心原理</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>VXLAN 通过封装的方式，把二层以太网帧包在 UDP 数据报里，在三层 IP 网络中传递。</p>
+</li>
+<li class="lvl-2">
+<p>封装格式大致是：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+-------------------------+</span><br><span class="line">| 外层IP头 (IP Header)    |</span><br><span class="line">+-------------------------+</span><br><span class="line">| 外层UDP头 (UDP Header)  |</span><br><span class="line">+-------------------------+</span><br><span class="line">| VXLAN头 (VXLAN Header)  |</span><br><span class="line">+-------------------------+</span><br><span class="line">| 内层二层帧 (Ethernet)   |</span><br><span class="line">+-------------------------+</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>外层 IP/UDP 用于三层传输</p>
+</li>
+<li class="lvl-2">
+<p>内层保留原本的二层以太网帧（如 MAC 地址）</p>
+</li>
+<li class="lvl-2">
+<p>VXLAN 头部里面包含了一个 VNI (VXLAN Network Identifier)：24 bit，可支持 1600万个虚拟网络</p>
+</li>
+<li class="lvl-2">
+<p>简单示意图</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VM1 (10.1.1.1) ——&gt; VTEP1 ——&gt; Underlay IP网络 ——&gt; VTEP2 ——&gt; VM2 (10.1.1.2)</span><br><span class="line"></span><br><span class="line">VTEP1 封装：</span><br><span class="line">  内层以太网帧  + VXLAN头 (VNI) + UDP + IP</span><br><span class="line"></span><br><span class="line">VTEP2 解封装：</span><br><span class="line">  去掉外层头部，还原原始二层帧</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -1398,14 +1441,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">529k</span>
+    <span title="站点总字数">530k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">32:02</span>
+    <span title="站点阅读时长">32:06</span>
   </span>
 </div>
 <div class="busuanzi-count">
