@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 Docker Swarm 的 栈管理   Docker官方文档   Docker Swarm 官方文档   Compose file reference">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-11T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-06-12T07:25:38.731Z">
+<meta property="article:modified_time" content="2025-06-28T03:28:50.646Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Stack简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack-%E9%80%9A%E5%B8%B8%E7%94%A8-Docker-Compose-%E6%96%87%E4%BB%B6%EF%BC%88YAML-%E6%A0%BC%E5%BC%8F%EF%BC%89-%E6%8F%8F%E8%BF%B0"><span class="nav-number">3.</span> <span class="nav-text">Stack 通常用 Docker Compose 文件（YAML 格式） 描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">Stack 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-config-%E8%BE%93%E5%87%BA%E6%9C%80%E7%BB%88%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">docker stack config: 输出最终的配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-deploy-%E9%83%A8%E7%BD%B2-stack"><span class="nav-number">4.2.</span> <span class="nav-text">docker stack deploy: 部署 stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-ls-%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89-stack"><span class="nav-number">4.3.</span> <span class="nav-text">docker stack ls: 列出所有 stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-services-%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.4.</span> <span class="nav-text">docker stack services:  查看服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-ps-%E5%88%97%E5%87%BA-stack-%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89%E6%9C%8D%E5%8A%A1%E5%AE%9E%E4%BE%8B"><span class="nav-number">4.5.</span> <span class="nav-text">docker stack ps: 列出 stack 下的所有服务实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-rm-%E5%81%9C%E6%AD%A2%E5%B9%B6%E5%88%A0%E9%99%A4-stack"><span class="nav-number">4.6.</span> <span class="nav-text">docker stack rm: 停止并删除 stack</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Stack简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack-%E9%80%9A%E5%B8%B8%E7%94%A8-Docker-Compose-%E6%96%87%E4%BB%B6%EF%BC%88YAML-%E6%A0%BC%E5%BC%8F%EF%BC%89-%E6%8F%8F%E8%BF%B0"><span class="nav-number">3.</span> <span class="nav-text">Stack 通常用 Docker Compose 文件（YAML 格式） 描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">Stack 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-config-%E8%BE%93%E5%87%BA%E6%9C%80%E7%BB%88%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">docker stack config: 输出最终的配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-deploy-%E9%83%A8%E7%BD%B2-stack"><span class="nav-number">4.2.</span> <span class="nav-text">docker stack deploy: 部署 stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-ls-%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89-stack"><span class="nav-number">4.3.</span> <span class="nav-text">docker stack ls: 列出所有 stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-services-%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.4.</span> <span class="nav-text">docker stack services:  查看服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-ps-%E5%88%97%E5%87%BA-stack-%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89%E6%9C%8D%E5%8A%A1%E5%AE%9E%E4%BE%8B"><span class="nav-number">4.5.</span> <span class="nav-text">docker stack ps: 列出 stack 下的所有服务实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-stack-rm-%E5%81%9C%E6%AD%A2%E5%B9%B6%E5%88%A0%E9%99%A4-stack"><span class="nav-number">4.6.</span> <span class="nav-text">docker stack rm: 停止并删除 stack</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#deploy-%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="nav-number">5.</span> <span class="nav-text">deploy 参数详解</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -974,13 +974,6 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/06/04/docker-compose/" rel="bookmark">
-        <time class="popular-posts-time">2025-06-04</time>
-        <br>
-      Docker 命令 之 docker compose
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/05/28/docker-command-volume/" rel="bookmark">
         <time class="popular-posts-time">2025-05-28</time>
         <br>
@@ -992,6 +985,13 @@ i.ban {
         <time class="popular-posts-time">2025-06-12</time>
         <br>
       Docker Swarm 之 Config 与  Secret
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/04/docker-compose/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-04</time>
+        <br>
+      Docker 命令 之 docker compose
       </a>
     </li>
   </ul>
@@ -1050,7 +1050,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-12 15:25:38" itemprop="dateModified" datetime="2025-06-12T15:25:38+08:00">2025-06-12</time>
+      <time title="修改时间：2025-06-28 11:28:50" itemprop="dateModified" datetime="2025-06-28T11:28:50+08:00">2025-06-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1098,14 +1098,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.4k</span>
+      <span>1.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
+      <span>7 分钟</span>
     </span>
 
         </div>
@@ -1357,6 +1357,8 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stack <span class="built_in">rm</span> portainer</span><br></pre></td></tr></table></figure>
+<h2 id="deploy-参数详解"><code>deploy</code> 参数详解</h2>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">my-service:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">myapp:latest</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">deploy:</span></span><br><span class="line">      <span class="attr">replicas:</span> <span class="number">3</span>  <span class="comment"># 指定副本数，仅在 mode: replicated 下有效。表示同时运行3个容器副本。</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">mode:</span> <span class="string">replicated</span>  <span class="comment"># 服务运行模式，可选值：</span></span><br><span class="line">                        <span class="comment"># - replicated：通过 replicas 指定副本数量（默认）</span></span><br><span class="line">                        <span class="comment"># - global：每个节点运行一个副本，忽略 replicas 配置</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">resources:</span></span><br><span class="line">        <span class="attr">limits:</span>         <span class="comment"># 容器的“硬限制”，超过会被强制限制</span></span><br><span class="line">          <span class="attr">cpus:</span> <span class="string">&#x27;1.0&#x27;</span>    <span class="comment"># 限制每个容器最多使用1个逻辑 CPU</span></span><br><span class="line">          <span class="attr">memory:</span> <span class="string">512M</span>   <span class="comment"># 限制每个容器最多使用512MB内存</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">reservations:</span>   <span class="comment"># 容器的“软限制”，Swarm调度时预留资源参考值（不会强制限制）</span></span><br><span class="line">          <span class="attr">cpus:</span> <span class="string">&#x27;0.25&#x27;</span>   <span class="comment"># 建议每个容器至少分配0.25个CPU</span></span><br><span class="line">          <span class="attr">memory:</span> <span class="string">128M</span>   <span class="comment"># 建议每个容器至少分配128MB内存</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">restart_policy:</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">on-failure</span>  <span class="comment"># 控制容器重启行为，可选值：</span></span><br><span class="line">                               <span class="comment"># - none：不重启</span></span><br><span class="line">                               <span class="comment"># - on-failure：失败时重启（非0退出码）</span></span><br><span class="line">                               <span class="comment"># - any：无论是否失败都重启</span></span><br><span class="line">        <span class="attr">delay:</span> <span class="string">5s</span>              <span class="comment"># 重启前等待时间</span></span><br><span class="line">        <span class="attr">max_attempts:</span> <span class="number">3</span>        <span class="comment"># 最多重启3次</span></span><br><span class="line">        <span class="attr">window:</span> <span class="string">60s</span>            <span class="comment"># 判断失败次数的时间窗口（60秒内最多失败3次）</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">placement:</span></span><br><span class="line">        <span class="attr">constraints:</span>           <span class="comment"># 指定容器调度到哪些节点上运行，可用条件有：</span></span><br><span class="line">                               <span class="comment"># - node.role == manager/worker</span></span><br><span class="line">                               <span class="comment"># - node.hostname == xxx</span></span><br><span class="line">                               <span class="comment"># - node.labels.xxx == yyy</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">node.role</span> <span class="string">==</span> <span class="string">worker</span>  <span class="comment"># 只调度到 worker 节点</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">preferences:</span>           <span class="comment"># 调度偏好（不是强约束）</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">spread:</span> <span class="string">node.labels.zone</span>  <span class="comment"># 将服务均匀地分布在 zone 标签不同的节点上</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">update_config:</span>           <span class="comment"># 控制服务滚动更新的行为</span></span><br><span class="line">        <span class="attr">parallelism:</span> <span class="number">2</span>         <span class="comment"># 每次最多并发更新2个容器</span></span><br><span class="line">        <span class="attr">delay:</span> <span class="string">10s</span>             <span class="comment"># 每批更新之间等待10秒</span></span><br><span class="line">        <span class="attr">failure_action:</span> <span class="string">rollback</span>  <span class="comment"># 更新失败时的处理方式，可选值：</span></span><br><span class="line">                                  <span class="comment"># - pause：暂停更新（默认）</span></span><br><span class="line">                                  <span class="comment"># - continue：继续更新</span></span><br><span class="line">                                  <span class="comment"># - rollback：回滚到旧版本</span></span><br><span class="line">        <span class="attr">order:</span> <span class="string">stop-first</span>      <span class="comment"># 控制更新顺序，可选值：</span></span><br><span class="line">                               <span class="comment"># - stop-first（先停后启，默认）</span></span><br><span class="line">                               <span class="comment"># - start-first（先启后停，适用于无状态服务）</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">rollback_config:</span>         <span class="comment"># 回滚时的行为，字段与 update_config 类似</span></span><br><span class="line">        <span class="attr">parallelism:</span> <span class="number">1</span>         <span class="comment"># 回滚时每次最多处理1个容器</span></span><br><span class="line">        <span class="attr">delay:</span> <span class="string">5s</span>              <span class="comment"># 每批回滚之间等待5秒</span></span><br><span class="line">        <span class="attr">failure_action:</span> <span class="string">pause</span>  <span class="comment"># 回滚失败时暂停</span></span><br><span class="line">        <span class="attr">order:</span> <span class="string">stop-first</span>      <span class="comment"># 回滚时先停再启</span></span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -1495,14 +1497,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">535k</span>
+    <span title="站点总字数">536k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">32:27</span>
+    <span title="站点阅读时长">32:31</span>
   </span>
 </div>
 <div class="busuanzi-count">
