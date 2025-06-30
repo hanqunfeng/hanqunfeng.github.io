@@ -879,18 +879,18 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">185</span>
+          <span class="site-state-item-count">187</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags">
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -956,6 +956,284 @@ i.ban {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2020/11/27/gradle-depoly-maven-center-repository/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/11/27/gradle-depoly-maven-center-repository/" class="post-title-link" itemprop="url">发布Jar到Maven中央仓库--Gradle版</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-11-27 21:30:05" itemprop="dateCreated datePublished" datetime="2020-11-27T21:30:05+08:00">2020-11-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-08-02 14:36:05" itemprop="dateModified" datetime="2024-08-02T14:36:05+08:00">2024-08-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2020/11/27/gradle-depoly-maven-center-repository/" class="leancloud_visitors" data-flag-title="发布Jar到Maven中央仓库--Gradle版" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2"><a target="_blank" rel="noopener" href="https://oss.sonatype.org">https://oss.sonatype.org</a>已经不再支持新用户注册，新的注册地址为<a target="_blank" rel="noopener" href="https://central.sonatype.com">https://central.sonatype.com</a>,所以本文内容已经过时，但是老用户不受影响，依旧可以继续通过本文方式进行发布，唯一区别就是认证时使用User Token进行认证。目前官方没有提供gradle发布插件，不过可以使用第三方提供的插件<a target="_blank" rel="noopener" href="https://central.sonatype.org/publish/publish-portal-gradle/">https://central.sonatype.org/publish/publish-portal-gradle/</a>，这是使用<a target="_blank" rel="noopener" href="https://jreleaser.org/guide/latest/examples/maven/maven-central.html#_gradle">jreleaser</a>插件的示例 <a href="/2024/08/02/gradle-depoly-maven-center-repository-new/" title="发布Jar到Maven中央仓库--Gradle版(最新方式)">发布Jar到Maven中央仓库--Gradle版(最新方式)</a></li>
+<li class="lvl-2">通过本文，你将知道如何将Gradle构建的项目发布到Maven中央仓库</li>
+<li class="lvl-2">Maven构建方式请看 <a href="/2020/11/26/mvn-depoly-maven-center-repository/" title="发布Jar到Maven中央仓库--Maven版">发布Jar到Maven中央仓库--Maven版</a> 。</li>
+<li class="lvl-2">前三个步骤与 <a href="/2020/11/26/mvn-depoly-maven-center-repository/" title="发布Jar到Maven中央仓库--Maven版">发布Jar到Maven中央仓库--Maven版</a> 相同，不在赘述。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/27/gradle-depoly-maven-center-repository/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2020/11/26/mvn-depoly-maven-center-repository/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/11/26/mvn-depoly-maven-center-repository/" class="post-title-link" itemprop="url">发布Jar到Maven中央仓库--Maven版</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-11-26 21:30:05" itemprop="dateCreated datePublished" datetime="2020-11-26T21:30:05+08:00">2020-11-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-12-16 15:35:50" itemprop="dateModified" datetime="2024-12-16T15:35:50+08:00">2024-12-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/maven/" itemprop="url" rel="index"><span itemprop="name">maven</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2020/11/26/mvn-depoly-maven-center-repository/" class="leancloud_visitors" data-flag-title="发布Jar到Maven中央仓库--Maven版" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">2024-12-11，老用户发布的权限已失效，登录<a target="_blank" rel="noopener" href="https://central.sonatype.com">https://central.sonatype.com</a>后提示可以将原来的命名空间迁移过来，但笔者按提示迁移报错，于是邮件联系官方，官方回复说有两个选择，1是恢复<a target="_blank" rel="noopener" href="https://oss.sonatype.org">https://oss.sonatype.org</a>上的发布权限，2是官方的技术人员在后台将命名空间迁移到新的central上来，以后要求我只能使用新的方式发布，笔者选择了后者。</li>
+<li class="lvl-2"><a target="_blank" rel="noopener" href="https://oss.sonatype.org">https://oss.sonatype.org</a>已经不再支持新用户注册，新的注册地址为<a target="_blank" rel="noopener" href="https://central.sonatype.com">https://central.sonatype.com</a>,所以本文内容已经过时，但是老用户不受影响，依旧可以继续通过本文方式进行发布，唯一区别就是在配置文件<code>settings.xml</code>中添加<code>server</code>节点配置用户认证时不再支持用户名和密码的认证方式，而是要使用<code>User Token</code>的方式。最新的方式请参看 <a href="/2024/08/01/mvn-depoly-maven-center-repository-new/" title="发布Jar到Maven中央仓库--Maven版(最新方式)">发布Jar到Maven中央仓库--Maven版(最新方式)</a></li>
+<li class="lvl-2">通过本文，你将知道如何将Maven构建的项目发布到Maven中央仓库</li>
+<li class="lvl-2">Gradle构建方式请看 <a href="/2020/11/27/gradle-depoly-maven-center-repository/" title="发布Jar到Maven中央仓库--Gradle版">发布Jar到Maven中央仓库--Gradle版</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/26/mvn-depoly-maven-center-repository/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2102,271 +2380,6 @@ i.ban {
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2022/05/19/thymeleaf_study/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/05/19/thymeleaf_study/" class="post-title-link" itemprop="url">Spring Boot2学习笔记--thymeleaf</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-05-19 14:24:04" itemprop="dateCreated datePublished" datetime="2022-05-19T14:24:04+08:00">2022-05-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot2/" itemprop="url" rel="index"><span itemprop="name">springboot2</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-  
-<!-- 置顶，精品 -->
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-
-
-    <span id="/2022/05/19/thymeleaf_study/" class="leancloud_visitors" data-flag-title="Spring Boot2学习笔记--thymeleaf" title="阅读次数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
-    </span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>看完本文你将掌握如下知识点：</p>
-<ul class="lvl-0">
-<li class="lvl-2">Spring Boot(2.4.4)中使用<a target="_blank" rel="noopener" href="https://www.thymeleaf.org">thymeleaf(3.0.12)</a>的常用语法</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/05/19/thymeleaf_study/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2020/04/18/http-utils/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/04/18/http-utils/" class="post-title-link" itemprop="url">HttpClient、OkHttp、RestTemplate、WebClient的基本使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-04-18 23:20:15" itemprop="dateCreated datePublished" datetime="2020-04-18T23:20:15+08:00">2020-04-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-<!-- 置顶，精品 -->
-    <span class="post-meta-item">
-    <span>
-    <span class="post-meta-item-icon">
-            <i class="fa-regular fa-newspaper jingping">精品</i>
-    </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-
-
-    <span id="/2020/04/18/http-utils/" class="leancloud_visitors" data-flag-title="HttpClient、OkHttp、RestTemplate、WebClient的基本使用" title="阅读次数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
-    </span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>6.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>23 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">本文内容基于org.apache.httpcomponents:httpclient:4.5.12，com.squareup.okhttp3:okhttp:4.5.0，springboot:2.2.6.RELEASE，spring-boot-starter-webflux:2.2.6.RELEASE</li>
-<li class="lvl-2">工具类，实现get/post[参数，json，输入流，文件，gzip]等方法</li>
-<li class="lvl-2">提供了测试用例及服务端demo</li>
-<li class="lvl-2">github：<a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/springbootchapter/tree/master/chapter26">https://github.com/hanqunfeng/springbootchapter/tree/master/chapter26</a></li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/18/http-utils/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/15/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/17/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2393,14 +2406,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">536k</span>
+    <span title="站点总字数">543k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">32:31</span>
+    <span title="站点阅读时长">32:56</span>
   </span>
 </div>
 <div class="busuanzi-count">
