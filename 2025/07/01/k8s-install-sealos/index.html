@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 Linux 下 使用 sealos 安装 K8S 的方法，本文以 CentOS 8 为例。   K8S官网   k8s Github   sealos官网   sealos Github">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-01T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-07-01T09:57:04.985Z">
+<meta property="article:modified_time" content="2025-07-01T14:08:58.346Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="K8S">
 <meta name="twitter:card" content="summary">
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%89%8D%E8%AE%BE%E7%BD%AE-%E6%89%80%E6%9C%89%E8%8A%82%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">安装前设置(所有节点)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F%E4%B8%AA%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E5%BA%94%E8%AF%A5%E6%9C%89%E4%B8%8D%E5%90%8C%E7%9A%84%E4%B8%BB%E6%9C%BA%E5%90%8D%EF%BC%8C%E4%B8%BB%E6%9C%BA%E5%90%8D%E4%B8%8D%E8%A6%81%E5%B8%A6%E4%B8%8B%E5%88%92%E7%BA%BF"><span class="nav-number">2.1.</span> <span class="nav-text">每个集群节点应该有不同的主机名，主机名不要带下划线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%AD%A3%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%97%B6%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">修正系统的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-sealos"><span class="nav-number">2.3.</span> <span class="nav-text">安装 sealos</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAk8s%E9%9B%86%E7%BE%A4-master"><span class="nav-number">3.</span> <span class="nav-text">创建k8s集群(master)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%EF%BC%9A%E7%94%A8K8S%E9%83%A8%E7%BD%B2Nginx"><span class="nav-number">4.</span> <span class="nav-text">测试：用K8S部署Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0-K8s-%E8%8A%82%E7%82%B9-master%E8%8A%82%E7%82%B9%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">增加 K8s 节点(master节点执行命令)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-master-%E8%8A%82%E7%82%B9"><span class="nav-number">5.1.</span> <span class="nav-text">添加 master 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-worker-%E8%8A%82%E7%82%B9"><span class="nav-number">5.2.</span> <span class="nav-text">添加 worker 节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9-master%E8%8A%82%E7%82%B9%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">删除节点(master节点执行命令)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-master-%E8%8A%82%E7%82%B9"><span class="nav-number">6.1.</span> <span class="nav-text">删除 master 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-worker-%E8%8A%82%E7%82%B9"><span class="nav-number">6.2.</span> <span class="nav-text">删除 worker 节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E9%99%A4K8s%E9%9B%86%E7%BE%A4-master%E8%8A%82%E7%82%B9%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">7.</span> <span class="nav-text">清除K8s集群(master节点执行命令)</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%89%8D%E8%AE%BE%E7%BD%AE-%E6%89%80%E6%9C%89%E8%8A%82%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">安装前设置(所有节点)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F%E4%B8%AA%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E5%BA%94%E8%AF%A5%E6%9C%89%E4%B8%8D%E5%90%8C%E7%9A%84%E4%B8%BB%E6%9C%BA%E5%90%8D%EF%BC%8C%E4%B8%BB%E6%9C%BA%E5%90%8D%E4%B8%8D%E8%A6%81%E5%B8%A6%E4%B8%8B%E5%88%92%E7%BA%BF"><span class="nav-number">2.1.</span> <span class="nav-text">每个集群节点应该有不同的主机名，主机名不要带下划线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%AD%A3%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%97%B6%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">修正系统的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-sealos"><span class="nav-number">2.3.</span> <span class="nav-text">安装 sealos</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAk8s%E9%9B%86%E7%BE%A4-master"><span class="nav-number">3.</span> <span class="nav-text">创建k8s集群(master)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%EF%BC%9A%E7%94%A8K8S%E9%83%A8%E7%BD%B2Nginx"><span class="nav-number">4.</span> <span class="nav-text">测试：用K8S部署Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0-K8s-%E8%8A%82%E7%82%B9-master%E8%8A%82%E7%82%B9%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">增加 K8s 节点(master节点执行命令)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-master-%E8%8A%82%E7%82%B9"><span class="nav-number">5.1.</span> <span class="nav-text">添加 master 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-worker-%E8%8A%82%E7%82%B9"><span class="nav-number">5.2.</span> <span class="nav-text">添加 worker 节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9-master%E8%8A%82%E7%82%B9%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">删除节点(master节点执行命令)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-master-%E8%8A%82%E7%82%B9"><span class="nav-number">6.1.</span> <span class="nav-text">删除 master 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-worker-%E8%8A%82%E7%82%B9"><span class="nav-number">6.2.</span> <span class="nav-text">删除 worker 节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E9%99%A4K8s%E9%9B%86%E7%BE%A4-master%E8%8A%82%E7%82%B9%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">7.</span> <span class="nav-text">清除K8s集群(master节点执行命令)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sealos-%E5%91%BD%E4%BB%A4"><span class="nav-number">8.</span> <span class="nav-text">sealos 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E7%AE%A1%E7%90%86"><span class="nav-number">8.1.</span> <span class="nav-text">镜像管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clusterfile-%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4"><span class="nav-number">8.2.</span> <span class="nav-text">Clusterfile 方式安装集群</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -979,17 +979,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/15/mysql8-mha/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-15</time>
+      <a class="popular-posts-link" href="/2025/05/22/docker-command-image/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-22</time>
         <br>
-      MySql-MHA的构建方法
+      Docker 命令 之 镜像(Image)
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2024/02/23/macos-shell-useful/" rel="bookmark">
-        <time class="popular-posts-time">2024-02-23</time>
+      <a class="popular-posts-link" href="/2025/05/19/docker-install-aws/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-19</time>
         <br>
-      MacOS下一些有用的脚本
+      AWS专有服务器如何安装Docker
       </a>
     </li>
   </ul>
@@ -1042,7 +1042,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 21:30:05 / 修改时间：17:57:04" itemprop="dateCreated datePublished" datetime="2025-07-01T21:30:05+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-01 21:30:05 / 修改时间：22:08:58" itemprop="dateCreated datePublished" datetime="2025-07-01T21:30:05+08:00">2025-07-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1090,14 +1090,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.6k</span>
+      <span>2.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
+      <span>8 分钟</span>
     </span>
 
         </div>
@@ -1158,6 +1158,9 @@ i.ban {
 <li class="lvl-2">
 <p>准备三台可以连接外网的主机，不要安装docker,k8s等，如已安装需先卸载</p>
 </li>
+<li class="lvl-2">
+<p>(推荐)升级系统内核，本文中非必须，升级内核方法参看 <a href="/2025/06/29/k8s-install-kubeadm/" title="Linux 安装 K8S 之 kubeadm">Linux 安装 K8S 之 kubeadm</a></p>
+</li>
 </ul>
 <h3 id="每个集群节点应该有不同的主机名，主机名不要带下划线">每个集群节点应该有不同的主机名，主机名不要带下划线</h3>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加主机名映射: vi /etc/hosts</span></span><br><span class="line">10.211.55.12 k8s-m1</span><br><span class="line">10.211.55.13 k8s-w1</span><br><span class="line">10.211.55.14 k8s-w2</span><br></pre></td></tr></table></figure>
@@ -1165,10 +1168,22 @@ i.ban {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装chrony</span></span><br><span class="line"><span class="built_in">sudo</span> dnf install chrony -y</span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> --now chronyd</span><br><span class="line"><span class="comment"># 修正时间</span></span><br><span class="line"><span class="built_in">sudo</span> chronyc makestep</span><br><span class="line"><span class="comment"># 查看时间</span></span><br><span class="line"><span class="built_in">date</span></span><br></pre></td></tr></table></figure>
 <h3 id="安装-sealos">安装 sealos</h3>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载</span></span><br><span class="line">wget https://github.com/labring/sealos/releases/download/v5.0.1/sealos_5.0.1_linux_amd64.rpm</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">yum install -y sealos_5.0.1_linux_amd64.rpm</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>安装 sealos 的自动补全</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;source &lt;(sealos completion bash)&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
 <h2 id="创建k8s集群-master">创建k8s集群(master)</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>创建集群: 使用sealos创建集群只需要一行命令，目前官网建议安装的k8s版本为v1.29.9(小版本号越高越稳定)</p>
+<p>创建集群: 使用sealos创建集群只需要一行命令，目前官网示例中的k8s版本为v1.29.9(小版本号越高越稳定)</p>
+</li>
+<li class="lvl-2">
+<p>可以在<a target="_blank" rel="noopener" href="https://hub.docker.com">docker hub</a>上查询，或者使用 <a target="_blank" rel="noopener" href="https://explore.ggcr.dev/">Registry Explorer</a> 查看如下镜像的所有版本，不建议使用太高的版本，有可能安装失败。</p>
+</li>
+<li class="lvl-2">
+<p>注意 sealos 与 kubernetes 的版本有对应关系，目前 <code>Sealos &gt;=v5.0.0</code> 对应的 <code>K8s &gt;=1.28</code>，具体可以从<a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/deploy-kubernetes">sealos官网</a>查询</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 国内可以在镜像前面加上 registry.cn-shanghai.aliyuncs.com/</span></span><br><span class="line"><span class="comment"># sealos 推荐的网络接口是 cilium</span></span><br><span class="line">$ sealos run labring/kubernetes:v1.29.9 labring/helm:v3.9.4 labring/cilium:v1.13.4 \</span><br><span class="line">     --masters 10.211.55.12 \</span><br><span class="line">     --nodes 10.211.55.13,10.211.55.14 -p [your-ssh-passwd]</span><br><span class="line"></span><br><span class="line"><span class="comment">## 参数说明</span></span><br><span class="line">-masters: 指定 master 节点的 IP 地址，多个节点之间用逗号隔开，但必须是奇数</span><br><span class="line">-nodes: 指定 worker 节点的 IP 地址，多个节点之间用逗号隔开。</span><br><span class="line">-p, --passwd: 指定 SSH 登录密码</span><br><span class="line">-u, --user: 登录用户名，默认为 root</span><br><span class="line">-i, --pk=<span class="string">&#x27;/root/.ssh/id_rsa&#x27;</span>: 指定 SSH 密钥文件路径</span><br><span class="line">--port: 指定 SSH 端口，默认为 22</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 安装成功会显示如下内容</span></span><br><span class="line">ℹ️  Using Cilium version 1.13.4</span><br><span class="line">🔮 Auto-detected cluster name: kubernetes</span><br><span class="line">🔮 Auto-detected datapath mode: tunnel</span><br><span class="line">🔮 Auto-detected kube-proxy has been installed</span><br><span class="line">2025-07-01T16:59:27 info succeeded <span class="keyword">in</span> creating a new cluster, enjoy it!</span><br><span class="line">2025-07-01T16:59:27 info</span><br><span class="line">      ___           ___           ___           ___       ___           ___</span><br><span class="line">     /\  \         /\  \         /\  \         /\__\     /\  \         /\  \</span><br><span class="line">    /::\  \       /::\  \       /::\  \       /:/  /    /::\  \       /::\  \</span><br><span class="line">   /:/\ \  \     /:/\:\  \     /:/\:\  \     /:/  /    /:/\:\  \     /:/\ \  \</span><br><span class="line">  _\:\~\ \  \   /::\~\:\  \   /::\~\:\  \   /:/  /    /:/  \:\  \   _\:\~\ \  \</span><br><span class="line"> /\ \:\ \ \__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/__/    /:/__/ \:\__\ /\ \:\ \ \__\</span><br><span class="line"> \:\ \:\ \/__/ \:\~\:\ \/__/ \/__\:\/:/  / \:\  \    \:\  \ /:/  / \:\ \:\ \/__/</span><br><span class="line">  \:\ \:\__\    \:\ \:\__\        \::/  /   \:\  \    \:\  /:/  /   \:\ \:\__\</span><br><span class="line">   \:\/:/  /     \:\ \/__/        /:/  /     \:\  \    \:\/:/  /     \:\/:/  /</span><br><span class="line">    \::/  /       \:\__\         /:/  /       \:\__\    \::/  /       \::/  /</span><br><span class="line">     \/__/         \/__/         \/__/         \/__/     \/__/         \/__/</span><br><span class="line"></span><br><span class="line">                  Website: https://www.sealos.io/</span><br><span class="line">                  Address: github.com/labring/sealos</span><br><span class="line">                  Version: 5.0.1-2b74a1281</span><br></pre></td></tr></table></figure>
@@ -1198,7 +1213,47 @@ i.ban {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sealos delete --nodes 10.211.55.20,10.211.55.21</span><br></pre></td></tr></table></figure>
 <h2 id="清除K8s集群-master节点执行命令">清除K8s集群(master节点执行命令)</h2>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sealos reset</span><br></pre></td></tr></table></figure>
-
+<h2 id="sealos-命令">sealos 命令</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">Cluster Management Commands:</span><br><span class="line">  apply         使用 Clusterfile 在 Kubernetes 集群中运行云镜像</span><br><span class="line">  cert          更新 Kubernetes API Server 的证书</span><br><span class="line">  run           轻松运行云原生应用，可用于已有或新建集群</span><br><span class="line">  reset         重置集群中的所有内容</span><br><span class="line">  status        查看 sealos 的状态</span><br><span class="line"></span><br><span class="line">Node Management Commands:</span><br><span class="line">  add           向集群中添加节点</span><br><span class="line">  delete        从集群中移除节点</span><br><span class="line"></span><br><span class="line">Remote Operation Commands:</span><br><span class="line">  <span class="built_in">exec</span>          在指定节点上执行 shell 命令或脚本</span><br><span class="line">  scp           将文件复制到指定节点的远程主机上</span><br><span class="line"></span><br><span class="line">Experimental Commands:</span><br><span class="line">  registry      与镜像仓库相关的实验性功能</span><br><span class="line"></span><br><span class="line">Container and Image Commands:</span><br><span class="line">  build         根据 Containerfile 或 Kubefile 构建镜像</span><br><span class="line">  create        创建集群但不执行命令，用于检查镜像</span><br><span class="line">  diff          查看对象文件系统的更改</span><br><span class="line">  inspect       检查容器或镜像的配置信息</span><br><span class="line">  images        列出本地存储中的镜像</span><br><span class="line">  load          从归档文件加载镜像</span><br><span class="line">  login         登录到容器镜像仓库</span><br><span class="line">  <span class="built_in">logout</span>        登出容器镜像仓库</span><br><span class="line">  manifest      操作 manifest 列表和镜像索引</span><br><span class="line">  merge         合并多个镜像为一个</span><br><span class="line">  pull          从指定位置拉取镜像</span><br><span class="line">  push          将镜像推送到指定目标</span><br><span class="line">  rmi           从本地删除一个或多个镜像</span><br><span class="line">  save          将镜像保存为归档文件</span><br><span class="line">  tag           为本地镜像添加额外的名称标签</span><br><span class="line"></span><br><span class="line">Other Commands:</span><br><span class="line">  completion    生成指定 shell 的自动补全脚本</span><br><span class="line">  docs          生成 API 参考文档</span><br><span class="line">  <span class="built_in">env</span>           输出 sealos 使用的所有环境变量信息</span><br><span class="line">  gen           生成包含默认设置的 Clusterfile</span><br><span class="line">  version       打印版本信息</span><br></pre></td></tr></table></figure>
+<h3 id="镜像管理">镜像管理</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看所有镜像</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sealos images</span><br><span class="line">REPOSITORY                                                 TAG        IMAGE ID       CREATED         SIZE</span><br><span class="line">docker.io/labring/kubernetes                               v1.29.9    bca192f35556   2 months ago    669 MB</span><br><span class="line">docker.io/labring/cilium                                   v1.13.4    71aa52ad0a11   23 months ago   483 MB</span><br><span class="line">docker.io/labring/helm                                     v3.9.4     3376f6822067   2 years ago     46.4 MB</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>删除镜像</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sealos rmi docker.io/labring/kubernetes:v1.29.9</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>拉取镜像</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sealos pull docker.io/labring/kubernetes:v1.29.9</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>登录镜像仓库，建议登录仓库，这样可以提高拉取镜像的次数，避免拉取镜像失败</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker.io 官方dockerhub镜像仓库</span></span><br><span class="line">sealos login docker.io -u [username] -p [password]</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>为镜像打tag</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sealos tag docker.io/labring/kubernetes:v1.29.9 docker.io/hanqunfeng/kubernetes:v1.29.9</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>推送镜像</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sealos push docker.io/hanqunfeng/kubernetes:v1.29.9</span><br></pre></td></tr></table></figure>
+<h3 id="Clusterfile-方式安装集群">Clusterfile 方式安装集群</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成配置文件</span></span><br><span class="line">sealos gen labring/kubernetes:v1.29.9 labring/helm:v3.9.4 labring/cilium:v1.13.4 \</span><br><span class="line">     --masters 10.211.55.12 \</span><br><span class="line">     --nodes 10.211.55.13,10.211.55.14 -p [your-ssh-passwd] &gt; Clusterfile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行配置文件</span></span><br><span class="line">sealos apply -f Clusterfile</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -1334,14 +1389,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">545k</span>
+    <span title="站点总字数">546k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">33:02</span>
+    <span title="站点阅读时长">33:05</span>
   </span>
 </div>
 <div class="busuanzi-count">
