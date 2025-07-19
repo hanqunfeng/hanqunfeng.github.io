@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 K8S 的 Service ，本文以 CentOS 8 为例。   K8S官网   k8s Github   k8s Service 介绍">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-18T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-07-18T09:46:01.458Z">
+<meta property="article:modified_time" content="2025-07-19T05:42:38.953Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="K8S">
 <meta name="twitter:card" content="summary">
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service-%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">Service 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAService"><span class="nav-number">3.</span> <span class="nav-text">创建Service</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">命令行方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yaml%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BAservice"><span class="nav-number">3.2.</span> <span class="nav-text">yaml文件创建service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AEservice%EF%BC%8C%E8%BD%AE%E8%AF%A2pod"><span class="nav-number">4.</span> <span class="nav-text">访问service，轮询pod</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86service"><span class="nav-number">5.</span> <span class="nav-text">管理service</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service-%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">Service 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAService"><span class="nav-number">3.</span> <span class="nav-text">创建Service</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ClusterIP"><span class="nav-number">3.1.</span> <span class="nav-text">ClusterIP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NodePort"><span class="nav-number">3.2.</span> <span class="nav-text">NodePort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yaml%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BAservice"><span class="nav-number">3.3.</span> <span class="nav-text">yaml文件创建service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ExternalName"><span class="nav-number">3.4.</span> <span class="nav-text">ExternalName</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LoadBalancer"><span class="nav-number">3.5.</span> <span class="nav-text">LoadBalancer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-MetallB"><span class="nav-number">3.5.1.</span> <span class="nav-text">安装 MetallB</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-LoadBalancer-%E7%B1%BB%E5%9E%8B%E7%9A%84-service"><span class="nav-number">3.5.2.</span> <span class="nav-text">创建 LoadBalancer 类型的 service</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AEservice%EF%BC%8C%E8%BD%AE%E8%AF%A2pod"><span class="nav-number">4.</span> <span class="nav-text">访问service，轮询pod</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86service"><span class="nav-number">5.</span> <span class="nav-text">管理service</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -882,7 +882,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">196</span>
+          <span class="site-state-item-count">197</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -960,22 +960,10 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/" rel="bookmark">
-      
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/07/14/k8s-deployment/" rel="bookmark">
-        <time class="popular-posts-time">2025-07-14</time>
+      <a class="popular-posts-link" href="/2025/07/19/k8s-ingress-nginx/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-19</time>
         <br>
-      K8S 之 Deployment
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/06/10/docker-swarm-service/" rel="bookmark">
-        <time class="popular-posts-time">2025-06-10</time>
-        <br>
-      Docker Swarm 之 服务(Service)
+      K8S 之 Ingress Nginx
       </a>
     </li>
     <li class="popular-posts-item">
@@ -986,10 +974,24 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/10/docker-swarm-service/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-10</time>
+        <br>
+      Docker Swarm 之 服务(Service)
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/07/02/k8s-namespace/" rel="bookmark">
         <time class="popular-posts-time">2025-07-02</time>
         <br>
       K8S 之 Namespace
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/k8s-deployment/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      K8S 之 Deployment
       </a>
     </li>
   </ul>
@@ -1040,9 +1042,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-07-18 22:30:05 / 修改时间：17:46:01" itemprop="dateCreated datePublished" datetime="2025-07-18T22:30:05+08:00">2025-07-18</time>
+      <time title="创建时间：2025-07-18 22:30:05" itemprop="dateCreated datePublished" datetime="2025-07-18T22:30:05+08:00">2025-07-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-19 13:42:38" itemprop="dateModified" datetime="2025-07-19T13:42:38+08:00">2025-07-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1090,14 +1098,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
+      <span>2.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
+      <span>9 分钟</span>
     </span>
 
         </div>
@@ -1172,8 +1180,20 @@ i.ban {
 </li>
 </ul>
 <h2 id="创建Service">创建Service</h2>
-<h3 id="命令行方式">命令行方式</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先创建deployment，此时会为每个pod添加一个label app=nginx</span></span><br><span class="line">kubectl create deployment nginx --image=nginx --replicas=2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建service，，将deployment的pod暴露出来，暴露类型为ClusterIP</span></span><br><span class="line">kubectl expose deployment nginx --<span class="built_in">type</span>=ClusterIP --port=80</span><br><span class="line">$ kubectl get svc nginx</span><br><span class="line">NAME    TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">nginx   ClusterIP   10.96.14.90   &lt;none&gt;        80/TCP    60s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建service，将deployment的pod暴露出来，暴露类型为NodePort</span></span><br><span class="line">kubectl expose deployment nginx --<span class="built_in">type</span>=NodePort --port=80</span><br><span class="line"><span class="comment"># 查看service，此时可以看到service的端口和节点的端口，与 ClusterIP 的区别就是是否暴露在节点上的端口</span></span><br><span class="line">$ kubectl get svc nginx</span><br><span class="line">NAME    TYPE       CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE</span><br><span class="line">nginx   NodePort   10.96.7.8    &lt;none&gt;        80:32691/TCP   31s</span><br></pre></td></tr></table></figure>
+<h3 id="ClusterIP">ClusterIP</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>只能在集群内部访问</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先创建deployment，此时会为每个pod添加一个label app=nginx</span></span><br><span class="line">kubectl create deployment nginx --image=nginx --replicas=2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建service，，将deployment的pod暴露出来，暴露类型为ClusterIP</span></span><br><span class="line">kubectl expose deployment nginx --<span class="built_in">type</span>=ClusterIP --port=80</span><br><span class="line">$ kubectl get svc nginx</span><br><span class="line">NAME    TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">nginx   ClusterIP   10.96.14.90   &lt;none&gt;        80/TCP    60s</span><br></pre></td></tr></table></figure>
+<h3 id="NodePort">NodePort</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>暴露宿主机的端口，供外部访问</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建service，将deployment的pod暴露出来，暴露类型为NodePort</span></span><br><span class="line">kubectl expose deployment nginx --<span class="built_in">type</span>=NodePort --port=80</span><br><span class="line"><span class="comment"># 查看service，此时可以看到service的端口和节点的端口，与 ClusterIP 的区别就是是否暴露在节点上的端口</span></span><br><span class="line">$ kubectl get svc nginx</span><br><span class="line">NAME    TYPE       CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE</span><br><span class="line">nginx   NodePort   10.96.7.8    &lt;none&gt;        80:32691/TCP   31s</span><br></pre></td></tr></table></figure>
 <h3 id="yaml文件创建service">yaml文件创建service</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1187,8 +1207,107 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取service的 selector</span></span><br><span class="line">$ k get svc -owide</span><br><span class="line">NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE    SELECTOR</span><br><span class="line">kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP        4d5h   &lt;none&gt;</span><br><span class="line">nginx        NodePort    10.96.9.77   &lt;none&gt;        80:30080/TCP   8s     app=nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里有个名称为 kubernetes 的 service，其作用是为了方便集群内部的 Pod 调用 API Server 的统一入口</span></span><br><span class="line"><span class="comment"># 无论 API Server 实际运行在哪个节点哪个 IP，集群内部只要访问如下地址就能访问 API Server。</span></span><br><span class="line"><span class="comment"># https://kubernetes.default.svc</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="comment"># https://10.96.0.1</span></span><br><span class="line"><span class="comment"># 这个 Service 是 系统自带的，不建议删除或修改。</span></span><br></pre></td></tr></table></figure>
+<h3 id="ExternalName">ExternalName</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>可以将其它 namespace 的 service 别名到 当前 namespace，这样访问 service 时就不需要加上命名空间名称了</p>
+</li>
+<li class="lvl-2">
+<p>ExternalName Service 是纯 DNS CNAME 映射，我们不经可以映射集群内容服务，也可以映射集群外部服务。</p>
+</li>
+<li class="lvl-2">
+<p>原先的 service 访问方式：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在不同命名空间下创建service</span></span><br><span class="line"><span class="comment"># 创建两个命名空间以及下面的资源</span></span><br><span class="line"><span class="comment">## ns1</span></span><br><span class="line">kubectl create namespace ns1</span><br><span class="line">kubectl create deployment alpine-demo -n ns1 --image=alpine/curl --replicas=1 -- /bin/sh -c <span class="string">&quot;sleep infinity&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## ns2</span></span><br><span class="line">kubectl create namespace ns2</span><br><span class="line">kubectl create deployment nginx-demo -n ns2 --image=nginx --replicas=1</span><br><span class="line">kubectl expose deployment nginx-demo -n ns2 --<span class="built_in">type</span>=ClusterIP --port=80 --name=nginx-service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入 ns1 中的 pod 访问 ns2 中的 nginx-service</span></span><br><span class="line">kubectl <span class="built_in">exec</span> -it -n ns1 alpine-demo-66895487c8-sk4t4 -- /bin/sh</span><br><span class="line">curl nginx-service.ns2.svc.cluster.local</span><br><span class="line">curl nginx-service.ns2</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>ExternalName 访问</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 ns1 中创建 externalName 类型的 service，--external-name 指定 ns2 中的 nginx-service</span></span><br><span class="line">kubectl create service externalname nginx-service -n ns1 --external-name=nginx-service.ns2.svc.cluster.local</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>也可以通过 yaml 创建</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-service</span>                               <span class="comment"># service 名称</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">ns1</span>                                    <span class="comment"># 指定命名空间 为 ns1</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">externalName:</span> <span class="string">nginx-service.ns2.svc.cluster.local</span> <span class="comment"># 指定外部服务名，比如 www.baidu.com</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">ExternalName</span>                                <span class="comment"># 指定为 ExternalName 类型</span></span><br><span class="line">  <span class="attr">selector:</span>                                         <span class="comment"># 不需要配置 selector</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx-service</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看 service</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ k get svc -n ns1</span><br><span class="line">NAME            TYPE           CLUSTER-IP   EXTERNAL-IP                           PORT(S)   AGE</span><br><span class="line">nginx-service   ExternalName   &lt;none&gt;       nginx-service.ns2.svc.cluster.local   &lt;none&gt;    16s</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>此时再次进入 ns1 中的 pod 访问 ns2 中的 nginx-service 服务</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl <span class="built_in">exec</span> -it -n ns1 alpine-demo-66895487c8-sk4t4 -- /bin/sh</span><br><span class="line"><span class="comment"># 此时就不需要加上 ns2 的 namespace 了</span></span><br><span class="line">curl nginx-service</span><br></pre></td></tr></table></figure>
+<h3 id="LoadBalancer">LoadBalancer</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>LoadBalancer 是 Kubernetes Service 的一种类型，用于自动申请一个云厂商的负载均衡器（如 AWS ELB、GCP LB、阿里云 SLB），将外部流量转发到 Kubernetes 集群内部的 Pod 上。</p>
+</li>
+<li class="lvl-2">
+<p>在私有云上，需要借助第三方负载均衡器来实现，比如 <a target="_blank" rel="noopener" href="https://metallb.io">MetalLB</a>，<a target="_blank" rel="noopener" href="https://github.com/metallb/metallb">github</a></p>
+</li>
+</ul>
+<h4 id="安装-MetallB">安装 MetallB</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果您在IPVS模式下使用kube代理，从Kubernetes v1.14.2开始，您必须启用严格的ARP模式。请注意，如果您使用kube-router作为服务代理，则不需要这个，因为它默认启用了严格的ARP。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看将要产生的变更，如果有变更则返回非零状态码</span></span><br><span class="line">kubectl get configmap kube-proxy -n kube-system -o yaml | \</span><br><span class="line">sed -e <span class="string">&quot;s/strictARP: false/strictARP: true/&quot;</span> | \</span><br><span class="line">kubectl diff -f - -n kube-system</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实际应用变更，只有发生错误时才返回非零状态码</span></span><br><span class="line">kubectl get configmap kube-proxy -n kube-system -o yaml | \</span><br><span class="line">sed -e <span class="string">&quot;s/strictARP: false/strictARP: true/&quot;</span> | \</span><br><span class="line">kubectl apply -f - -n kube-system</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>安装MetalLB</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> METLB_VERSION=v0.15.2</span><br><span class="line">curl -L -o metallb.yaml https://raw.githubusercontent.com/metallb/metallb/<span class="variable">$&#123;METLB_VERSION&#125;</span>/config/manifests/metallb-native.yaml</span><br><span class="line">kubectl apply -f metallb.yaml</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看MetalLB资源</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ k get all -n metallb-system -owide</span><br><span class="line">NAME                              READY   STATUS    RESTARTS      AGE     IP               NODE          NOMINATED NODE   READINESS GATES</span><br><span class="line">pod/controller-58fdf44d87-bsp4z   1/1     Running   0             4m13s   10.244.194.104   k8s-worker1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">pod/speaker-sjvq5                 1/1     Running   0             4m13s   10.211.55.15     k8s-worker1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">pod/speaker-srpp4                 1/1     Running   0             4m13s   10.211.55.16     k8s-worker2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">pod/speaker-tbnls                 1/1     Running   2 (98s ago)   4m13s   10.211.55.11     k8s-master    &lt;none&gt;           &lt;none&gt;</span><br><span class="line"></span><br><span class="line">NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE     SELECTOR</span><br><span class="line">service/metallb-webhook-service   ClusterIP   10.96.233.8   &lt;none&gt;        443/TCP   4m14s   component=controller</span><br><span class="line"></span><br><span class="line">NAME                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE     CONTAINERS   IMAGES                            SELECTOR</span><br><span class="line">daemonset.apps/speaker   3         3         3       3            3           kubernetes.io/os=linux   4m13s   speaker      quay.io/metallb/speaker:v0.15.2   app=metallb,component=speaker</span><br><span class="line"></span><br><span class="line">NAME                         READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                               SELECTOR</span><br><span class="line">deployment.apps/controller   1/1     1            1           4m14s   controller   quay.io/metallb/controller:v0.15.2   app=metallb,component=controller</span><br><span class="line"></span><br><span class="line">NAME                                    DESIRED   CURRENT   READY   AGE     CONTAINERS   IMAGES                               SELECTOR</span><br><span class="line">replicaset.apps/controller-58fdf44d87   1         1         1       4m13s   controller   quay.io/metallb/controller:v0.15.2   app=metallb,component=controller,pod-template-hash=58fdf44d87</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>配置地址池:metallb-pool.yaml</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">metallb.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">IPAddressPool</span>                 <span class="comment"># 地址池类型</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">metallb-pool</span>                <span class="comment"># 地址池名称</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">metallb-system</span>         <span class="comment"># 命名空间</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">addresses:</span>                        <span class="comment"># 配置地址池</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">10.211</span><span class="number">.55</span><span class="number">.200</span><span class="number">-10.211</span><span class="number">.55</span><span class="number">.250</span>     <span class="comment"># 与 节点 相同的网段，负载均衡器可以分配的IP范围</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f metallb-pool.yaml</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>配置地址池的二级公告:metallb-advertisement.yaml</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">metallb.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">L2Advertisement</span>               <span class="comment"># 地址池二级公告类型</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">metallb-advertisement</span>       <span class="comment"># 公告名称</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">metallb-system</span>         <span class="comment"># 命名空间</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ipAddressPools:</span>                   <span class="comment"># 地址池名称列表，只有被公告的地址池才会被使用</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">metallb-pool</span>                    <span class="comment"># 地址池名称</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f metallb-advertisement.yaml</span><br></pre></td></tr></table></figure>
+<h4 id="创建-LoadBalancer-类型的-service">创建 LoadBalancer 类型的 service</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>metallb-service.yaml</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span>                  <span class="comment"># 指定使用的 API 版本，这里是 apps/v1，适用于 Deployment 资源</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span>                     <span class="comment"># Kubernetes 资源类型，这里是部署（Deployment）</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span>                       <span class="comment"># 标签，用于标识资源，可与 selector 匹配</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx</span>                        <span class="comment"># 资源名称，必须唯一（在同一命名空间下）</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">ns1</span>                     <span class="comment"># 命名空间，默认为 default</span></span><br><span class="line"><span class="attr">spec:</span>                                <span class="comment"># 配置项</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span>                        <span class="comment"># 副本数，表示希望运行多少个 Pod 实例</span></span><br><span class="line">  <span class="attr">selector:</span>                          <span class="comment"># 选择器，指定要管理的 Pod</span></span><br><span class="line">    <span class="attr">matchLabels:</span>                     <span class="comment"># 标签选择器</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span>                     <span class="comment"># 选择器，指定 Deployment 管理哪些 Pod（标签必须与 template 中匹配）</span></span><br><span class="line">  <span class="attr">template:</span>                          <span class="comment"># 模板，定义 Pod 的内容，具体可以参考 Pod 的配置</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span>                   <span class="comment"># Pod 的标签，必须与 selector 中的 matchLabels 一致</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">nginx</span>                 <span class="comment"># 容器使用的镜像，这里是官方的 nginx 镜像</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span>                  <span class="comment"># 容器的名称</span></span><br><span class="line"><span class="string">---</span>                                  <span class="comment"># 分割线</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span>                       <span class="comment"># api版本</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span>                        <span class="comment"># 资源类型</span></span><br><span class="line"><span class="attr">metadata:</span>                            <span class="comment"># 元数据</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx</span>                        <span class="comment"># service名称</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">ns1</span>                     <span class="comment"># 命名空间</span></span><br><span class="line"><span class="attr">spec:</span>                                <span class="comment"># 配置</span></span><br><span class="line">  <span class="attr">ports:</span>                             <span class="comment"># 端口</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span>                         <span class="comment"># 集群内访问端口，service的端口，一般配置为与 targetPort 一致，但是非必须</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">TCP</span>                    <span class="comment"># 协议</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">80</span>                   <span class="comment"># 容器端口, pod的端口，这个必须与实际容器端口一致</span></span><br><span class="line">  <span class="attr">selector:</span>                          <span class="comment"># 选择器</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span>                       <span class="comment"># pod的标签，即匹配pod的标签 app=nginx</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">LoadBalancer</span>                 <span class="comment"># service类型</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ k apply -f metallb-service.yaml</span><br><span class="line">deployment.apps/nginx created</span><br><span class="line">service/nginx created</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看service</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以看到 service 的类型为 LoadBalancer，并分配了 EXTERNAL-IP，这里还开放了nodePort 30613</span></span><br><span class="line">$ kubectl get svc -n ns1</span><br><span class="line">NAME         TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE</span><br><span class="line">nginx        LoadBalancer   10.96.210.244   10.211.55.200   80:30613/TCP   52s</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问service</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 service 的 port 访问，这里是 80</span></span><br><span class="line">curl 10.211.55.200</span><br><span class="line"><span class="comment"># 同样可以基于 nodeIP+nodePort 访问</span></span><br><span class="line">curl 10.211.55.11:30613</span><br></pre></td></tr></table></figure>
 <h2 id="访问service，轮询pod">访问service，轮询pod</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 在集群内，通过 CLUSTER-IP 访问</span></span><br><span class="line">curl 10.96.9.77</span><br><span class="line"><span class="comment"># 实际上在集群内部可以通过 &lt;serviceName&gt;.default.svc.cluster.local 访问，比如本示例为</span></span><br><span class="line">curl nginx.default.svc.cluster.local</span><br><span class="line"><span class="comment"># 这是因为在创建 service前，我们是不知道 service 的 IP 地址的，所以在其它pod中就可以预先使用 serviceName.default.svc.cluster.local 访问，k8s会自动将 serviceName.default.svc.cluster.local 解析为 service 的 CLUSTER-IP</span></span><br><span class="line"><span class="comment"># 在相同的 namespace 中，可以通过 serviceName 直接访问</span></span><br><span class="line">curl nginx</span><br><span class="line"></span><br><span class="line"><span class="comment">## 在集群外，通过 NODE-IP:NODE-PORT 访问</span></span><br><span class="line">curl 10.211.55.16:30080</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 在集群内</span></span><br><span class="line"><span class="comment"># 在相同的 namespace 中，可以通过 serviceName 直接访问</span></span><br><span class="line">curl nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过 CLUSTER-IP 访问</span></span><br><span class="line">curl 10.96.9.77</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在不同的 namespace 中，可以通过 &lt;serviceName&gt;.&lt;namespace&gt; 或者 &lt;serviceName&gt;.&lt;namespace&gt;.svc.cluster.local 访问，比如本示例为</span></span><br><span class="line">curl nginx.default</span><br><span class="line">curl nginx.default.svc.cluster.local</span><br><span class="line"><span class="comment"># 这是因为在创建 service前，我们是不知道 service 的 IP 地址的，所以在其它pod中就可以预先使用 &lt;serviceName&gt;.&lt;namespace&gt; 占位，k8s会自动将其解析为 service 的 CLUSTER-IP</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 在集群外</span></span><br><span class="line"><span class="comment"># 通过 NODE-IP:NODE-PORT 访问</span></span><br><span class="line">curl 10.211.55.16:30080</span><br></pre></td></tr></table></figure>
 <h2 id="管理service">管理service</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1310,6 +1429,9 @@ i.ban {
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2025/07/19/k8s-ingress-nginx/" rel="next" title="K8S 之 Ingress Nginx">
+                  K8S 之 Ingress Nginx <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -1344,14 +1466,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">566k</span>
+    <span title="站点总字数">570k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">34:19</span>
+    <span title="站点阅读时长">34:32</span>
   </span>
 </div>
 <div class="busuanzi-count">
