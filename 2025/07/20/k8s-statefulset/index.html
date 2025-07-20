@@ -22,25 +22,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="分享成长与快乐的地方">
-<meta property="og:type" content="website">
-<meta property="og:title" content="飘逸峰的博客">
-<meta property="og:url" content="https://blog.hanqunfeng.com/archives/2023/07/index.html">
+    <meta name="description" content="摘要   本文介绍 K8S 的 Statefulset ，本文以 CentOS 8 为例。   K8S官网   k8s Github   k8s Statefulset 介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S 之 Statefulset">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/07/20/k8s-statefulset/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="分享成长与快乐的地方">
+<meta property="og:description" content="摘要   本文介绍 K8S 的 Statefulset ，本文以 CentOS 8 为例。   K8S官网   k8s Github   k8s Statefulset 介绍">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-20T15:30:05.000Z">
+<meta property="article:modified_time" content="2025-07-20T15:33:29.602Z">
 <meta property="article:author" content="飘逸峰">
-<meta property="article:tag" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+<meta property="article:tag" content="K8S">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/archives/2023/07/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/07/20/k8s-statefulset/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"archives/2023/07/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/07/20/k8s-statefulset/","path":"2025/07/20/k8s-statefulset/","title":"K8S 之 Statefulset"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>归档 | 飘逸峰的博客</title>
+<title>K8S 之 Statefulset | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -65,7 +67,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
 <style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -86,7 +88,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">飘逸峰的博客</h1>
+      <p class="site-title">飘逸峰的博客</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
@@ -852,7 +854,7 @@ i.ban {
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -865,6 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Statefulset-%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">Statefulset 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Statefulset-%E7%AE%A1%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">Statefulset 管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Statefulset-%E5%88%9B%E5%BB%BA"><span class="nav-number">3.1.</span> <span class="nav-text">Statefulset 创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-Statefulset"><span class="nav-number">3.2.</span> <span class="nav-text">查看 Statefulset</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AEpod%E4%B8%AD%E7%9A%84redis%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.3.</span> <span class="nav-text">访问pod中的redis服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-Statefulset-%E8%AF%A6%E6%83%85"><span class="nav-number">3.4.</span> <span class="nav-text">查看 Statefulset 详情</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-Statefulset"><span class="nav-number">3.5.</span> <span class="nav-text">删除 Statefulset</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-Statefulset-%E6%97%A5%E5%BF%97"><span class="nav-number">3.6.</span> <span class="nav-text">查看 Statefulset 日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%9A%E5%8A%A8%E5%8D%87%E7%BA%A7%E4%B8%8E%E5%9B%9E%E6%BB%9A-Statefulset"><span class="nav-number">3.7.</span> <span class="nav-text">滚动升级与回滚 Statefulset</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deployment-%E5%92%8C-StatefulSet-%E7%9A%84%E5%AF%B9%E6%AF%94%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">Deployment 和 StatefulSet 的对比总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -950,239 +953,508 @@ i.ban {
         </ul>
       </div>
     </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/k8s-deployment/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      K8S 之 Deployment
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/18/k8s-service/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-18</time>
+        <br>
+      K8S 之 Service
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/07/07/aws-eks13-kubectl/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-07</time>
+        <br>
+      AWS-EKS-13--Kubectl
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/02/k8s-namespace/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-02</time>
+        <br>
+      K8S 之 Namespace
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2018/12/27/redis-cluster/" rel="bookmark">
+        <time class="popular-posts-time">2018-12-27</time>
+        <br>
+      Redis集群
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
   </aside>
 
 
     </div>
 
-    <div class="main-inner archive posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        
-        <span class="collection-header">非常好! 目前共计 199 篇日志。 继续努力。</span>
-      </div>
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/07/20/k8s-statefulset/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="K8S 之 Statefulset | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          K8S 之 Statefulset
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2023<span class="collection-year-count">61</span></span>
+
+      <time title="创建时间：2025-07-20 23:30:05 / 修改时间：23:33:29" itemprop="dateCreated datePublished" datetime="2025-07-20T23:30:05+08:00">2025-07-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/k8s/" itemprop="url" rel="index"><span itemprop="name">k8s</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2025/07/20/k8s-statefulset/" class="leancloud_visitors" data-flag-title="K8S 之 Statefulset" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍 K8S 的 Statefulset ，本文以 CentOS 8 为例。</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/">K8S官网</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes">k8s Github</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/workloads/controllers/statefulset/">k8s Statefulset 介绍</a></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="Statefulset-介绍">Statefulset 介绍</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Statefulset(缩写为 sts) 是 K8S 官方提供的一种控制器，用于管理有状态应用。例如，数据库应用，消息队列，等等。</p>
+</li>
+<li class="lvl-2">
+<p>Statefulset(有状态) 与 Deployment(无状态) 的区别是：</p>
+<ul class="lvl-2">
+<li class="lvl-4">Statefulset 创建的 Pod 会有相同的名称，并且会分配相同的持久卷。</li>
+<li class="lvl-4">Statefulset 创建的 Pod 使用 Headless Service(无头服务，没有ClusterIP)进行通信。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Statefulset-管理">Statefulset 管理</h2>
+<h3 id="Statefulset-创建">Statefulset 创建</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Statefulset 只能 通过 <code>yaml</code> 创建，不支持 <code>create</code> 创建</p>
+</li>
+<li class="lvl-2">
+<p>一个简单的 <code>redis-statefulset.yaml</code> 文件说明</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span>                      <span class="comment"># api版本</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span>                       <span class="comment"># 资源类型</span></span><br><span class="line"><span class="attr">metadata:</span>                           <span class="comment"># 元数据</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">redis-svc</span>                   <span class="comment"># service名称</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">sts-ns</span></span><br><span class="line"><span class="attr">spec:</span>                               <span class="comment"># 配置</span></span><br><span class="line">  <span class="attr">ports:</span>                            <span class="comment"># 端口</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">6379</span>                      <span class="comment"># 集群内访问端口，service的端口，一般配置为与 targetPort 一致，但是非必须</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">TCP</span>                   <span class="comment"># 协议</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">6379</span>                <span class="comment"># 容器端口, pod的端口，这个必须与实际容器端口一致</span></span><br><span class="line">  <span class="attr">selector:</span>                         <span class="comment"># 选择器</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">redis</span>                      <span class="comment"># pod的标签，即匹配pod的标签 app=redis</span></span><br><span class="line">  <span class="attr">clusterIP:</span> <span class="string">None</span>                   <span class="comment"># 集群IP设置为None，即为“Headless Service”</span></span><br><span class="line"><span class="string">---</span>                                 <span class="comment"># 分割线</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span>                  <span class="comment"># 指定使用的 API 版本，这里是 apps/v1，适用于 StatefulSet 资源</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StatefulSet</span>                    <span class="comment"># Kubernetes 资源类型，这里是部署（StatefulSet）</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">redis-sts</span>                    <span class="comment"># 资源名称，必须唯一（在同一命名空间下）</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">sts-ns</span></span><br><span class="line"><span class="attr">spec:</span>                                <span class="comment"># 配置项</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span>           <span class="comment"># 保留的历史版本数，默认值为 10，Deployment 和 StatefulSet 都有这个配置项。回滚时有用。</span></span><br><span class="line">  <span class="attr">selector:</span>                          <span class="comment"># 选择器，指定要管理的 Pod</span></span><br><span class="line">    <span class="attr">matchLabels:</span>                     <span class="comment"># 标签选择器</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">redis</span>                     <span class="comment"># 选择器，指定 StatefulSet 管理哪些 Pod（标签必须与 template 中匹配）</span></span><br><span class="line">  <span class="attr">updateStrategy:</span>                    <span class="comment"># 更新策略，这里要注意这个更新策略与Deployment的属性名字不一样</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">RollingUpdate</span>              <span class="comment"># 1.RollingUpdate：这是默认的更新策略。使用 RollingUpdate 更新策略时，在更新 StatefulSet 模板后， 老的 StatefulSet Pod 将被终止，并且将以受控方式自动创建新的 StatefulSet Pod。 更新期间，最多只能有 StatefulSet 的一个 Pod 运行于每个节点上。</span></span><br><span class="line">                                     <span class="comment"># 2.OnDelete：使用 OnDelete 更新策略时，在更新 StatefulSet 模板后，只有当你手动删除老的 StatefulSet Pod 之后，新的 StatefulSet Pod 才会被自动创建。</span></span><br><span class="line">    <span class="attr">rollingUpdate:</span>                   <span class="comment"># 滚动升级的配置</span></span><br><span class="line">      <span class="attr">partition:</span> <span class="number">0</span>                    <span class="comment"># 用于控制从第几个 Pod 开始滚动升级</span></span><br><span class="line">  <span class="attr">serviceName:</span> <span class="string">redis-svc</span>             <span class="comment"># 服务名称,sts对象使用无头服务，这个是必填项</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">2</span>                        <span class="comment"># 副本数，默认是 1</span></span><br><span class="line">  <span class="attr">template:</span>                          <span class="comment"># 模板，定义 Pod 的内容，具体可以参考 Pod 的配置</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">redis</span>                   <span class="comment"># Pod 的标签，必须与 selector 中的 matchLabels 一致</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">redis:6.2</span>             <span class="comment"># 容器使用的镜像，这里是官方的 redis 镜像</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">redis</span>                  <span class="comment"># 容器的名称，实际的名称为 sts-redis-&lt;number&gt;，从 0 开始递增</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>执行创建</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建命名空间</span></span><br><span class="line">kubectl create namespace sts-ns</span><br><span class="line"><span class="comment"># 创建 StatefulSet</span></span><br><span class="line">kubectl apply -f redis-statefulset.yaml</span><br></pre></td></tr></table></figure>
+<h3 id="查看-Statefulset">查看 Statefulset</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ k get all -n sts-ns</span><br><span class="line">NAME              READY   STATUS    RESTARTS   AGE</span><br><span class="line">pod/redis-sts-0   1/1     Running   0          40s</span><br><span class="line">pod/redis-sts-1   1/1     Running   0          24s</span><br><span class="line"></span><br><span class="line">NAME                TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE</span><br><span class="line">service/redis-svc   ClusterIP   None         &lt;none&gt;        6379/TCP   40s</span><br><span class="line"></span><br><span class="line">NAME                         READY   AGE</span><br><span class="line">statefulset.apps/redis-sts   2/2     40s</span><br></pre></td></tr></table></figure>
+<h3 id="访问pod中的redis服务">访问pod中的redis服务</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>既然是Headless Service，就只能在集群内部访问</p>
+</li>
+<li class="lvl-2">
+<p>在相同的 namespace 中，可以通过 <code>serviceName</code> 直接访问，访问指定的 pod，可以通过 <code>&lt;pod-name&gt;.&lt;service-name&gt;</code></p>
+</li>
+<li class="lvl-2">
+<p>在不同的 namespace 中，可以通过 <code>&lt;serviceName&gt;.&lt;namespace&gt;</code> 或者 <code>&lt;serviceName&gt;.&lt;namespace&gt;.svc.cluster.local</code> 访问，访问指定的 pod，可以通过 <code>&lt;pod-name&gt;.&lt;service-name&gt;.&lt;namespace&gt;.svc.cluster.local</code> 访问，因为 pod-name 是固定且唯一的</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ k <span class="built_in">exec</span> -it pod/redis-sts-0 -n sts-ns -- getent hosts redis-svc</span><br><span class="line">10.244.126.55   redis-svc.sts-ns.svc.cluster.local</span><br><span class="line">10.244.194.110  redis-svc.sts-ns.svc.cluster.local</span><br><span class="line"></span><br><span class="line">$ k <span class="built_in">exec</span> -it pod/redis-sts-0 -n sts-ns -- getent hosts redis-sts-1.redis-svc</span><br><span class="line">10.244.126.55   redis-sts-1.redis-svc.sts-ns.svc.cluster.local</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在集群外部访问，需要创建一个新的 Service，类型为 NodePort 或者 LoadBalancer，将redis服务暴露出去</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span>                      <span class="comment"># api版本</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span>                       <span class="comment"># 资源类型</span></span><br><span class="line"><span class="attr">metadata:</span>                           <span class="comment"># 元数据</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">redis-svc-out</span>               <span class="comment"># service名称</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">sts-ns</span></span><br><span class="line"><span class="attr">spec:</span>                               <span class="comment"># 配置</span></span><br><span class="line">  <span class="attr">ports:</span>                            <span class="comment"># 端口</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">6379</span>                      <span class="comment"># 集群内访问端口，service的端口，一般配置为与 targetPort 一致，但是非必须</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">TCP</span>                   <span class="comment"># 协议</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">6379</span>                <span class="comment"># 容器端口, pod的端口，这个必须与实际容器端口一致</span></span><br><span class="line">  <span class="attr">selector:</span>                         <span class="comment"># 选择器</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">redis</span>                      <span class="comment"># pod的标签，即匹配pod的标签 app=redis</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">LoadBalancer</span>                <span class="comment"># 负载均衡</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>执行</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建</span></span><br><span class="line">$ k create -f redis-svc-out.yaml</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">$ k get svc -n sts-ns</span><br><span class="line">NAME            TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)          AGE</span><br><span class="line">redis-svc       ClusterIP      None          &lt;none&gt;          6379/TCP         70m</span><br><span class="line">redis-svc-out   LoadBalancer   10.96.21.96   10.211.55.202   6379:31806/TCP   54m</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在集群外的机器上访问 redis，每次连接会轮询访问各个pod</span></span><br><span class="line">$ redis-cli -h 10.211.55.202 info server | grep redis_version</span><br><span class="line">redis_version:8.0.3</span><br></pre></td></tr></table></figure>
+<h3 id="查看-Statefulset-详情">查看 Statefulset 详情</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>当 Statefulset 运行错误时，可以通过该命令查看 Statefulset 的详情，找到错误原因</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe sts &lt;sts-name&gt;</span><br><span class="line">kubectl describe sts &lt;sts-name&gt; -n &lt;namespace-name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="删除-Statefulset">删除 Statefulset</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete sts &lt;sts-name&gt;</span><br><span class="line">kubectl delete sts &lt;sts-name&gt; -n &lt;namespace-name&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过 yaml 文件删除</span></span><br><span class="line">kubectl delete -f &lt;yaml-file&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="查看-Statefulset-日志">查看 Statefulset 日志</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs sts/&lt;sts-name&gt;</span><br><span class="line">kubectl logs sts/&lt;sts-name&gt; -n &lt;namespace-name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="滚动升级与回滚-Statefulset">滚动升级与回滚 Statefulset</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>对 <code>RollingUpdate</code> 类型的 <code>Statefulset</code> 的 <code>.spec.template</code> 的任何更新都将触发滚动更新。</p>
+</li>
+<li class="lvl-2">
+<p>我们修改过 <code>Statefulset</code> 的 <code>.spec.template</code>，并保存后，重新运行 <code>kubectl apply -f &lt;yaml-file&gt;</code>即可触发滚动升级。</p>
+</li>
+<li class="lvl-2">
+<p>如果只是更新容器的镜像，也可以通过如下命令触发滚动升级</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ k <span class="built_in">exec</span> -it pod/redis-sts-0 -n sts-ns -- redis-server -v</span><br><span class="line">Redis server v=6.2.19 sha=00000000:0 malloc=jemalloc-5.1.0 bits=64 build=c51c65e7ae83f735</span><br><span class="line"></span><br><span class="line"><span class="comment"># kubectl set image sts/&lt;sts-name&gt; &lt;container-name&gt;=&lt;image&gt;:&lt;tag&gt; --record=true</span></span><br><span class="line">kubectl <span class="built_in">set</span> image sts redis-sts redis=redis:8.0 --record=<span class="literal">true</span> -n sts-ns</span><br><span class="line"></span><br><span class="line">$ k <span class="built_in">exec</span> -it pod/redis-sts-0 -n sts-ns -- redis-server -v</span><br><span class="line">Redis server v=8.0.3 sha=00000000:1 malloc=jemalloc-5.3.0 bits=64 build=d4cb0aa008da4ca9</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看滚动升级状态</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl rollout status sts/&lt;sts-name&gt;</span></span><br><span class="line">$ kubectl rollout status sts redis-sts -n sts-ns</span><br><span class="line">partitioned roll out complete: 2 new pods have been updated...</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看历史版本</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 前面的序号表示版本号</span></span><br><span class="line">kubectl rollout <span class="built_in">history</span> sts redis-sts -n sts-ns</span><br><span class="line"><span class="comment"># 查看指定版本的详情</span></span><br><span class="line">kubectl rollout <span class="built_in">history</span> sts redis-sts -n sts-ns --revision=1</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>回滚</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 回退到前一个版本</span></span><br><span class="line">kubectl rollout undo sts redis-sts -n sts-ns</span><br><span class="line"><span class="comment"># 回到指定版本，这里 --to-revision=1 表示回到版本1</span></span><br><span class="line">kubectl rollout undo sts redis-sts -n sts-nsx --to-revision=1</span><br></pre></td></tr></table></figure>
+<h2 id="Deployment-和-StatefulSet-的对比总结">Deployment 和 StatefulSet 的对比总结</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th><strong>Deployment</strong></th>
+<th><strong>StatefulSet</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>用途</strong></td>
+<td>无状态应用（如 Web 服务、API 服务）</td>
+<td>有状态应用（如数据库、缓存：Redis、MySQL、Kafka）</td>
+</tr>
+<tr>
+<td><strong>Pod 名称</strong></td>
+<td>Pod 名字随机生成，如 <code>nginx-abc123</code></td>
+<td>Pod 名字有序，格式为 <code>name-0</code>、<code>name-1</code>、<code>name-2</code></td>
+</tr>
+<tr>
+<td><strong>稳定的标识</strong></td>
+<td><strong>不提供</strong>，每次重建 Pod 名字可能不同</td>
+<td><strong>提供</strong>，每个 Pod 的名字、网络 ID、存储持久化不变</td>
+</tr>
+<tr>
+<td><strong>存储卷</strong></td>
+<td>通常配合 PVC，但 Pod 重建时挂载卷可能变化</td>
+<td>配置 <code>volumeClaimTemplates</code>，每个 Pod 独立持久卷</td>
+</tr>
+<tr>
+<td><strong>滚动更新策略</strong></td>
+<td>支持 <code>maxSurge</code>、<code>maxUnavailable</code>，可并行更新 Pod</td>
+<td>默认 <strong>逐个顺序更新</strong> Pod（可用 <code>partition</code> 控制分批更新）</td>
+</tr>
+<tr>
+<td><strong>可用性</strong></td>
+<td>通常设计为 <strong>无状态多副本高可用</strong>，不保证 Pod 启动顺序或固定 IP</td>
+<td><strong>有状态且有序部署、删除、更新</strong>，通常单副本逐个维护可用性</td>
+</tr>
+<tr>
+<td><strong>服务访问</strong></td>
+<td>通过 ClusterIP、NodePort、LoadBalancer 访问</td>
+<td>推荐用 <strong>Headless Service (clusterIP: None)</strong>，Pod 有固定 DNS</td>
+</tr>
+<tr>
+<td><strong>典型应用场景</strong></td>
+<td>Web 应用、REST API、无状态微服务</td>
+<td>数据库（MySQL、PostgreSQL）、缓存（Redis）、队列（Kafka、RabbitMQ）</td>
+</tr>
+<tr>
+<td><strong>Pod 伸缩特性</strong></td>
+<td><strong>灵活伸缩</strong>，增加/减少副本无特定顺序</td>
+<td><strong>有序伸缩</strong>，<code>name-0</code> -&gt; <code>name-1</code> -&gt; <code>name-2</code>…</td>
+</tr>
+<tr>
+<td><strong>重建策略</strong></td>
+<td>Pod 崩溃后重建的是新 Pod，无持久存储数据可能丢失</td>
+<td>Pod 崩溃后重建的是相同 Pod 名字，挂载相同 PVC，不丢数据</td>
+</tr>
+</tbody>
+</table>
+<h2 id="后记">后记</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>StatefulSet 类似于 Deployment，同样支持扩缩容（scale 或者 hpa），但因为其是有状态的，所以需谨慎</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># scale</span></span><br><span class="line">kubectl scale sts redis-sts --replicas=5 -n sts-ns</span><br><span class="line"></span><br><span class="line"><span class="comment"># hpa，要求pod配置中有资源限制</span></span><br><span class="line">kubectl autoscale sts redis-sts --name=<span class="string">&quot;hpa-redis&quot;</span> --cpu-percent=50 --min=3 --max=10 -n sts-ns</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th><strong>可行性</strong></th>
+<th><strong>推荐情况</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>扩容（增加副本数）</strong></td>
+<td>✅ <strong>推荐</strong></td>
+<td>安全，新增 Pod 按序从 N-1 开始创建（<code>sts-name-0</code> -&gt; <code>sts-name-1</code> -&gt; <code>sts-name-2</code>）</td>
+</tr>
+<tr>
+<td><strong>缩容（减少副本数）</strong></td>
+<td>⚠️ <strong>小心使用</strong></td>
+<td>可能导致 Pod 及其关联 PVC 被废弃，<strong>数据可能丢失</strong></td>
+</tr>
+</tbody>
+</table>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-19T20:30:05+08:00"
-              content="2023-07-19">
-          07-19
-        </time>
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
       </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/19/aws-eks19-autoscaler-karpenter/" itemprop="url">
-            <span itemprop="name">AWS-EKS-19--Autoscaling 之 Karpenter</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-18T20:30:05+08:00"
-              content="2023-07-18">
-          07-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/18/aws-eks18-autoscaler-cas/" itemprop="url">
-            <span itemprop="name">AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-17T20:30:05+08:00"
-              content="2023-07-17">
-          07-17
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/17/aws-eks17-hpa/" itemprop="url">
-            <span itemprop="name">AWS-EKS-17--Horizontal Pod Autoscaler（HPA）</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-14T20:30:05+08:00"
-              content="2023-07-14">
-          07-14
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/14/aws-eks16-servcieaccount/" itemprop="url">
-            <span itemprop="name">AWS-EKS-16--聊一聊ServiceAccount</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-13T20:30:05+08:00"
-              content="2023-07-13">
-          07-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/13/aws-eks15-auth-pod/" itemprop="url">
-            <span itemprop="name">AWS-EKS-15--EKS权限管理(下)Pod 是如何调用 AWS 资源的</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-10T20:30:05+08:00"
-              content="2023-07-10">
-          07-10
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/10/aws-eks14-helm/" itemprop="url">
-            <span itemprop="name">AWS-EKS-14--Helm</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-07T23:50:05+08:00"
-              content="2023-07-07">
-          07-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/07/aws-eks13-kubectl/" itemprop="url">
-            <span itemprop="name">AWS-EKS-13--Kubectl</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-07T23:30:05+08:00"
-              content="2023-07-07">
-          07-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/07/aws-eks12-dashboard/" itemprop="url">
-            <span itemprop="name">AWS-EKS-12--部署 Dashboard UI</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-07T23:20:05+08:00"
-              content="2023-07-07">
-          07-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/07/aws-eks11-metrics/" itemprop="url">
-            <span itemprop="name">AWS-EKS-11--安装 Kubernetes Metrics Server</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-07-07T23:10:05+08:00"
-              content="2023-07-07">
-          07-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/07/07/aws-eks10-iam-share/" itemprop="url">
-            <span itemprop="name">AWS-EKS-10--EKS权限管理(上)向其他 IAM 用户授予权限</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-
-    </div>
   </div>
-  
-  
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2023/07/page/2/">2</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/archives/2023/07/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+</div>
 
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2025/07/20/k8s-statefulset/" title="K8S 之 Statefulset">https://blog.hanqunfeng.com/2025/07/20/k8s-statefulset/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/K8S/" rel="tag"><i class="fa fa-tag"></i> K8S</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/20/k8s-hpa/" rel="prev" title="K8S 之 Horizontal Pod Autoscaler（HPA）">
+                  <i class="fa fa-angle-left"></i> K8S 之 Horizontal Pod Autoscaler（HPA）
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -1443,5 +1715,5 @@ darkmode.showWidget();
 
 
 </div>
-</body>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
 </html>
