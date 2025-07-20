@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 Linux 下 使用 kubeadm 安装 K8S 的方法，本文以 CentOS 8 为例。   K8S官网   k8s Github   使用 kubeadm 引导集群   kubeadm 命令指南   用 kubeadm 进行管理">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-29T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-07-19T09:25:08.972Z">
+<meta property="article:modified_time" content="2025-07-20T03:10:41.428Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="K8S">
 <meta name="twitter:card" content="summary">
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%89%8D%E8%AE%BE%E7%BD%AE-%E6%89%80%E6%9C%89%E8%8A%82%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">安装前设置(所有节点)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%AD%A3%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%97%B6%E9%97%B4"><span class="nav-number">2.1.</span> <span class="nav-text">修正系统的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-docker-%E5%8F%AF%E9%80%89"><span class="nav-number">2.2.</span> <span class="nav-text">安装 docker(可选)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="nav-number">2.3.</span> <span class="nav-text">创建用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8"><span class="nav-number">2.4.</span> <span class="nav-text">升级内核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86-SELinux-%E8%AE%BE%E7%BD%AE%E4%B8%BA-permissive-%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%9B%B8%E5%BD%93%E4%BA%8E%E5%B0%86%E5%85%B6%E7%A6%81%E7%94%A8%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">将 SELinux 设置为 permissive 模式（相当于将其禁用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%81%E7%94%A8Firewalld"><span class="nav-number">2.6.</span> <span class="nav-text">禁用Firewalld</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%85%B3-Firewalld-%E5%BA%94%E8%AF%A5%E5%BC%80%E6%94%BE%E5%93%AA%E4%BA%9B%E7%AB%AF%E5%8F%A3%EF%BC%9F-%E5%AE%9E%E6%B5%8B%E8%BF%98%E6%98%AF%E4%BC%9A%E9%81%87%E5%88%B0%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.6.1.</span> <span class="nav-text">不关 Firewalld 应该开放哪些端口？(实测还是会遇到各种各样的问题)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%ADswap"><span class="nav-number">2.7.</span> <span class="nav-text">关闭swap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97"><span class="nav-number">2.8.</span> <span class="nav-text">加载内核模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0"><span class="nav-number">2.9.</span> <span class="nav-text">设置内核参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85containerd"><span class="nav-number">2.10.</span> <span class="nav-text">安装containerd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cri-dockerd-%E5%8F%AF%E9%80%89"><span class="nav-number">2.11.</span> <span class="nav-text">安装cri-dockerd(可选)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-kubelet-kubeadm-kubectl"><span class="nav-number">2.12.</span> <span class="nav-text">安装 kubelet, kubeadm, kubectl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4-master%E8%8A%82%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">创建集群(master节点)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%8A%82%E7%82%B9-worker%E8%8A%82%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">添加节点(worker节点)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%EF%BC%9A%E7%94%A8K8S%E9%83%A8%E7%BD%B2Nginx"><span class="nav-number">5.</span> <span class="nav-text">测试：用K8S部署Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-kubeadm-%E5%8D%B8%E8%BD%BD-Kubernetes"><span class="nav-number">6.</span> <span class="nav-text">通过 kubeadm 卸载 Kubernetes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2%E5%92%8C%E7%A6%81%E7%94%A8-kubelet-%E6%9C%8D%E5%8A%A1"><span class="nav-number">7.</span> <span class="nav-text">停止和禁用 kubelet 服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7-kubeadm-%E9%9B%86%E7%BE%A4"><span class="nav-number">8.</span> <span class="nav-text">升级 kubeadm 集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E6%AD%A5%E9%AA%A4"><span class="nav-number">8.1.</span> <span class="nav-text">升级步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7-master-%E8%8A%82%E7%82%B9"><span class="nav-number">8.1.1.</span> <span class="nav-text">升级 master 节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7-worker-%E8%8A%82%E7%82%B9"><span class="nav-number">8.1.2.</span> <span class="nav-text">升级 worker 节点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E8%AF%81%E4%B9%A6"><span class="nav-number">9.</span> <span class="nav-text">更新证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes-%E8%8A%82%E7%82%B9%E7%BB%84%E4%BB%B6"><span class="nav-number">10.</span> <span class="nav-text">Kubernetes 节点组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crictl-%E5%91%BD%E4%BB%A4"><span class="nav-number">11.</span> <span class="nav-text">crictl 命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nerdctl"><span class="nav-number">12.</span> <span class="nav-text">nerdctl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k8s%E6%8C%87%E6%A0%87%E7%9B%91%E6%8E%A7"><span class="nav-number">13.</span> <span class="nav-text">k8s指标监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5-k8s-%E9%9B%86%E7%BE%A4"><span class="nav-number">14.</span> <span class="nav-text">远程连接 k8s 集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E4%B8%8D%E5%AD%98%E5%9C%A8-kubeconfig-%E6%96%87%E4%BB%B6"><span class="nav-number">14.1.</span> <span class="nav-text">本地不存在 kubeconfig 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%B7%B2%E5%AD%98%E5%9C%A8-kubeconfig-%E6%96%87%E4%BB%B6"><span class="nav-number">14.2.</span> <span class="nav-text">本地已存在 kubeconfig 文件</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%89%8D%E8%AE%BE%E7%BD%AE-%E6%89%80%E6%9C%89%E8%8A%82%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">安装前设置(所有节点)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%AD%A3%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%97%B6%E9%97%B4"><span class="nav-number">2.1.</span> <span class="nav-text">修正系统的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-docker-%E5%8F%AF%E9%80%89"><span class="nav-number">2.2.</span> <span class="nav-text">安装 docker(可选)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="nav-number">2.3.</span> <span class="nav-text">创建用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8"><span class="nav-number">2.4.</span> <span class="nav-text">升级内核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86-SELinux-%E8%AE%BE%E7%BD%AE%E4%B8%BA-permissive-%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%9B%B8%E5%BD%93%E4%BA%8E%E5%B0%86%E5%85%B6%E7%A6%81%E7%94%A8%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">将 SELinux 设置为 permissive 模式（相当于将其禁用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%81%E7%94%A8Firewalld"><span class="nav-number">2.6.</span> <span class="nav-text">禁用Firewalld</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%85%B3-Firewalld-%E5%BA%94%E8%AF%A5%E5%BC%80%E6%94%BE%E5%93%AA%E4%BA%9B%E7%AB%AF%E5%8F%A3%EF%BC%9F-%E5%AE%9E%E6%B5%8B%E8%BF%98%E6%98%AF%E4%BC%9A%E9%81%87%E5%88%B0%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.6.1.</span> <span class="nav-text">不关 Firewalld 应该开放哪些端口？(实测还是会遇到各种各样的问题)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%ADswap"><span class="nav-number">2.7.</span> <span class="nav-text">关闭swap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97"><span class="nav-number">2.8.</span> <span class="nav-text">加载内核模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0"><span class="nav-number">2.9.</span> <span class="nav-text">设置内核参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85containerd"><span class="nav-number">2.10.</span> <span class="nav-text">安装containerd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cri-dockerd-%E5%8F%AF%E9%80%89"><span class="nav-number">2.11.</span> <span class="nav-text">安装cri-dockerd(可选)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-kubelet-kubeadm-kubectl"><span class="nav-number">2.12.</span> <span class="nav-text">安装 kubelet, kubeadm, kubectl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4-master%E8%8A%82%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">创建集群(master节点)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%8A%82%E7%82%B9-worker%E8%8A%82%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">添加节点(worker节点)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%EF%BC%9A%E7%94%A8K8S%E9%83%A8%E7%BD%B2Nginx"><span class="nav-number">5.</span> <span class="nav-text">测试：用K8S部署Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-kubeadm-%E5%8D%B8%E8%BD%BD-Kubernetes"><span class="nav-number">6.</span> <span class="nav-text">通过 kubeadm 卸载 Kubernetes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2%E5%92%8C%E7%A6%81%E7%94%A8-kubelet-%E6%9C%8D%E5%8A%A1"><span class="nav-number">7.</span> <span class="nav-text">停止和禁用 kubelet 服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7-kubeadm-%E9%9B%86%E7%BE%A4"><span class="nav-number">8.</span> <span class="nav-text">升级 kubeadm 集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E6%AD%A5%E9%AA%A4"><span class="nav-number">8.1.</span> <span class="nav-text">升级步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7-master-%E8%8A%82%E7%82%B9"><span class="nav-number">8.1.1.</span> <span class="nav-text">升级 master 节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7-worker-%E8%8A%82%E7%82%B9"><span class="nav-number">8.1.2.</span> <span class="nav-text">升级 worker 节点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E8%AF%81%E4%B9%A6"><span class="nav-number">9.</span> <span class="nav-text">更新证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes-%E8%8A%82%E7%82%B9%E7%BB%84%E4%BB%B6"><span class="nav-number">10.</span> <span class="nav-text">Kubernetes 节点组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crictl-%E5%91%BD%E4%BB%A4"><span class="nav-number">11.</span> <span class="nav-text">crictl 命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nerdctl"><span class="nav-number">12.</span> <span class="nav-text">nerdctl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5-k8s-%E9%9B%86%E7%BE%A4"><span class="nav-number">13.</span> <span class="nav-text">远程连接 k8s 集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E4%B8%8D%E5%AD%98%E5%9C%A8-kubeconfig-%E6%96%87%E4%BB%B6"><span class="nav-number">13.1.</span> <span class="nav-text">本地不存在 kubeconfig 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%B7%B2%E5%AD%98%E5%9C%A8-kubeconfig-%E6%96%87%E4%BB%B6"><span class="nav-number">13.2.</span> <span class="nav-text">本地已存在 kubeconfig 文件</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -882,7 +882,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">197</span>
+          <span class="site-state-item-count">198</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -988,10 +988,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/05/27/docker-command-container/" rel="bookmark">
-        <time class="popular-posts-time">2025-05-27</time>
+      <a class="popular-posts-link" href="/2025/05/28/docker-command-volume/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-28</time>
         <br>
-      Docker 命令 之 容器(Container)
+      Docker 命令 之 数据卷(Volume)
       </a>
     </li>
   </ul>
@@ -1050,7 +1050,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-19 17:25:08" itemprop="dateModified" datetime="2025-07-19T17:25:08+08:00">2025-07-19</time>
+      <time title="修改时间：2025-07-20 11:10:41" itemprop="dateModified" datetime="2025-07-20T11:10:41+08:00">2025-07-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1098,14 +1098,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.7k</span>
+      <span>6.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>28 分钟</span>
+      <span>25 分钟</span>
     </span>
 
         </div>
@@ -1719,82 +1719,6 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 下载最新版本</span></span><br><span class="line">VERSION=2.1.3</span><br><span class="line">wget https://github.com/containerd/nerdctl/releases/download/v<span class="variable">$&#123;VERSION&#125;</span>/nerdctl-<span class="variable">$&#123;VERSION&#125;</span>-linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 解压</span></span><br><span class="line">tar -xvf nerdctl-<span class="variable">$&#123;VERSION&#125;</span>-linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 移动到系统 PATH</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mv</span> nerdctl /usr/local/bin/</span><br><span class="line"></span><br><span class="line"><span class="comment"># nerdctl 需要 sudo 权限</span></span><br><span class="line"><span class="comment">## 为 sudo 添加 PATH</span></span><br><span class="line"><span class="built_in">sudo</span> visudo</span><br><span class="line"><span class="comment">## 找到这一行</span></span><br><span class="line">Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line"><span class="comment">## 修改为，即将 nerdctl 所在的目录加入 PATH</span></span><br><span class="line">Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.测试</span></span><br><span class="line"><span class="comment">## 查看版本</span></span><br><span class="line"><span class="built_in">sudo</span> nerdctl version</span><br><span class="line"><span class="comment">## 列出容器，--namespace k8s.io 表示查看 k8s 中的容器</span></span><br><span class="line"><span class="built_in">sudo</span> nerdctl ps --namespace k8s.io</span><br><span class="line"></span><br><span class="line"><span class="comment">## 如果不想每次都加上 --namespace k8s.io，可以设置别名</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;alias kps=&#x27;sudo nerdctl --namespace=k8s.io ps&#x27;&quot;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"><span class="comment">## 测试</span></span><br><span class="line">kps</span><br></pre></td></tr></table></figure>
-<h2 id="k8s指标监控">k8s指标监控</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>Kubernetes 的 kubectl top 命令是依赖 Metrics API 的，默认并不内置。需要通过 metrics-server 来收集和提供节点/Pod 的资源用量数据（CPU、内存等）。</p>
-</li>
-<li class="lvl-2">
-<p>安装 <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/metrics-server">metrics-server</a></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L -o metrics-server.yaml https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml</span><br><span class="line">$ kubectl apply -f metrics-server.yaml</span><br><span class="line">serviceaccount/metrics-server created</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/system:metrics-server created</span><br><span class="line">rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created</span><br><span class="line">service/metrics-server created</span><br><span class="line">deployment.apps/metrics-server created</span><br><span class="line">apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>部署后发现pod没有运行成功</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$  k get all -n kube-system -l k8s-app=metrics-server</span><br><span class="line">NAME                                  READY   STATUS    RESTARTS   AGE</span><br><span class="line">pod/metrics-server-867d48dc9c-fgdjq   0/1     Running   0          16s</span><br><span class="line"></span><br><span class="line">NAME                     TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">service/metrics-server   ClusterIP   10.96.91.221   &lt;none&gt;        443/TCP   16s</span><br><span class="line"></span><br><span class="line">NAME                             READY   UP-TO-DATE   AVAILABLE   AGE</span><br><span class="line">deployment.apps/metrics-server   0/1     1            0           16s</span><br><span class="line"></span><br><span class="line">NAME                                        DESIRED   CURRENT   READY   AGE</span><br><span class="line">replicaset.apps/metrics-server-867d48dc9c   1         1         0       16s</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>检查日志</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ k logs deployment.apps/metrics-server -n kube-system</span><br><span class="line"><span class="comment">## 输出类似于</span></span><br><span class="line">E0703 23:02:38.120831       1 scraper.go:149] <span class="string">&quot;Failed to scrape node&quot;</span> err=<span class="string">&quot;Get \&quot;https://10.211.55.15:10250/metrics/resource\&quot;: tls: failed to verify certificate: x509: cannot validate certificate for 10.211.55.15 because it doesn&#x27;t contain any IP SANs&quot;</span> node=<span class="string">&quot;k8s-worker1&quot;</span></span><br><span class="line">E0703 23:02:38.127774       1 scraper.go:149] <span class="string">&quot;Failed to scrape node&quot;</span> err=<span class="string">&quot;Get \&quot;https://10.211.55.16:10250/metrics/resource\&quot;: tls: failed to verify certificate: x509: cannot validate certificate for 10.211.55.16 because it doesn&#x27;t contain any IP SANs&quot;</span> node=<span class="string">&quot;k8s-worker2&quot;</span></span><br><span class="line">E0703 23:02:38.140583       1 scraper.go:149] <span class="string">&quot;Failed to scrape node&quot;</span> err=<span class="string">&quot;Get \&quot;https://10.211.55.11:10250/metrics/resource\&quot;: tls: failed to verify certificate: x509: cannot validate certificate for 10.211.55.11 because it doesn&#x27;t contain any IP SANs&quot;</span> node=<span class="string">&quot;k8s-master&quot;</span></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>意思是 metrics-server 在通过 https://<node-ip>:10250 请求 kubelet 的时候，发现 kubelet 的证书不包含该 IP 的 Subject Alternative Name (SAN)，因此 TLS 校验失败。</p>
-</li>
-<li class="lvl-2">
-<p>解决方案: 添加 --kubelet-insecure-tls 参数，跳过 kubelet 的 TLS 证书校验(metrics-server 本身权限有限，风险可控，kubelet 自签证书维护成本高)</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">kubectl edit deployment metrics-server -n kube-system</span><br><span class="line"><span class="comment">## 在 args 中添加 --kubelet-insecure-tls</span></span><br><span class="line">  spec:</span><br><span class="line">    containers:</span><br><span class="line">    - args:</span><br><span class="line">      - --cert-dir=/tmp</span><br><span class="line">      - --secure-port=10250</span><br><span class="line">      - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname</span><br><span class="line">      - --kubelet-use-node-status-port</span><br><span class="line">      - --metric-resolution=15s</span><br><span class="line">      - --kubelet-insecure-tls   <span class="comment"># 添加此行</span></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><code>wq</code>保存后，等一会再次查看所有资源均已正常</p>
-</li>
-<li class="lvl-2">
-<p>查看所有 node 的资源</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ k top nodes</span><br><span class="line">NAME          CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)</span><br><span class="line">k8s-master    216m         10%      1712Mi          44%</span><br><span class="line">k8s-worker1   79m          3%       1025Mi          26%</span><br><span class="line">k8s-worker2   82m          4%       982Mi           25%</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>NAME</strong></td>
-<td>节点名称，Kubernetes 集群的节点名字。</td>
-</tr>
-<tr>
-<td><strong>CPU(cores)</strong></td>
-<td>当前节点 CPU 的瞬时使用量，单位是核心数（Core），比如 <code>216m</code> = 0.216 核心。<code>m</code> = <strong>millicores</strong>，1000m = 1核。</td>
-</tr>
-<tr>
-<td><strong>CPU(%)</strong></td>
-<td>当前 CPU 使用率，相对于该节点 CPU 总核数的百分比。比如 <code>10%</code> 表示节点 CPU 的 10% 被使用。</td>
-</tr>
-<tr>
-<td><strong>MEMORY(bytes)</strong></td>
-<td>节点当前使用的内存，单位是字节（例如 <code>1712Mi</code> = 1712 Mebibytes ≈ 1.7 GB）。</td>
-</tr>
-<tr>
-<td><strong>MEMORY(%)</strong></td>
-<td>节点内存使用率，占总内存的百分比。比如 <code>44%</code> 表示该节点内存使用了 44%。</td>
-</tr>
-</tbody>
-</table>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>查看所有 pod 的资源</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ k top pods -A</span><br><span class="line">NAMESPACE     NAME                                       CPU(cores)   MEMORY(bytes)</span><br><span class="line">default       nginx-5869d7778c-5682r                     0m           9Mi</span><br><span class="line">default       nginx-5869d7778c-thw8f                     0m           4Mi</span><br><span class="line">kube-system   calico-kube-controllers-7bfdc5b57c-q5xwp   6m           35Mi</span><br><span class="line">kube-system   calico-node-7pbbq                          42m          281Mi</span><br><span class="line">kube-system   calico-node-v4hzr                          47m          260Mi</span><br><span class="line">kube-system   calico-node-w47qq                          40m          263Mi</span><br><span class="line">kube-system   coredns-674b8bbfcf-2tvld                   2m           23Mi</span><br><span class="line">kube-system   coredns-674b8bbfcf-h6kx7                   2m           22Mi</span><br><span class="line">kube-system   etcd-k8s-master                            27m          85Mi</span><br><span class="line">kube-system   kube-apiserver-k8s-master                  49m          404Mi</span><br><span class="line">kube-system   kube-controller-manager-k8s-master         28m          100Mi</span><br><span class="line">kube-system   kube-proxy-nkbns                           1m           41Mi</span><br><span class="line">kube-system   kube-proxy-plqw8                           1m           25Mi</span><br><span class="line">kube-system   kube-proxy-sbgh6                           1m           34Mi</span><br><span class="line">kube-system   kube-scheduler-k8s-master                  8m           38Mi</span><br><span class="line">kube-system   metrics-server-56fb9549f4-rtt7n            4m           21Mi</span><br></pre></td></tr></table></figure>
 <h2 id="远程连接-k8s-集群">远程连接 k8s 集群</h2>
 <h3 id="本地不存在-kubeconfig-文件">本地不存在 kubeconfig 文件</h3>
 <ul class="lvl-0">
@@ -1970,14 +1894,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">570k</span>
+    <span title="站点总字数">572k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">34:33</span>
+    <span title="站点阅读时长">34:41</span>
   </span>
 </div>
 <div class="busuanzi-count">
