@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要   本文介绍 Docker Swarm 的 服务管理   Docker官方文档   Docker Swarm 官方文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Swarm 之 服务(Service)">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/06/10/docker-swarm-service/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要   本文介绍 Docker Swarm 的 服务管理   Docker官方文档   Docker Swarm 官方文档">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-10T13:30:05.000Z">
+<meta property="article:modified_time" content="2025-06-28T03:23:06.766Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/06/10/docker-swarm-service/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/06/10/docker-swarm-service/","path":"2025/06/10/docker-swarm-service/","title":"Docker Swarm 之 服务(Service)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Docker Swarm 之 服务(Service) | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service-%E4%B8%8E-Task"><span class="nav-number">2.</span> <span class="nav-text">Service 与 Task</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Service%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是 Service？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Task%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">什么是 Task？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.3.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service-%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">Service 相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-create-%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.1.</span> <span class="nav-text">docker service create:  创建服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-service-create-%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.1.</span> <span class="nav-text">docker service create 使用示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-ls-%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.2.</span> <span class="nav-text">docker service ls: 列出所有服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-inspect-%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E8%AF%A6%E6%83%85"><span class="nav-number">3.3.</span> <span class="nav-text">docker service inspect: 查看服务详情</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-log-%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E6%97%A5%E5%BF%97"><span class="nav-number">3.4.</span> <span class="nav-text">docker service log: 查看服务日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-ps-%E5%88%97%E5%87%BA%E6%9C%8D%E5%8A%A1%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.5.</span> <span class="nav-text">docker service ps: 列出服务任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-scale-%E6%89%A9%E5%AE%B9-%E7%BC%A9%E5%AE%B9%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.6.</span> <span class="nav-text">docker service scale: 扩容&#x2F;缩容服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-update-%E6%9B%B4%E6%96%B0%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.7.</span> <span class="nav-text">docker service update: 更新服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-rollback-%E5%9B%9E%E6%BB%9A%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.8.</span> <span class="nav-text">docker service rollback: 回滚服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-service-rm-%E5%88%A0%E9%99%A4%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.9.</span> <span class="nav-text">docker service rm: 删除服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E9%AA%8C%E6%8A%80%E5%B7%A7"><span class="nav-number">4.</span> <span class="nav-text">经验技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%A9%E4%BB%BB%E5%8A%A1%E8%BF%90%E8%A1%8C%E5%9C%A8%E6%8C%87%E5%AE%9A%E7%9A%84%E8%8A%82%E7%82%B9%E4%B8%8A%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">如何让任务运行在指定的节点上？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AEService%E6%9C%8D%E5%8A%A1%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">如何访问Service服务？</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">214</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/22/docker-command-image/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-22</time>
+        <br>
+      Docker 命令 之 镜像(Image)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/19/docker-install-aws/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-19</time>
+        <br>
+      AWS专有服务器如何安装Docker
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/27/docker-command-container/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-27</time>
+        <br>
+      Docker 命令 之 容器(Container)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/09/docker-swarm-node/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-09</time>
+        <br>
+      Docker Swarm 之 节点(Node)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/11/docker-swarm-stack/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-11</time>
+        <br>
+      Docker Swarm 之 栈(Stack)
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/06/10/docker-swarm-service/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Docker Swarm 之 服务(Service) | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker Swarm 之 服务(Service)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-10 21:30:05" itemprop="dateCreated datePublished" datetime="2025-06-10T21:30:05+08:00">2025-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-28 11:23:06" itemprop="dateModified" datetime="2025-06-28T11:23:06+08:00">2025-06-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2025/06/10/docker-swarm-service/" class="leancloud_visitors" data-flag-title="Docker Swarm 之 服务(Service)" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍 Docker Swarm 的 服务管理</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com">Docker官方文档</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/swarm/">Docker Swarm 官方文档</a></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="Service-与-Task">Service 与 Task</h2>
+<h3 id="什么是-Service？">什么是 Service？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Service 是用户定义的服务抽象，一个 Service 表示你希望在 Swarm 集群中运行的某个“应用”。</p>
+</li>
+<li class="lvl-2">
+<p>它定义了你要运行的容器镜像、启动命令、副本数量、网络配置、环境变量、端口映射等信息。</p>
+</li>
+<li class="lvl-2">
+<p>可以类比成 Kubernetes 中的 Deployment，代表的是“期望状态”。</p>
+</li>
+</ul>
+<h3 id="什么是-Task？">什么是 Task？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Task 是 Service 的实际执行实例，Swarm 会根据 Service 的配置生成 Task。</p>
+</li>
+<li class="lvl-2">
+<p>Service中的每个副本对应一个 Task，每一个 Task 代表一个要在某个节点上运行的容器。</p>
+</li>
+<li class="lvl-2">
+<p>Task 的状态由 Swarm 管理，它负责启动、调度、重启等生命周期操作。</p>
+</li>
+<li class="lvl-2">
+<p>当某个 Task 崩溃，Swarm 会自动重新调度一个新的 Task 来替代它。</p>
+</li>
+<li class="lvl-2">
+<p>Task 是不可变的，一旦创建不能修改，更新 Service 会创建新的 Task。</p>
+</li>
+</ul>
+<h3 id="示例">示例</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个名为 nginx 的 Service，并指定镜像为 nginx:latest，并设置副本数为 3。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker service create --name nginx --replicas 3 nginx:latest</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这里创建了一个名为 nginx 的 Service，并设置了副本数为 3，即Swarm会创建3个Task来完成这个任务，每个 Task 最终会对应一个具体的nginx容器。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>Service</th>
+<th>Task</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>定义</td>
+<td>用户定义的服务配置</td>
+<td>服务配置生成的执行单元</td>
+</tr>
+<tr>
+<td>数量关系</td>
+<td>一个 Service 包含多个 Task</td>
+<td>一个 Task 属于一个 Service</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>描述“期望状态”</td>
+<td>代表“实际状态”</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>可以更新</td>
+<td>不可变，更新意味着重新创建</td>
+</tr>
+<tr>
+<td>管理者</td>
+<td>由用户管理</td>
+<td>完全由 Swarm 调度和管理</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Service-相关命令">Service 相关命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>中文说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>create</td>
+<td>创建一个新的服务</td>
+</tr>
+<tr>
+<td>inspect</td>
+<td>显示一个或多个服务的详细信息</td>
+</tr>
+<tr>
+<td>logs</td>
+<td>获取服务或任务的日志</td>
+</tr>
+<tr>
+<td>ls</td>
+<td>列出所有服务</td>
+</tr>
+<tr>
+<td>ps</td>
+<td>列出一个或多个服务的任务（Task）</td>
+</tr>
+<tr>
+<td>rm</td>
+<td>删除一个或多个服务</td>
+</tr>
+<tr>
+<td>rollback</td>
+<td>回滚服务的配置更改</td>
+</tr>
+<tr>
+<td>scale</td>
+<td>扩缩一个或多个可复制服务的副本数量</td>
+</tr>
+<tr>
+<td>update</td>
+<td>更新服务配置</td>
+</tr>
+</tbody>
+</table>
+<h3 id="docker-service-create-创建服务"><code>docker service create</code>:  创建服务</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>常用参数说明</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>示例命令（含说明）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--name</code></td>
+<td>指定服务名称</td>
+<td><code>docker service create --name my-web nginx</code><br>→ 创建一个名为 <code>my-web</code> 的 nginx 服务</td>
+</tr>
+<tr>
+<td><code>--replicas</code></td>
+<td>设置副本数量（仅适用于 replicated 模式）</td>
+<td><code>docker service create --replicas 3 nginx</code><br>→ 启动 3 个 nginx 副本</td>
+</tr>
+<tr>
+<td><code>--publish</code> 或 <code>-p</code></td>
+<td>映射端口（格式如 <code>80:80</code>）</td>
+<td><code>docker service create -p 8080:80 nginx</code><br>→ 将容器的 80 端口映射到主机 8080</td>
+</tr>
+<tr>
+<td><code>--env</code> 或 <code>-e</code></td>
+<td>设置环境变量</td>
+<td><code>docker service create -e ENV=prod nginx</code><br>→ 设置环境变量 <code>ENV=prod</code></td>
+</tr>
+<tr>
+<td><code>--mount</code></td>
+<td>设置数据卷挂载</td>
+<td><code>docker service create --mount type=bind,src=/data,target=/app nginx</code><br>→ 将主机的 <code>/data</code> 目录挂载到容器内 <code>/app</code></td>
+</tr>
+<tr>
+<td><code>--constraint</code></td>
+<td>设置部署约束（如指定节点）</td>
+<td><code>docker service create --constraint 'node.labels.type == web' nginx</code><br>→ 仅部署在带标签 <code>type=web</code> 的节点上</td>
+</tr>
+<tr>
+<td><code>--network</code></td>
+<td>指定服务所属的网络（通常使用 overlay 网络）</td>
+<td><code>docker service create --network my-net nginx</code><br>→ 将服务连接到自定义网络 <code>my-net</code></td>
+</tr>
+<tr>
+<td><code>--detach</code> 或 <code>-d</code></td>
+<td>后台运行服务（默认行为）</td>
+<td><code>docker service create -d nginx</code><br>→ 后台创建服务，不阻塞终端，因为是默认行为，所以不加 -d 也是一样的，service不支持像 docker run 那样支持前台运行</td>
+</tr>
+<tr>
+<td><code>--limit-cpu</code> / <code>--limit-memory</code></td>
+<td>设置资源限制</td>
+<td><code>docker service create --limit-cpu 0.5 --limit-memory 256M nginx</code><br>→ 每个任务最多使用 0.5 个 CPU 和 256MB 内存</td>
+</tr>
+<tr>
+<td><code>--restart-condition</code></td>
+<td>设置重启策略（如 on-failure、any、none）</td>
+<td><code>docker service create --restart-condition on-failure nginx</code><br>→ 仅当容器失败时自动重启</td>
+</tr>
+<tr>
+<td><code>--mode</code></td>
+<td>指定服务运行模式，支持：<code>replicated</code>、<code>global</code>、<code>replicated-job</code>、<code>global-job</code></td>
+<td><code>docker service create --mode global nginx</code><br>→ 在集群每个节点上运行一个 nginx 实例</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>cpu 与 内存限制</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--limit-cpu 1.0</code></td>
+<td>限制每个容器最多使用 1 核 CPU时间 , 1 CPU = 在每个调度周期中可占满 CPU 的全部时间份额(一个周期时间默认100ms)</td>
+</tr>
+<tr>
+<td><code>--limit-cpu 0.5</code></td>
+<td>限制每个容器最多使用 50% 的单核CPU时间</td>
+</tr>
+<tr>
+<td><code>--limit-cpu 3.5</code></td>
+<td>每个容器最多可以使用 3.5 核的 CPU 时间，由调度器决定分配。并不是限制成只能跑在一个核上，而是限制“总共使用不超过 3.5 核的时间片”。</td>
+</tr>
+<tr>
+<td><code>--limit-memory 512M</code></td>
+<td>限制每个容器最多使用指定内存（如 512M）</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>服务运行模式（–mode）详解</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>模式名称</th>
+<th>说明</th>
+<th>使用场景示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>replicated</code></td>
+<td>默认模式。用户指定需要运行多少个副本，Swarm 在合适的节点上调度这些副本。</td>
+<td>典型的 Web 服务，如 nginx、Node.js、Java 应用等</td>
+</tr>
+<tr>
+<td><code>global</code></td>
+<td>每个可用节点只部署一个任务实例，不需要用户指定副本数。</td>
+<td>系统级服务，如日志收集器（Fluentd）、监控代理（Prometheus node exporter）</td>
+</tr>
+<tr>
+<td><code>replicated-job</code></td>
+<td>在多个节点上<strong>按副本数</strong>运行一次性任务，任务完成后即退出。</td>
+<td>数据处理、批处理任务，如转换文件或跑 ETL</td>
+</tr>
+<tr>
+<td><code>global-job</code></td>
+<td>在<strong>所有节点上各运行一次</strong>的短暂任务，执行完毕即退出。</td>
+<td>初始化脚本、每台机器上运行一次的数据清洗、初始化环境任务等</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>job 模式通常配合镜像中设定的入口命令使用，不适用于长期运行的服务。<br>
+replicated 和 global 模式适用于持续运行的服务，Swarm 会自动重启失败的任务。</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>服务重启策略（–restart-condition）详解</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>none</code></td>
+<td>不重启任务。即使任务失败，也不会尝试恢复。适用于短生命周期的任务或测试服务。</td>
+</tr>
+<tr>
+<td><code>on-failure</code></td>
+<td><strong>仅在任务异常失败时</strong>（exit code 非 0）自动重启。常用于可能偶发失败的服务。</td>
+</tr>
+<tr>
+<td><code>any</code>（默认）</td>
+<td><strong>无论任务如何退出</strong>（包括正常退出或失败），都会尝试重启。适用于持续运行服务。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>情景总结</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>情景</th>
+<th><code>none</code></th>
+<th><code>on-failure</code></th>
+<th><code>any</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>服务运行时崩溃（exit code ≠ 0）</td>
+<td>❌ 不重启</td>
+<td>✅ 自动重启</td>
+<td>✅ 自动重启</td>
+</tr>
+<tr>
+<td>服务正常结束（exit code = 0）</td>
+<td>❌ 不重启</td>
+<td>❌ 不重启</td>
+<td>✅ 自动重启</td>
+</tr>
+<tr>
+<td>持续运行型服务（如 nginx）</td>
+<td>❌ 不推荐</td>
+<td>可用</td>
+<td>✅ 推荐</td>
+</tr>
+<tr>
+<td>一次性任务（如批处理、数据初始化）</td>
+<td>✅ 推荐</td>
+<td>可用</td>
+<td>❌ 不推荐</td>
+</tr>
+</tbody>
+</table>
+<h4 id="docker-service-create-使用示例"><code>docker service create</code> 使用示例</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个名为 my-nginx 的服务，并指定 3 个副本，将 80 端口映射到主机的 80 端口，并使用 nginx 镜像</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此时在浏览器中输入Swarm中任意节点的IP地址，即可访问到Nginx服务，即使任务没有被分配到这个节点，也能访问到Nginx服务，这就是Swarm的负载均衡功能</span></span><br><span class="line">docker service create \</span><br><span class="line">  --name my-nginx \</span><br><span class="line">  --replicas 3 \</span><br><span class="line">  --publish 80:80 \</span><br><span class="line">  nginx</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个名为 log-agent 的全局服务，并使用 fluentd 镜像，即每个节点都会运行一个 fluentd 容器</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line">docker service create --name log-agent --mode global fluentd</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个名称为 web-app 的服务，并设置环境变量 NODE_ENV=production ，挂载 /data 目录到容器的 /app/data 目录，并设置 2 个副本，并且指定启动容器的命令为 node server.js</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker service create \</span><br><span class="line">  --name web-app \</span><br><span class="line">  --<span class="built_in">env</span> NODE_ENV=production \</span><br><span class="line">  --mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/data,target=/app/data \</span><br><span class="line">  --replicas 2 \</span><br><span class="line">  node:18 node server.js</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个名称为 db 的服务，并指定运行在具有 role=db 标签的节点上，并且使用名为 db-data 的卷挂载数据</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建数据卷</span></span><br><span class="line">docker volume create db-data</span><br><span class="line"><span class="comment"># 创建服务</span></span><br><span class="line">docker service create \</span><br><span class="line">  --name db \</span><br><span class="line">  --constraint <span class="string">&#x27;node.labels.role == db&#x27;</span> \</span><br><span class="line">  --mount <span class="built_in">type</span>=volume,<span class="built_in">source</span>=db-data,target=/var/lib/mysql \</span><br><span class="line">  mysql:8</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用 on-failure 策略，仅在失败时自动重启</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker service create \</span><br><span class="line">  --name unstable-worker \</span><br><span class="line">  --restart-condition on-failure \</span><br><span class="line">  my-worker-image</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>指定网络，网络驱动类型为 overlay</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先在manager节点上创建一个 overlay 网络（适用于 Swarm 模式）</span></span><br><span class="line">docker network create --driver overlay my-overlay-net</span><br><span class="line"><span class="comment"># 创建驱动类型为 overlay 的网络，会立即同步所有 manager 节点，但不会同步到 worker 节点，只有当任务被分配到 worker 节点时，该网络才会同步到 worker 节点</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建服务并加入该网络</span></span><br><span class="line">docker service create \</span><br><span class="line">  --name web-service \</span><br><span class="line">  --network my-overlay-net \</span><br><span class="line">  --replicas 5 \</span><br><span class="line">  nginx</span><br><span class="line">  <span class="comment"># --network: 指定服务运行时连接到该网络，这样在同一个网络中的服务之间可以使用 服务名互相访问，实现服务发现和负载均衡。</span></span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>小贴士</strong></em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker network <span class="built_in">ls</span></span><br><span class="line">NETWORK ID     NAME              DRIVER    SCOPE</span><br><span class="line">6b7aadbbd180   bridge            bridge    <span class="built_in">local</span></span><br><span class="line">5ddadf5d0608   docker_gwbridge   bridge    <span class="built_in">local</span></span><br><span class="line">21c6f5b1bedd   host              host      <span class="built_in">local</span></span><br><span class="line">idx465x3jg68   ingress           overlay   swarm</span><br><span class="line">a770c5ad4b13   none              null      <span class="built_in">local</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-1">
+<li class="lvl-2">初始化Swarm集群后，会创建一个默认的 overlay 网络: ingress，如果我们创建服务时没有指定网络，那么服务就会加入 ingress 网络。</li>
+<li class="lvl-2">但是这个默认的 ingress 网络并不能用于服务之间通过服务名称互相访问，但可以通过IP或Hostname访问服务。</li>
+<li class="lvl-2">默认的 ingress 网络仅用于 ingress 负载均衡（即 -p 端口映射），不支持服务内部通信或 DNS 服务发现。</li>
+<li class="lvl-2">另外，初始化Swarm集群后，还会创建一个默认的 bridge 网络: docker_gwbridge，负责连接 Swarm 集群的 Overlay 网络与宿主机网络，负责跨节点的流量转发
+<ul class="lvl-3">
+<li class="lvl-4">当一个容器在 Overlay 网络里访问外部 IP，比如访问公网，流量最终通过 docker_gwbridge 网络出口出去。</li>
+<li class="lvl-4">节点间 VXLAN 隧道的流量也会借助此网络桥接到宿主机的物理网络接口。</li>
+</ul>
+</li>
+</ul>
+</div>
+<h3 id="docker-service-ls-列出所有服务"><code>docker service ls</code>: 列出所有服务</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker service <span class="built_in">ls</span></span><br><span class="line">ID             NAME       MODE         REPLICAS   IMAGE          PORTS</span><br><span class="line">dmnztimv3pb8   my-nginx   replicated   2/2        nginx:latest   *:80-&gt;80/tcp</span><br></pre></td></tr></table></figure>
+<h3 id="docker-service-inspect-查看服务详情"><code>docker service inspect</code>: 查看服务详情</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker service inspect my-nginx</span><br></pre></td></tr></table></figure>
+<h3 id="docker-service-log-查看服务日志"><code>docker service log</code>: 查看服务日志</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看指定服务下所有任务的日志</span></span><br><span class="line">docker service logs my-nginx</span><br><span class="line"><span class="comment"># 查看指定任务的日志，指定任务ID，不支持任务名称</span></span><br><span class="line">docker service logs p4tats0f9npk</span><br><span class="line"><span class="comment"># 滚动查看日志</span></span><br><span class="line">docker service logs -f my-nginx</span><br></pre></td></tr></table></figure>
+<h3 id="docker-service-ps-列出服务任务"><code>docker service ps</code>: 列出服务任务</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker service ps my-nginx</span><br><span class="line">ID             NAME         IMAGE          NODE       DESIRED STATE   CURRENT STATE            ERROR     PORTS</span><br><span class="line">p4tats0f9npk   my-nginx.1   nginx:latest   manager1   Running         Running 13 minutes ago</span><br><span class="line">v7z383xy7dso   my-nginx.2   nginx:latest   manager2   Running         Running 15 minutes ago</span><br></pre></td></tr></table></figure>
+<h3 id="docker-service-scale-扩容-缩容服务"><code>docker service scale</code>: 扩容/缩容服务</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动一个服务</span></span><br><span class="line">docker service create \</span><br><span class="line">  --name my-nginx \</span><br><span class="line">  --replicas 3 \</span><br><span class="line">  --publish 80:80 \</span><br><span class="line">  nginx</span><br><span class="line"><span class="comment"># 查看服务任务</span></span><br><span class="line">docker service ps my-nginx</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">ID             NAME         IMAGE          NODE       DESIRED STATE   CURRENT STATE            ERROR     PORTS</span><br><span class="line">p4tats0f9npk   my-nginx.1   nginx:latest   manager1   Running         Running 14 seconds ago</span><br><span class="line">v7z383xy7dso   my-nginx.2   nginx:latest   manager2   Running         Running 2 minutes ago</span><br><span class="line">w0sm5ixvi6eb   my-nginx.3   nginx:latest   worker2    Running         Running 4 seconds ago</span><br><span class="line"></span><br><span class="line"><span class="comment"># 扩容到5个任务</span></span><br><span class="line">docker service scale my-nginx=5</span><br><span class="line"><span class="comment"># 查看服务任务</span></span><br><span class="line">docker service ps my-nginx</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">ID             NAME         IMAGE          NODE       DESIRED STATE   CURRENT STATE                    ERROR     PORTS</span><br><span class="line">p4tats0f9npk   my-nginx.1   nginx:latest   manager1   Running         Running about a minute ago</span><br><span class="line">v7z383xy7dso   my-nginx.2   nginx:latest   manager2   Running         Running 3 minutes ago</span><br><span class="line">w0sm5ixvi6eb   my-nginx.3   nginx:latest   worker2    Running         Running about a minute ago</span><br><span class="line">ksbeflwg3mcj   my-nginx.4   nginx:latest   worker1    Running         Running less than a second ago</span><br><span class="line">iw4zlm56n1x8   my-nginx.5   nginx:latest   manager3   Running         Running less than a second ago</span><br><span class="line"></span><br><span class="line"><span class="comment"># 缩容到2个人任务</span></span><br><span class="line">docker service scale my-nginx=2</span><br><span class="line"><span class="comment"># 查看服务任务</span></span><br><span class="line">docker service ps my-nginx</span><br><span class="line">ID             NAME         IMAGE          NODE       DESIRED STATE   CURRENT STATE           ERROR     PORTS</span><br><span class="line">p4tats0f9npk   my-nginx.1   nginx:latest   manager1   Running         Running 2 minutes ago</span><br><span class="line">v7z383xy7dso   my-nginx.2   nginx:latest   manager2   Running         Running 4 minutes ago</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 还可以使用如下命令进行扩缩容</span></span><br><span class="line">docker service update --replicas=5 my-nginx</span><br></pre></td></tr></table></figure>
+<h3 id="docker-service-update-更新服务"><code>docker service update</code>: 更新服务</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>支持的参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--image</code></td>
+<td>更新服务使用的镜像</td>
+<td><code>--image nginx:1.25</code></td>
+</tr>
+<tr>
+<td><code>--replicas</code></td>
+<td>设置服务的副本数量（仅适用于 replicated 模式）</td>
+<td><code>--replicas 5</code></td>
+</tr>
+<tr>
+<td><code>--env-add</code></td>
+<td>添加环境变量</td>
+<td><code>--env-add DEBUG=true</code></td>
+</tr>
+<tr>
+<td><code>--env-rm</code></td>
+<td>移除环境变量</td>
+<td><code>--env-rm OLD_VAR</code></td>
+</tr>
+<tr>
+<td><code>--publish-add</code></td>
+<td>添加端口映射</td>
+<td><code>--publish-add published=8080,target=80</code></td>
+</tr>
+<tr>
+<td><code>--publish-rm</code></td>
+<td>移除端口映射</td>
+<td><code>--publish-rm 80</code></td>
+</tr>
+<tr>
+<td><code>--mount-add</code></td>
+<td>添加挂载</td>
+<td><code>--mount-add type=bind,src=/data,dst=/data</code></td>
+</tr>
+<tr>
+<td><code>--mount-rm</code></td>
+<td>移除挂载</td>
+<td><code>--mount-rm /data</code></td>
+</tr>
+<tr>
+<td><code>--constraint-add</code></td>
+<td>添加部署约束</td>
+<td><code>--constraint-add 'node.labels.zone==east'</code></td>
+</tr>
+<tr>
+<td><code>--constraint-rm</code></td>
+<td>移除部署约束</td>
+<td><code>--constraint-rm 'node.labels.zone==east'</code></td>
+</tr>
+<tr>
+<td><code>--limit-cpu</code></td>
+<td>设置 CPU 限制</td>
+<td><code>--limit-cpu 0.5</code></td>
+</tr>
+<tr>
+<td><code>--limit-memory</code></td>
+<td>设置内存限制</td>
+<td><code>--limit-memory 256M</code></td>
+</tr>
+<tr>
+<td><code>--restart-condition</code></td>
+<td>设置重启策略（none、on-failure、any）</td>
+<td><code>--restart-condition on-failure</code></td>
+</tr>
+<tr>
+<td><code>--update-delay</code></td>
+<td>设置任务更新之间的延迟</td>
+<td><code>--update-delay 10s</code></td>
+</tr>
+<tr>
+<td><code>--update-parallelism</code></td>
+<td>设置并发更新任务的数量</td>
+<td><code>--update-parallelism 2</code></td>
+</tr>
+<tr>
+<td><code>--update-order</code></td>
+<td>设置更新顺序（start-first 或 stop-first）</td>
+<td><code>--update-order start-first</code></td>
+</tr>
+<tr>
+<td><code>--update-failure-action</code></td>
+<td>更新失败后的动作（pause、continue、rollback）</td>
+<td><code>--update-failure-action rollback</code></td>
+</tr>
+<tr>
+<td><code>--rollback</code></td>
+<td>回滚到上一次成功配置</td>
+<td><code>--rollback</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker service update \</span><br><span class="line">  --image nginx:1.25 \</span><br><span class="line">  --replicas 4 \</span><br><span class="line">  --env-add ENV=prod \</span><br><span class="line">  --limit-memory 512M \</span><br><span class="line">  --limit-cpu 1.0 \</span><br><span class="line">  --update-delay 10s \</span><br><span class="line">  --update-parallelism 2 \</span><br><span class="line">  --update-failure-action rollback \</span><br><span class="line">  my-nginx</span><br></pre></td></tr></table></figure>
+<h3 id="docker-service-rollback-回滚服务"><code>docker service rollback</code>: 回滚服务</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>会将服务回滚到上一次成功部署的版本，包括镜像、环境变量、部署约束等。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker service rollback &lt;service_name&gt;</span></span><br><span class="line">docker service rollback my-nginx</span><br></pre></td></tr></table></figure>
+<h3 id="docker-service-rm-删除服务"><code>docker service rm</code>: 删除服务</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>删除服务会停止服务并删除服务。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker service rm &lt;service_name&gt;</span></span><br><span class="line">docker service <span class="built_in">rm</span> my-nginx</span><br></pre></td></tr></table></figure>
+<h2 id="经验技巧">经验技巧</h2>
+<h3 id="如何让任务运行在指定的节点上？">如何让任务运行在指定的节点上？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建服务时，可以使用 <code>--constraint</code> 参数指定节点的标签，使其运行在具有指定标签的节点上。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给结点加标签</span></span><br><span class="line">docker node update --label-add <span class="built_in">env</span>=prod worker1</span><br><span class="line"></span><br><span class="line"><span class="comment"># node.labels 是Swarm内置属性，表示节点的标签，这里指定节点标签为 env=prod</span></span><br><span class="line">docker service create \</span><br><span class="line">--name my-nginx \</span><br><span class="line">--replicas 2 \</span><br><span class="line">--constraint <span class="string">&#x27;node.labels.env == prod&#x27;</span> \</span><br><span class="line">nginx:latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里要注意，运行任务后如果修改了node的标签，那么任务就会重新分配，分配是如果找不到符合标签的节点，就会运行失败。</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>只能运行在管理节点上</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.role 是 Swarm 的内置属性，表示节点的类型，值为 manager 或 worker。</span></span><br><span class="line">docker service create \</span><br><span class="line">  --name manager-only-service \</span><br><span class="line">  --constraint <span class="string">&#x27;node.role == manager&#x27;</span> \</span><br><span class="line">  nginx</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Swarm 内置属性</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>示例值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node.id</code></td>
+<td><code>node.id == abcd1234</code></td>
+<td>节点的唯一 ID（可用 <code>docker node ls</code> 查看）</td>
+</tr>
+<tr>
+<td><code>node.hostname</code></td>
+<td><code>node.hostname == manager-1</code></td>
+<td>节点主机名</td>
+</tr>
+<tr>
+<td><code>node.role</code></td>
+<td><code>node.role == manager</code> 或 <code>node.role == worker</code></td>
+<td>节点在 Swarm 中的角色（管理/工作）</td>
+</tr>
+<tr>
+<td><code>engine.labels.*</code></td>
+<td><code>engine.labels.disk == ssd</code></td>
+<td>Docker 引擎级别的标签（需手动设置）</td>
+</tr>
+<tr>
+<td><code>node.platform.os</code></td>
+<td><code>node.platform.os == linux</code></td>
+<td>节点操作系统类型</td>
+</tr>
+<tr>
+<td><code>node.platform.arch</code></td>
+<td><code>node.platform.arch == x86_64</code></td>
+<td>节点架构类型（如 <code>arm64</code>, <code>x86_64</code>）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="如何访问Service服务？">如何访问Service服务？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动一个service，3个副本，镜像为 whoami，这个镜像会返回当前访问的容器的ID，即返回的Hostname</span></span><br><span class="line">docker service create --name <span class="built_in">whoami</span> \</span><br><span class="line">  --replicas 3 \</span><br><span class="line">  -p 80:80 \</span><br><span class="line">  traefik/whoami</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看service服务运行在哪些节点上，看到这里只有 manager1\manager2\worker2 节点上运行，注意这里看到的ID是Task ID，并非容器ID</span></span><br><span class="line">docker service ps <span class="built_in">whoami</span></span><br><span class="line">ID             NAME       IMAGE                   NODE       DESIRED STATE   CURRENT STATE            ERROR     PORTS</span><br><span class="line">u1elzp22hyvm   whoami.1   traefik/whoami:latest   manager2   Running         Running 2 minutes ago</span><br><span class="line">4cent1kfgghb   whoami.2   traefik/whoami:latest   worker2    Running         Running 17 seconds ago</span><br><span class="line">lu6u6j8ji0uq   whoami.3   traefik/whoami:latest   manager1   Running         Running 40 seconds ago</span><br><span class="line"><span class="comment"># 如果希望查询某个Service的所有容器的ID，可以执行如下命令</span></span><br><span class="line">docker service ps <span class="built_in">whoami</span> -q | xargs docker inspect --format <span class="string">&#x27;&#123;&#123;.Status.ContainerStatus.ContainerID&#125;&#125;&#x27;</span> | <span class="built_in">cut</span> -c 1-12</span><br><span class="line">a3fb63bde8e7</span><br><span class="line">a14e30a02987</span><br><span class="line">549610f3a1e9</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>此时我们通过curl访问 Swarm 集群中的任意一个节点的IP，都可以访问到这个服务，比如 <code>curl 10.211.55.12</code>，这是 manager3 节点的 IP 地址，虽然这个服务并没有在 manager3 节点上运行，但是我们依旧可以访问到这个服务，不仅如此，每次运行命令返回的Hostname(就是容器ID)都会发生变化，其效果就是在各个运行的容器间轮询，这就是 Swarm 集群的负载均衡效果。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">curl http://10.211.55.12</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Hostname: a3fb63bde8e7   <span class="comment"># 容器ID</span></span><br><span class="line">IP: 127.0.0.1</span><br><span class="line">IP: ::1</span><br><span class="line">IP: 10.0.0.36            <span class="comment"># 容器IP，对接 br0</span></span><br><span class="line">IP: 172.18.0.4           <span class="comment"># 容器IP，对接 docker_gwbridge</span></span><br><span class="line">RemoteAddr: 10.0.0.6:52964</span><br><span class="line">GET / HTTP/1.1</span><br><span class="line">Host: 10.211.55.12</span><br><span class="line">User-Agent: curl/7.61.1</span><br><span class="line">Accept: */*</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在集群内部访问服务，建议将所有服务运行在相同的network中，这样可以不同的service之间可以通过服务名称访问服务，在集群外部，可以通过nginx等代理访问服务。</p>
+</li>
+<li class="lvl-2">
+<p>可以编写一个脚本方便查看service与container的运行关系，比如：docker_service_container</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># filename: docker_service_container</span></span><br><span class="line"><span class="comment"># 用法提示</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$1</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;用法: <span class="variable">$0</span> &lt;SERVICE_NAME&gt;&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># service名称</span></span><br><span class="line">SERVCIE_NAME=<span class="variable">$1</span></span><br><span class="line"><span class="comment"># 所属network,默认 ingress，这里要注意一下，如果是自定义的overlay网络，只能获取到当前主机上的容器IP</span></span><br><span class="line">NETWORK=<span class="variable">$2</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$2</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  NETWORK=$(docker service inspect <span class="variable">$SERVCIE_NAME</span> --format <span class="string">&#x27;&#123;&#123;json .Endpoint.VirtualIPs&#125;&#125;&#x27;</span> | jq <span class="string">&#x27;.[0].NetworkID&#x27;</span> | sed <span class="string">&#x27;s/&quot;//g&#x27;</span>)</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># NETWORK=$&#123;2:-ingress&#125;</span></span><br><span class="line"></span><br><span class="line">d1=$(<span class="built_in">echo</span> -e <span class="string">&quot;SERVICE-ID TASK-ID CONTAINER-ID NODE-ID&quot;</span> | awk <span class="string">&#x27;&#123;printf &quot;%-12s    %-12s    %-12s    %-12s\n&quot;, substr($1,1,12), substr($2,1,12), substr($3,1,12), substr($4,1,12)&#125;&#x27;</span> ;\</span><br><span class="line">docker service ps <span class="variable">$SERVCIE_NAME</span> --filter <span class="string">&quot;desired-state=running&quot;</span> -q | xargs docker inspect --format <span class="string">&#x27;&#123;&#123;.ServiceID&#125;&#125;    &#123;&#123;.ID&#125;&#125;    &#123;&#123;.Status.ContainerStatus.ContainerID&#125;&#125;    &#123;&#123;.NodeID&#125;&#125;&#x27;</span> \</span><br><span class="line">| awk <span class="string">&#x27;&#123;printf &quot;%-12s    %-12s    %-12s    %-12s\n&quot;, substr($1,1,12), substr($2,1,12), substr($3,1,12), substr($4,1,12)&#125;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#echo &quot;$d1&quot;</span></span><br><span class="line"></span><br><span class="line">d2=$(docker service ps <span class="variable">$SERVCIE_NAME</span> --filter <span class="string">&quot;desired-state=running&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#echo &quot;$d2&quot;</span></span><br><span class="line"></span><br><span class="line">nn1=$(awk <span class="string">&#x27;</span></span><br><span class="line"><span class="string">NR==FNR &amp;&amp; FNR &gt; 1 &#123;</span></span><br><span class="line"><span class="string">  id = $1</span></span><br><span class="line"><span class="string">  name = $2</span></span><br><span class="line"><span class="string">  node = $4</span></span><br><span class="line"><span class="string">  desired = $5</span></span><br><span class="line"><span class="string">  # 拼接 CURRENT STATE（从第6列开始的所有字段）</span></span><br><span class="line"><span class="string">  current = &quot;&quot;</span></span><br><span class="line"><span class="string">  for (i=6; i&lt;=NF; i++) &#123;</span></span><br><span class="line"><span class="string">    current = current $i &quot; &quot;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  gsub(/ /, &quot;-&quot;, current)</span></span><br><span class="line"><span class="string">  current = substr(current, 1, length(current)-1)  # 去掉最后空格</span></span><br><span class="line"><span class="string">  info[id] = name &quot;\t&quot; node &quot;\t&quot; desired &quot;\t&quot; current</span></span><br><span class="line"><span class="string">  next</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">FNR==1 &#123;</span></span><br><span class="line"><span class="string">  print $0 &quot;\tTASK-NAME\tNODE\tDESIRED_STATE\tCURRENT_STATE&quot;</span></span><br><span class="line"><span class="string">  next</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  print $0 &quot;\t&quot; info[$2]</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&#x27;</span> &lt;(<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$d2</span>&quot;</span>) &lt;(<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$d1</span>&quot;</span>) | <span class="built_in">tail</span> -n +2 | column -t)</span><br><span class="line"></span><br><span class="line">nn2=$(<span class="built_in">echo</span> <span class="string">&quot;CONTAINER-ID IP&quot;</span>;docker network inspect <span class="variable">$&#123;NETWORK&#125;</span> -f <span class="string">&#x27;&#123;&#123;range $id, $container := .Containers&#125;&#125;&#123;&#123;slice $id 0 12&#125;&#125; &#123;&#123;$container.Name&#125;&#125; &#123;&#123;$container.IPv4Address&#125;&#125;&#123;&#123;println&#125;&#125;&#123;&#123;end&#125;&#125;&#x27;</span> | grep <span class="variable">$SERVCIE_NAME</span> | awk -F <span class="string">&quot; &quot;</span> <span class="string">&#x27;&#123;print $1&quot; &quot;$3&#125;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">awk <span class="string">&#x27;</span></span><br><span class="line"><span class="string">NR==FNR &#123; ip[$1]=$2; next &#125;</span></span><br><span class="line"><span class="string">&#123; print $0, ip[$3] &#125;</span></span><br><span class="line"><span class="string">&#x27;</span> &lt;(<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$nn2</span>&quot;</span>) &lt;(<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$nn1</span>&quot;</span>) | column -t</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>运行</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /usr/local/bin/docker-swarm-service</span><br><span class="line"><span class="comment"># 执行脚本</span></span><br><span class="line">docker-swarm-service <span class="built_in">whoami</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">SERVICE-ID    TASK-ID       CONTAINER-ID  NODE-ID       TASK-NAME  NODE      DESIRED_STATE  CURRENT_STATE              IP</span><br><span class="line">snuhv0g2dm1q  czisrjrp8k2t  9e4ce349971c  kp2zerd28xgz  whoami.1   manager1  Running        Running-about-an-hour-ago  10.0.0.35/24</span><br><span class="line">snuhv0g2dm1q  tvbkwmnafedw  0d586021260d  kp2zerd28xgz  whoami.2   manager1  Running        Running-about-an-hour-ago  10.0.0.36/24</span><br><span class="line">snuhv0g2dm1q  815qp859a1f4  449d5e1a231d  kp2zerd28xgz  whoami.3   manager1  Running        Running-about-an-hour-ago  10.0.0.15/24</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2025/06/10/docker-swarm-service/" title="Docker Swarm 之 服务(Service)">https://blog.hanqunfeng.com/2025/06/10/docker-swarm-service/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"><i class="fa fa-tag"></i> docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/09/docker-swarm-node/" rel="prev" title="Docker Swarm 之 节点(Node)">
+                  <i class="fa fa-angle-left"></i> Docker Swarm 之 节点(Node)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/06/11/docker-swarm-overlay/" rel="next" title="Docker Swarm 之 网络(Overlay)">
+                  Docker Swarm 之 网络(Overlay) <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">599k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">36:20</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.min.js","integrity":"sha256-G8ouPAnw4zzMbnAenHnVz6h9XpKbNdOkrqTh7AadyHs="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>
