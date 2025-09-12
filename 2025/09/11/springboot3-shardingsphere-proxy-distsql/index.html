@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 ShardingSphere-Proxy5.5.2 DistSQL 的使用。   ShardingSphere官网">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-09-11T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-09-11T10:54:59.105Z">
+<meta property="article:modified_time" content="2025-09-12T02:44:50.982Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="springboot">
 <meta property="article:tag" content="sharding-sphere">
@@ -968,17 +968,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/09/01/springboot3-shardingsphere/" rel="bookmark">
-        <time class="popular-posts-time">2025-09-01</time>
-        <br>
-      SpringBoot3 + ShardingSphere-JDBC5.5.2 分库分表
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/09/04/springboot3-shardingsphere-proxy/" rel="bookmark">
         <time class="popular-posts-time">2025-09-04</time>
         <br>
       SpringBoot3 + ShardingSphere-Proxy5.5.2 分库分表
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/09/01/springboot3-shardingsphere/" rel="bookmark">
+        <time class="popular-posts-time">2025-09-01</time>
+        <br>
+      SpringBoot3 + ShardingSphere-JDBC5.5.2 分库分表
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1036,9 +1036,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-09-11 21:30:05 / 修改时间：18:54:59" itemprop="dateCreated datePublished" datetime="2025-09-11T21:30:05+08:00">2025-09-11</time>
+      <time title="创建时间：2025-09-11 21:30:05" itemprop="dateCreated datePublished" datetime="2025-09-11T21:30:05+08:00">2025-09-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-12 10:44:50" itemprop="dateModified" datetime="2025-09-12T10:44:50+08:00">2025-09-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1090,7 +1096,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.9k</span>
+      <span>4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1297,7 +1303,7 @@ i.ban {
 <p>卸载单表，<a target="_blank" rel="noopener" href="https://shardingsphere.apache.org/document/5.5.2/cn/user-manual/shardingsphere-proxy/distsql/syntax/rdl/rule-definition/single-table/unload-single-table/">官方文档</a></p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LOAD SINGLE TABLE ds_0.t_address;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UNLOAD SINGLE TABLE ds_0.t_address;</span><br></pre></td></tr></table></figure>
 <h3 id="广播表配置">广播表配置</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1312,6 +1318,18 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE BROADCAST TABLE RULE dict;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>删除广播表，<a target="_blank" rel="noopener" href="https://shardingsphere.apache.org/document/5.5.2/cn/user-manual/shardingsphere-proxy/distsql/syntax/rdl/rule-definition/broadcast-table/drop-broadcast-table-rule/">官方文档</a></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP BROADCAST TABLE RULE dict;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查询广播表，<a target="_blank" rel="noopener" href="https://shardingsphere.apache.org/document/5.5.2/cn/user-manual/shardingsphere-proxy/distsql/syntax/rql/rule-query/broadcast-table/show-broadcast-table-rule/">官方文档</a></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询当前逻辑库中具有广播规则的表</span></span><br><span class="line">SHOW BROADCAST TABLE RULES;</span><br><span class="line"><span class="comment"># 查询指定数据库中具有广播规则的表</span></span><br><span class="line">SHOW BROADCAST TABLE RULES FROM sharding_db;</span><br></pre></td></tr></table></figure>
 <h3 id="分库分表配置">分库分表配置</h3>
 <h4 id="单分片键，Long-类型">单分片键，Long 类型</h4>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="type">!SHARDING</span> <span class="comment"># 分片规则配置</span></span><br><span class="line">    <span class="attr">tables:</span> <span class="comment"># 手工分片规则配置</span></span><br><span class="line">      <span class="attr">course:</span> <span class="comment"># 逻辑表名称</span></span><br><span class="line">        <span class="attr">actualDataNodes:</span> <span class="string">ds_$&#123;0..1&#125;.course_$&#123;1..2&#125;</span> <span class="comment"># 实际数据节点，建表时写成了 1和2，懒得改了，所以下面分表规则中对2取余后要+1</span></span><br><span class="line">        <span class="attr">databaseStrategy:</span> <span class="comment"># 分库策略</span></span><br><span class="line">          <span class="attr">standard:</span> <span class="comment"># 用于单分片键的标准分片场景</span></span><br><span class="line">            <span class="attr">shardingColumn:</span> <span class="string">user_id</span> <span class="comment"># 分片列名称</span></span><br><span class="line">            <span class="attr">shardingAlgorithmName:</span> <span class="string">course_db_inline</span> <span class="comment"># 分片算法名称</span></span><br><span class="line">        <span class="attr">tableStrategy:</span> <span class="comment"># 分表策略</span></span><br><span class="line">          <span class="attr">standard:</span></span><br><span class="line">            <span class="attr">shardingColumn:</span> <span class="string">cid</span></span><br><span class="line">            <span class="attr">shardingAlgorithmName:</span> <span class="string">course_inline</span></span><br><span class="line">        <span class="attr">keyGenerateStrategy:</span> <span class="comment"># 分布式序列策略</span></span><br><span class="line">          <span class="attr">column:</span> <span class="string">cid</span> <span class="comment"># 自增列名称</span></span><br><span class="line">          <span class="attr">keyGeneratorName:</span> <span class="string">snowflake</span> <span class="comment"># 分布式序列算法名称</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">shardingAlgorithms:</span> <span class="comment"># 分片算法</span></span><br><span class="line">      <span class="attr">course_inline:</span> <span class="comment"># 定义名称，在上面引用</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">INLINE</span> <span class="comment"># 基于行表达式的分片算法，这里使用 MOD 会报错</span></span><br><span class="line">        <span class="attr">props:</span> <span class="comment"># 属性</span></span><br><span class="line">          <span class="attr">algorithm-expression:</span> <span class="string">course_$&#123;cid</span> <span class="string">%</span> <span class="number">2</span> <span class="string">+</span> <span class="number">1</span><span class="string">&#125;</span> <span class="comment"># 表达式，这是因为表名称为 course_1, course_2</span></span><br><span class="line">          <span class="attr">allow-range-query-with-inline-sharding:</span> <span class="literal">true</span> <span class="comment"># 允许范围查询</span></span><br><span class="line">      <span class="attr">course_db_inline:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">INLINE</span></span><br><span class="line">        <span class="attr">props:</span></span><br><span class="line">          <span class="attr">algorithm-expression:</span> <span class="string">ds_$&#123;user_id</span> <span class="string">%</span> <span class="number">2</span><span class="string">&#125;</span> <span class="comment"># 表示 ds_0, ds_1</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">keyGenerators:</span> <span class="comment"># 分布式主键生成器</span></span><br><span class="line">      <span class="attr">snowflake:</span> <span class="comment"># 定义名称，在上面引用</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">SNOWFLAKE</span> <span class="comment"># 使用雪花算法，Long</span></span><br></pre></td></tr></table></figure>
@@ -1564,14 +1582,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">608k</span>
+    <span title="站点总字数">610k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">36:50</span>
+    <span title="站点阅读时长">36:57</span>
   </span>
 </div>
 <div class="busuanzi-count">
