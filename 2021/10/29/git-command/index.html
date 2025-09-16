@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要  一起来了解一些git常用命令吧 推荐一个学习git命令的网站：https:&#x2F;&#x2F;learngitbranching.js.org&#x2F;?locale&#x3D;zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git常用命令">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2021/10/29/git-command/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要  一起来了解一些git常用命令吧 推荐一个学习git命令的网站：https:&#x2F;&#x2F;learngitbranching.js.org&#x2F;?locale&#x3D;zh_CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/git.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/merge1.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/merge2.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase1.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase2.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase3.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase4.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase5.png">
+<meta property="og:image" content="https://blog.hanqunfeng.com/images_glob/git-command/rebase5.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase6.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/A-git-dev.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/B-git-dev.png">
+<meta property="article:published_time" content="2021-10-29T13:30:05.000Z">
+<meta property="article:modified_time" content="2025-05-23T02:58:59.090Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/git.png">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2021/10/29/git-command/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2021/10/29/git-command/","path":"2021/10/29/git-command/","title":"Git常用命令"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Git常用命令 | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Git%E7%9A%845%E7%A7%8D%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%9F%9F"><span class="nav-number">2.1.</span> <span class="nav-text">Git的5种工作区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%9A%84%E7%8A%B6%E6%80%81"><span class="nav-number">2.2.</span> <span class="nav-text">文件的状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E5%88%86%E6%94%AF%E6%97%B6%E5%80%BC%E5%BE%97%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">2.3.</span> <span class="nav-text">切换分支时值得注意的地方</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HEAD%E6%8C%87%E9%92%88%E5%92%8C%E5%88%86%E6%94%AF%E6%8C%87%E9%92%88"><span class="nav-number">2.4.</span> <span class="nav-text">HEAD指针和分支指针</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%8E%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">问题与方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%AB%E4%BA%BA%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E4%B8%AD%E5%88%9B%E5%BB%BA%E4%BA%86%E6%96%B0%E7%9A%84branch%EF%BC%8C%E6%88%91%E6%9C%AC%E5%9C%B0%E6%89%A7%E8%A1%8Cgit-branch-a%E5%8D%B4%E7%9C%8B%E4%B8%8D%E5%88%B0%EF%BC%8C%E5%A6%82%E4%BD%95%E6%89%8D%E8%83%BD%E7%9C%8B%E5%88%B0%E5%B9%B6checkout%E5%91%A2%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">1.别人在远程仓库中创建了新的branch，我本地执行git branch -a却看不到，如何才能看到并checkout呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">2.如何查看本地分支与远程分支的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E4%B8%A4%E4%B8%AA%E5%88%86%E6%94%AF%E4%B9%8B%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">3.3.</span> <span class="nav-text">3.如何查看本地两个分支之间的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E7%9A%84%E5%8F%91%E7%94%9F%E4%BA%86%E5%93%AA%E4%BA%9B%E6%9B%B4%E6%94%B9%EF%BC%9F"><span class="nav-number">3.4.</span> <span class="nav-text">4.如何查看本地的发生了哪些更改？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%A6%82%E4%BD%95%E6%8F%90%E4%BA%A4%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93%EF%BC%9F"><span class="nav-number">3.5.</span> <span class="nav-text">5.如何提交本地仓库？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-git-reset-%E5%A6%82%E4%BD%95%E5%9B%9E%E6%BB%9A%E5%88%B0%E6%8C%87%E5%AE%9A%E7%89%88%E6%9C%AC%E6%88%96%E5%88%86%E6%94%AF"><span class="nav-number">3.6.</span> <span class="nav-text">6.git reset: 如何回滚到指定版本或分支?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-gitignore-%E5%9C%A8git%E4%B8%AD%E5%A6%82%E6%9E%9C%E6%83%B3%E5%BF%BD%E7%95%A5%E6%8E%89%E6%9F%90%E4%B8%AA%E6%96%87%E4%BB%B6%EF%BC%8C%E4%B8%8D%E8%AE%A9%E8%BF%99%E4%B8%AA%E6%96%87%E4%BB%B6%E6%8F%90%E4%BA%A4%E5%88%B0%E7%89%88%E6%9C%AC%E5%BA%93%E4%B8%AD%EF%BC%8C%E8%A6%81%E6%80%8E%E4%B9%88%E5%81%9A%E5%91%A2%EF%BC%9F"><span class="nav-number">3.7.</span> <span class="nav-text">7..gitignore: 在git中如果想忽略掉某个文件，不让这个文件提交到版本库中，要怎么做呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-git-commit-amend-commit%E5%90%8E%E5%8F%91%E7%8E%B0%E6%9C%89%E5%86%85%E5%AE%B9%E8%A6%81%E4%BF%AE%E6%94%B9%E6%88%96%E8%80%85%E6%B3%A8%E9%87%8A%E5%86%99%E9%94%99%E4%BA%86%EF%BC%8C%E4%BD%86%E6%98%AF%E4%B8%8D%E6%83%B3%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E4%B8%80%E6%AC%A1commit%EF%BC%8C%E8%A6%81%E6%80%8E%E4%B9%88%E5%8A%9E%E5%91%A2%EF%BC%9F"><span class="nav-number">3.8.</span> <span class="nav-text">8.git commit --amend: commit后发现有内容要修改或者注释写错了，但是不想创建新的一次commit，要怎么办呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-git-log%E2%80%93%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E6%97%A5%E5%BF%97"><span class="nav-number">3.9.</span> <span class="nav-text">9.git log–如何查看提交日志?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93%E5%B9%B6%E7%BB%91%E5%AE%9A%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">3.10.</span> <span class="nav-text">10.如何创建本地仓库并绑定到远程仓库?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E5%9C%B0%E5%9D%80%E5%8F%98%E6%9B%B4%E5%90%8E%E5%A6%82%E4%BD%95%E6%9B%B4%E6%96%B0%EF%BC%9F"><span class="nav-number">3.11.</span> <span class="nav-text">11.远程仓库地址变更后如何更新？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E5%A6%82%E4%BD%95%E5%B0%86%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93%E5%90%8C%E6%97%B6%E7%BB%91%E5%AE%9A%E5%88%B0%E5%A4%9A%E4%B8%AA%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%EF%BC%9F"><span class="nav-number">3.12.</span> <span class="nav-text">12.如何将本地仓库同时绑定到多个远程仓库？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-%E5%A6%82%E4%BD%95%E5%9C%A8git-pull%E6%97%B6%E4%B8%8D%E7%94%A8%E6%AF%8F%E6%AC%A1%E9%83%BD%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%EF%BC%9F"><span class="nav-number">3.13.</span> <span class="nav-text">13.如何在git pull时不用每次都输入密码？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-%E5%A6%82%E6%9E%9C%E6%96%87%E4%BB%B6%E5%B7%B2%E7%BB%8Fgit-add%E5%88%B0%E6%9A%82%E5%AD%98%E5%8C%BA%EF%BC%8C%E4%BD%86%E6%98%AF%E5%B0%9A%E6%9C%AAcommit%EF%BC%8C%E6%AD%A4%E6%97%B6%E5%A6%82%E4%BD%95%E5%B0%86%E6%96%87%E4%BB%B6%E4%BB%8E%E6%9A%82%E5%AD%98%E5%8C%BA%E4%B8%AD%E7%A7%BB%E9%99%A4%EF%BC%9F"><span class="nav-number">3.14.</span> <span class="nav-text">14.如果文件已经git add到暂存区，但是尚未commit，此时如何将文件从暂存区中移除？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-git-config-%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E5%92%8C%E6%9F%A5%E7%9C%8Bgit%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%EF%BC%9F"><span class="nav-number">3.15.</span> <span class="nav-text">15.git config: 如何设置和查看git配置信息？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-%E6%8F%90%E4%BA%A4%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%AA%E5%A4%A7-%E9%BB%98%E8%AE%A4%E6%98%AF1M-%EF%BC%8C%E5%AF%BC%E8%87%B4push%E5%A4%B1%E8%B4%A5%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">3.16.</span> <span class="nav-text">16.提交的文件太大(默认是1M)，导致push失败怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#17-clone%E4%BB%A3%E7%A0%81%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E5%BC%8F%E6%98%AF%E9%80%9A%E8%BF%87https%E7%9A%84%E5%BD%A2%E5%BC%8F%EF%BC%8C%E4%B8%8D%E8%BF%87%E4%B8%80%E8%88%AC%E8%BF%99%E6%A0%B7%E5%81%9A%E9%9C%80%E8%A6%81%E8%BE%93%E5%85%A5%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81%EF%BC%8C%E5%A6%82%E6%9E%9C%E4%B8%8D%E6%83%B3%E8%BE%93%E5%85%A5%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8git-xxxx%E7%9A%84%E5%BD%A2%E5%BC%8F%EF%BC%8C%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%91%A2%EF%BC%9F"><span class="nav-number">3.17.</span> <span class="nav-text">17.clone代码最简单的方式是通过https的形式，不过一般这样做需要输入用户名和密码，如果不想输入用户名和密码可以使用git@xxxx的形式，如何实现呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#18-git-branch-%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E5%88%86%E6%94%AF-%E5%88%87%E6%8D%A2%E5%88%86%E6%94%AF-%E6%9F%A5%E7%9C%8B%E5%88%86%E6%94%AF-%E5%88%A0%E9%99%A4%E5%88%86%E6%94%AF-%E5%8F%91%E5%B8%83%E5%88%86%E6%94%AF%EF%BC%9F"><span class="nav-number">3.18.</span> <span class="nav-text">18.git branch: 如何创建分支\切换分支\查看分支\删除分支\发布分支？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#19-merge%E8%BF%98%E6%98%AFrebase-%E5%A6%82%E4%BD%95%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF"><span class="nav-number">3.19.</span> <span class="nav-text">19.merge还是rebase? 如何合并分支?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E5%87%86%E5%A4%87%EF%BC%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%80%E4%B8%AA%E5%BE%85%E5%90%88%E5%B9%B6%E7%9A%84%E7%9B%AE%E5%BD%95"><span class="nav-number">3.19.1.</span> <span class="nav-text">示例准备，初始化一个待合并的目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#merge"><span class="nav-number">3.19.2.</span> <span class="nav-text">merge</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#merge%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.19.2.1.</span> <span class="nav-text">merge示例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rebase"><span class="nav-number">3.19.3.</span> <span class="nav-text">rebase</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#rebase%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.19.3.1.</span> <span class="nav-text">rebase示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#20-git-rebase-i-%E6%88%91commit%E4%BA%86%E5%BE%88%E5%A4%9A%E6%AC%A1%EF%BC%8C%E5%8F%91%E7%8E%B0%E9%83%BD%E6%98%AF%E5%B9%B2%E7%9A%84%E4%B8%80%E4%BB%B6%E4%BA%8B%EF%BC%8C%E6%AD%A4%E6%97%B6%E5%A6%82%E6%9E%9C%E7%9B%B4%E6%8E%A5rebase%E5%88%B0%E4%B8%BB%E5%88%86%E6%94%AF%E4%BC%9A%E6%9C%89%E5%BE%88%E5%A4%9A%E6%B2%A1%E5%BF%85%E8%A6%81%E7%9A%84log%EF%BC%8C%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E5%90%88%E5%B9%B6%E8%BF%99%E4%BA%9Bcommit%E4%B8%BA%E4%B8%80%E4%B8%AA%E5%91%A2%EF%BC%9F"><span class="nav-number">3.20.</span> <span class="nav-text">20.git rebase -i: 我commit了很多次，发现都是干的一件事，此时如果直接rebase到主分支会有很多没必要的log，是否可以合并这些commit为一个呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.20.1.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#21-git-revert-%E5%A6%82%E4%BD%95%E6%92%A4%E9%94%80%E6%8C%87%E5%AE%9A%E7%9A%84%E6%8F%90%E4%BA%A4%E5%91%A2%EF%BC%8C%E5%B0%B1%E6%98%AF%E6%8A%8A%E8%BF%99%E6%AC%A1%E6%8F%90%E4%BA%A4%E5%9B%9E%E6%BB%9A%E5%88%B0%E5%85%B6%E5%89%8D%E4%B8%80%E6%AC%A1%E6%8F%90%E4%BA%A4%E7%9A%84%E7%8A%B6%E6%80%81%EF%BC%8C%E4%BD%86%E6%98%AF%E5%8F%88%E4%B8%8D%E5%BD%B1%E5%93%8D%E5%85%B6%E4%B9%8B%E5%90%8E%E7%9A%84%E6%8F%90%E4%BA%A4%EF%BC%9F"><span class="nav-number">3.21.</span> <span class="nav-text">21.git revert: 如何撤销指定的提交呢，就是把这次提交回滚到其前一次提交的状态，但是又不影响其之后的提交？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-%E5%A6%82%E4%BD%95%E6%89%93tag"><span class="nav-number">3.22.</span> <span class="nav-text">22.如何打tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#23-git-pull-git-fetch-git-merge%E8%BF%99%E7%A7%8D%E8%AF%B4%E6%B3%95%E5%AF%B9%E5%90%97%EF%BC%9F"><span class="nav-number">3.23.</span> <span class="nav-text">23.git pull &#x3D; git fetch + git merge这种说法对吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#24-%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E5%BC%80%E5%8F%91%E2%80%93-%E6%B5%8B%E8%AF%95%E2%80%93-%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B%EF%BC%9F"><span class="nav-number">3.24.</span> <span class="nav-text">24.如何确定开发–&gt;测试–&gt;发布流程？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%8F%91A%E6%A8%A1%E5%9E%8B%EF%BC%9A%E5%9F%BA%E4%BA%8Emaster%E7%9A%84%E4%B8%BB%E5%88%86%E6%94%AF%E5%BC%80%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.24.1.</span> <span class="nav-text">开发A模型：基于master的主分支开发模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%8F%91B%E6%A8%A1%E5%9E%8B%EF%BC%9A%E5%9F%BA%E4%BA%8Edev%E7%9A%84%E5%AD%90%E5%88%86%E6%94%AF%E5%BC%80%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.24.2.</span> <span class="nav-text">开发B模型：基于dev的子分支开发模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B%EF%BC%9A%E5%9F%BA%E4%BA%8EA-B%E6%A8%A1%E5%9E%8B%E7%9A%84master%E7%9A%84%E4%B8%BB%E5%88%86%E6%94%AF"><span class="nav-number">3.24.3.</span> <span class="nav-text">测试模型：基于A\B模型的master的主分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.24.4.</span> <span class="nav-text">发布模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">3.24.5.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#25-git-stash-%E6%88%91%E5%B7%B2%E7%BB%8F%E4%BF%AE%E6%94%B9%E4%BA%86%E6%9C%AC%E5%9C%B0%E7%9A%84%E4%BB%A3%E7%A0%81%EF%BC%8C%E4%BD%86%E6%98%AF%E8%BF%98%E6%B2%A1%E6%9C%89commit%EF%BC%8C%E4%BD%86%E6%98%AF%E5%8F%88%E6%83%B3%E5%88%87%E5%88%B0%E5%85%B6%E4%BB%96%E5%88%86%E6%94%AF%EF%BC%8C%E4%B8%8D%E6%83%B3%E4%B8%A2%E5%BC%83%E4%BF%AE%E6%94%B9%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%83%B3%E6%8A%8A%E8%BF%99%E4%BA%9B%E4%BF%AE%E6%94%B9%E5%B8%A6%E5%88%B0%E5%85%B6%E5%AE%83%E5%88%86%E6%94%AF%EF%BC%8C%E5%9B%A0%E4%B8%BA%E4%BB%A3%E7%A0%81%E8%BF%98%E6%9C%89%E7%94%A8%EF%BC%8C%E5%BD%93%E5%88%87%E5%9B%9E%E6%97%B6%E8%BF%98%E9%9C%80%E8%A6%81%E6%81%A2%E5%A4%8D%E8%BF%99%E4%BA%9B%E4%BF%AE%E6%94%B9%EF%BC%8C%E9%82%A3%E4%B9%88%E8%AF%A5%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%EF%BC%9F"><span class="nav-number">3.25.</span> <span class="nav-text">25.git stash: 我已经修改了本地的代码，但是还没有commit，但是又想切到其他分支，不想丢弃修改，也不想把这些修改带到其它分支，因为代码还有用，当切回时还需要恢复这些修改，那么该怎么处理？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-stash"><span class="nav-number">3.25.1.</span> <span class="nav-text">创建一个 stash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-stash"><span class="nav-number">3.25.2.</span> <span class="nav-text">查看 stash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D-stash"><span class="nav-number">3.25.3.</span> <span class="nav-text">恢复 stash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-stash"><span class="nav-number">3.25.4.</span> <span class="nav-text">删除 stash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%B9%B6%E5%88%A0%E9%99%A4-stash"><span class="nav-number">3.25.5.</span> <span class="nav-text">恢复并删除 stash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">3.25.6.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.25.7.</span> <span class="nav-text">典型的使用场景</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">218</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2021/10/29/git-command/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Git常用命令 | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Git常用命令
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-29 21:30:05" itemprop="dateCreated datePublished" datetime="2021-10-29T21:30:05+08:00">2021-10-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-05-23 10:58:59" itemprop="dateModified" datetime="2025-05-23T10:58:59+08:00">2025-05-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2021/10/29/git-command/" class="leancloud_visitors" data-flag-title="Git常用命令" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>11k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>38 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">一起来了解一些git常用命令吧</li>
+<li class="lvl-2">推荐一个学习git命令的网站：<a target="_blank" rel="noopener" href="https://learngitbranching.js.org/?locale=zh_CN">https://learngitbranching.js.org/?locale=zh_CN</a><br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/git.png" alt=""></li>
+</ul>
+<span id="more"></span>
+<h2 id="基本概念">基本概念</h2>
+<h3 id="Git的5种工作区域">Git的5种工作区域</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>工作目录：用于新增、修改、删除文件，实际我们用于编写代码的目录</p>
+</li>
+<li class="lvl-2">
+<p>暂存区：执行<code>add</code>命令可以将工作目录对应的文件提交到暂存区，只有加入到暂存区的文件才会参与版本控制，其实际为一堆索引文件，保存在<code>.git/objects</code>目录下，记录每个文件的快照（hash）</p>
+</li>
+<li class="lvl-2">
+<p>本地版本库：执行<code>commit</code>命令可以将暂存区的文件提交到本地版本库，每一次提交都会记录版本日志，其实际保存位置也是<code>.git/objects</code>目录下的快照文件，每一次<code>commit</code>如果文件发生变化都会生成新的快照，<code>.git/refs/heads/</code>下记录每个分支的最新一次commit的版本号</p>
+</li>
+<li class="lvl-2">
+<p>远程跟踪区：<code>.git/refs/remotes/origin/</code>下记录每个分支的最新一次更新后的远程版本号，执行<code>fetch\pull\push</code>时都会更新为最新的远程版本号。如果只执行<code>fetch</code>仅仅会更新远程跟踪区，并不会更新本地目录，执行<code>pull</code>命令会同时更新远程跟踪区和本地目录</p>
+</li>
+<li class="lvl-2">
+<p>远程版本库：例如github</p>
+</li>
+</ul>
+<h3 id="文件的状态">文件的状态</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Untracked:未跟踪的文件，尚未加入过暂存区的文件</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜  git:(release) <span class="built_in">touch</span> a.txt</span><br><span class="line">➜  git:(release) ✗ git status</span><br><span class="line">位于分支 release</span><br><span class="line">您的分支与上游分支 <span class="string">&#x27;origin/release&#x27;</span> 一致。</span><br><span class="line"></span><br><span class="line">未跟踪的文件:</span><br><span class="line">  （使用 <span class="string">&quot;git add &lt;文件&gt;...&quot;</span> 以包含要提交的内容）</span><br><span class="line">	a.txt</span><br><span class="line"></span><br><span class="line">提交为空，但是存在尚未跟踪的文件（使用 <span class="string">&quot;git add&quot;</span> 建立跟踪）</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>要提交的变更[新增]，加入暂存区</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  git:(release) ✗ git add .</span><br><span class="line">➜  git:(release) ✗ git status</span><br><span class="line">位于分支 release</span><br><span class="line">您的分支与上游分支 <span class="string">&#x27;origin/release&#x27;</span> 一致。</span><br><span class="line"></span><br><span class="line">要提交的变更：</span><br><span class="line">  （使用 <span class="string">&quot;git restore --staged &lt;文件&gt;...&quot;</span> 以取消暂存）</span><br><span class="line">	新文件：   a.txt</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>已提交版本库待发布到远端，将暂存区的文件加入本地版本库</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜  git:(release) ✗ git commit -m <span class="string">&#x27;add a.txt&#x27;</span></span><br><span class="line">[release 9292bb2] add a.txt</span><br><span class="line"> 1 file changed, 0 insertions(+), 0 deletions(-)</span><br><span class="line"> create mode 100644 a.txt</span><br><span class="line">➜  git:(release) git status</span><br><span class="line">位于分支 release</span><br><span class="line">您的分支领先 <span class="string">&#x27;origin/release&#x27;</span> 共 1 个提交。</span><br><span class="line">  （使用 <span class="string">&quot;git push&quot;</span> 来发布您的本地提交）</span><br><span class="line"></span><br><span class="line">无文件要提交，干净的工作区</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>尚未暂存以备提交的变更，加入过暂存区的文件发生修改</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">➜  git:(release) <span class="built_in">echo</span> <span class="string">&quot;hello&quot;</span> &gt;&gt; a.txt</span><br><span class="line">➜  git:(release) ✗ git status</span><br><span class="line">位于分支 release</span><br><span class="line">您的分支领先 <span class="string">&#x27;origin/release&#x27;</span> 共 1 个提交。</span><br><span class="line">  （使用 <span class="string">&quot;git push&quot;</span> 来发布您的本地提交）</span><br><span class="line"></span><br><span class="line">尚未暂存以备提交的变更：</span><br><span class="line">  （使用 <span class="string">&quot;git add &lt;文件&gt;...&quot;</span> 更新要提交的内容）</span><br><span class="line">  （使用 <span class="string">&quot;git restore &lt;文件&gt;...&quot;</span> 丢弃工作区的改动）</span><br><span class="line">	修改：     a.txt</span><br><span class="line"></span><br><span class="line">修改尚未加入提交（使用 <span class="string">&quot;git add&quot;</span> 和/或 <span class="string">&quot;git commit -a&quot;</span>）</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>要提交的变更[修改]，加入过暂存区的文件重新加入暂存区</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  git:(release) ✗ git add .</span><br><span class="line">➜  git:(release) ✗ git status</span><br><span class="line">位于分支 release</span><br><span class="line">您的分支领先 <span class="string">&#x27;origin/release&#x27;</span> 共 1 个提交。</span><br><span class="line">  （使用 <span class="string">&quot;git push&quot;</span> 来发布您的本地提交）</span><br><span class="line"></span><br><span class="line">要提交的变更：</span><br><span class="line">  （使用 <span class="string">&quot;git restore --staged &lt;文件&gt;...&quot;</span> 以取消暂存）</span><br><span class="line">	修改：     a.txt</span><br></pre></td></tr></table></figure>
+<h3 id="切换分支时值得注意的地方">切换分支时值得注意的地方</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>只要文件没有被commit，无论是新增还是修改，切换分支时，文件的状态都会被带到切换后的分支</p>
+</li>
+<li class="lvl-2">
+<p>所以切换分支前，一定要执行commit</p>
+</li>
+</ul>
+<h3 id="HEAD指针和分支指针">HEAD指针和分支指针</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>我们在查看git的log时会看到类似于<code>* 6d93a15 (HEAD -&gt; master) message</code>这样的信息，6d93a15就是commit时的版本号，master是分支名称，HEAD就是<code>HEAD指针</code>，实际上这里的master也是一个指针，他就是<code>分支指针</code></p>
+</li>
+<li class="lvl-2">
+<p><code>分支指针</code>永远指向当前分支最新的一次提交版本，分支指针对应版本号保存在<code>.git/refs/heads/</code>目录下对应的分支文件中</p>
+</li>
+<li class="lvl-2">
+<p><code>HEAD指针</code>表示我们当前的工作目录是基于哪个版本checkout出来的，通常情况下<code>HEAD指针</code>指向<code>分支指针</code>，但当我们通过命令<code>git checkout &lt;commit号&gt;</code>切换到某个版本时，<code>HEAD指针</code>就不再指向<code>分支指针</code>，这个情况有个名字叫作<code>detached HEAD(头分离)</code>，<code>HEAD指针</code>对应的版本号保存在<code>.git/HEAD</code>文件中，这也是为什么我们每次进入项目，git都知道我们当前所在分支或版本号是什么。</p>
+</li>
+<li class="lvl-2">
+<p>参考资料：<a target="_blank" rel="noopener" href="https://www.zsythink.net/archives/3412/">https://www.zsythink.net/archives/3412/</a></p>
+</li>
+</ul>
+<h2 id="问题与方法">问题与方法</h2>
+<h3 id="1-别人在远程仓库中创建了新的branch，我本地执行git-branch-a却看不到，如何才能看到并checkout呢？">1.别人在远程仓库中创建了新的branch，我本地执行<code>git branch -a</code>却看不到，如何才能看到并checkout呢？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.先要获取远端全部信息</span></span><br><span class="line">git fetch origin</span><br><span class="line"><span class="comment"># git fetch 远程名称，通过git remote查看，一般就是origin。</span></span><br><span class="line">git fetch <span class="comment"># 也可以不加远程名称</span></span><br><span class="line"><span class="comment"># 该命令无论在哪个分支上执行，都会更新本地所有的远程分支</span></span><br><span class="line"><span class="comment"># git fetch 完成了仅有的但是很重要的两步:</span></span><br><span class="line"><span class="comment"># 1.从远程仓库下载本地仓库中缺失的提交记录</span></span><br><span class="line"><span class="comment"># 2.更新远程分支指针(如 o/master)</span></span><br><span class="line"><span class="comment"># git fetch 实际上将本地仓库中的远程分支更新成了远程仓库相应分支最新的状态。</span></span><br><span class="line"><span class="comment"># git fetch 并不会改变你本地仓库的状态。它不会更新你的 本地 分支，也不会修改你磁盘上的文件。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.再查看分支信息</span></span><br><span class="line">git branch -a</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.checkout到本地并切换到新创建的分支</span></span><br><span class="line">git checkout -b release（本地分支名） origin/release（远程分支名）</span><br><span class="line">控制台输出：</span><br><span class="line">分支 <span class="string">&#x27;release&#x27;</span> 设置为跟踪来自 <span class="string">&#x27;origin&#x27;</span> 的远程分支 <span class="string">&#x27;release&#x27;</span>。</span><br><span class="line">切换到一个新分支 <span class="string">&#x27;release&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.查看当前分支跟踪的远程分支</span></span><br><span class="line">git rev-parse --abbrev-ref --symbolic-full-name @&#123;u&#125;  <span class="comment"># @&#123;u&#125; 是 @&#123;upstream&#125; 的简写</span></span><br><span class="line">控制台输出：</span><br><span class="line">origin/release</span><br></pre></td></tr></table></figure>
+<h3 id="2-如何查看本地分支与远程分支的区别？">2.如何查看本地分支与远程分支的区别？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.先要获取远端全部信息</span></span><br><span class="line">git fetch origin</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">git fetch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.切换到待比较的本地分支，如master</span></span><br><span class="line">git checkout master</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.比较当前分支与origin/master之间的不同，--stat只显示哪些文件有不同，如果要查看每个文件不同的详细信息就去掉--stat</span></span><br><span class="line">git diff origin/master --<span class="built_in">stat</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.比较任意两个分支的不同，--stat只显示哪些文件有不同，如果要查看每个文件不同的详细信息就去掉--stat</span></span><br><span class="line">git diff origin/master..master --<span class="built_in">stat</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="3-如何查看本地两个分支之间的区别？">3.如何查看本地两个分支之间的区别？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.比较任意两个分支的区别</span></span><br><span class="line">git diff master..dev --<span class="built_in">stat</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.比较当前分支与master分支的区别</span></span><br><span class="line">git diff master --<span class="built_in">stat</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-如何查看本地的发生了哪些更改？">4.如何查看本地的发生了哪些更改？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前工作目录的索引和上次提交索引之间的差异，只有已经被commit过的文件才会被比较，如果是新增的文件则看不到</span></span><br><span class="line">git diff --<span class="built_in">stat</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过`git status`命令查看本地都有哪些变化，包含新增未加入暂存区的，新增已加入暂存区的，已提交过但有改动的，等等</span></span><br><span class="line">git status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看下次执行`git commit`时会被提交的文件</span></span><br><span class="line">git diff --cached --<span class="built_in">stat</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看下次执行`git commit -a` 时会被提交的文件，-a表示先add再commit</span></span><br><span class="line">git diff HEAD --<span class="built_in">stat</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-如何提交本地仓库？">5.如何提交本地仓库？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本地无论是新增文件或修改文件，都要add后才能commit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1.先add再commit</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&#x27;message&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.add同时commit，注意，如果存在尚未跟踪的文件，需要使用 &quot;git add&quot; 建立跟踪</span></span><br><span class="line"> git commit -a -m <span class="string">&#x27;message&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="6-git-reset-如何回滚到指定版本或分支">6.<code>git reset</code>: 如何回滚到指定版本或分支?</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。</p>
+</li>
+<li class="lvl-2">
+<p>注意，如果reset包含了已经发布（<code>git push</code>）的的版本，此时如果用<code>git push</code>会报错，因为我们本地库HEAD指向的版本比远程库的要旧，需要执行命令<code>git push -f</code>强制更新远程</p>
+</li>
+<li class="lvl-2">
+<p>注意参数<code>--hard</code>有和没有的区别，有–hard，则完全回退到上一版本，丢弃所有其它修改，清空暂存区，同步工作目录到指定版本。没有–hard，则该版本之后的变化会变为Modified状态保留在工作目录，只清空暂存区。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.回滚到上一个版本</span></span><br><span class="line">git reset --hard HEAD^ <span class="comment"># 完全回退到上一个版本，丢弃所有其它修改，清空暂存区，同步工作目录到指定版本，也就是说，上一次提交之后新增或修改的文件内容都没有了</span></span><br><span class="line">git reset HEAD~1 <span class="comment"># 则该版本之后的变化会变为Modified状态保留在工作目录，只清空暂存区，也就是说，上一次提交之后新增或修改的文件内容得以保留</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.回滚到上上个版本</span></span><br><span class="line">git reset --hard HEAD^^</span><br><span class="line">git reset HEAD~2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.回滚到指定版本的分支</span></span><br><span class="line">git reset --hard 版本号</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.1 查看版本号</span></span><br><span class="line">git <span class="built_in">log</span> --oneline</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.回滚到指定分支</span></span><br><span class="line">git reset --hard 分支名称</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.1 回滚到与本地远程分支一样的状态，一般本地仓库搞坏了会这么做</span></span><br><span class="line">git reset --hard origin/master</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. `git log`看不到reset的历史，可以通过如下命令查看</span></span><br><span class="line">git reflog</span><br></pre></td></tr></table></figure>
+<h3 id="7-gitignore-在git中如果想忽略掉某个文件，不让这个文件提交到版本库中，要怎么做呢？">7.<code>.gitignore</code>: 在git中如果想忽略掉某个文件，不让这个文件提交到版本库中，要怎么做呢？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在工作目录下创建 .gitignore 文件</span></span><br><span class="line"><span class="comment"># 其格式为：</span></span><br><span class="line"><span class="comment"># 此为注释 – 将被 Git 忽略</span></span><br><span class="line">*.a       <span class="comment"># 忽略所有 .a 结尾的文件</span></span><br><span class="line">!lib.a    <span class="comment"># 但 lib.a 除外</span></span><br><span class="line">/TODO     <span class="comment"># 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO</span></span><br><span class="line">build/    <span class="comment"># 忽略 build/ 目录下的所有文件</span></span><br><span class="line">doc/*.txt <span class="comment"># 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略文件默认为当前项目目录下的.gitignore文件，也可以通过如下命令指定文件路径和名称</span></span><br><span class="line">git config core.excludesfile .gitignore_dev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可配置为全局文件，这样就不需要为每个项目都创建.gitignore 文件</span></span><br><span class="line">git config --global core.excludesfile ~/.gitignore_global</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># .gitignore 文件 只对git add起作用，如果有文件在被加入到.gitignore 文件前就已经被commit了可以使用如下方法</span></span><br><span class="line"><span class="comment"># 1.删除暂存区、分支上内容，本地保留。解除该文件的追踪关系，脱离版本控制。</span></span><br><span class="line">git <span class="built_in">rm</span> --cached 文件名   <span class="comment"># 删除文件</span></span><br><span class="line">git <span class="built_in">rm</span> -r --cached 文件夹   <span class="comment"># 删除文件夹  -r 表示允许递归删除</span></span><br><span class="line">git <span class="built_in">rm</span> -r --cached .  <span class="comment"># 删除当前目录下全部文件的暂存区</span></span><br><span class="line"></span><br><span class="line">git <span class="built_in">rm</span> -r 文件夹/文件名  <span class="comment">#删除本地、暂存区、分支上内容，如果该文件不需要在本地保留，就可以测底删除</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.重新加入暂存区</span></span><br><span class="line">git add . <span class="comment"># 将当前目录下所有文件加入暂存区</span></span><br><span class="line">git add file/dir <span class="comment">#将指定文件或目录加入暂存区，支持通配符</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.查看暂存区内容</span></span><br><span class="line">git diff --cached</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.提交</span></span><br><span class="line">git commit -m <span class="string">&quot;message&quot;</span> <span class="comment"># 将暂存区内容提交到本地版本库</span></span><br><span class="line">git commit -am <span class="string">&quot;message&quot;</span> <span class="comment"># 先提交暂存区再提交到本地版本库</span></span><br></pre></td></tr></table></figure>
+<h3 id="8-git-commit-amend-commit后发现有内容要修改或者注释写错了，但是不想创建新的一次commit，要怎么办呢？">8.<code>git commit --amend</code>: commit后发现有内容要修改或者注释写错了，但是不想创建新的一次commit，要怎么办呢？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>以下命令如果直接合并到已经push过的版本，再次git push时会提示&quot;更新被拒绝，因为您当前分支的最新提交落后于其对应的远程分支&quot;，此时可以执行<code>git push -f</code>强行发布即可。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 覆盖上一次提交，这样不会产生新的提交</span></span><br><span class="line">git commit --amend  -am <span class="string">&quot;注释&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在上次提交中附加一些内容，保持提交日志不变</span></span><br><span class="line">git commit -a --amend --no-edit</span><br></pre></td></tr></table></figure>
+<h3 id="9-git-log–如何查看提交日志">9.<code>git log</code>–如何查看提交日志?</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示版本历史，如果有用git reset --hard xxxxx回退操作，则只会显示到xxx之前的历史</span></span><br><span class="line">git <span class="built_in">log</span>  <span class="comment"># 显示当前分支之前的全部日志</span></span><br><span class="line">git <span class="built_in">log</span>  --all <span class="comment">#  --all 显示全部分支</span></span><br><span class="line">git <span class="built_in">log</span> --oneline <span class="comment"># 单行显示</span></span><br><span class="line"></span><br><span class="line">git <span class="built_in">log</span> --oneline --all --graph <span class="comment"># 图形化显示全部分支log</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在所有提交日志中搜索包含「homepage」的提交</span></span><br><span class="line">git <span class="built_in">log</span> --all --grep=<span class="string">&#x27;homepage&#x27;</span> <span class="comment">#模糊匹配</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取某人的提交日志</span></span><br><span class="line">git <span class="built_in">log</span> --author=<span class="string">&quot;hanqf&quot;</span>  <span class="comment">#模糊匹配</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看完整版本历史，也就是说即便有git reset也会显示</span></span><br><span class="line">git reflog</span><br></pre></td></tr></table></figure>
+<h3 id="10-如何创建本地仓库并绑定到远程仓库">10.如何创建本地仓库并绑定到远程仓库?</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.首先要在对应的git服务器创建一个新的仓库，一般的git服务器创建新仓库后都会提示你如何绑定该仓库的</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 创建本地仓库</span></span><br><span class="line">git init <span class="comment">#将当前目录加入版本控制</span></span><br><span class="line">git init <span class="built_in">dir</span> <span class="comment">#将dir加入版本控制</span></span><br><span class="line"><span class="comment"># 默认使用 &#x27;master&#x27; 作为初始分支的名称，如果要修改分支名称，可以执行如下命令：</span></span><br><span class="line">git branch -m &lt;name&gt;</span><br><span class="line"><span class="comment"># 也可以通过设置git config来配置默认的名称，除了 &#x27;master&#x27; 之外，通常选定的名字有 &#x27;main&#x27;、&#x27;trunk&#x27; 和 &#x27;development&#x27;。</span></span><br><span class="line">git config --global init.defaultBranch &lt;名称&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 创建新的文件后提交到本地仓库</span></span><br><span class="line">git add . &amp;&amp; git commit -m <span class="string">&#x27;message&#x27;</span></span><br><span class="line">git commit -am <span class="string">&quot;备注&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.绑定远程仓库</span></span><br><span class="line">git remote add origin https://xxxxx (远程仓库地址)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5.提交本地仓库的变更到远程仓库，这里要注意github的主分支名称已经变更为main，所以提交github时要将master替换为main</span></span><br><span class="line">git pull --rebase origin master <span class="comment">#获取远程库与本地同步合并（如果远程库不为空必须做这一步，否则后面的提交会失败）</span></span><br><span class="line">git push -u origin master <span class="comment">#提交master到其远程仓库，第一次提交加上-u，以后就不用了</span></span><br><span class="line">git push origin master</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">git push <span class="comment"># 将当前分支提交到其对应的远程仓库</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>以下是绑定到GitHub仓库的步骤</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 推送一个全新的仓库</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;# docker_test&quot;</span> &gt;&gt; README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git branch -M main</span><br><span class="line">git remote add origin https://github.com/hanqunfeng/docker_test.git</span><br><span class="line">git push -u origin main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送一个现存的仓库</span></span><br><span class="line">git remote add origin https://github.com/hanqunfeng/docker_test.git</span><br><span class="line">git branch -M main</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+<h3 id="11-远程仓库地址变更后如何更新？">11.远程仓库地址变更后如何更新？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.命令行修改</span></span><br><span class="line">git remote set-url origin [NEW_URL]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.手工编辑.git目录下的config文件</span></span><br><span class="line">[remote <span class="string">&quot;origin&quot;</span>]</span><br><span class="line">    url = https://xxxxxx (修改为新的地址)</span><br><span class="line">    fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.查看修改后的地址</span></span><br><span class="line">git remote get-url origin   <span class="comment">#只会显示可以fetch的地址</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.查看远程仓库地址</span></span><br><span class="line">git remote -v  <span class="comment"># 会显示push和fetch的地址</span></span><br></pre></td></tr></table></figure>
+<h3 id="12-如何将本地仓库同时绑定到多个远程仓库？">12.如何将本地仓库同时绑定到多个远程仓库？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.按照`10.如何创建本地仓库并绑定到远程仓库?`中的步骤完成第一个仓库的绑定</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.手工编辑.git目录下的config文件</span></span><br><span class="line">[remote <span class="string">&quot;origin&quot;</span>]</span><br><span class="line">    url = https://xxxxxxxx1  <span class="comment"># 此处为第一个远程仓库的地址，即可以push又可以fetch</span></span><br><span class="line">    url = https://xxxxxxxx2  <span class="comment"># 在此添加第二个仓库的地址，以此类推，可以添加多个，只可以push，只能备份使用</span></span><br><span class="line">    fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.保存后再次执行，这里要注意github的主分支名称已经变更为main，所以提交github时要将master替换为main</span></span><br><span class="line">git push -u origin master  <span class="comment"># 提交master到其远程仓库，只有第一次执行时需要加上 -u ，以后只需要：git push  origin master</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">git push <span class="comment"># 将当前分支提交到其对应的远程仓库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.查看远程仓库地址</span></span><br><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
+<h3 id="13-如何在git-pull时不用每次都输入密码？">13.如何在<code>git pull</code>时不用每次都输入密码？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入项目目录</span></span><br><span class="line">git config --global credential.helper store</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行 git pull 并输入密码，此时当前项目就会记住密码了，下次再执行时就不用密码了</span></span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+<h3 id="14-如果文件已经git-add到暂存区，但是尚未commit，此时如何将文件从暂存区中移除？">14.如果文件已经<code>git add</code>到暂存区，但是尚未commit，此时如何将文件从暂存区中移除？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 如果文件还没有放入暂存区</span></span><br><span class="line">git checkout -- &lt;文件名&gt; <span class="comment">#放弃对某一个文件已经做出的修改，回到head版本的该文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果文件已经`git add`到暂存区，但是尚未commit</span></span><br><span class="line"><span class="comment"># 移出单个文件</span></span><br><span class="line">git restore --staged &lt;文件路径&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 移出本次全都add到暂存区的文件</span></span><br><span class="line">git reset .  <span class="comment"># 重置本次全部索引，.代表当前目录</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过git status查看文件路径</span></span><br><span class="line">git status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果已经commit，可以通过如下方式移除</span></span><br><span class="line"><span class="comment"># 删除暂存区、分支上内容，本地保留。解除该文件的追踪关系，脱离版本控制。</span></span><br><span class="line">git <span class="built_in">rm</span> --cached &lt;文件名&gt;   <span class="comment"># 删除文件</span></span><br><span class="line">git <span class="built_in">rm</span> -r --cached &lt;文件夹&gt;   <span class="comment"># 删除文件夹  -r 表示允许递归删除</span></span><br><span class="line">git <span class="built_in">rm</span> -r --cached .  <span class="comment"># 删除当前目录下全部文件的暂存区，.代表当前目录</span></span><br></pre></td></tr></table></figure>
+<h3 id="15-git-config-如何设置和查看git配置信息？">15.<code>git config</code>: 如何设置和查看git配置信息？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用git config命令进行设置和查看</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局设置用户名和邮箱，全局配置是保存在 ~/.gitconfig中的</span></span><br><span class="line">git config --global user.name <span class="string">&quot;你的用户名&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;你的邮箱&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 只对当前项目有效，项目根目录下执行，去掉--global，项目配置优先级更高，项目配置保存在.git/config中，可以直接修改</span></span><br><span class="line">git config user.name <span class="string">&quot;你的用户名&quot;</span></span><br><span class="line">git config user.email <span class="string">&quot;你的邮箱&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改你的用户名和邮箱</span></span><br><span class="line">git config --global --replace-all user.name <span class="string">&quot;你的用户名&quot;</span></span><br><span class="line">git config --global --replace-all user.email <span class="string">&quot;你的邮箱&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看配置</span></span><br><span class="line">git config --list  <span class="comment"># 此时项目配置和全局配置都会显示</span></span><br><span class="line"></span><br><span class="line">git config --global --list <span class="comment"># 只显示全局配置，全局配置是保存在 ~/.gitconfig中的</span></span><br><span class="line"></span><br><span class="line">git config user.name <span class="comment"># 查看某个配置的值</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改全局配置的值，--replace-all会匹配所有行，也可以直接在~/.gitconfig中修改</span></span><br><span class="line">git config --global --replace-all user.name <span class="string">&quot;你的用户名&quot;</span></span><br><span class="line">git config --global --replace-all user.email <span class="string">&quot;你的邮箱&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改项目配置的值，--replace-all会匹配所有行，也可以直接在.git/config中修改</span></span><br><span class="line">git config --replace-all user.name <span class="string">&quot;你的用户名&quot;</span></span><br><span class="line">git config --replace-all user.email <span class="string">&quot;你的邮箱&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="16-提交的文件太大-默认是1M-，导致push失败怎么办？">16.提交的文件太大(默认是1M)，导致push失败怎么办？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加大缓冲区大小（http.postBuffer的参数）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 524288000 的单位代表 B，524288000B 也就是 500MB。</span></span><br><span class="line">git config http.postBuffer 524288000</span><br><span class="line"><span class="comment"># 或全局设置</span></span><br><span class="line">git config --global http.postBuffer 524288000</span><br></pre></td></tr></table></figure>
+<h3 id="17-clone代码最简单的方式是通过https的形式，不过一般这样做需要输入用户名和密码，如果不想输入用户名和密码可以使用git-xxxx的形式，如何实现呢？">17.clone代码最简单的方式是通过https的形式，不过一般这样做需要输入用户名和密码，如果不想输入用户名和密码可以使用<code>git@xxxx</code>的形式，如何实现呢？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这种方式就是基于ssh的密钥证书来实现</span></span><br><span class="line"><span class="comment"># 生成本地ssh密钥对，按照提示完成三次回车，即可生成 ssh key。此时会在~/.ssh/下创建id_rsa.pub(公钥)和id_rsa(私钥)</span></span><br><span class="line">ssh-keygen -b 4096 -t rsa <span class="comment"># -t 指定生成密钥的算法类型，生成的文件名称就是以其开头的，如这里就是id_rsa</span></span><br><span class="line"><span class="comment"># 支持的密钥算法类型包含：rsa,ed25519,等等，具体参见各个git服务器的配置说明</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时cat id_rsa.pub 可以看到公钥的内容</span></span><br><span class="line"><span class="comment"># 形式为:sshkey的算法+密文+sshkey的标签，此时sshkey算法为ssh-rsa，sshkey标签为机器名称，若要指定sshkey标签可以通过-C指定</span></span><br><span class="line">ssh-keygen -b 4096 -t rsa -C <span class="string">&quot;xxxxxxx&quot;</span></span><br><span class="line"><span class="comment"># 注意这里-C可以指定任意值，网上说必须指定邮箱其初衷仅仅是为了便于辨识</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将公钥文件内容复制到对应的git服务器配置ssh-key的地方，具体使用方式可以参见各个git服务器的说明。</span></span><br><span class="line"><span class="comment"># Github: settings--SSH and GPG keys--SSH keys--New SSH key</span></span><br><span class="line"><span class="comment"># 测试连接是否正常</span></span><br><span class="line">ssh -T git@github.com</span><br><span class="line"><span class="comment"># Coding: 个人帐号设置--个人设置--SSH 公钥--新增公钥</span></span><br><span class="line"><span class="comment"># 测试连接是否正常</span></span><br><span class="line">ssh -T git@e.coding.net</span><br><span class="line"></span><br><span class="line"><span class="comment"># Gitee: 设置--安全设置--SSH公钥</span></span><br><span class="line"><span class="comment"># 测试连接是否正常</span></span><br><span class="line">ssh -T git@gitee.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># clone代码示例</span></span><br><span class="line">git <span class="built_in">clone</span> git@github.com:hanqunfeng/reactive-redis-cache-annotation-spring-boot-starter.git</span><br></pre></td></tr></table></figure>
+<h3 id="18-git-branch-如何创建分支-切换分支-查看分支-删除分支-发布分支？">18.<code>git branch</code>: 如何创建分支\切换分支\查看分支\删除分支\发布分支？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从当前分支创建release分支，但是不切换</span></span><br><span class="line">git branch release</span><br><span class="line"></span><br><span class="line">git checkout release <span class="comment"># 从当前分支切换到release分支</span></span><br><span class="line">git checkout &lt;commit号&gt; <span class="comment"># 从当前分支切换到commit号对应的版本</span></span><br><span class="line"><span class="comment"># 注意，当切换到某个版本号对应的版本时就会发生“头分离”，即HEAD指针不会再指向分支指针，而是指向了那个版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 从当前分支创建并切换到release分支，相当于执行git branch release &amp;&amp; git checkout release两个命令</span></span><br><span class="line">git checkout -b release</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从dev分支创建release分支，但是不切换</span></span><br><span class="line">git branch release dev</span><br><span class="line"><span class="comment"># 从dev分支创建release分支,并切换</span></span><br><span class="line">git checkout -b release dev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将当前分支名称重命名为release</span></span><br><span class="line">git branch -m release</span><br><span class="line"><span class="comment"># 将当前分支名称重命名为release，如果目标分支 release 已存在，则强制覆盖</span></span><br><span class="line">git branch -M release</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有本地分支</span></span><br><span class="line">git branch == git branch --list</span><br><span class="line"><span class="comment"># 查看所有远程分支</span></span><br><span class="line">git branch -r</span><br><span class="line"><span class="comment"># 查看所有分支，包含本地和远程分支</span></span><br><span class="line">git branch -a</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从指定版本创建release分支，版本号通过git log --oneline查看</span></span><br><span class="line">git branch release 799fb04</span><br><span class="line">git checkout -b release 799fb04</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 从远程分支origin/release创建release分支，并切换</span></span><br><span class="line">git checkout -b release origin/release</span><br><span class="line"></span><br><span class="line"><span class="comment">#跳到上一个分支，比如当前是master分支，是从dev分支通过git checkout master命令切换过来的，那么该命令会重新回到dev分支</span></span><br><span class="line">git checkout -</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分支</span></span><br><span class="line">git branch  <span class="comment">#列出所有本地分支，标*的就是当前所在的分支，.git/HEAD 文件中存放的就是当前分支信息</span></span><br><span class="line">git branch --remote   <span class="comment">#列出远程仓库中的所有分支</span></span><br><span class="line">git branch -a  <span class="comment">#同时显示本地和远程的所有分支</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> .git/HEAD  <span class="comment">#查看当前所在分支</span></span><br><span class="line">git symbolic-ref HEAD <span class="comment">#查看当前所在分支，本地分支</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除分支</span></span><br><span class="line"><span class="comment"># 删除release分支，不能在release下删除自己</span></span><br><span class="line">git branch -d release</span><br><span class="line"></span><br><span class="line"><span class="comment"># 假设我们通过master创建了release分支，此时release分支发生了变更并执行了commit，但是并没有将更改merge回master，此时删除release分支需要执行如下命令</span></span><br><span class="line">git branch -D release  <span class="comment"># -D 强制删除</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布分支</span></span><br><span class="line">git push --set-upstream origin &lt;new branch name&gt; <span class="comment">#推新分支到远程仓库并在本地分支和远程分支之间建立关联</span></span><br><span class="line"><span class="comment"># 也可以分两步完成，但推荐上面的方式</span></span><br><span class="line">git push origin &lt;new branch name&gt; <span class="comment">#推新分支到远程仓库</span></span><br><span class="line">git branch --set-upstream-to=origin/&lt;new branch name&gt; &lt;new branch name&gt; <span class="comment">#关联本地分支到远程分支，否则每一次pull或push的时候都需要明确指定本地和远端分支。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前分支跟踪的远程分支</span></span><br><span class="line">git rev-parse --abbrev-ref --symbolic-full-name @&#123;u&#125;  <span class="comment"># @&#123;u&#125; 是 @&#123;upstream&#125; 的简写</span></span><br></pre></td></tr></table></figure>
+<h3 id="19-merge还是rebase-如何合并分支">19.merge还是rebase? 如何合并分支?</h3>
+<p>一般开发流程：</p>
+<ol>
+<li class="lvl-3">
+<p>更新主分支 git pull</p>
+</li>
+<li class="lvl-3">
+<p>从主分支创建一个开发分支 git checkout -b dev，每个开发人员都会创建一个自己的开发分支</p>
+</li>
+<li class="lvl-3">
+<p>开发分支完成测试后合并回主分支，这里推荐使用git rebase，开发分支的log会被移动到主分支的顶端，这样主分支始终是一条线</p>
+</li>
+<li class="lvl-3">
+<p>这样主分支在保持干净的同时还保留了每一次commit的log，便于开发人员追溯历史</p>
+</li>
+<li class="lvl-3">
+<p>也可以使用<code>git merge --no-ff</code>，其也会保留每次的log到主分支上</p>
+</li>
+</ol>
+<p>一般发布流程：</p>
+<ol>
+<li class="lvl-3">
+<p>将主分支测试完成后合并到发布分支，一般都是由一个专门的人员进行合并，此时推荐使用git merge，这样每次一发布的版本都会产生一个新的节点，而主分支上的多次commit的log不会被记录到发布分支上</p>
+</li>
+<li class="lvl-3">
+<p>这样发布分支看起来就是每一次大的发布才会合并一次并记录log，log中可以编辑本次发布的内容。</p>
+</li>
+</ol>
+<h4 id="示例准备，初始化一个待合并的目录">示例准备，初始化一个待合并的目录</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">➜ <span class="built_in">mkdir</span> git_test</span><br><span class="line">➜ <span class="built_in">cd</span> git_test</span><br><span class="line">➜ <span class="built_in">touch</span> 1.txt</span><br><span class="line">➜ git init</span><br><span class="line">[master（根提交） 5b91fc1] init...</span><br><span class="line"> 1 files changed, 0 insertions(+), 0 deletions(-)</span><br><span class="line"> create mode 100644 1.txt</span><br><span class="line">➜ git:(master) git add . &amp;&amp; git commit -m <span class="string">&#x27;init...&#x27;</span></span><br><span class="line">➜ git:(master) git checkout -b dev</span><br><span class="line">➜ git:(dev) <span class="built_in">echo</span> <span class="string">&quot;dev1&quot;</span> &gt;&gt; a.txt</span><br><span class="line">➜ git:(dev) ✗ git add . &amp;&amp; git commit -m <span class="string">&#x27;dev1&#x27;</span></span><br><span class="line">[dev 8d57739] dev1</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 a.txt</span><br><span class="line">➜ git:(dev) ✗ git checkout master</span><br><span class="line">切换到分支 <span class="string">&#x27;master&#x27;</span></span><br><span class="line">➜ git:(master) ✗ <span class="built_in">echo</span> <span class="string">&quot;master1&quot;</span> &gt;&gt; a.txt</span><br><span class="line">➜ git:(master) ✗ git add . &amp;&amp; git commit -m <span class="string">&#x27;master1&#x27;</span></span><br><span class="line">[master fa2400a] master1</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 a.txt</span><br><span class="line">➜ git:(master) ✗ git checkout dev</span><br><span class="line">切换到分支 <span class="string">&#x27;dev&#x27;</span></span><br><span class="line">➜ git:(dev) ✗ <span class="built_in">echo</span> <span class="string">&quot;dev2&quot;</span> &gt;&gt; a.txt</span><br><span class="line">➜ git:(dev) ✗ git add . &amp;&amp; git commit -m <span class="string">&#x27;dev2&#x27;</span></span><br><span class="line">[dev 0006560] dev2</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">➜ git:(dev) ✗ git checkout master</span><br><span class="line">切换到分支 <span class="string">&#x27;master&#x27;</span></span><br></pre></td></tr></table></figure>
+<h4 id="merge">merge</h4>
+<p>将dev分支merge到当前分支</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge dev</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>merge会将dev分支和当前分支合并后创建一个新的节点放到当前分支最顶端，所以解决完冲突，需要执行如下命令创建一个新的commit</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add . &amp;&amp; git commit -m <span class="string">&#x27;merge dev&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>merge的log会按照时间顺序显示</p>
+</li>
+<li class="lvl-2">
+<p>merge后如果删除了dev分支，则在log中就看不到这个分支信息了，但是日志内容还在</p>
+</li>
+</ul>
+<h5 id="merge示例">merge示例</h5>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜ git:(master) ✗ git merge dev</span><br><span class="line">冲突（add/add）：合并冲突于 a.txt</span><br><span class="line">自动合并 a.txt</span><br><span class="line">自动合并失败，修正冲突然后提交修正的结果。</span><br><span class="line">➜ git:(master) ✗ vim a.txt</span><br><span class="line">➜ git:(master) ✗ git add . &amp;&amp; git commit -m <span class="string">&#x27;master merge release&#x27;</span></span><br><span class="line">➜ git:(master) git <span class="built_in">log</span> --oneline   <span class="comment"># 此时才能看到日志</span></span><br><span class="line">➜ git:(master) git branch -D dev</span><br><span class="line">已删除分支 dev（曾为 0006560）。</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/merge1.png" alt=""><br>
+删除dev分支后<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/merge2.png" alt=""></p>
+<h4 id="rebase">rebase</h4>
+<p>将dev分支rebase到当前分支</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase dev</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>rebase会将dev分支的每一个节点转移到当前分支最顶端，而不会产生一个新的节点，这样rebase后的分支节点看起来就是一条线</p>
+</li>
+<li class="lvl-2">
+<p>解决完冲突，执行<code>git add .</code>和<code>git rebase --continue</code>，不会产生额外的commit</p>
+</li>
+<li class="lvl-2">
+<p>rebase后如果删除了dev分支，则在log中就看不到这个分支信息了，但是日志内容还在，这样看起来就是主分支自己的节点，没有产生过新的分支</p>
+</li>
+<li class="lvl-2">
+<p>如果要放弃本次合并，可以运行<code>git rebase --abort</code></p>
+</li>
+</ul>
+<h5 id="rebase示例">rebase示例</h5>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">➜  git:(master) git rebase dev</span><br><span class="line">冲突（add/add）：合并冲突于 a.txt</span><br><span class="line">自动合并 a.txt</span><br><span class="line">error: 不能应用 0657382... master1</span><br><span class="line">Resolve all conflicts manually, mark them as resolved with</span><br><span class="line"><span class="string">&quot;git add/rm &lt;conflicted_files&gt;&quot;</span>, <span class="keyword">then</span> run <span class="string">&quot;git rebase --continue&quot;</span>.</span><br><span class="line">You can instead skip this commit: run <span class="string">&quot;git rebase --skip&quot;</span>.</span><br><span class="line">To abort and get back to the state before <span class="string">&quot;git rebase&quot;</span>, run <span class="string">&quot;git rebase --abort&quot;</span>.</span><br><span class="line">不能应用 0657382... master1</span><br><span class="line">➜  git:(e4410b4) ✗ vim a.txt</span><br><span class="line">➜  git:(e4410b4) ✗ git add .</span><br><span class="line">➜  git:(e4410b4) ✗ git rebase --<span class="built_in">continue</span></span><br><span class="line">[分离头指针 bd01ea0] master1</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">成功变基并更新 refs/heads/master。</span><br><span class="line">➜  git:(master) git <span class="built_in">log</span> --oneline</span><br><span class="line">➜  git:(master) git branch -D dev</span><br><span class="line">已删除分支 dev（曾为 e4410b4）。</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase1.png" alt=""><br>
+删除dev分支后<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase2.png" alt=""></p>
+<h3 id="20-git-rebase-i-我commit了很多次，发现都是干的一件事，此时如果直接rebase到主分支会有很多没必要的log，是否可以合并这些commit为一个呢？">20.<code>git rebase -i</code>: 我commit了很多次，发现都是干的一件事，此时如果直接rebase到主分支会有很多没必要的log，是否可以合并这些commit为一个呢？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git rebase -i 即可以合并多次提交，也可以合并分支，-i表示可以编辑提交过程，编辑过程中将后面的提交命令修改为s即可，保存后会提示你是否重新编辑log内容，按需编写即可。</span></span><br><span class="line">git rebase -i  commit号 <span class="comment">#将commit号到最新的提交合并为一个提交，需要在弹出的交互页面中编辑合并过程</span></span><br><span class="line">git rebase -i  start_commit号 end_commit号  <span class="comment">#合并指定commit号之间的的提交</span></span><br><span class="line">git rebase -i HEAD~3   <span class="comment">#合并最新的三次提交，编辑页面将后两次命令修改为s，wq后编辑新的commit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 该命令也可以合并分支</span></span><br><span class="line">git rebase -i  分支名称 <span class="comment">#将指定分支合并到当前分支，合并时将指定分支的多个提交合并为一次提交，需要在弹出的交互页面中编辑合并过程</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果修改的提交节点距离结束的提交节点中间有多个节点，而上一次和下一次都需要合并文件，这个过程就要进行多次。个人感觉这个过程虽然可以重新整理提交节点，使节点更准确清晰，但是如果修改的点比较远，文件内容变化复杂，这个多次合并的过程还是比较痛苦的，不推荐在这种情况下使用。</p>
+</li>
+<li class="lvl-2">
+<p>推荐的使用场景为，针对同一个功能进行修改，在commit后尚未进行pushsa时发现有些内容需要变化，如果此时没有进行commit，可以执行<code>git commit --amend  -am &quot;注释&quot;</code>,如果已经执行了commit，则可以执行<code>git rebase -i HEAD~2</code>。</p>
+</li>
+</ul>
+<h4 id="示例">示例</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i HEAD~3</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>注意这里会进入两次编辑页面，一次是多个提交的处理方式，按提示进行修改即可，一般保留第一行的命令pick，后面的行命令修改为s，然后wq保存。</p>
+</li>
+<li class="lvl-2">
+<p>注意合并多个分支时如果包含已经发布过的分支，就要调整顺序，将已经发布的最后一个分支放到第一行，否则再次发布时会提示需要先执行<code>git pull</code>，这是因为按照上面的逻辑只有第一行的是提交操作，后面的不会产生新的提交，所以版本号就会落后于远端分支，但是即便调整顺序，也会提示版本偏离，还是要先执行<code>git pull</code>，待手工合并冲突后再次提交一个新的commit，所以，最好的方法就是不要包含已经发布过的分支，只针对未发布的分支进行合并。<br>
+编辑后的：<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase3.png" alt=""></p>
+</li>
+<li class="lvl-2">
+<p>第二个页面是要求你编辑本次合并的log说明，此时每次的log都会显示在这个页面，去掉不需要的，重新编辑一下保存即可。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase4.png" alt=""><br>
+编辑后的：<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase5.png" alt=""></p>
+</li>
+</ul>
+<!-- <div>
+<img src="/images_glob/git-command/rebase5.png" width="60%">
+</div> -->
+<p>查看日志：git log --oneline<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/rebase6.png" alt=""></p>
+<h3 id="21-git-revert-如何撤销指定的提交呢，就是把这次提交回滚到其前一次提交的状态，但是又不影响其之后的提交？">21.<code>git revert</code>: 如何撤销指定的提交呢，就是把这次提交回滚到其前一次提交的状态，但是又不影响其之后的提交？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>git revert</code> 是回滚某个commit ，不是回滚“到”某个</p>
+</li>
+<li class="lvl-2">
+<p><code>git revert</code>是用一次新的commit来回滚之前的commit，<code>git reset</code>是直接删除指定的commit。</p>
+</li>
+<li class="lvl-2">
+<p><code>git reset</code> 撤销到某次提交, <code>git revert</code> 撤销某次提交，撤销并不意味着删除本次提交，其log里仍然会有这次提交，只不过revert后会产生一个新的节点用于提交，而reset是会删除之前的log。</p>
+</li>
+<li class="lvl-2">
+<p>需要回滚到上一个版本时，可以通过<code>git reset HEAD~1</code>实现，也可以通过执行<code>git revert HEAD</code>实现。区别就是reset后再次发布需要<code>git push -f</code>，而revert不需要-f参数，因为revert时会在顶端产生一个新的节点，其版本号一定比远端新的。</p>
+</li>
+<li class="lvl-2">
+<p>还有一点需要注意，例如dev是从 master checkout出来的分支，然后针对dev执行reset时，如果reset的版本master里也包含，此时再将dev merge 回 master时，则master里会保留本应该被reset的内容，而执行revert则不会出现这个问题，因为revert是用一次逆向的commit“中和”之前的提交。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 撤销并commit一次新的提交</span></span><br><span class="line">git revert HEAD        <span class="comment">#撤销前一次 commit</span></span><br><span class="line">git revert HEAD^       <span class="comment">#撤销前前一次 commit</span></span><br><span class="line">git revert HEAD~3      <span class="comment">#撤销倒数第四次提交</span></span><br><span class="line">git revert commit号    <span class="comment">#撤销指定的版本，撤销也会作为一次提交进行保存。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果只撤销，即只改变本地目录和索引，但不执行commit，可以加上-n参数，然后手工执行commit操作</span></span><br><span class="line">git revert -n HEAD~3</span><br><span class="line">git revert -n &lt;commit1&gt;..&lt;commit2&gt; <span class="comment"># 撤销多个版本，commit1 &gt; x &gt;= commit2，此时要加上-n参数，否则每个撤销都会创建一个新的commit号</span></span><br></pre></td></tr></table></figure>
+<h3 id="22-如何打tag">22.如何打tag</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git tag -a <span class="string">&quot;prod_x.x.x&quot;</span> -m <span class="string">&quot;message&quot;</span> <span class="comment">#打标签, -a是标签名 -m注释</span></span><br><span class="line">git push origin <span class="string">&quot;prod_x.x.x&quot;</span> <span class="comment">#将这个新标签推送到远程仓库</span></span><br><span class="line"></span><br><span class="line">git tag <span class="comment">#查看标签信息</span></span><br><span class="line">git show prod_x.x.x <span class="comment">#显示被打标签的commit的详细信息</span></span><br><span class="line"></span><br><span class="line">git checkout -b hotfix_x.x.x prod_x.x.x <span class="comment">#从prod_x.x.x标签的版本上开一个新的修复分支</span></span><br><span class="line">git push origin hotfix_x.x.x <span class="comment">#将hotfix_x.x.x分支推送到远程仓库</span></span><br><span class="line">git branch --set-upstream-to=origin/hotfix_x.x.x hotfix_x.x.x <span class="comment">#关联本地分支到远程分支</span></span><br></pre></td></tr></table></figure>
+<h3 id="23-git-pull-git-fetch-git-merge这种说法对吗？">23.<code>git pull</code> = <code>git fetch</code> + <code>git merge</code>这种说法对吗？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>默认情况下，<code>git pull</code> = <code>git fetch</code> + <code>git merge</code></p>
+</li>
+<li class="lvl-2">
+<p>如果配置了 <code>pull.rebase=true</code>，那么 <code>git pull</code> 不再执行 <code>merge</code>，而是执行 <code>rebase</code>。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置为 rebase，--global 表示全局配置</span></span><br><span class="line">git config --global pull.rebase <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复默认行为为 merge</span></span><br><span class="line">git config --global pull.rebase <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前配置</span></span><br><span class="line"><span class="comment"># 检查全局配置</span></span><br><span class="line">git config --global pull.rebase</span><br><span class="line"><span class="comment"># 检查当前仓库配置</span></span><br><span class="line">git config pull.rebase</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>其实更好的比较是<code>git pull --rebase</code> 与 <code>git fetch</code> + <code>git merge</code>的区别，其相当于<code>git fetch</code> + <code>git rebase</code></p>
+</li>
+</ul>
+<p>为了说清楚这个问题，我们需要先明白git的三个仓库：</p>
+<ol>
+<li class="lvl-3">
+<p>本地仓库：如master，修改代码，提交暂存区，然后commit到的就是本地仓库</p>
+</li>
+<li class="lvl-3">
+<p>本地远程跟踪仓库：如orign/master，这个仓库不能用来直接提交代码，其用来保存上一次从远程仓库拉取到的最新版本，如果不主动执行git fetch，git pull，git push等，是不会更新这个版本的。</p>
+</li>
+<li class="lvl-3">
+<p>远程仓库：git服务器，如github。执行git push时会将本地仓库的版本发布到远程仓库。</p>
+</li>
+</ol>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>git fetch</code>的作用是将远程仓库(如github)的版本与本地远程跟踪仓库(如orign/master)的版本保持一致。之后我们在master分支下执行<code>git merge orign/master</code>就会将远程仓库的代码合并到本地仓库，所以合并后会产出一个新的版本，我们可以发布这个版本到远程仓库。</p>
+</li>
+<li class="lvl-2">
+<p><code>git pull</code>的作用是先执行<code>git fetch</code>，再执行<code>git merge</code>，所以<code>git pull</code>会自动将远程仓库的代码合并到本地仓库，所以合并后会产出一个新的版本，我们可以发布这个版本到远程仓库。</p>
+</li>
+</ul>
+<h3 id="24-如何确定开发–-测试–-发布流程？">24.如何确定开发–&gt;测试–&gt;发布流程？</h3>
+<h4 id="开发A模型：基于master的主分支开发模型">开发A模型：基于master的主分支开发模型</h4>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/A-git-dev.png" alt=""></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用git rebase orign将远程分支内容合并到当前master主分支，保证本地master始终是一条线</p>
+</li>
+<li class="lvl-2">
+<p>模型结构简单，始终记住使用<code>git fetch</code> + <code>git rebase</code>或者<code>git pull --rebase</code>更新主分支版本</p>
+</li>
+</ul>
+<h4 id="开发B模型：基于dev的子分支开发模型">开发B模型：基于dev的子分支开发模型</h4>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/B-git-dev.png" alt=""></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>增加了一个dev子分支，合并回master主分支时可以通过<code>git rebase -i</code>的方式合并多个commit为一个commit，减少版本号数量</p>
+</li>
+<li class="lvl-2">
+<p>每次开发时要创建新的分支，开发完成后删除该分支，虽略显反锁，但也更加灵活，比如上一次的开发任务还没有完成，有一个紧急的任务需要马上处理，此时只需要从master分支checkout出一个子分支进行开发即可。</p>
+</li>
+<li class="lvl-2">
+<p>使用<code>git pull --rebase</code>更新远程版本，使用<code>git rebase dev</code>合并子分支，总的目标依旧是保证本地master始终是一条线</p>
+</li>
+</ul>
+<h4 id="测试模型：基于A-B模型的master的主分支">测试模型：基于A\B模型的master的主分支</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>开发完成后，从master分支中checkout出一个release分支用于测试</p>
+</li>
+<li class="lvl-2">
+<p>测试过程中如果有bug，则由开发人员通过开发模型进行修复，修复后merge到release中</p>
+</li>
+<li class="lvl-2">
+<p>测试通过后，将release分支内容merge到prod分支中（prod表示生产分支，第一次时从release中checkout创建）</p>
+</li>
+<li class="lvl-2">
+<p>release分支仅仅为了本次发布内容而创建的测试分支，所以发布后可以删除release分支</p>
+</li>
+</ul>
+<h4 id="发布模型">发布模型</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>release分支测试通过够会merge到prod生产分支，此时代码可以发布上线，上线前需要为prod打tag</p>
+</li>
+<li class="lvl-2">
+<p>只有打了tag的代码才能部署上线，如果线上代码发现bug，则从对应的tag中checkout一个hotfix分支，用于bug修复</p>
+</li>
+<li class="lvl-2">
+<p>bug修复后从hotfix分支checkout出hotfix_release分支进行测试，测试过程按照<code>测试模型</code>进行</p>
+</li>
+<li class="lvl-2">
+<p>测试通过后按照<code>发布模型</code>进行</p>
+</li>
+<li class="lvl-2">
+<p>发布后需要将hotfix_release分支merge到master开发主分支，之后可以删除本次hotfix分支和hotfix_release分支</p>
+</li>
+</ul>
+<h4 id="说明">说明</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本地和远程始终存在的分支是master开发主分支和prod发布主分支</p>
+</li>
+<li class="lvl-2">
+<p>每次上线前一定要打tag，tag对应的就是当前生产环境</p>
+</li>
+<li class="lvl-2">
+<p>测试分支和修复分支根据需要进行创建，用后可以删除。</p>
+</li>
+</ul>
+<h3 id="25-git-stash-我已经修改了本地的代码，但是还没有commit，但是又想切到其他分支，不想丢弃修改，也不想把这些修改带到其它分支，因为代码还有用，当切回时还需要恢复这些修改，那么该怎么处理？">25.<code>git stash</code>: 我已经修改了本地的代码，但是还没有commit，但是又想切到其他分支，不想丢弃修改，也不想把这些修改带到其它分支，因为代码还有用，当切回时还需要恢复这些修改，那么该怎么处理？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>git stash</code>可以做到这一点，其会将工作区中的更改（包括未暂存和已暂存的文件）保存到一个临时区域（称为 “stash 栈”），并将工作目录恢复为干净的状态。</p>
+</li>
+<li class="lvl-2">
+<p>其特点是非破坏性操作，改动不会丢失，可以随时取回，这在切换分支或处理紧急任务时非常有用。</p>
+</li>
+</ul>
+<h4 id="创建一个-stash">创建一个 stash</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将当前分支上所有未提交的更改（包括工作区和暂存区的内容）保存到 stash 栈中。</p>
+</li>
+<li class="lvl-2">
+<p>执行后，工作目录会变得干净（与最近的一次提交一致）。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 stash</span></span><br><span class="line">$ git stash</span><br><span class="line">保存工作目录和索引状态 WIP on main: c4f0eaf 2024-12-05 11:43:57#brew</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建带描述的 stash</span></span><br><span class="line">$ git stash save <span class="string">&quot;描述信息&quot;</span></span><br><span class="line">保存工作目录和索引状态 On main: 描述信息</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="查看-stash">查看 stash</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看当前的 stash 栈，包括每个 stash 的编号、提交信息、日期和时间等。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git stash list</span><br><span class="line">stash@&#123;0&#125;: WIP on main: c4f0eaf 2024-12-05 11:43:57#brew</span><br></pre></td></tr></table></figure>
+<h4 id="恢复-stash">恢复 stash</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>从 stash 栈中恢复最近一次保存的 stash，但 不会删除 stash。</p>
+</li>
+<li class="lvl-2">
+<p>执行后，工作目录会恢复到 stash 保存的状态</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 恢复最近一次保存的 stash</span></span><br><span class="line">$ git stash apply</span><br><span class="line">位于分支 main</span><br><span class="line">您的分支与上游分支 <span class="string">&#x27;origin/main&#x27;</span> 一致。</span><br><span class="line"></span><br><span class="line">尚未暂存以备提交的变更：</span><br><span class="line">  （使用 <span class="string">&quot;git add &lt;文件&gt;...&quot;</span> 更新要提交的内容）</span><br><span class="line">  （使用 <span class="string">&quot;git restore &lt;文件&gt;...&quot;</span> 丢弃工作区的改动）</span><br><span class="line">        修改：     <span class="built_in">source</span>/_posts/git-command.md</span><br><span class="line"></span><br><span class="line">修改尚未加入提交（使用 <span class="string">&quot;git add&quot;</span> 和/或 <span class="string">&quot;git commit -a&quot;</span>）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复特定的 stash</span></span><br><span class="line">$ git stash apply stash@&#123;1&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="删除-stash">删除 stash</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除最近一次的 stash</span></span><br><span class="line">$ git stash drop</span><br><span class="line">丢弃了 refs/stash@&#123;0&#125;（6f483ee0c0753762a497d24f424c8998372e96a9）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果需要删除特定的 stash（非顶部的），需要指定索引（stash@&#123;n&#125;）</span></span><br><span class="line">$ git stash drop stash@&#123;1&#125;</span><br><span class="line">丢弃了 stash@&#123;1&#125;（50a9e83d3bf96e2f3ca5368d2a248113874507b9）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除所有 stash</span></span><br><span class="line">$ git stash clear</span><br></pre></td></tr></table></figure>
+<h4 id="恢复并删除-stash">恢复并删除 stash</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>等价于 <code>git stash apply</code> + <code>git stash drop</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 恢复并删除最近一次的 stash</span></span><br><span class="line">$ git stash pop</span><br><span class="line"></span><br><span class="line">位于分支 main</span><br><span class="line">您的分支与上游分支 <span class="string">&#x27;origin/main&#x27;</span> 一致。</span><br><span class="line"></span><br><span class="line">尚未暂存以备提交的变更：</span><br><span class="line">  （使用 <span class="string">&quot;git add &lt;文件&gt;...&quot;</span> 更新要提交的内容）</span><br><span class="line">  （使用 <span class="string">&quot;git restore &lt;文件&gt;...&quot;</span> 丢弃工作区的改动）</span><br><span class="line">        修改：     <span class="built_in">source</span>/_posts/git-command.md</span><br><span class="line"></span><br><span class="line">修改尚未加入提交（使用 <span class="string">&quot;git add&quot;</span> 和/或 <span class="string">&quot;git commit -a&quot;</span>）</span><br><span class="line">丢弃了 refs/stash@&#123;0&#125;（63a7551a9bc920f82802cbda542da99800b8a58c）</span><br></pre></td></tr></table></figure>
+<h4 id="注意事项">注意事项</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果有未追踪的文件，需要用 <code>git stash -u</code> 或 <code>git stash --include-untracked</code> 才会保存。</p>
+</li>
+</ul>
+<h4 id="典型的使用场景">典型的使用场景</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.假设当前分支有未完成的更改，但需要切换到其他分支紧急处理一些问题</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 暂存未完成的更改</span></span><br><span class="line">git stash</span><br><span class="line"><span class="comment"># 切换到要处理问题的分支</span></span><br><span class="line">git checkout 其他分支</span><br><span class="line"><span class="comment"># 切换回原来的分支</span></span><br><span class="line">git checkout 原分支</span><br><span class="line"><span class="comment"># 恢复未完成的更改</span></span><br><span class="line">git stash pop</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p>如果 stash 恢复时遇到冲突，比如文件被修改了，则需要手动解决冲突</p>
+</li>
+</ul>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 恢复 stash 是遇到冲突</span></span><br><span class="line">$ git stash pop</span><br><span class="line">错误：您对下列文件的本地修改将被合并操作覆盖：</span><br><span class="line">        <span class="built_in">source</span>/_posts/git-command.md</span><br><span class="line">请在合并前提交或贮藏您的修改。</span><br><span class="line">正在终止</span><br><span class="line">位于分支 main</span><br><span class="line">您的分支与上游分支 <span class="string">&#x27;origin/main&#x27;</span> 一致。</span><br><span class="line"></span><br><span class="line">尚未暂存以备提交的变更：</span><br><span class="line">  （使用 <span class="string">&quot;git add &lt;文件&gt;...&quot;</span> 更新要提交的内容）</span><br><span class="line">  （使用 <span class="string">&quot;git restore &lt;文件&gt;...&quot;</span> 丢弃工作区的改动）</span><br><span class="line">        修改：     <span class="built_in">source</span>/_posts/git-command.md</span><br><span class="line"></span><br><span class="line">修改尚未加入提交（使用 <span class="string">&quot;git add&quot;</span> 和/或 <span class="string">&quot;git commit -a&quot;</span>）</span><br><span class="line">贮藏条目被保留以备您再次需要。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 先将修改提交到缓存区</span></span><br><span class="line">$ git add .</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次恢复 stash，但要注意，此时虽然是 pop 操作，但是 stash 并没有被删除，需要手工删除</span></span><br><span class="line"><span class="comment"># 恢复后冲突会被合并到有冲突的文件上，此时需要手工解决</span></span><br><span class="line">$ git stash pop</span><br><span class="line">自动合并 <span class="built_in">source</span>/_posts/git-command.md</span><br><span class="line">冲突（内容）：合并冲突于 <span class="built_in">source</span>/_posts/git-command.md</span><br><span class="line">位于分支 main</span><br><span class="line">您的分支与上游分支 <span class="string">&#x27;origin/main&#x27;</span> 一致。</span><br><span class="line"></span><br><span class="line">未合并的路径：</span><br><span class="line">  （使用 <span class="string">&quot;git restore --staged &lt;文件&gt;...&quot;</span> 以取消暂存）</span><br><span class="line">  （使用 <span class="string">&quot;git add &lt;文件&gt;...&quot;</span> 标记解决方案）</span><br><span class="line">        双方修改：   <span class="built_in">source</span>/_posts/git-command.md</span><br><span class="line"></span><br><span class="line">修改尚未加入提交（使用 <span class="string">&quot;git add&quot;</span> 和/或 <span class="string">&quot;git commit -a&quot;</span>）</span><br><span class="line">贮藏条目被保留以备您再次需要。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 stash</span></span><br><span class="line">$ git stash list</span><br><span class="line">stash@&#123;0&#125;: WIP on main: c4f0eaf 2024-12-05 11:43:57#brew</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 stash</span></span><br><span class="line">$ git stash drop</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.本地修改了部分文件，但此时需要更新远程仓库，此时需要先将本地修改的文件暂存，再更新远程仓库，最后再恢复本地修改的文件。</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --autostash:</span></span><br><span class="line"><span class="comment">#   如果当前分支有未提交的更改（工作区或暂存区），Git 默认会拒绝执行 rebase 或 pull 操作。</span></span><br><span class="line"><span class="comment">#   --autostash 会自动将未提交的更改临时存储到一个 Git &quot;栈&quot;（stash）中。</span></span><br><span class="line"><span class="comment">#   执行完成后，这些更改会自动还原到原来的状态。</span></span><br><span class="line"><span class="comment"># 整体过程：</span></span><br><span class="line"><span class="comment">#   创建一个临时 stash。</span></span><br><span class="line"><span class="comment">#   完成 pull 操作（包括 rebase）。</span></span><br><span class="line"><span class="comment">#   恢复之前的 stash。</span></span><br><span class="line"><span class="comment"># 避免手动执行 git stash 和 git stash pop 的麻烦。</span></span><br><span class="line">git pull --rebase --autostash</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2021/10/29/git-command/" title="Git常用命令">https://blog.hanqunfeng.com/2021/10/29/git-command/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/git/" rel="tag"><i class="fa fa-tag"></i> git</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/09/08/springboot-query/" rel="prev" title="Spring Boot的@Query注解">
+                  <i class="fa fa-angle-left"></i> Spring Boot的@Query注解
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/12/02/maven-setting/" rel="next" title="Maven仓库及镜像配置">
+                  Maven仓库及镜像配置 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">617k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">37:24</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.min.js","integrity":"sha256-G8ouPAnw4zzMbnAenHnVz6h9XpKbNdOkrqTh7AadyHs="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>

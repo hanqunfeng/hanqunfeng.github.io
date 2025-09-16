@@ -1,0 +1,2441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要   本文介绍JVM的命令行工具   JDK8 The Java® Virtual Machine Specification   JDK8的java指令的官⽅⽂档   JDK⼯具官⽹⽂档   JDK17的java指令的官⽅⽂档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM 之 命令行工具">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/05/13/jvm-tools-01/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要   本文介绍JVM的命令行工具   JDK8 The Java® Virtual Machine Specification   JDK8的java指令的官⽅⽂档   JDK⼯具官⽹⽂档   JDK17的java指令的官⽅⽂档">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/2L73Hi.png">
+<meta property="article:published_time" content="2025-05-13T13:30:05.000Z">
+<meta property="article:modified_time" content="2025-09-15T06:26:27.524Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="jvm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/2L73Hi.png">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/05/13/jvm-tools-01/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/05/13/jvm-tools-01/","path":"2025/05/13/jvm-tools-01/","title":"JVM 之 命令行工具"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JVM 之 命令行工具 | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM-%E7%9A%84%E5%8F%82%E6%95%B0-%E4%B8%89%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">JVM 的参数(三类)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-java-XX-UnlockExperimentalVMOptions-XX-PrintFlagsFinal-version-%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%B4%E6%98%8E"><span class="nav-number">2.1.</span> <span class="nav-text">运行 java -XX:+UnlockExperimentalVMOptions -XX:+PrintFlagsFinal -version 返回值说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jps-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8Djvm%E4%B8%AD%E7%9A%84%E8%BF%9B%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">jps: 查看当前jvm中的进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jinfo-%E6%9F%A5%E7%9C%8BJVM%E5%8F%82%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">jinfo: 查看JVM参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jstat-%E6%9F%A5%E7%9C%8B%E6%8C%87%E5%AE%9AJAVA%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="nav-number">5.</span> <span class="nav-text">jstat: 查看指定JAVA进程的运行状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jstack-%E6%9F%A5%E7%9C%8B%E6%8C%87%E5%AE%9AJAVA%E8%BF%9B%E7%A8%8B%E4%B8%AD%E5%90%84%E7%BA%BF%E7%A8%8B%E7%9A%84%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88"><span class="nav-number">6.</span> <span class="nav-text">jstack: 查看指定JAVA进程中各线程的调用堆栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8jstack%E6%A3%80%E6%9F%A5%E6%AD%BB%E9%94%81"><span class="nav-number">6.1.</span> <span class="nav-text">使用jstack检查死锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%9F%A5%E6%89%BE-Found-one-Java-level-deadlock-%E6%8F%90%E7%A4%BA"><span class="nav-number">6.1.1.</span> <span class="nav-text">直接查找 Found one Java-level deadlock 提示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E5%88%A4%E6%96%AD%E6%AD%BB%E9%94%81%E7%9A%84%E7%89%B9%E5%BE%81%EF%BC%88%E5%A6%82%E6%9E%9C%E6%B2%A1%E6%9C%89%E4%B8%8A%E9%9D%A2%E7%9A%84%E6%8F%90%E7%A4%BA%EF%BC%89"><span class="nav-number">6.1.2.</span> <span class="nav-text">手动判断死锁的特征（如果没有上面的提示）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jmap-%E5%88%86%E6%9E%90%E8%BF%90%E8%A1%8C%E4%B8%AD-Java-%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="nav-number">7.</span> <span class="nav-text">jmap: 分析运行中 Java 进程的内存使用情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jmap-histo-pid-%E6%9F%A5%E7%9C%8B%E7%B1%BB%E5%AE%9E%E4%BE%8B%E6%95%B0%E9%87%8F%E5%8F%8A%E5%8D%A0%E7%94%A8%E5%86%85%E5%AD%98"><span class="nav-number">7.1.</span> <span class="nav-text">jmap -histo &lt;pid&gt;: 查看类实例数量及占用内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jmap-heap-pid-%E6%9F%A5%E7%9C%8B%E5%A0%86%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="nav-number">7.2.</span> <span class="nav-text">jmap -heap &lt;pid&gt;: 查看堆使用情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jmap-dump-live-format-b-file-file-pid-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%BF%AB%E7%85%A7%EF%BC%8C%E5%B9%B6%E4%BF%9D%E5%AD%98%E5%88%B0%E6%96%87%E4%BB%B6%E4%B8%AD"><span class="nav-number">7.3.</span> <span class="nav-text">jmap -dump:live,format&#x3D;b,file&#x3D;&lt;file&gt; &lt;pid&gt;: 创建一个快照，并保存到文件中</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jcmd-%E5%8F%AF%E4%BB%A5%E6%9B%BF%E4%BB%A3jmap%E5%91%BD%E4%BB%A4%EF%BC%8Cjdk1-8-%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">jcmd: 可以替代jmap命令，jdk1.8+推荐使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jcmd-pid-GC-heap-info-%E6%9F%A5%E7%9C%8B%E5%A0%86%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="nav-number">8.1.</span> <span class="nav-text">jcmd &lt;pid&gt; GC.heap_info: 查看堆使用情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jcmd-pid-GC-class-histogram-%E6%9F%A5%E7%9C%8B%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%83%85%E5%86%B5"><span class="nav-number">8.2.</span> <span class="nav-text">jcmd &lt;pid&gt; GC.class_histogram: 查看类加载情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jcmd-pid-GC-heap-dump-path-to-heap-hprof-%E5%AF%BC%E5%87%BA-heap-dump"><span class="nav-number">8.3.</span> <span class="nav-text">jcmd &lt;pid&gt; GC.heap_dump &#x2F;path&#x2F;to&#x2F;heap.hprof: 导出 heap dump</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jhat-%E5%88%86%E6%9E%90-Java-Heap-Dump-%E6%96%87%E4%BB%B6%EF%BC%88-hprof%EF%BC%89%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="nav-number">9.</span> <span class="nav-text">jhat: 分析 Java Heap Dump 文件（.hprof）的工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvisualvm-%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%9A%84-JVM-%E7%9B%91%E6%8E%A7%E4%B8%8E%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7"><span class="nav-number">10.</span> <span class="nav-text">jvisualvm: 图形化的 JVM 监控与分析工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-MAT-Java-Heap-Dump-%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7"><span class="nav-number">11.</span> <span class="nav-text">Eclipse MAT: Java Heap Dump 分析工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Arthas-%E6%8E%A8%E8%8D%90"><span class="nav-number">12.</span> <span class="nav-text">Arthas : 推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Arthas-%E6%A0%B8%E5%BF%83%E7%89%B9%E7%82%B9"><span class="nav-number">12.1.</span> <span class="nav-text">Arthas 核心特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Arthas-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">12.2.</span> <span class="nav-text">Arthas 常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8"><span class="nav-number">12.2.1.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dashboard-%E5%AE%9E%E6%97%B6%E6%9F%A5%E7%9C%8B-JVM-%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="nav-number">12.2.2.</span> <span class="nav-text">dashboard :  实时查看 JVM 运行状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#thread-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D-JVM-%E7%BA%BF%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="nav-number">12.2.3.</span> <span class="nav-text">thread : 查看当前 JVM 线程信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sc-%E6%9F%A5%E7%9C%8B-JVM-%E5%B7%B2%E5%8A%A0%E8%BD%BD%E7%9A%84%E7%B1%BB%E4%BF%A1%E6%81%AF"><span class="nav-number">12.2.4.</span> <span class="nav-text">sc : 查看 JVM 已加载的类信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sm-%E6%9F%A5%E7%9C%8B%E5%B7%B2%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E6%96%B9%E6%B3%95%E4%BF%A1%E6%81%AF"><span class="nav-number">12.2.5.</span> <span class="nav-text">sm  : 查看已加载类的方法信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jad-Java%E6%BA%90%E7%A0%81%E5%8F%8D%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7"><span class="nav-number">12.2.6.</span> <span class="nav-text">jad : Java源码反编译工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mc-Memory-Compiler-%E5%86%85%E5%AD%98%E7%BC%96%E8%AF%91%E5%99%A8%EF%BC%8C%E7%BC%96%E8%AF%91-java%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90-class"><span class="nav-number">12.2.7.</span> <span class="nav-text">mc : Memory Compiler&#x2F;内存编译器，编译.java文件生成.class</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#retransform-%E9%87%8D%E6%96%B0%E5%8A%A0%E8%BD%BD%E7%B1%BB-%E7%83%AD%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81"><span class="nav-number">12.2.8.</span> <span class="nav-text">retransform : 重新加载类(热修改代码)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sysprop-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D-JVM-%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7"><span class="nav-number">12.2.9.</span> <span class="nav-text">sysprop : 查看当前 JVM 的系统属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sysenv-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D-JVM-%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">12.2.10.</span> <span class="nav-text">sysenv : 查看当前 JVM 的环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jvm-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D-JVM-%E7%9A%84%E4%BF%A1%E6%81%AF%EF%BC%8C%E5%8C%85%E5%90%AB%E5%BE%88%E5%A4%9A%E9%87%8D%E8%A6%81%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="nav-number">12.2.11.</span> <span class="nav-text">jvm : 查看当前 JVM 的信息，包含很多重要的信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#watch-%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C%E6%95%B0%E6%8D%AE%E8%A7%82%E6%B5%8B"><span class="nav-number">12.2.12.</span> <span class="nav-text">watch : 函数执行数据观测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jobs-%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E4%B8%AD%E7%9A%84%E4%BB%BB%E5%8A%A1"><span class="nav-number">12.2.13.</span> <span class="nav-text">jobs : 查看运行中的任务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#logger-%E6%9F%A5%E7%9C%8B-logger-%E4%BF%A1%E6%81%AF%EF%BC%8C%E6%9B%B4%E6%96%B0-logger-level"><span class="nav-number">12.2.14.</span> <span class="nav-text">logger : 查看 logger 信息，更新 logger level</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#classloader-%E6%9F%A5%E7%9C%8B-classloader-%E7%9A%84%E7%BB%A7%E6%89%BF%E6%A0%91%EF%BC%8Curls%EF%BC%8C%E7%B1%BB%E5%8A%A0%E8%BD%BD%E4%BF%A1%E6%81%AF"><span class="nav-number">12.2.15.</span> <span class="nav-text">classloader : 查看 classloader 的继承树，urls，类加载信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ognl-%E6%89%A7%E8%A1%8C-ognl-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">12.2.16.</span> <span class="nav-text">ognl : 执行 ognl 表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vmoption-%E6%9F%A5%E7%9C%8B%EF%BC%8C%E6%9B%B4%E6%96%B0-VM-%E8%AF%8A%E6%96%AD%E7%9B%B8%E5%85%B3%E7%9A%84%E5%8F%82%E6%95%B0"><span class="nav-number">12.2.17.</span> <span class="nav-text">vmoption : 查看，更新 VM 诊断相关的参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vmtool-%E5%AE%9E%E7%8E%B0%E6%9F%A5%E8%AF%A2%E5%86%85%E5%AD%98%E5%AF%B9%E8%B1%A1%EF%BC%8C%E5%BC%BA%E5%88%B6-GC-%E7%AD%89%E5%8A%9F%E8%83%BD"><span class="nav-number">12.2.18.</span> <span class="nav-text">vmtool : 实现查询内存对象，强制 GC 等功能</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">218</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/05/23/java-concurrency08-LockSupport/" rel="bookmark">
+        <time class="popular-posts-time">2023-05-23</time>
+        <br>
+      Java并发编程--JUC并发工具类之LockSupport
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/05/13/jvm-tools-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JVM 之 命令行工具 | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JVM 之 命令行工具
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-13 21:30:05" itemprop="dateCreated datePublished" datetime="2025-05-13T21:30:05+08:00">2025-05-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-15 14:26:27" itemprop="dateModified" datetime="2025-09-15T14:26:27+08:00">2025-09-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/jvm/" itemprop="url" rel="index"><span itemprop="name">jvm</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2025/05/13/jvm-tools-01/" class="leancloud_visitors" data-flag-title="JVM 之 命令行工具" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>29 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍JVM的命令行工具</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">JDK8 The Java® Virtual Machine Specification</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html">JDK8的java指令的官⽅⽂档</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/index.html">JDK⼯具官⽹⽂档</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/java.html">JDK17的java指令的官⽅⽂档</a></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="JVM-的参数-三类">JVM 的参数(三类)</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>标准参数: 以<code>-</code>开头，所有 HotSpot 都⽀持。例如<code>java -version</code>。这类参数可以使⽤<code>java -help</code> 或者<code>java -?</code>全部打印出来</p>
+</li>
+<li class="lvl-2">
+<p>⾮标准参数: 以<code>-X</code>开头，是特定 HotSpot版本⽀持的指令。例如<code>java -Xms200M -Xmx200M</code>。这类指令可以⽤<code>java -X</code> 全部打印出来。</p>
+</li>
+<li class="lvl-2">
+<p>不稳定参数: 这也是 JVM调优的噩梦。以<code>-XX</code> 开头，这些参数是跟特定HotSpot版本对应的，很有可能换个版本就没有了。详细的⽂档资料也特别少。JDK8 中的以下⼏个指令可以帮助开发者了解 JDK8 中的这⼀类不稳定参数。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">java -XX:+PrintFlagsInitial -version   <span class="comment"># 所有参数的默认值</span></span><br><span class="line">java -XX:+PrintFlagsFinal -version      <span class="comment"># 所有参数最终⽣效的值。</span></span><br><span class="line">java -XX:+UnlockExperimentalVMOptions -XX:+PrintFlagsFinal -version      <span class="comment"># 所有参数最终⽣效的值，包含实验性参数。</span></span><br><span class="line">java -XX:+PrintCommandLineFlags -version <span class="comment"># 当前命令生效的值，可以看到是⽤的哪种GC。 JDK1.8默认⽤的ParallelGC</span></span><br></pre></td></tr></table></figure>
+<h3 id="运行-java-XX-UnlockExperimentalVMOptions-XX-PrintFlagsFinal-version-返回值说明">运行 <code>java -XX:+UnlockExperimentalVMOptions -XX:+PrintFlagsFinal -version</code> 返回值说明</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[Global flags]</span><br><span class="line">     intx ActiveProcessorCount                      = -1                                  &#123;product&#125;</span><br><span class="line">    uintx AdaptiveSizeDecrementScaleFactor          = 4                                   &#123;product&#125;</span><br><span class="line">    uintx AdaptiveSizeMajorGCDecayTimeScale         = 10                                  &#123;product&#125;</span><br><span class="line">    uintx AdaptiveSizePausePolicy                   = 0                                   &#123;product&#125;</span><br><span class="line">    uintx AdaptiveSizePolicyCollectionCostMargin    = 50                                  &#123;product&#125;</span><br><span class="line">    uintx AdaptiveSizePolicyInitializingSteps       = 20                                  &#123;product&#125;</span><br><span class="line">    uintx AdaptiveSizePolicyOutputInterval          = 0                                   &#123;product&#125;</span><br><span class="line">    uintx AdaptiveSizePolicyWeight                  = 10                                  &#123;product&#125;</span><br><span class="line">    uintx AdaptiveSizeThroughPutPolicy              = 0                                   &#123;product&#125;</span><br><span class="line">    uintx AdaptiveTimeWeight                        = 25                                  &#123;product&#125;</span><br><span class="line">     bool AdjustConcurrency                         = <span class="literal">false</span>                               &#123;product&#125;</span><br><span class="line">     bool AggressiveHeap                            = <span class="literal">false</span>                               &#123;product&#125;</span><br><span class="line">     bool AggressiveOpts                            = <span class="literal">false</span>                               &#123;product&#125;</span><br><span class="line">     intx AliasLevel                                = 3                                   &#123;C2 product&#125;</span><br><span class="line">     ………………………………</span><br><span class="line"><span class="comment"># 格式：flag类型，flag名称，flag值，flag来源与作用域修饰符</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>flag类型:</p>
+</li>
+</ul>
+<blockquote>
+<p>jdk8</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>含义</th>
+<th>描述说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>intx</code></td>
+<td>有符号整数（int extended）</td>
+<td>用于表示带符号整数型参数</td>
+</tr>
+<tr>
+<td><code>uintx</code></td>
+<td>无符号整数（unsigned int extended）</td>
+<td>表示非负整数型参数</td>
+</tr>
+<tr>
+<td><code>uint64_t</code></td>
+<td>无符号 64 位整数</td>
+<td>适用于需要更大整数值的参数，比如内存大小、纳秒时间戳等</td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>布尔型</td>
+<td><code>true</code> 或 <code>false</code>，表示开关型参数。<code>+</code>表示开启，<code>-</code>表示关闭。 如 <code>-XX:+UseG1GC</code>，表示开启 G1 回收器功能。</td>
+</tr>
+<tr>
+<td><code>double</code></td>
+<td>双精度浮点型</td>
+<td>用于表示浮点数值类型的 JVM 参数</td>
+</tr>
+<tr>
+<td><code>ccstr</code></td>
+<td>常量 C 字符串指针</td>
+<td>表示字符串参数（不可变）</td>
+</tr>
+<tr>
+<td><code>ccstrlist</code></td>
+<td>C 字符串列表</td>
+<td>表示以逗号分隔的字符串列表</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>jdk11后出现更多的类型</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>含义</th>
+<th>描述说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code></td>
+<td>有符号整数,通常是 32 位</td>
+<td>JVM 内部使用的普通 int 参数</td>
+</tr>
+<tr>
+<td><code>uint</code></td>
+<td>无符号整数,通常是 32 位</td>
+<td>少量用于特殊场景的参数</td>
+</tr>
+<tr>
+<td><code>size_t</code></td>
+<td>内存大小</td>
+<td>表示内存大小参数（单位一般为字节）,jdk11后出现，原来是 <code>uintx</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>flag来源与作用域修饰符</p>
+</li>
+</ul>
+<blockquote>
+<p>jdk8</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>标记</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&#123;product&#125;</code></td>
+<td>正式产品参数（用户可用，可通过 <code>-XX:</code> 进行设置）</td>
+</tr>
+<tr>
+<td><code>&#123;pd product&#125;</code></td>
+<td>平台相关的正式参数（platform-dependent），在某些操作系统/CPU 上可用</td>
+</tr>
+<tr>
+<td><code>&#123;C1 product&#125;</code></td>
+<td>仅在使用 <strong>C1 编译器（优化编译器）</strong> 时有效的参数</td>
+</tr>
+<tr>
+<td><code>&#123;C2 product&#125;</code></td>
+<td>仅在使用 <strong>C2 编译器（优化编译器）</strong> 时有效的参数</td>
+</tr>
+<tr>
+<td><code>&#123;manageable&#125;</code></td>
+<td>可通过 JMX 动态管理的参数（运行时可调整）</td>
+</tr>
+<tr>
+<td><code>&#123;ARCH product&#125;</code></td>
+<td>与 CPU 架构相关的产品参数（如 x86、ARM 等）</td>
+</tr>
+<tr>
+<td><code>&#123;lp64_product&#125;</code></td>
+<td>仅在 64 位 JVM 上才有效的产品参数</td>
+</tr>
+<tr>
+<td><code>&#123;experimental&#125;</code></td>
+<td>实验性的 参数，可能在将来的版本中删除或更改。需要开启 -XX:+UnlockExperimentalVMOptions</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>jdk11后出现更多的类型</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>标记</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&#123;C1 pd product&#125;</code></td>
+<td>平台相关的正式参数,仅在使用 <strong>C1 编译器（优化编译器）</strong> 时有效的参数</td>
+</tr>
+<tr>
+<td><code>&#123;C2 pd product&#125;</code></td>
+<td>平台相关的正式参数,仅在使用 <strong>C2 编译器（优化编译器）</strong> 时有效的参数</td>
+</tr>
+<tr>
+<td><code>&#123;JVMCI product&#125;</code></td>
+<td>此参数适用于 JVMCI 或 Graal 编译器相关功能，jdk21添加</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>另外，jdk11+ 中，最后还会多出一列，其作用是说明该参数的设置来源</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>来源标识</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&#123;default&#125;</code></td>
+<td>使用的是该参数的默认值（没有被用户或系统设置）</td>
+</tr>
+<tr>
+<td><code>&#123;command line&#125;</code></td>
+<td>用户通过命令行显式设置的参数（如 <code>-XX:+UseG1GC</code>）</td>
+</tr>
+<tr>
+<td><code>&#123;ergonomic&#125;</code></td>
+<td>JVM 根据系统环境自动选择的值（自适应设置）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="jps-查看当前jvm中的进程">jps: 查看当前jvm中的进程</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看java进程ID</span></span><br><span class="line">jps</span><br><span class="line"><span class="comment"># 查看java进程信息，包括ID和启动类或jar的名称</span></span><br><span class="line">jps -l</span><br><span class="line"><span class="comment"># 查看启动java进程时传递给jvm的参数设置</span></span><br><span class="line">jps -v</span><br><span class="line"><span class="comment"># 查看java进程信息，同时显示启动java进程时传递给jvm的参数设置</span></span><br><span class="line">jps -lv</span><br></pre></td></tr></table></figure>
+<h2 id="jinfo-查看JVM参数">jinfo: 查看JVM参数</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>jinfo 是 JDK 自带的命令行工具之一，用于 查看和修改正在运行中的 Java 进程的配置信息，主要包括 JVM 参数、系统属性等信息。</p>
+</li>
+<li class="lvl-2">
+<p>在 Java 9+ 之后被标记为 deprecated，建议改用 jcmd 替代</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在运行的 JVM 参数</span></span><br><span class="line">jinfo &lt;PID&gt;</span><br><span class="line"><span class="comment"># jcmd 命令，分成三个</span></span><br><span class="line">jcmd &lt;pid&gt; VM.flags <span class="comment"># VM Flags</span></span><br><span class="line">jcmd &lt;pid&gt; VM.system_properties <span class="comment"># System Properties</span></span><br><span class="line">jcmd &lt;pid&gt; VM.command_line <span class="comment"># Command Line</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看指定进程的系统属性（-sysprops）</span></span><br><span class="line">jinfo -sysprops &lt;PID&gt;</span><br><span class="line"><span class="comment"># jcmd 命令</span></span><br><span class="line">jcmd &lt;pid&gt; VM.system_properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># 动态修改 JVM 参数（仅支持部分参数）</span></span><br><span class="line">jinfo -flag [+|-]&lt;flagname&gt; &lt;pid&gt;</span><br><span class="line"><span class="comment">## 例：打开 GC 日志</span></span><br><span class="line">jinfo -flag +PrintGC &lt;pid&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查是否开启了某个 JVM 特性（如 UseG1GC）</span></span><br><span class="line">jinfo -flag UseG1GC &lt;pid&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="jstat-查看指定JAVA进程的运行状态">jstat: 查看指定JAVA进程的运行状态</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看运行状态</span></span><br><span class="line">jstat -gc &lt;PID&gt;</span><br><span class="line"><span class="comment"># 查看运行状态，每隔5000毫秒输出一次，共输出20次</span></span><br><span class="line">jstat -gc &lt;PID&gt; 5000 20</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line"> S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT</span><br><span class="line">512.0  512.0   0.0   224.0  29696.0  27138.2   105984.0   96531.8   122368.0 114450.4 15360.0 14018.9    733    5.099   4      0.833    5.931</span><br><span class="line">512.0  512.0   0.0   224.0  29696.0  27203.9   105984.0   96531.8   122368.0 114450.4 15360.0 14018.9    733    5.099   4      0.833    5.931</span><br><span class="line">512.0  512.0   0.0   224.0  29696.0  27220.4   105984.0   96531.8   122368.0 114450.4 15360.0 14018.9    733    5.099   4      0.833    5.931</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>内存区统计（单位：KB）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S0C</strong></td>
+<td>Survivor 0 区的容量（KB）</td>
+</tr>
+<tr>
+<td><strong>S1C</strong></td>
+<td>Survivor 1 区的容量（KB）</td>
+</tr>
+<tr>
+<td><strong>S0U</strong></td>
+<td>Survivor 0 区已使用内存（KB）</td>
+</tr>
+<tr>
+<td><strong>S1U</strong></td>
+<td>Survivor 1 区已使用内存（KB）</td>
+</tr>
+<tr>
+<td><strong>EC</strong></td>
+<td>Eden 区的容量（KB）</td>
+</tr>
+<tr>
+<td><strong>EU</strong></td>
+<td>Eden 区已使用内存（KB）</td>
+</tr>
+<tr>
+<td><strong>OC</strong></td>
+<td>Old Generation（老年代）的容量（KB）</td>
+</tr>
+<tr>
+<td><strong>OU</strong></td>
+<td>Old Generation 已使用内存（KB）</td>
+</tr>
+<tr>
+<td><strong>MC</strong></td>
+<td>Metaspace（元空间）的容量（KB）</td>
+</tr>
+<tr>
+<td><strong>MU</strong></td>
+<td>Metaspace 已使用内存（KB）</td>
+</tr>
+<tr>
+<td><strong>CCSC</strong></td>
+<td>Compressed Class Space 的容量（KB）</td>
+</tr>
+<tr>
+<td><strong>CCSU</strong></td>
+<td>Compressed Class Space 已使用内存（KB）</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>GC 次数与耗时(从应用程序启动到采样时)</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>YGC</strong></td>
+<td>Young GC（Minor GC） 的累计次数</td>
+</tr>
+<tr>
+<td><strong>YGCT</strong></td>
+<td>Young GC 累计耗时（单位：秒）</td>
+</tr>
+<tr>
+<td><strong>FGC</strong></td>
+<td>Full GC 的累计次数</td>
+</tr>
+<tr>
+<td><strong>FGCT</strong></td>
+<td>Full GC 累计耗时（单位：秒）</td>
+</tr>
+<tr>
+<td><strong>GCT</strong></td>
+<td>GC 总耗时（YGCT + FGCT，总和）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="jstack-查看指定JAVA进程中各线程的调用堆栈">jstack: 查看指定JAVA进程中各线程的调用堆栈</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印线程的标准栈信息（栈帧 + 线程状态）</span></span><br><span class="line">jstack &lt;PID&gt;</span><br><span class="line"><span class="comment"># 在标准输出基础上，额外打印线程拥有的锁（monitor）和 waited on 锁对象信息</span></span><br><span class="line">jstack -l &lt;PID&gt;</span><br><span class="line"><span class="comment"># 输出到文件</span></span><br><span class="line">jstack -l &lt;PID&gt; &gt; jstack.tdump <span class="comment"># 这个文件名后缀只是为了方便 jvisualvm 查看</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line"><span class="string">&quot;idle-connection-reaper&quot;</span> <span class="comment">#68 daemon prio=5 os_prio=0 tid=0x00007f38b6ae2800 nid=0x62e9 waiting on condition [0x00007f385b0f5000]</span></span><br><span class="line">   java.lang.Thread.State: TIMED_WAITING (sleeping)</span><br><span class="line">	at java.lang.Thread.<span class="built_in">sleep</span>(Native Method)</span><br><span class="line">	at software.amazon.awssdk.http.apache.internal.conn.IdleConnectionReaper<span class="variable">$ReaperTask</span>.run(IdleConnectionReaper.java:151)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor<span class="variable">$Worker</span>.run(ThreadPoolExecutor.java:624)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:750)</span><br><span class="line"></span><br><span class="line">   Locked ownable synchronizers:</span><br><span class="line">	- &lt;0x00000000c561cfd8&gt; (a java.util.concurrent.ThreadPoolExecutor<span class="variable">$Worker</span>)</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>jstack输出内容含义</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;idle-connection-reaper&quot;</code></td>
+<td>线程名称。这个线程是 AWS SDK 中用于清理空闲连接的后台线程。</td>
+</tr>
+<tr>
+<td><code>#68</code></td>
+<td>线程 ID（Java 层分配的编号）。</td>
+</tr>
+<tr>
+<td><code>daemon</code></td>
+<td>表示这是一个 <strong>守护线程</strong>。JVM 退出时不会等待守护线程运行结束。</td>
+</tr>
+<tr>
+<td><code>prio=5</code></td>
+<td>Java 层的线程优先级（默认 1–10，5 是默认）。</td>
+</tr>
+<tr>
+<td><code>os_prio=0</code></td>
+<td>操作系统层线程优先级（取决于操作系统和 JVM 的实现）。</td>
+</tr>
+<tr>
+<td><code>tid=0x00007f38b6ae2800</code></td>
+<td>线程 ID（Java 层使用的地址标识）。</td>
+</tr>
+<tr>
+<td><code>nid=0x62e9</code></td>
+<td>Native ID，操作系统分配的线程 ID（十六进制表示），可以通过命令<code>printf &quot;%d\n&quot; 0x62e9</code>转换为10进制。<br>  <code>ps -Lp &lt;PID&gt;</code> 和 <code>top -Hp &lt;PID&gt;</code> 展示的线程id是10进制</td>
+</tr>
+<tr>
+<td><code>waiting on condition</code></td>
+<td>线程状态说明：正在等待某种条件，一般指 <code>sleep()</code> 或 <code>wait()</code> 等。</td>
+</tr>
+<tr>
+<td><code>[0x00007f385b0f5000]</code></td>
+<td>栈帧的内存地址。</td>
+</tr>
+<tr>
+<td><code>java.lang.Thread.State: TIMED_WAITING (sleeping)</code></td>
+<td>线程状态。</td>
+</tr>
+<tr>
+<td><code>at java.lang.Thread.sleep(Native Method)</code> <br> …………………………</td>
+<td>线程调用栈信息，包括调用方法、调用参数、调用栈帧。</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>另外还有如下信息，表示此线程持有的可拥有同步器（例如 ReentrantLock），具体内容如下：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Locked ownable synchronizers:</span><br><span class="line">	- &lt;0x00000000c561cfd8&gt; (a java.util.concurrent.ThreadPoolExecutor<span class="variable">$Worker</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;0x00000000c561cfd8&gt;</code></td>
+<td>持有锁的对象地址。可以在其他线程中查找这个地址，以判断死锁等问题。</td>
+</tr>
+<tr>
+<td><code>(a ThreadPoolExecutor$Worker)</code></td>
+<td>表示该锁属于 <code>ThreadPoolExecutor</code> 的某个 <code>Worker</code> 线程（这是线程池的工作线程）。</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>线程状态</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>含义</th>
+<th>常见原因 / 示例方法</th>
+<th>示例 jstack 输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RUNNABLE</code></td>
+<td>线程正在运行或准备运行，等待 CPU 时间片。</td>
+<td>线程活跃运行中</td>
+<td><code>&quot;Thread-0&quot; #1 prio=5 os_prio=0 tid=0x00007f8d9c001000 nid=0x1a runnable [0x00007f8dbf7fe000]</code></td>
+</tr>
+<tr>
+<td><code>BLOCKED (on object monitor)</code></td>
+<td>等待获取对象的监视器锁（同步锁），即等待进入同步块或方法。</td>
+<td><code>synchronized</code> 同步块或方法</td>
+<td><code>&quot;Thread-1&quot; #2 prio=5 os_prio=0 tid=0x00007f8d9c002000 nid=0x1b waiting for monitor entry [0x00007f8dbeaff000]</code></td>
+</tr>
+<tr>
+<td><code>WAITING (on object monitor)</code></td>
+<td>无限期等待其他线程执行某操作。</td>
+<td><code>Object.wait()</code><br><code>Thread.join()</code><br><code>LockSupport.park()</code><br><code>Condition.await()</code></td>
+<td><code>&quot;Thread-2&quot; #3 prio=5 os_prio=0 tid=0x00007f8d9c003000 nid=0x1c waiting on condition [0x00007f8dbebff000]</code></td>
+</tr>
+<tr>
+<td><code>TIMED_WAITING (on object monitor)</code></td>
+<td>等待固定时间，直到条件满足或超时。</td>
+<td><code>Object.wait(long)</code><br><code>Thread.sleep(long)</code><br><code>Condition.awaitNanos(long)</code><br><code>DelayQueue.take()</code></td>
+<td><code>&quot;Thread-3&quot; #4 prio=5 os_prio=0 tid=0x00007f8d9c004000 nid=0x1d timed_waiting [0x00007f8dbebff000]</code></td>
+</tr>
+<tr>
+<td><code>TERMINATED</code></td>
+<td>线程已运行完毕并退出（通常不在 jstack 中显示）。</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3 id="使用jstack检查死锁">使用jstack检查死锁</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>死锁是指多个线程互相等待对方释放锁，导致无法继续运行的情况。</p>
+</li>
+</ul>
+<h4 id="直接查找-Found-one-Java-level-deadlock-提示">直接查找 <code>Found one Java-level deadlock</code> 提示</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Found one Java-level deadlock:</span><br><span class="line">=============================</span><br><span class="line"><span class="string">&quot;Thread-1&quot;</span>:</span><br><span class="line">  waiting to lock monitor 0x0000000005c0a098 (object 0x00000000d5c10a70, a java.lang.Object),</span><br><span class="line">  <span class="built_in">which</span> is held by <span class="string">&quot;Thread-2&quot;</span></span><br><span class="line"><span class="string">&quot;Thread-2&quot;</span>:</span><br><span class="line">  waiting to lock monitor 0x0000000005c0a128 (object 0x00000000d5c10aa0, a java.lang.Object),</span><br><span class="line">  <span class="built_in">which</span> is held by <span class="string">&quot;Thread-1&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>表示两个线程互相等待对方释放锁，造成死锁。</p>
+</li>
+<li class="lvl-2">
+<p>目前只支持找出 <code>synchronized</code> 关键字阻塞住的线程，如果是 <code>java.util.concurrent.Lock</code> 目前还不支持。</p>
+</li>
+</ul>
+<h4 id="手动判断死锁的特征（如果没有上面的提示）">手动判断死锁的特征（如果没有上面的提示）</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果 JVM 没有显式提示，你可以通过以下死锁特征进行手动识别：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>特征</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>线程处于 <code>BLOCKED</code> 状态</td>
+<td>线程被锁阻塞在 <code>monitor</code> 上。</td>
+</tr>
+<tr>
+<td><code>waiting to lock</code> 和 <code>locked</code> 出现交叉</td>
+<td>一个线程正在等待另一个线程持有的锁，而另一个线程也在等待当前线程的锁。</td>
+</tr>
+<tr>
+<td>没有能继续执行的线程</td>
+<td>多个线程都处于 <code>BLOCKED</code> 状态，且相互依赖。</td>
+</tr>
+</tbody>
+</table>
+<div class="tips">
+<p><em><strong>在 Java 8 之后支持获取 JVM 内部线程</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2">VM 内部线程包括下面几种：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>线程类型</th>
+<th>示例名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JIT（Just-In-Time）编译线程</td>
+<td>C1 CompilerThread0, C2 CompilerThread0</td>
+</tr>
+<tr>
+<td>GC 线程</td>
+<td>GC Thread0, G1 Young RemSet Sampling</td>
+</tr>
+<tr>
+<td>其它内部线程</td>
+<td>VM Periodic Task Thread, VM Thread, Service Thread</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>自 JDK 7 及以上版本开始，HotSpot JVM 默认启用了：分层编译（Tiered Compilation），即同时使用 C1 和 C2 编译器。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>编译器</th>
+<th>特性</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1（Client Compiler）</strong></td>
+<td>编译速度快，优化少</td>
+<td>程序启动时使用，提升启动速度</td>
+</tr>
+<tr>
+<td><strong>C2（Server Compiler）</strong></td>
+<td>编译速度慢，优化强</td>
+<td>热点代码达到一定门槛后使用，提升长期运行性能</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>JVM 启动后，先解释执行字节码；热点代码首先由 C1 编译器处理；如果进一步变热，交由 C2 编译器优化；整个过程由 JVM 自动管理，不需要手动干预。</p>
+</blockquote>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>是否可以指定只用某个编译器？是的，你可以用 JVM 参数控制，但真没必要。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-client</code></td>
+<td>使用 C1 编译器（适合启动快）</td>
+</tr>
+<tr>
+<td><code>-server</code></td>
+<td>使用 C2 编译器（适合长时间运行的服务）</td>
+</tr>
+<tr>
+<td><code>-XX:-TieredCompilation</code></td>
+<td>禁用分层编译，仅使用 <code>-client</code> 或 <code>-server</code> 指定的编译器</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="jmap-分析运行中-Java-进程的内存使用情况">jmap: 分析运行中 Java 进程的内存使用情况</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>jmap 比较消耗内存，所以不推荐生产环境使用。</p>
+</li>
+</ul>
+<h3 id="jmap-histo-pid-查看类实例数量及占用内存"><code>jmap -histo &lt;pid&gt;</code>: 查看类实例数量及占用内存</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ jmap -histo 25238</span><br><span class="line">25238:</span><br><span class="line"></span><br><span class="line"> num     <span class="comment">#instances         #bytes  class name</span></span><br><span class="line">----------------------------------------------</span><br><span class="line">   1:        106175       10838440  [C</span><br><span class="line">   2:         94344        3019008  java.util.concurrent.ConcurrentHashMap<span class="variable">$Node</span></span><br><span class="line">   3:        105529        2532696  java.lang.String</span><br><span class="line">   4:         11203        2496608  [B</span><br><span class="line">   5:         20178        2430136  [Ljava.lang.Object;</span><br><span class="line">   6:         21642        2399904  java.lang.Class</span><br><span class="line">…………………………</span><br><span class="line">Total        857252       51328200</span><br><span class="line"></span><br><span class="line"><span class="comment"># num: 序号</span></span><br><span class="line"><span class="comment"># instances: 实例数量</span></span><br><span class="line"><span class="comment"># bytes: 实例字节数</span></span><br><span class="line"><span class="comment"># class name: 类名, [C is a char[]，[S is a short[]，[I is a int[]，[B is a byte[]，[L is a List</span></span><br><span class="line"><span class="comment"># Total: 总数</span></span><br></pre></td></tr></table></figure>
+<h3 id="jmap-heap-pid-查看堆使用情况"><code>jmap -heap &lt;pid&gt;</code>: 查看堆使用情况</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">$ jmap -heap 25238</span><br><span class="line">Attaching to process ID 25238, please <span class="built_in">wait</span>...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.371-b11</span><br><span class="line"></span><br><span class="line">using thread-local object allocation.</span><br><span class="line">Parallel GC with 2 thread(s)</span><br><span class="line"></span><br><span class="line">Heap Configuration:    <span class="comment"># 堆配置</span></span><br><span class="line">   MinHeapFreeRatio         = 0                     <span class="comment"># 最小空闲百分比</span></span><br><span class="line">   MaxHeapFreeRatio         = 100                     <span class="comment"># 最大空闲百分比</span></span><br><span class="line">   MaxHeapSize              = 1010827264 (964.0MB)    <span class="comment"># 最大堆大小</span></span><br><span class="line">   NewSize                  = 21495808 (20.5MB)       <span class="comment"># 新生代大小</span></span><br><span class="line">   MaxNewSize               = 336592896 (321.0MB)     <span class="comment"># 新生代最大大小</span></span><br><span class="line">   OldSize                  = 43515904 (41.5MB)       <span class="comment"># 老年代大小</span></span><br><span class="line">   NewRatio                 = 2                       <span class="comment"># 新生代与老年代比例</span></span><br><span class="line">   SurvivorRatio            = 8                       <span class="comment"># 幸存者比例</span></span><br><span class="line">   MetaspaceSize            = 21807104 (20.796875MB)   <span class="comment"># 元空间大小</span></span><br><span class="line">   CompressedClassSpaceSize = 1073741824 (1024.0MB)   <span class="comment"># 压缩类空间大小，用于存储所有 类指针（Klass pointer）</span></span><br><span class="line">   MaxMetaspaceSize         = 17592186044415 MB       <span class="comment"># 元空间最大大小</span></span><br><span class="line">   G1HeapRegionSize         = 0 (0.0MB)               <span class="comment"># G1堆大小</span></span><br><span class="line"></span><br><span class="line">Heap Usage:       <span class="comment"># 堆使用情况</span></span><br><span class="line">PS Young Generation <span class="comment"># 年轻生代</span></span><br><span class="line">Eden Space:         <span class="comment"># Eden 区</span></span><br><span class="line">   capacity = 30932992 (29.5MB)    <span class="comment">#  Eden 区大小</span></span><br><span class="line">   used     = 16705104 (15.931228637695312MB) <span class="comment">#  Eden 区使用情况</span></span><br><span class="line">   free     = 14227888 (13.568771362304688MB) <span class="comment">#  Eden 区剩余情况</span></span><br><span class="line">   54.00416487354343% used                    <span class="comment">#  Eden 区使用百分比</span></span><br><span class="line">From Space:                      <span class="comment"># 幸存者区 survivor0</span></span><br><span class="line">   capacity = 524288 (0.5MB)</span><br><span class="line">   used     = 0 (0.0MB)</span><br><span class="line">   free     = 524288 (0.5MB)</span><br><span class="line">   0.0% used</span><br><span class="line">To Space:                       <span class="comment"># 幸存者区 survivor1</span></span><br><span class="line">   capacity = 524288 (0.5MB)</span><br><span class="line">   used     = 0 (0.0MB)</span><br><span class="line">   free     = 524288 (0.5MB)</span><br><span class="line">   0.0% used</span><br><span class="line">PS Old Generation                <span class="comment"># 老年代</span></span><br><span class="line">   capacity = 193462272 (184.5MB)</span><br><span class="line">   used     = 43292112 (41.28657531738281MB)</span><br><span class="line">   free     = 150170160 (143.2134246826172MB)</span><br><span class="line">   22.377547597497458% used</span><br><span class="line"></span><br><span class="line">38722 interned Strings occupying 4184168 bytes. <span class="comment"># 堆中字符串数量及占用内存</span></span><br></pre></td></tr></table></figure>
+<h3 id="jmap-dump-live-format-b-file-file-pid-创建一个快照，并保存到文件中"><code>jmap -dump:live,format=b,file=&lt;file&gt; &lt;pid&gt;</code>: 创建一个快照，并保存到文件中</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个快照，并保存到当前目录下</span></span><br><span class="line">$ jmap -dump:live,format=b,file=test.hprof 25238</span><br><span class="line">Dumping heap to /tmp/test.hprof ...</span><br><span class="line">Heap dump file created</span><br></pre></td></tr></table></figure>
+<h2 id="jcmd-可以替代jmap命令，jdk1-8-推荐使用">jcmd: 可以替代<code>jmap</code>命令，<code>jdk1.8+</code>推荐使用</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>jcmd</code> 是 <code>JDK</code> 的一个命令行工具，用于管理 <code>JVM</code>，<code>jcmd</code> 可以查看 <code>JVM</code> 的运行状态、查看堆内存信息、触发 GC、查看线程信息、查看类信息等等。</p>
+</li>
+<li class="lvl-2">
+<p>生产环境不建议使用<code>jmap</code>，因其会占用大量内存，推荐使用 <code>jcmd</code>。</p>
+</li>
+</ul>
+<h3 id="jcmd-pid-GC-heap-info-查看堆使用情况"><code>jcmd &lt;pid&gt; GC.heap_info</code>: 查看堆使用情况</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>类似 <code>jmap -heap &lt;pid&gt;</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ jcmd 25238 GC.heap_info</span><br><span class="line">25238:</span><br><span class="line"> PSYoungGen      total 30208K, used 23593K [0x00000000ebf00000, 0x00000000edd80000, 0x0000000100000000)</span><br><span class="line">  eden space 29696K, 78% used [0x00000000ebf00000,0x00000000ed5d2560,0x00000000edc00000)</span><br><span class="line">  from space 512K, 43% used [0x00000000edd00000,0x00000000edd38000,0x00000000edd80000)</span><br><span class="line">  to   space 512K, 0% used [0x00000000edc80000,0x00000000edc80000,0x00000000edd00000)</span><br><span class="line"> ParOldGen       total 105984K, used 96547K [0x00000000c3c00000, 0x00000000ca380000, 0x00000000ebf00000)</span><br><span class="line">  object space 105984K, 91% used [0x00000000c3c00000,0x00000000c9a48f10,0x00000000ca380000)</span><br><span class="line"> Metaspace       used 114450K, capacity 122262K, committed 122368K, reserved 1157120K</span><br><span class="line">  class space    used 14018K, capacity 15294K, committed 15360K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+<h3 id="jcmd-pid-GC-class-histogram-查看类加载情况"><code>jcmd &lt;pid&gt; GC.class_histogram</code>: 查看类加载情况</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>类似 <code>jmap -histo &lt;pid&gt;</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ jcmd 25238 GC.class_histogram</span><br><span class="line">25238:</span><br><span class="line"></span><br><span class="line"> num     <span class="comment">#instances         #bytes  class name</span></span><br><span class="line">----------------------------------------------</span><br><span class="line">   1:        106175       10838440  [C</span><br><span class="line">   2:         94344        3019008  java.util.concurrent.ConcurrentHashMap<span class="variable">$Node</span></span><br><span class="line">   3:        105529        2532696  java.lang.String</span><br><span class="line">   4:         11203        2496608  [B</span><br><span class="line">   5:         20178        2430136  [Ljava.lang.Object;</span><br><span class="line">   6:         21642        2399904  java.lang.Class</span><br><span class="line">…………………………</span><br><span class="line">Total        857252       51328200</span><br><span class="line"></span><br><span class="line"><span class="comment"># num: 序号</span></span><br><span class="line"><span class="comment"># instances: 实例数量</span></span><br><span class="line"><span class="comment"># bytes: 实例字节数</span></span><br><span class="line"><span class="comment"># class name: 类名, [C is a char[]，[S is a short[]，[I is a int[]，[B is a byte[]，[L is a List</span></span><br><span class="line"><span class="comment"># Total: 总数</span></span><br></pre></td></tr></table></figure>
+<h3 id="jcmd-pid-GC-heap-dump-path-to-heap-hprof-导出-heap-dump"><code>jcmd &lt;pid&gt; GC.heap_dump /path/to/heap.hprof</code>: 导出 heap dump</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>替代 <code>jmap -dump:format=b,file=heap.hprof &lt;pid&gt;</code>，但仍会有停顿（触发FullGC），dump 过程慢，生产环境慎重使用</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ jcmd 25238 GC.heap_dump ./heap.hprof</span><br><span class="line">25238:</span><br><span class="line">Heap dump file created</span><br><span class="line"><span class="comment"># 注意这里使用的是相对目录，./heap.hprof，但此时 &quot;./&quot; 并不是运行命令时所在的目录，而是指 Java 进程的工作目录，如果你不知道工作目录，可以通过如下命令查看</span></span><br><span class="line">jcmd &lt;pid&gt; VM.system_properties | grep <span class="string">&quot;user.dir&quot;</span></span><br><span class="line"><span class="comment"># linux下也可以通过如下命令查看</span></span><br><span class="line"><span class="built_in">ls</span> -l /proc/&lt;pid&gt;/cwd</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>因为生产环境不推荐使用 <code>jmap</code> 或 <code>jcmd</code> 导出 heap dump，所以我们需要在生产环境中配置如下jvm参数</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-XX:+HeadDumpOnOutOfMemoryError <span class="comment"># 内存溢出（OOM）时会自动保存堆内存快照文件</span></span><br><span class="line">-XX:HeapDumpPath=/path/to/dump.hprof <span class="comment"># 指定堆内存快照文件保存路径，如果不配置，则默认保存在 Java 进程的工作目录下，文件名称默认为 java_&lt;pid&gt;.hprof</span></span><br></pre></td></tr></table></figure>
+<h2 id="jhat-分析-Java-Heap-Dump-文件（-hprof）的工具">jhat: 分析 Java Heap Dump 文件（.hprof）的工具</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>jhat（Java Heap Analysis Tool）是 JDK 附带的一个用于**分析 Java Heap Dump 文件（.hprof）**的工具。它可以将堆快照作为 HTTP 服务加载，并允许你通过浏览器交互式地查看和查询对象信息。</p>
+</li>
+<li class="lvl-2">
+<p>不过需要注意的是：<br>
+🔺 从 JDK 9 起，jhat 已被官方废弃，推荐使用更强大的工具如 <code>VisualVM</code>、<code>Eclipse MAT</code> 或 <code>jcmd + 外部工具</code>。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认端口7000</span></span><br><span class="line">jhat &lt;heap dump file&gt;</span><br><span class="line"><span class="comment"># 指定端口</span></span><br><span class="line">jhat -port 8000 &lt;heap dump file&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="jvisualvm-图形化的-JVM-监控与分析工具">jvisualvm: 图形化的 JVM 监控与分析工具</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>jvisualvm（全称：Java VisualVM）是 Java 官方提供的一款 图形化的 JVM 监控与分析工具，用于观察、分析和调试正在运行的 Java 程序。它非常适合开发和测试环境中进行内存分析、线程分析、GC 行为观察等任务。</p>
+</li>
+<li class="lvl-2">
+<p>功能概览</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>进程监控</strong></td>
+<td>查看本地或远程 JVM 进程的内存、CPU、线程等运行状态</td>
+</tr>
+<tr>
+<td><strong>内存使用分析</strong></td>
+<td>查看堆内存使用情况、GC 次数和时间、类实例分布等</td>
+</tr>
+<tr>
+<td><strong>线程分析</strong></td>
+<td>查看线程状态、线程栈、是否存在死锁</td>
+</tr>
+<tr>
+<td><strong>GC 分析</strong></td>
+<td>图形化展示 GC 活动、频率与耗时</td>
+</tr>
+<tr>
+<td><strong>堆转储分析</strong></td>
+<td>导入 <code>.hprof</code> 文件进行对象实例、类、引用关系分析</td>
+</tr>
+<tr>
+<td><strong>CPU 分析</strong></td>
+<td>分析方法调用路径、耗时、热点代码（需手动启用 CPU profiler）</td>
+</tr>
+<tr>
+<td><strong>插件支持</strong></td>
+<td>可以通过插件安装更多功能（如 Visual GC）</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>启动 jvisualvm</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不要在生产环境使用，如果是分析服务端 .hprof 文件，可以导出到本地后在本地启动</span></span><br><span class="line">$ jvisualvm</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在 jvisualvm 中导入 .hprof 文件</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ jvisualvm --openfile &lt;heap dump file&gt;</span><br><span class="line"><span class="comment"># 或者 先打开 jvisualvm 后，点击 File -&gt; Open File -&gt; 选择 .hprof 文件</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>⚠️ 注意事项</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>注意点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不适用于大规模生产环境监控</td>
+<td>因为其分析过程可能会对 JVM 有轻微影响</td>
+</tr>
+<tr>
+<td><code>.hprof</code> 文件过大时加载缓慢</td>
+<td>可配合 Eclipse MAT 使用</td>
+</tr>
+<tr>
+<td>CPU/Memory Profiler 会增加系统负担</td>
+<td>使用时谨慎，建议只在测试环境启用</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Eclipse-MAT-Java-Heap-Dump-分析工具">Eclipse MAT: Java Heap Dump 分析工具</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://eclipse.dev/mat">Eclipse MAT</a>（Eclipse Memory Analyzer Tool）是一个用于分析 Java 堆快照的工具，它提供了许多功能来帮助开发人员理解 Java 应用程序中的内存问题。</p>
+</li>
+</ul>
+<div class="tips">
+<p><em><strong>MaxOS系统安装Eclipse MAT后，启动报错，报错信息为：The JVM shared library “/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/…/lib/server/libjvm.dylib” does not contain the JNI_CreateJavaVM symbol.</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2">解决方法：<br>
+1.在应用列表，找到<code>MemoryAnalyzer.app</code>，然后右键单击后，选择<code>显示包内容</code>,进入Contents目录，找到<code>Info.plist</code>文件<br>
+2.打开<code>Info.plist</code>文件后，可以看到注释<code>&lt;string&gt;-vm&lt;/string&gt;</code>配置项，我们需要做的就是打开这个配置项，并且将其设置为我们系统的Java路径，最新版需要<code>jdk17+</code></li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>-vm<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>/Users/hanqf/develop_soft/jdk17/bin/java<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</div>
+<h2 id="Arthas-推荐">Arthas : 推荐</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://arthas.aliyun.com">Arthas</a> 是阿里巴巴开源的一款 Java 诊断工具，专为线上诊断而设计。它可以帮助开发者在不重启、不修改代码的情况下，排查生产环境中 Java 应用的问题。</p>
+</li>
+<li class="lvl-2">
+<p>Arthas 支持 JDK 6+，支持 Linux/Mac/Windows，采用命令行交互模式，同时提供丰富的 Tab 自动补全功能，进一步方便进行问题的定位和诊断。</p>
+</li>
+<li class="lvl-2">
+<p>这里要注意一点，就是Arthas从<code>4.x</code>版本开始，需要依赖<code>JDK8+</code>，如果是<code>JDK6/7</code>，可以下载最后一个3.x版本 <a target="_blank" rel="noopener" href="https://github.com/alibaba/arthas/releases/tag/arthas-all-3.7.2">3.7.2</a>。</p>
+</li>
+<li class="lvl-2">
+<p>为了方便我们学习，Arthas还为我们提供了一个练习场，<a target="_blank" rel="noopener" href="https://killercoda.com/arthas/course/arthas-tutorials-cn">Arthas Playground</a>。</p>
+</li>
+</ul>
+<h3 id="Arthas-核心特点">Arthas 核心特点</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>无需重启、侵入性低<br>
+Arthas 可以 attach 到正在运行的 JVM 上，不需要重启服务或修改源代码。</p>
+</li>
+<li class="lvl-2">
+<p>命令式交互体验<br>
+类似 Linux shell 的操作方式，支持 tab 补全、上下键历史命令等，非常直观。</p>
+</li>
+<li class="lvl-2">
+<p>实时查看和监控<br>
+可查看方法参数、返回值、调用栈、执行耗时、JVM 线程、内存等实时数据。</p>
+</li>
+<li class="lvl-2">
+<p>多种连接方式<br>
+支持命令行终端、本地 shell、Web 页面、telnet 等多种连接方式。</p>
+</li>
+<li class="lvl-2">
+<p>支持多种 JVM 版本<br>
+支持 Java 6+，包括 OpenJDK、Oracle JDK、Alibaba Dragonwell 等。</p>
+</li>
+</ul>
+<h3 id="Arthas-常用命令">Arthas 常用命令</h3>
+<h4 id="启动">启动</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">java -jar arthas-boot.jar</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">java -jar arthas-boot.jar --target-ip 0.0.0.0</span><br><span class="line">[INFO] JAVA_HOME: /Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home/jre</span><br><span class="line">[INFO] arthas-boot version: 4.0.5</span><br><span class="line">[INFO] Process 43959 already using port 3658</span><br><span class="line">[INFO] Process 43959 already using port 8563</span><br><span class="line">[INFO] Found existing java process, please choose one and input the serial number of the process, eg : 1. Then hit ENTER.</span><br><span class="line">* [1]: 43959 demo-arthas-spring-boot.jar</span><br><span class="line">  [2]: 50851 org.jetbrains.idea.maven.server.RemoteMavenServer36</span><br><span class="line">  [3]: 50813 org.sonarsource.sonarlint.core.backend.cli.SonarLintServerCli</span><br><span class="line">  [4]: 50655 com.intellij.idea.Main</span><br><span class="line"><span class="comment"># 启动后，会自动进入交互模式，此时输入要监控的进程序号</span></span><br><span class="line">1 <span class="comment"># 比如这里输入 1 回车</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">[INFO] arthas home: /Users/hanqf/.arthas/lib/4.0.5/arthas</span><br><span class="line">[INFO] The target process already listen port 3658, skip attach.</span><br><span class="line">[INFO] arthas-client connect 0.0.0.0 3658</span><br><span class="line">  ,---.  ,------. ,--------.,--.  ,--.  ,---.   ,---.</span><br><span class="line"> /  O  \ |  .--. <span class="string">&#x27;&#x27;</span>--.  .--<span class="string">&#x27;|  &#x27;</span>--<span class="string">&#x27;  | /  O  \ &#x27;</span>   .-<span class="string">&#x27;</span></span><br><span class="line"><span class="string">|  .-.  ||  &#x27;</span>--<span class="string">&#x27;.&#x27;</span>   |  |   |  .--.  ||  .-.  |`.  `-.</span><br><span class="line">|  | |  ||  |\  \    |  |   |  |  |  ||  | |  |.-<span class="string">&#x27;    |</span></span><br><span class="line"><span class="string">`--&#x27;</span> `--<span class="string">&#x27;`--&#x27;</span> <span class="string">&#x27;--&#x27;</span>   `--<span class="string">&#x27;   `--&#x27;</span>  `--<span class="string">&#x27;`--&#x27;</span> `--<span class="string">&#x27;`-----&#x27;</span></span><br><span class="line"></span><br><span class="line">wiki        https://arthas.aliyun.com/doc</span><br><span class="line">tutorials   https://arthas.aliyun.com/doc/arthas-tutorials.html</span><br><span class="line">version     4.0.5</span><br><span class="line">main_class  demo-arthas-spring-boot.jar</span><br><span class="line">pid         43959</span><br><span class="line">start_time  2025-05-14 14:57:18.031</span><br><span class="line">currnt_time 2025-05-14 14:59:22.004</span><br><span class="line"></span><br><span class="line">[arthas@43959]$ <span class="comment"># 此时进入 arthas 命令行交互状态</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出 arthas</span></span><br><span class="line">[arthas@43959]$ stop <span class="comment"># 退出 arthas</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>arthas 命令有很多，当常用的也就几个，另外如果记不住某个命令怎么用了可以通过如下命令查询</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">command</span>&gt; -h 或者 <span class="built_in">help</span> &lt;<span class="built_in">command</span>&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="dashboard-实时查看-JVM-运行状态">dashboard :  实时查看 JVM 运行状态</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 JVM 运行状态， 默认每隔 5 秒刷新 CPU、内存、线程、GC 等信息</span></span><br><span class="line"><span class="comment"># 默认会一直刷新状态，按 `q` 或  `Ctrl+C` 退出</span></span><br><span class="line">dashboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每隔 2 秒刷新一次</span></span><br><span class="line">dashboard -i 2000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 刷新 10 次后停止</span></span><br><span class="line">dashboard -n 10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每隔 2 秒刷新一次，刷新 10 次后停止</span></span><br><span class="line">dashboard -i 2000 -n 10</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/2L73Hi.png" alt="" width="1400" height="900"></p>
+<h4 id="thread-查看当前-JVM-线程信息">thread : 查看当前 JVM 线程信息</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前 JVM 线程信息，按 CPU 使用率倒序</span></span><br><span class="line">thread</span><br><span class="line"><span class="comment"># 查看所有线程信息</span></span><br><span class="line">thread --all</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看指定线程的堆栈信息</span></span><br><span class="line">thread 18</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line"><span class="string">&quot;http-nio-80-exec-1&quot;</span> Id=18 WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer<span class="variable">$ConditionObject</span>@51866c16</span><br><span class="line">    at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">    -  waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer<span class="variable">$ConditionObject</span>@51866c16</span><br><span class="line">    at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)</span><br><span class="line">    at java.util.concurrent.locks.AbstractQueuedSynchronizer<span class="variable">$ConditionObject</span>.await(AbstractQueuedSynchronizer.java:2039)</span><br><span class="line">    at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)</span><br><span class="line">    at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:103)</span><br><span class="line">    at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:31)</span><br><span class="line">    at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)</span><br><span class="line">    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)</span><br><span class="line">    at java.util.concurrent.ThreadPoolExecutor<span class="variable">$Worker</span>.run(ThreadPoolExecutor.java:624)</span><br><span class="line">    at org.apache.tomcat.util.threads.TaskThread<span class="variable">$WrappingRunnable</span>.run(TaskThread.java:61)</span><br><span class="line">    at java.lang.Thread.run(Thread.java:748)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看最忙的前5个线程的堆栈信息</span></span><br><span class="line">thread -n 5</span><br><span class="line"><span class="comment"># 查看全部线程的堆栈信息</span></span><br><span class="line">thread -n -1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 cpu 使用率统计的采样间隔，单位为毫秒，默认值为 200</span></span><br><span class="line">thread -i 500</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找出当前阻塞其他线程的线程</span></span><br><span class="line">thread -b</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看指定状态的线程</span></span><br><span class="line">thread --state WAITING</span><br></pre></td></tr></table></figure>
+<h4 id="sc-查看-JVM-已加载的类信息">sc : 查看 JVM 已加载的类信息</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>Search-Class</code> 的简写，这个命令能搜索出所有已经加载到 JVM 中的 Class 信息</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通配符匹配，打印搜索到的类全名</span></span><br><span class="line">sc *.demo.*</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印类的详细信息</span></span><br><span class="line">sc -d com.example.demo.arthas.AdminFilterConfig</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印出类的 Field 信息</span></span><br><span class="line">sc -d -f com.example.demo.arthas.AdminFilterConfig</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通配符查询并获取classLoaderHash</span></span><br><span class="line">sc -d *AdminFilterConfig | grep classLoaderHash</span><br></pre></td></tr></table></figure>
+<h4 id="sm-查看已加载类的方法信息">sm  : 查看已加载类的方法信息</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>Search-Method</code> 的简写，这个命令能搜索出所有已经加载到 JVM 中的 Method 信息</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印指定类中的方法</span></span><br><span class="line">sm java.lang.String</span><br><span class="line"><span class="comment"># 展示方法的详细信息</span></span><br><span class="line">sm -d java.lang.String</span><br><span class="line"><span class="comment"># 展示指定方法的详细信息</span></span><br><span class="line">sm -d java.lang.String substring</span><br><span class="line"><span class="comment"># 模糊匹配</span></span><br><span class="line">sm -d java.lang.String eq*</span><br></pre></td></tr></table></figure>
+<h4 id="jad-Java源码反编译工具">jad : Java源码反编译工具</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>验证生产环境下的代码是否与提交的代码一致</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印出类的源码，类名</span></span><br><span class="line">jad com.example.demo.arthas.user.UserController</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">jad com.example.demo.arthas.user.UserController</span><br><span class="line"></span><br><span class="line">ClassLoader:</span><br><span class="line">+-org.springframework.boot.loader.LaunchedURLClassLoader@5b2133b1</span><br><span class="line">  +-sun.misc.Launcher<span class="variable">$AppClassLoader</span>@5c647e05</span><br><span class="line">    +-sun.misc.Launcher<span class="variable">$ExtClassLoader</span>@452b3a41</span><br><span class="line"></span><br><span class="line">Location:</span><br><span class="line">file:/Users/hanqf/Desktop/arhtas_dir/demo-arthas-spring-boot.jar!/BOOT-INF/classes!/</span><br><span class="line"></span><br><span class="line">       /*</span><br><span class="line">        * Decompiled with CFR.</span><br><span class="line">        *</span><br><span class="line">        * Could not load the following classes:</span><br><span class="line">        *  com.example.demo.arthas.user.User</span><br><span class="line">        *  org.slf4j.Logger</span><br><span class="line">        *  org.slf4j.LoggerFactory</span><br><span class="line">        *  org.springframework.web.bind.annotation.GetMapping</span><br><span class="line">        *  org.springframework.web.bind.annotation.PathVariable</span><br><span class="line">        *  org.springframework.web.bind.annotation.RestController</span><br><span class="line">        */</span><br><span class="line">       package com.example.demo.arthas.user;</span><br><span class="line"></span><br><span class="line">       import com.example.demo.arthas.user.User;</span><br><span class="line">       import org.slf4j.Logger;</span><br><span class="line">       import org.slf4j.LoggerFactory;</span><br><span class="line">       import org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line">       import org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">       import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">       @RestController</span><br><span class="line">       public class UserController &#123;</span><br><span class="line">           private static final Logger logger = LoggerFactory.getLogger(UserController.class);</span><br><span class="line"></span><br><span class="line">           @GetMapping(value=&#123;<span class="string">&quot;/user/&#123;id&#125;&quot;</span>&#125;)</span><br><span class="line">           public User findUserById(@PathVariable Integer <span class="built_in">id</span>) &#123;</span><br><span class="line">/*15*/         logger.info(<span class="string">&quot;id: &#123;&#125;&quot;</span>, (Object)<span class="built_in">id</span>);</span><br><span class="line">/*17*/         <span class="keyword">if</span> (<span class="built_in">id</span> != null &amp;&amp; <span class="built_in">id</span> &lt; 1) &#123;</span><br><span class="line">                   throw new IllegalArgumentException(<span class="string">&quot;id &lt; 1&quot;</span>);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="built_in">return</span> new User(id.intValue(), <span class="string">&quot;name&quot;</span> + <span class="built_in">id</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">Affect(row-cnt:1) cost <span class="keyword">in</span> 411 ms.</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 反编译后的源码会有类加载器的信息，如果只希望打印源码，可以加上 --source-only</span></span><br><span class="line">jad --source-only com.example.demo.arthas.user.UserController</span><br><span class="line"><span class="comment"># 不显示行号</span></span><br><span class="line">jad --source-only com.example.demo.arthas.user.UserController --lineNumber <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出到文件</span></span><br><span class="line">jad --source-only com.example.demo.arthas.user.UserController &gt; /tmp/UserController.java</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印出类中某个方法的源码，类名 + 方法名</span></span><br><span class="line">jad com.example.demo.arthas.user.UserController findUserById</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反编译时指定dump class文件目录</span></span><br><span class="line">jad --source-only com.example.demo.arthas.user.UserController --lineNumber <span class="literal">false</span> -d /tmp/jad</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>当有多个 ClassLoader 都加载了这个类时，jad 命令会输出对应 ClassLoader 实例的 hashcode，然后你只需要重新执行 jad 命令，并使用参数 -c <hashcode> 就可以反编译指定 ClassLoader 加载的那个类了；</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ jad org.apache.log4j.Logger</span><br><span class="line"></span><br><span class="line">Found more than one class <span class="keyword">for</span>: org.apache.log4j.Logger, Please use jad -c hashcode org.apache.log4j.Logger</span><br><span class="line">HASHCODE  CLASSLOADER</span><br><span class="line">69dcaba4  +-monitor<span class="string">&#x27;s ModuleClassLoader</span></span><br><span class="line"><span class="string">6e51ad67  +-java.net.URLClassLoader@6e51ad67</span></span><br><span class="line"><span class="string">            +-sun.misc.Launcher$AppClassLoader@6951a712</span></span><br><span class="line"><span class="string">            +-sun.misc.Launcher$ExtClassLoader@6fafc4c2</span></span><br><span class="line"><span class="string">2bdd9114  +-pandora-qos-service&#x27;</span>s ModuleClassLoader</span><br><span class="line">4c0df5f8  +-pandora-framework<span class="string">&#x27;s ModuleClassLoader</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Affect(row-cnt:0) cost in 38 ms.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 指定类加载器</span></span><br><span class="line"><span class="string">$ jad org.apache.log4j.Logger -c 69dcaba4</span></span><br></pre></td></tr></table></figure>
+<h4 id="mc-Memory-Compiler-内存编译器，编译-java文件生成-class">mc : Memory Compiler/内存编译器，编译<code>.java</code>文件生成<code>.class</code></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译，这里一定要指定类加载器，否则会报错，因为你编译的类中可能import其它类，不指定就会提示找不到对应的类。</span></span><br><span class="line"><span class="comment"># 类加载器可以通过 jad 命令获取</span></span><br><span class="line">mc --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader /tmp/UserController.java</span><br><span class="line"><span class="comment"># 指定类加载器的编号</span></span><br><span class="line">mc -c 5b2133b1 /tmp/UserController.java</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将 UserController.class 文件输出到指定目录， -d 指定输出目录</span></span><br><span class="line">mc --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader /tmp/UserController.java -d /tmp</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>mc 命令有可能失败。如果编译失败可以在本地编译好.class文件，再上传到服务器。</p>
+</li>
+</ul>
+<h4 id="retransform-重新加载类-热修改代码">retransform : 重新加载类(热修改代码)</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">retransform /tmp/com/example/demo/arthas/user/UserController.class</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 通过 retransform 重新加载的 class</span></span><br><span class="line">retransform -l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除通过 retransform 重新加载的 class，通过 id 删除</span></span><br><span class="line">retransform -d 1</span><br><span class="line"><span class="comment"># 删除所有</span></span><br><span class="line">retransform --deleteAll</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除后要重新触发 retransform，否则内存中依旧使用的是删除前的 class</span></span><br><span class="line">retransform --classPattern com.example.demo.arthas.user.UserController</span><br></pre></td></tr></table></figure>
+<h4 id="sysprop-查看当前-JVM-的系统属性">sysprop : 查看当前 JVM 的系统属性</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印系统属性</span></span><br><span class="line">sysprop</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定单个 key，key支持自动补全</span></span><br><span class="line">sysprop java.version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过grep过滤</span></span><br><span class="line">sysprop | grep user</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置 或 修改 系统属性</span></span><br><span class="line">sysprop testKey testValue</span><br></pre></td></tr></table></figure>
+<h4 id="sysenv-查看当前-JVM-的环境变量">sysenv : 查看当前 JVM 的环境变量</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出所有环境变量</span></span><br><span class="line">sysenv</span><br><span class="line"><span class="comment"># 指定单个 key，key支持自动补全</span></span><br><span class="line">sysenv PATH</span><br><span class="line"><span class="comment"># 通过grep过滤</span></span><br><span class="line">sysenv | grep PATH</span><br></pre></td></tr></table></figure>
+<h4 id="jvm-查看当前-JVM-的信息，包含很多重要的信息">jvm : 查看当前 JVM 的信息，包含很多重要的信息</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jvm</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>GARBAGE-COLLECTORS </code> GC 相关</p>
+</li>
+<li class="lvl-2">
+<p><code>THREAD</code> 相关</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">COUNT: JVM 当前活跃的线程数</span><br><span class="line">DAEMON-COUNT: JVM 当前活跃的守护线程数</span><br><span class="line">PEAK-COUNT: 从 JVM 启动开始曾经活着的最大线程数</span><br><span class="line">STARTED-COUNT: 从 JVM 启动开始总共启动过的线程次数</span><br><span class="line">DEADLOCK-COUNT: JVM 当前死锁的线程数</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>FILE-DESCRIPTOR</code> 文件描述符相关</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MAX-FILE-DESCRIPTOR-COUNT：JVM 进程最大可以打开的文件描述符数</span><br><span class="line">OPEN-FILE-DESCRIPTOR-COUNT：JVM 当前打开的文件描述符数</span><br></pre></td></tr></table></figure>
+<h4 id="watch-函数执行数据观测">watch : 函数执行数据观测</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>让你能方便的观察到指定函数的调用情况。能观察到的范围为：返回值、抛出异常、入参，通过编写 OGNL 表达式进行对应变量的查看。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 观察指定类中某个方法的调用情况，className +  methodName + 返回值表达式</span></span><br><span class="line"><span class="comment"># 开启后，当方法被调用时，会按照指定的 `返回值表达式` 输出结果，返回值表达式 可以不指定，默认为 &#123;params, target, returnObj&#125;</span></span><br><span class="line">watch com.example.demo.arthas.user.UserController findUserById <span class="string">&#x27;&#123;params, throwExp&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 观察全部方法，通配符匹配</span></span><br><span class="line">watch com.example.demo.arthas.user.UserController <span class="string">&#x27;*&#x27;</span> <span class="string">&#x27;&#123;params, throwExp&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 默认输出结果没有展开，可以加上 -x 指定输出结果的属性遍历深度，默认为 1，最大值是 4</span></span><br><span class="line">watch com.example.demo.arthas.user.UserController <span class="string">&#x27;*&#x27;</span> <span class="string">&#x27;&#123;params, throwExp&#125;&#x27;</span> -x 2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅当抛出异常时才打印，-e 在函数异常之后观察</span></span><br><span class="line">watch com.example.demo.arthas.user.UserController <span class="string">&#x27;*&#x27;</span> <span class="string">&#x27;&#123;params, throwExp&#125;&#x27;</span> -x 2 -e</span><br><span class="line"></span><br><span class="line"><span class="comment"># 参数条件过滤，params[0] &gt; 100 表示方法入参中第一个参数的值大于 100 时才触发打印</span></span><br><span class="line">watch com.example.demo.arthas.user.UserController * returnObj <span class="string">&#x27;params[0] &gt; 100&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 按请求耗时进行过滤，#cost&gt;200 表示耗时大于200ms</span></span><br><span class="line">watch com.example.demo.arthas.user.UserController * <span class="string">&#x27;&#123;params, returnObj&#125;&#x27;</span> <span class="string">&#x27;#cost&gt;200&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出watch</span></span><br><span class="line">q</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>watch 命令表达式支持变量说明表</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型/说明</th>
+<th>作用/含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>loader</code></td>
+<td><code>ClassLoader</code></td>
+<td>方法所在类的类加载器对象</td>
+</tr>
+<tr>
+<td><code>clazz</code></td>
+<td><code>Class&lt;?&gt;</code></td>
+<td>方法所属的类（<code>Class</code> 对象）</td>
+</tr>
+<tr>
+<td><code>method</code></td>
+<td><code>java.lang.reflect.Method</code></td>
+<td>被调用的方法的反射对象</td>
+</tr>
+<tr>
+<td><code>target</code></td>
+<td><code>Object</code></td>
+<td>方法的调用目标对象（即 <code>this</code> 对象），静态方法中为 <code>null</code></td>
+</tr>
+<tr>
+<td><code>params</code></td>
+<td><code>Object[]</code></td>
+<td>方法的入参数组</td>
+</tr>
+<tr>
+<td><code>returnObj</code></td>
+<td><code>Object</code></td>
+<td>方法的返回值</td>
+</tr>
+<tr>
+<td><code>throwExp</code></td>
+<td><code>Throwable</code></td>
+<td>方法抛出的异常</td>
+</tr>
+<tr>
+<td><code>isBefore</code></td>
+<td><code>boolean</code></td>
+<td>当前执行位置是否是方法调用<strong>之前</strong>（<code>BEFORE</code> 阶段）</td>
+</tr>
+<tr>
+<td><code>isThrow</code></td>
+<td><code>boolean</code></td>
+<td>当前方法是否以异常结束（<code>THROWS</code> 阶段）</td>
+</tr>
+<tr>
+<td><code>isReturn</code></td>
+<td><code>boolean</code></td>
+<td>当前方法是否正常返回（<code>RETURN</code> 阶段）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="jobs-查看运行中的任务">jobs : 查看运行中的任务</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如下命令会转到后台运行 ，与linux命令类似，命令最后加上 `&amp;` 即可</span></span><br><span class="line">watch com.example.demo.arthas.user.UserController * <span class="string">&#x27;&#123;params, throwExp&#125;&#x27;</span> <span class="string">&#x27;throwExp != null&#x27;</span> &gt;&gt; a.log &amp;</span><br><span class="line"><span class="comment"># 查看后台任务</span></span><br><span class="line"><span class="built_in">jobs</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">[1]*</span><br><span class="line">       Running           watch com.example.demo.arthas.user.UserController * <span class="string">&#x27;&#123;params, throwExp&#125;&#x27;</span> <span class="string">&#x27;throwExp != null&#x27;</span> &gt;&gt; a.log &amp;</span><br><span class="line">       execution count : 0</span><br><span class="line">       start time      : Thu May 15 15:10:04 CST 2025</span><br><span class="line">       <span class="built_in">timeout</span> <span class="built_in">date</span>    : Fri May 16 15:10:04 CST 2025</span><br><span class="line">       session         : ded56dfd-5683-4427-ac08-792f8fb75e5e (current)</span><br><span class="line"><span class="comment"># 结束任务</span></span><br><span class="line"><span class="built_in">kill</span> 1 <span class="comment"># 1为后台任务id</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将后台任务转到前台</span></span><br><span class="line"><span class="built_in">fg</span> 1 <span class="comment"># 1为后台任务id</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 暂停任务，但此时会将arthas进程都挂起，所以并不好用</span></span><br><span class="line">ctrl+z</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将前台任务转到后台继续执行</span></span><br><span class="line"><span class="built_in">bg</span> 1 <span class="comment"># 1为前台任务id</span></span><br></pre></td></tr></table></figure>
+<h4 id="logger-查看-logger-信息，更新-logger-level">logger : 查看 logger 信息，更新 logger level</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 logger 信息</span></span><br><span class="line">logger</span><br><span class="line"><span class="comment"># 查看指定名字的logger信息</span></span><br><span class="line">logger -n ROOT</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看没有 appender 的 logger 的信息，不加这个参数只会打印有 appender 的 logger 的信息</span></span><br><span class="line">logger --include-no-appender</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新 logger level，-c classLoader 的 hashcode</span></span><br><span class="line">logger --name ROOT --level debug -c 5b2133b1</span><br><span class="line">logger --name ROOT --level error --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader</span><br></pre></td></tr></table></figure>
+<h4 id="classloader-查看-classloader-的继承树，urls，类加载信息">classloader : 查看 classloader 的继承树，urls，类加载信息</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 classloader 的信息，加载class的数量，hashcode，classloader 的 parent</span></span><br><span class="line">classloader -l</span><br><span class="line"><span class="comment"># 树形展示</span></span><br><span class="line">classloader -t</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找资源，比如查找指定名称的文件</span></span><br><span class="line">classloader -c 5b2133b1 -r application.properties</span><br><span class="line">classloader --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader -r logback-spring.xml</span><br></pre></td></tr></table></figure>
+<h4 id="ognl-执行-ognl-表达式">ognl : 执行 ognl 表达式</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 调用静态函数</span></span><br><span class="line">ognl <span class="string">&#x27;@java.lang.System@out.println(&quot;hello&quot;)&#x27;</span></span><br><span class="line">ognl <span class="string">&#x27;@java.lang.Math@sqrt(9.0)&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取静态类的静态字段</span></span><br><span class="line">ognl <span class="string">&#x27;@java.io.File@separator&#x27;</span></span><br><span class="line"><span class="comment"># 需要指定classLoaderClass</span></span><br><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader @com.example.demo.arthas.user.UserController@logger</span><br><span class="line"><span class="comment"># 获取classLoaderHash</span></span><br><span class="line">sc -d *UserController | grep classLoaderHash</span><br><span class="line">ognl -c 5b2133b1 @com.example.demo.arthas.user.UserController@logger</span><br><span class="line"></span><br><span class="line"><span class="comment"># 返回值展开基层 -x</span></span><br><span class="line">ognl -c 5b2133b1 @com.example.demo.arthas.user.UserController@logger -x 3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行多行表达式，赋值给临时变量，返回一个 List</span></span><br><span class="line">ognl <span class="string">&#x27;#value1=@System@getProperty(&quot;java.home&quot;), #value2=@System@getProperty(&quot;java.runtime.name&quot;), &#123;#value1, #value2&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 索引</span></span><br><span class="line"><span class="comment"># 获取数组中的第一个元素</span></span><br><span class="line">ognl <span class="string">&quot;&#123;1,2,3,4&#125;[0]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 变量引用，使用 # 在 OGNL 中定义临时变量，他们全局可见，此外表达式计算的每一步结果都保存在变量 this 中</span></span><br><span class="line"><span class="comment"># 下面命令通过获取列表的第一个元素进行判断如果大于 5 则乘以 2 反之则加 10</span></span><br><span class="line">ognl <span class="string">&quot;&#123;10,20,30&#125;[0].(#this &gt; 5 ? #this*2 : #this+10)&quot;</span></span><br><span class="line"><span class="comment"># 每个元素乘以 2 后返回</span></span><br><span class="line">ognl <span class="string">&quot;&#123;1, 2, 3&#125;.&#123;#this*2&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法调用</span></span><br><span class="line"><span class="comment"># 通过下面命令可以调用 ArrayList 的 size() 方法获取到 ArrayList 的大小</span></span><br><span class="line">ognl <span class="string">&quot;&#123;1,2,3,4&#125;.size()&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 复杂链式表达式</span></span><br><span class="line">ognl <span class="string">&quot;@java.lang.System@out.(print(&#x27;Hello &#x27;), print(&#x27;world\n&#x27;))&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建原生数组</span></span><br><span class="line">ognl <span class="string">&quot;new int[] &#123;1, 2, 3&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建普通 Map</span></span><br><span class="line">ognl <span class="string">&quot;#&#123; &#x27;foo&#x27;: &#x27;foo value&#x27;, &#x27;bar&#x27;: &#x27;bar value&#x27; &#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建特定类型 Map</span></span><br><span class="line">ognl <span class="string">&quot;#@java.util.HashMap@&#123; &#x27;foo&#x27;: &#x27;foo value&#x27;, &#x27;bar&#x27;: &#x27;bar value&#x27; &#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找所有匹配的元素</span></span><br><span class="line">ognl <span class="string">&quot;&#123;1024, &#x27;Hello world!&#x27;, true, 2048&#125;.&#123;? #this instanceof Number&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找第一个匹配的元素</span></span><br><span class="line">ognl <span class="string">&quot;&#123;1024, &#x27;Hello world!&#x27;, true, 2048&#125;.&#123;^ #this instanceof Number&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找最后一个匹配的元素</span></span><br><span class="line">ognl <span class="string">&quot;&#123;1024, &#x27;Hello world!&#x27;, true, 2048&#125;.&#123;$ #this instanceof Number&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="vmoption-查看，更新-VM-诊断相关的参数">vmoption : 查看，更新 VM 诊断相关的参数</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看所有的 option</span></span><br><span class="line">vmoption</span><br><span class="line"><span class="comment"># 查看指定的 option</span></span><br><span class="line">vmoption PrintGC</span><br><span class="line"><span class="comment"># 更新指定的 option</span></span><br><span class="line">vmoption PrintGC <span class="literal">true</span></span><br><span class="line">vmoption PrintGCDetails <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h4 id="vmtool-实现查询内存对象，强制-GC-等功能">vmtool : 实现查询内存对象，强制 GC 等功能</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取对象，--action getInstances: 获取对象实例，--className: 指定类名，--limit: 指定获取数量</span></span><br><span class="line">vmtool --action getInstances --className java.lang.String --<span class="built_in">limit</span> 10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 classloader name，这里获取 spring的 ApplicationContext 对象，-x: 展开多少层</span></span><br><span class="line">vmtool --action getInstances --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader --className org.springframework.context.ApplicationContext -x 3</span><br><span class="line"><span class="comment"># 指定 classloader hash</span></span><br><span class="line">sc -d org.springframework.context.ApplicationContext | grep classLoaderHash</span><br><span class="line">vmtool --action getInstances -c 19469ea2 --className org.springframework.context.ApplicationContext</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行表达式，--express: 执行的表达式，这里是调用对象的方法</span></span><br><span class="line">vmtool --action getInstances --className com.example.demo.arthas.aop.HelloWorldService --express <span class="string">&#x27;instances[0].getHelloMessage()&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制 GC，可以结合 vmoption 命令动态打开PrintGC开关</span></span><br><span class="line">vmtool --action forceGc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 中断线程， -t 线程ID,可以使用 thread命令获取</span></span><br><span class="line">vmtool --action interruptThread -t 1</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2025/05/13/jvm-tools-01/" title="JVM 之 命令行工具">https://blog.hanqunfeng.com/2025/05/13/jvm-tools-01/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/jvm/" rel="tag"><i class="fa fa-tag"></i> jvm</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/05/12/jvm-gc-01/" rel="prev" title="JVM 之 内存模型与垃圾回收机制(GC)">
+                  <i class="fa fa-angle-left"></i> JVM 之 内存模型与垃圾回收机制(GC)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/05/19/docker-install-aws/" rel="next" title="AWS专有服务器如何安装Docker">
+                  AWS专有服务器如何安装Docker <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">617k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">37:24</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.min.js","integrity":"sha256-G8ouPAnw4zzMbnAenHnVz6h9XpKbNdOkrqTh7AadyHs="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>
