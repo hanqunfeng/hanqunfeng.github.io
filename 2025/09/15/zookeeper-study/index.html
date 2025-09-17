@@ -22,16 +22,16 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍 CentOS8 中 Zookeeper 的安装与使用。   Zookeeper官网">
+    <meta name="description" content="摘要   本文介绍 CentOS8 中 Zookeeper 的安装与使用。   Zookeeper官网   本文使用的 Zookeeper 版本为 3.8.4。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zookeeper 的安装及使用">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/09/15/zookeeper-study/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 CentOS8 中 Zookeeper 的安装与使用。   Zookeeper官网">
+<meta property="og:description" content="摘要   本文介绍 CentOS8 中 Zookeeper 的安装与使用。   Zookeeper官网   本文使用的 Zookeeper 版本为 3.8.4。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/QgdBSR.png">
 <meta property="article:published_time" content="2025-09-15T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-09-16T11:47:12.273Z">
+<meta property="article:modified_time" content="2025-09-17T08:31:36.898Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="zookeeper">
 <meta name="twitter:card" content="summary">
@@ -869,7 +869,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Zookeeper 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">Zookeeper 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">单机安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">集群安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ZooKeeper-%E9%9B%86%E7%BE%A4%E8%A7%92%E8%89%B2"><span class="nav-number">3.2.1.</span> <span class="nav-text">ZooKeeper 集群角色</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Leader%EF%BC%88%E9%A2%86%E5%AF%BC%E8%80%85%EF%BC%89"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1. Leader（领导者）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Follower%EF%BC%88%E8%B7%9F%E9%9A%8F%E8%80%85%EF%BC%89"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">2. Follower（跟随者）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-Observer%EF%BC%88%E8%A7%82%E5%AF%9F%E8%80%85%EF%BC%89"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">3. Observer（观察者）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="nav-number">3.2.2.</span> <span class="nav-text">集群搭建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%9C%80%E5%B0%91%E8%8A%82%E7%82%B9%E8%A6%81%E6%B1%82%E5%92%8C%E6%89%A9%E5%AE%B9%E8%A7%84%E5%88%99"><span class="nav-number">3.2.3.</span> <span class="nav-text">集群最少节点要求和扩容规则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZooKeeper-%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E8%AF%B4%E6%98%8E"><span class="nav-number">4.</span> <span class="nav-text">ZooKeeper 默认端口说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">客户端连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">Zookeeper 节点类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E7%9B%91%E5%90%AC%E6%9C%BA%E5%88%B6"><span class="nav-number">7.</span> <span class="nav-text">Zookeeper 监听机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%80%A7-Watch"><span class="nav-number">7.1.</span> <span class="nav-text">永久性 Watch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E5%90%AC%E5%99%A8%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">7.2.</span> <span class="nav-text">监听器应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACL%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-number">8.</span> <span class="nav-text">ACL权限控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">8.1.</span> <span class="nav-text">ACL 的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL-%E7%9A%84%E7%BB%84%E6%88%90"><span class="nav-number">8.2.</span> <span class="nav-text">ACL 的组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-scheme-%E7%B1%BB%E5%9E%8B"><span class="nav-number">8.3.</span> <span class="nav-text">常见的 scheme 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%B1%BB%E5%9E%8B"><span class="nav-number">8.4.</span> <span class="nav-text">权限类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">8.5.</span> <span class="nav-text">典型应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL-%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">8.6.</span> <span class="nav-text">ACL 相关命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auth-%E4%B8%8E-digest-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">8.7.</span> <span class="nav-text">auth 与 digest 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#super-%E8%B6%85%E7%BA%A7%E7%AE%A1%E7%90%86%E5%91%98"><span class="nav-number">8.8.</span> <span class="nav-text">super 超级管理员</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E5%AD%97%E6%AF%8D%E5%91%BD%E4%BB%A4"><span class="nav-number">9.</span> <span class="nav-text">4字母命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-4-%E5%AD%97%E6%AF%8D%E5%91%BD%E4%BB%A4"><span class="nav-number">9.1.</span> <span class="nav-text">什么是 4 字母命令?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF-4%E5%AD%97%E6%AF%8D%E5%91%BD%E4%BB%A4"><span class="nav-number">9.2.</span> <span class="nav-text">开启 4字母命令</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Zookeeper 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">Zookeeper 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">单机安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">集群安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ZooKeeper-%E9%9B%86%E7%BE%A4%E8%A7%92%E8%89%B2"><span class="nav-number">3.2.1.</span> <span class="nav-text">ZooKeeper 集群角色</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Leader%EF%BC%88%E9%A2%86%E5%AF%BC%E8%80%85%EF%BC%89"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1. Leader（领导者）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Follower%EF%BC%88%E8%B7%9F%E9%9A%8F%E8%80%85%EF%BC%89"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">2. Follower（跟随者）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-Observer%EF%BC%88%E8%A7%82%E5%AF%9F%E8%80%85%EF%BC%89"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">3. Observer（观察者）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="nav-number">3.2.2.</span> <span class="nav-text">集群搭建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%9C%80%E5%B0%91%E8%8A%82%E7%82%B9%E8%A6%81%E6%B1%82%E5%92%8C%E6%89%A9%E5%AE%B9%E8%A7%84%E5%88%99"><span class="nav-number">3.2.3.</span> <span class="nav-text">集群最少节点要求和扩容规则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZooKeeper-%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E8%AF%B4%E6%98%8E"><span class="nav-number">4.</span> <span class="nav-text">ZooKeeper 默认端口说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">客户端连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">Zookeeper 节点类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E7%9B%91%E5%90%AC%E6%9C%BA%E5%88%B6"><span class="nav-number">7.</span> <span class="nav-text">Zookeeper 监听机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%80%A7-Watch"><span class="nav-number">7.1.</span> <span class="nav-text">永久性 Watch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E5%90%AC%E5%99%A8%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">7.2.</span> <span class="nav-text">监听器应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACL%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-number">8.</span> <span class="nav-text">ACL权限控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">8.1.</span> <span class="nav-text">ACL 的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL-%E7%9A%84%E7%BB%84%E6%88%90"><span class="nav-number">8.2.</span> <span class="nav-text">ACL 的组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-scheme-%E7%B1%BB%E5%9E%8B"><span class="nav-number">8.3.</span> <span class="nav-text">常见的 scheme 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%B1%BB%E5%9E%8B"><span class="nav-number">8.4.</span> <span class="nav-text">权限类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">8.5.</span> <span class="nav-text">典型应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACL-%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">8.6.</span> <span class="nav-text">ACL 相关命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auth-%E4%B8%8E-digest-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">8.7.</span> <span class="nav-text">auth 与 digest 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#super-%E8%B6%85%E7%BA%A7%E7%AE%A1%E7%90%86%E5%91%98"><span class="nav-number">8.8.</span> <span class="nav-text">super 超级管理员</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E5%AD%97%E6%AF%8D%E5%91%BD%E4%BB%A4"><span class="nav-number">9.</span> <span class="nav-text">4字母命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-4-%E5%AD%97%E6%AF%8D%E5%91%BD%E4%BB%A4"><span class="nav-number">9.1.</span> <span class="nav-text">什么是 4 字母命令?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF-4%E5%AD%97%E6%AF%8D%E5%91%BD%E4%BB%A4"><span class="nav-number">9.2.</span> <span class="nav-text">开启 4字母命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-Java-Client"><span class="nav-number">10.</span> <span class="nav-text">Zookeeper Java Client</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper-%E5%AE%98%E6%96%B9Java%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">10.1.</span> <span class="nav-text">Zookeeper 官方Java客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper-%E7%AC%AC%E4%B8%89%E6%96%B9Java%E5%AE%A2%E6%88%B7%E7%AB%AF-Curator"><span class="nav-number">10.2.</span> <span class="nav-text">Zookeeper 第三方Java客户端 Curator</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1031,7 +1031,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-16 19:47:12" itemprop="dateModified" datetime="2025-09-16T19:47:12+08:00">2025-09-16</time>
+      <time title="修改时间：2025-09-17 16:31:36" itemprop="dateModified" datetime="2025-09-17T16:31:36+08:00">2025-09-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1083,14 +1083,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>6k</span>
+      <span>7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>22 分钟</span>
+      <span>25 分钟</span>
     </span>
 
         </div>
@@ -1134,6 +1134,9 @@ i.ban {
 </li>
 <li class="lvl-2">
 <p><a target="_blank" rel="noopener" href="https://zookeeper.apache.org">Zookeeper官网</a></p>
+</li>
+<li class="lvl-2">
+<p>本文使用的 Zookeeper 版本为 3.8.4。</p>
 </li>
 </ul>
 <span id="more"></span>
@@ -1486,6 +1489,27 @@ i.ban {
 <td><code>help</code></td>
 </tr>
 <tr>
+<td><strong>version</strong></td>
+<td><code>version</code></td>
+<td>查看客户端和服务器版本信息</td>
+<td>无</td>
+<td><code>version</code></td>
+</tr>
+<tr>
+<td><strong>connect</strong></td>
+<td><code>connect host:port</code></td>
+<td>连接到指定 ZooKeeper 服务器</td>
+<td><code>host:port</code>: 服务器地址</td>
+<td><code>connect 127.0.0.1:2181</code></td>
+</tr>
+<tr>
+<td><strong>close</strong></td>
+<td><code>close</code></td>
+<td>关闭当前会话 ,通过 <code>connect</code> 可重连</td>
+<td>无</td>
+<td><code>close</code></td>
+</tr>
+<tr>
 <td><strong>quit</strong></td>
 <td><code>quit</code></td>
 <td>退出客户端</td>
@@ -1498,6 +1522,20 @@ i.ban {
 <td>查看节点的子节点</td>
 <td>- <code>-w</code>: 监听子节点变化<br>- <code>-s</code>: 显示节点状态信息<br>- <code>-R</code>: 递归查看</td>
 <td><code>ls -s -w /zk_test</code></td>
+</tr>
+<tr>
+<td><strong>getAllChildrenNumber</strong></td>
+<td><code>getAllChildrenNumber path</code></td>
+<td>获取某节点所有子节点的总数</td>
+<td>无</td>
+<td><code>getAllChildrenNumber /zk_test</code></td>
+</tr>
+<tr>
+<td><strong>getEphemerals</strong></td>
+<td><code>getEphemerals path</code></td>
+<td>获取某路径下所有临时节点</td>
+<td>无</td>
+<td><code>getEphemerals /zk_test</code></td>
 </tr>
 <tr>
 <td><strong>create</strong></td>
@@ -1521,25 +1559,18 @@ i.ban {
 <td><code>set /zk_test &quot;new_data&quot;</code></td>
 </tr>
 <tr>
-<td><strong>getAcl</strong></td>
-<td><code>getAcl [-s] path</code></td>
-<td>获取节点访问控制信息</td>
-<td>- <code>-s</code>: 显示节点状态信息</td>
-<td><code>getAcl /zk_test</code></td>
-</tr>
-<tr>
-<td><strong>setAcl</strong></td>
-<td><code>setAcl [-s] [-v version] [-R] path acl</code></td>
-<td>设置节点访问控制列表</td>
-<td>- <code>-s</code>: 显示节点状态信息<br>- <code>-v</code>: 指定版本号<br>- <code>-R</code>: 递归设置</td>
-<td><code>setAcl /zk_test world:anyone:r</code></td>
-</tr>
-<tr>
 <td><strong>stat</strong></td>
 <td><code>stat [-w] path</code></td>
 <td>查看节点状态信息</td>
 <td>- <code>-w</code>: 监听节点变化</td>
 <td><code>stat -w /zk_test</code></td>
+</tr>
+<tr>
+<td><strong>sync</strong></td>
+<td><code>sync path</code></td>
+<td>同步指定节点数据</td>
+<td>无</td>
+<td><code>sync /zk_test</code></td>
 </tr>
 <tr>
 <td><strong>delete</strong></td>
@@ -1556,11 +1587,53 @@ i.ban {
 <td><code>deleteall /zk_test</code></td>
 </tr>
 <tr>
+<td><strong>getAcl</strong></td>
+<td><code>getAcl [-s] path</code></td>
+<td>获取节点访问控制信息</td>
+<td>- <code>-s</code>: 显示节点状态信息</td>
+<td><code>getAcl /zk_test</code></td>
+</tr>
+<tr>
+<td><strong>setAcl</strong></td>
+<td><code>setAcl [-s] [-v version] [-R] path acl</code></td>
+<td>设置节点访问控制列表</td>
+<td>- <code>-s</code>: 显示节点状态信息<br>- <code>-v</code>: 指定版本号<br>- <code>-R</code>: 递归设置</td>
+<td><code>setAcl /zk_test world:anyone:r</code></td>
+</tr>
+<tr>
+<td><strong>listquota</strong></td>
+<td><code>listquota path</code></td>
+<td>查看节点配额信息</td>
+<td>无</td>
+<td><code>listquota /zk_test</code></td>
+</tr>
+<tr>
 <td><strong>setquota</strong></td>
 <td><code>setquota [-n] [-b] val path</code></td>
 <td>对节点增加限制</td>
 <td>- <code>-n</code>: 子节点最大个数<br>- <code>-b</code>: 数据值最大长度，-1 表示无限制</td>
 <td><code>setquota -n 5 /zk_test</code></td>
+</tr>
+<tr>
+<td><strong>delquota</strong></td>
+<td><code>delquota [-n                                    | -b] path</code></td>
+<td>删除节点配额限制</td>
+<td>- <code>-n</code>: 删除子节点数限制<br>- <code>-b</code>: 删除数据值大小限制</td>
+<td><code>delquota -n /zk_test</code></td>
+</tr>
+<tr>
+<td><strong>config</strong></td>
+<td><code>config</code></td>
+<td>查看服务器配置</td>
+<td>无</td>
+<td><code>config</code></td>
+</tr>
+<tr>
+<td><strong>whoami</strong></td>
+<td><code>whoami</code></td>
+<td>查看当前会话身份</td>
+<td>无</td>
+<td><code>whoami</code></td>
 </tr>
 </tbody>
 </table>
@@ -1658,7 +1731,7 @@ i.ban {
 <h2 id="Zookeeper-监听机制">Zookeeper 监听机制</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>watch机制，顾名思义是一个监听机制。Zookeeper中的watch机制，必须客户端先去服务端注册监听，这样事件发送才会触发监听，通知给客户端。</p>
+<p>watch机制，顾名思义是一个监听机制。Zookeeper中的watch机制，必须客户端先去服务端注册监听，这样事件发生时才会触发监听，通知给客户端。</p>
 </li>
 <li class="lvl-2">
 <p>监听的对象是事件，支持的事件类型如下：</p>
@@ -1750,7 +1823,7 @@ i.ban {
 <h2 id="ACL权限控制">ACL权限控制</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>ZooKeeper 默认情况下，任何客户端都可以读写任意节点数据。</p>
+<p>ZooKeeper 默认情况下，所有节点的权限都是 <code>OPEN_ACL_UNSAFE</code> ，任何客户端都可以读写任意节点数据。</p>
 </li>
 <li class="lvl-2">
 <p>生产环境中，通常需要限制对节点的访问权限，即 <code>ACL</code> 权限控制。</p>
@@ -1774,7 +1847,7 @@ i.ban {
 <h3 id="ACL-的组成">ACL 的组成</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>zookeeper 的 acl 通过 [scheme🆔permissions] 来构成权限列表。</p>
+<p>zookeeper 的 acl 通过 <code>scheme:id:permissions</code> 来构成权限列表。</p>
 <ul class="lvl-2">
 <li class="lvl-4">scheme：授权的模式，代表采用的某种权限机制，包括 world、auth、digest、ip、super 几种。</li>
 <li class="lvl-4">id：授权对象，代表允许访问的用户。如果我们选择采用 IP 方式，使用的授权对象可以是一个 IP 地址或 IP 地址段；而如果使用 Digest 或 Super 方式，则对应于一个用户名。如果是 World 模式，是授权系统中所有的用户。</li>
@@ -1859,12 +1932,6 @@ i.ban {
 <td>管理(Admin)</td>
 <td><code>setAcl /node acl</code></td>
 <td>允许修改 ACL 权限</td>
-</tr>
-<tr>
-<td><strong>全部</strong></td>
-<td>全部控制</td>
-<td><code>rwcda</code></td>
-<td>拥有全部权限</td>
 </tr>
 </tbody>
 </table>
@@ -1974,7 +2041,7 @@ i.ban {
 <h3 id="super-超级管理员"><code>super</code> 超级管理员</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>拥有所有权限</p>
+<p>拥有全部节点的所有权限: <code>crwda</code></p>
 </li>
 <li class="lvl-2">
 <p>设置超级管理员</p>
@@ -2106,6 +2173,99 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果没有安装 nc，可以使用 yum 安装</span></span><br><span class="line">yum install nc -y</span><br><span class="line"><span class="comment"># 查看节点状态</span></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">stat</span> | nc 127.0.0.1 2181</span><br></pre></td></tr></table></figure>
+<h2 id="Zookeeper-Java-Client">Zookeeper Java Client</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>项目示例：<a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/springbootchapter/tree/master/springboot3-demo/zookeeper-demo/">Github地址</a>，单元测试。</p>
+</li>
+</ul>
+<h3 id="Zookeeper-官方Java客户端">Zookeeper 官方Java客户端</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>ZooKeeper官方的客户端API提供了基本的操作。例如，创建会话、创建节点、读取节点、更新数据、删除节点和检查节点是否存在等。不过，对于实际开发来说，ZooKeeper官方API有一些不足之处，具体如下：</p>
+<ul class="lvl-2">
+<li class="lvl-4">ZooKeeper的Watcher监测是一次性的，每次触发之后都需要重新进行注册。</li>
+<li class="lvl-4">会话超时之后没有实现重连机制。</li>
+<li class="lvl-4">异常处理烦琐，ZooKeeper提供了很多异常，对于开发人员来说可能根本不知道应该如何处理这些抛出的异常。</li>
+<li class="lvl-4">仅提供了简单的byte[]数组类型的接口，没有提供Java POJO级别的序列化数据处理接口。</li>
+<li class="lvl-4">创建节点时如果抛出异常，需要自行检查节点是否存在。</li>
+<li class="lvl-4">无法实现级联删除。</li>
+<li class="lvl-4">总之，ZooKeeper官方API功能比较简单，在实际开发过程中比较笨重，一般不推荐使用。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>项目引入依赖时，最好保持与服务端版本一致，否则可能会有一些兼容性的问题</p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- zookeeper client --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.zookeeper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zookeeper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Zookeeper-第三方Java客户端-Curator">Zookeeper 第三方Java客户端 Curator</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://curator.apache.org/docs/about">Curator</a>是Netflix公司开源的一套ZooKeeper客户端框架，和ZkClient一样它解决了非常底层的细节开发工作，包括连接、重连、反复注册Watcher的问题以及NodeExistsException异常等。</p>
+</li>
+<li class="lvl-2">
+<p>Curator是Apache基金会的顶级项目之一，Curator具有更加完善的文档，另外还提供了一套易用性和可读性更强的Fluent风格的客户端API框架。</p>
+</li>
+<li class="lvl-2">
+<p>Curator还为ZooKeeper客户端框架提供了一些比较普遍的、开箱即用的、分布式开发用的解决方案，例如Recipe、共享锁服务、Master选举机制和分布式计算器等，帮助开发者避免了“重复造轮子”的无效开发工作。</p>
+</li>
+<li class="lvl-2">
+<p>在实际的开发场景中，使用Curator客户端就足以应付日常的ZooKeeper集群操作的需求。</p>
+</li>
+<li class="lvl-2">
+<p>引入依赖说明：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>依赖关系</th>
+<th>功能定位</th>
+<th>典型功能举例</th>
+<th>常用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>curator-client</strong></td>
+<td>依赖 zookeeper</td>
+<td>连接管理、重试策略、底层 API</td>
+<td>连接会话管理、RetryPolicy</td>
+<td>需要最轻量的 ZooKeeper 客户端</td>
+</tr>
+<tr>
+<td><strong>curator-framework</strong></td>
+<td>依赖 curator-client</td>
+<td>高层 API 封装，简化 ZK 操作</td>
+<td>创建节点、Watcher 管理、自动重连</td>
+<td>通用 ZooKeeper 客户端开发</td>
+</tr>
+<tr>
+<td><strong>curator-recipes</strong></td>
+<td>依赖 curator-framework → curator-client</td>
+<td>分布式模式现成实现</td>
+<td>分布式锁、Leader 选举、队列、Barrier</td>
+<td>直接用分布式工具，无需自己实现</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>使用建议</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p>如果你只想轻量访问 ZooKeeper → <code>curator-client</code> 就够了，但几乎没人单独用。</p>
+</li>
+<li class="lvl-4">
+<p>如果你想方便操作 ZooKeeper API → <code>curator-framework</code>，大部分情况都适用。</p>
+</li>
+<li class="lvl-4">
+<p>如果你想用分布式锁、选举、Barrier → <code>curator-recipes</code>（它会自动引入前两个）。</p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- zookeeper client --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.zookeeper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zookeeper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--curator--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.curator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>curator-recipes<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.9.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.zookeeper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zookeeper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
     </div>
 
     
@@ -2241,14 +2401,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">617k</span>
+    <span title="站点总字数">618k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">37:24</span>
+    <span title="站点阅读时长">37:28</span>
   </span>
 </div>
 <div class="busuanzi-count">
