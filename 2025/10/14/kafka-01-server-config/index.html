@@ -22,27 +22,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍 Kafka 的 通信协议，以及如何开启外网访问。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
+    <meta name="description" content="摘要   本文介绍 CentOS9 中 Kafka 的 server.properties 的配置项，基于 Zookeeper。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka 允许外网访问">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/15/kafka-02-protocol/index.html">
+<meta property="og:title" content="Kafka 的 server.properties 配置项">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/14/kafka-01-server-config/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 Kafka 的 通信协议，以及如何开启外网访问。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
+<meta property="og:description" content="摘要   本文介绍 CentOS9 中 Kafka 的 server.properties 的配置项，基于 Zookeeper。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-10-15T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-13T08:00:32.852Z">
+<meta property="article:published_time" content="2025-10-14T13:30:05.000Z">
+<meta property="article:modified_time" content="2025-10-14T03:13:41.481Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2025/10/15/kafka-02-protocol/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/10/14/kafka-01-server-config/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/10/15/kafka-02-protocol/","path":"2025/10/15/kafka-02-protocol/","title":"Kafka 允许外网访问"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/10/14/kafka-01-server-config/","path":"2025/10/14/kafka-01-server-config/","title":"Kafka 的 server.properties 配置项"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Kafka 允许外网访问 | 飘逸峰的博客</title>
+<title>Kafka 的 server.properties 配置项 | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%9A%84-%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.</span> <span class="nav-text">Kafka 的 通信协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%85%E9%9C%80%E5%86%85%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="nav-number">3.</span> <span class="nav-text">仅需内网访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="nav-number">4.</span> <span class="nav-text">允许外网访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%A4%96%E7%BD%91%E9%83%BD%E8%A6%81%E8%AE%BF%E9%97%AE%EF%BC%88%E6%8E%A8%E8%8D%90%E5%8F%8C%E9%80%9A%E9%81%93%E6%96%B9%E5%BC%8F%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">内外网都要访问（推荐双通道方式）</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-3-x-server-properties-%E4%B8%BB%E8%A6%81%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%B8%85%E5%8D%95"><span class="nav-number">2.</span> <span class="nav-text">Kafka 3.x server.properties 主要配置项清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">参数使用建议总结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -882,7 +882,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">226</span>
+          <span class="site-state-item-count">227</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -960,15 +960,15 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/15/kafka-03-webui/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-15</time>
+      <a class="popular-posts-link" href="/2025/10/13/kafka-02-protocol/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
         <br>
-      Kafka 的 Web UI 之 Kafbat UI
+      Kafka 允许外网访问
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/15/kafka-01-install-zookeeper/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-15</time>
+      <a class="popular-posts-link" href="/2025/10/13/kafka-01-install-zookeeper/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
         <br>
       Kafka 的安装：基于 Zookeeper
       </a>
@@ -981,17 +981,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/09/15/zookeeper-study/" rel="bookmark">
-        <time class="popular-posts-time">2025-09-15</time>
+      <a class="popular-posts-link" href="/2025/10/13/kafka-03-webui/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
         <br>
-      Zookeeper 的安装及使用
+      Kafka 的 Web UI 之 Kafbat UI
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/07/20/k8s-statefulset/" rel="bookmark">
-        <time class="popular-posts-time">2025-07-20</time>
+      <a class="popular-posts-link" href="/2023/07/17/aws-eks17-hpa/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-17</time>
         <br>
-      K8S 之 Statefulset
+      AWS-EKS-17--Horizontal Pod Autoscaler（HPA）
       </a>
     </li>
   </ul>
@@ -1014,7 +1014,7 @@ i.ban {
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/10/15/kafka-02-protocol/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/10/14/kafka-01-server-config/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -1027,12 +1027,12 @@ i.ban {
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Kafka 允许外网访问 | 飘逸峰的博客">
+      <meta itemprop="name" content="Kafka 的 server.properties 配置项 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Kafka 允许外网访问
+          Kafka 的 server.properties 配置项
         </h1>
 
         <div class="post-meta-container">
@@ -1042,15 +1042,9 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-10-15 22:30:05" itemprop="dateCreated datePublished" datetime="2025-10-15T22:30:05+08:00">2025-10-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-13 16:00:32" itemprop="dateModified" datetime="2025-10-13T16:00:32+08:00">2025-10-13</time>
+      <time title="创建时间：2025-10-14 21:30:05 / 修改时间：11:13:41" itemprop="dateCreated datePublished" datetime="2025-10-14T21:30:05+08:00">2025-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1090,7 +1084,7 @@ i.ban {
 </div>
 
 
-    <span id="/2025/10/15/kafka-02-protocol/" class="leancloud_visitors" data-flag-title="Kafka 允许外网访问" title="阅读次数">
+    <span id="/2025/10/14/kafka-01-server-config/" class="leancloud_visitors" data-flag-title="Kafka 的 server.properties 配置项" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -1102,14 +1096,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>907</span>
+      <span>1.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
+      <span>5 分钟</span>
     </span>
 
         </div>
@@ -1149,7 +1143,7 @@ i.ban {
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>本文介绍 Kafka 的 通信协议，以及如何开启外网访问。</p>
+<p>本文介绍 CentOS9 中 Kafka 的 server.properties 的配置项，基于 Zookeeper。</p>
 </li>
 <li class="lvl-2">
 <p><a target="_blank" rel="noopener" href="https://kafka.apache.org">Kafka官网</a></p>
@@ -1159,96 +1153,486 @@ i.ban {
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="Kafka-的-通信协议">Kafka 的 通信协议</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>Kafka 主要支持四种安全协议</p>
-</li>
-</ul>
+<h2 id="Kafka-3-x-server-properties-主要配置项清单">Kafka 3.x server.properties 主要配置项清单</h2>
 <table>
 <thead>
 <tr>
-<th>协议名称</th>
-<th>加密</th>
-<th>认证</th>
+<th>分类</th>
+<th>参数名</th>
+<th>默认值</th>
 <th>说明</th>
-<th>推荐场景</th>
-<th>理由</th>
+<th>推荐/备注</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>PLAINTEXT</strong></td>
-<td>❌ 否</td>
-<td>❌ 否</td>
-<td>无加密、无认证（默认最简单）</td>
-<td>开发 / 测试环境、内网集群通信</td>
-<td>简单、易调试；网络可信，性能优先</td>
+<td>🗂️ <strong>基本信息</strong></td>
+<td><code>broker.id</code></td>
+<td>0</td>
+<td>Broker 唯一标识</td>
+<td>集群中必须唯一</td>
 </tr>
 <tr>
-<td><strong>SSL</strong></td>
-<td>✅ 是</td>
-<td>✅ 可选</td>
-<td>使用 TLS/SSL 加密通信，可配置客户端证书认证</td>
-<td>外网客户端访问</td>
-<td>支持数据加密，可选认证，保证安全</td>
+<td></td>
+<td><code>node.id</code></td>
+<td>-</td>
+<td>Raft 模式（KRaft）下使用</td>
+<td>ZK 模式忽略</td>
 </tr>
 <tr>
-<td><strong>SASL_PLAINTEXT</strong></td>
-<td>❌ 否</td>
-<td>✅ 是</td>
-<td>使用 SASL（用户名密码）认证，但不加密数据</td>
-<td>需要用户认证但局域网环境</td>
-<td>有认证，但不加密，性能开销低</td>
+<td></td>
+<td><code>process.roles</code></td>
+<td>-</td>
+<td>KRaft 模式角色（controller, broker）</td>
+<td>ZK 模式不配置</td>
 </tr>
 <tr>
-<td><strong>SASL_SSL</strong></td>
-<td>✅ 是</td>
-<td>✅ 是</td>
-<td>同时支持 SASL 认证和 SSL 加密（最安全）</td>
-<td>外网客户端访问</td>
-<td>既有认证又加密，安全性最高</td>
+<td>🔌 <strong>网络与监听配置</strong></td>
+<td><code>listeners</code></td>
+<td>PLAINTEXT://:9092</td>
+<td>Broker 监听地址</td>
+<td>可用多个协议，如 SASL_PLAINTEXT, SSL</td>
+</tr>
+<tr>
+<td></td>
+<td><code>advertised.listeners</code></td>
+<td>-</td>
+<td>客户端连接时看到的地址</td>
+<td>外网访问需配置</td>
+</tr>
+<tr>
+<td></td>
+<td><code>listener.security.protocol.map</code></td>
+<td>PLAINTEXT:PLAINTEXT</td>
+<td>映射监听器协议</td>
+<td>多协议时配置</td>
+</tr>
+<tr>
+<td></td>
+<td><code>inter.broker.listener.name</code></td>
+<td>-（Kafka 2.4+ 默认第一个 listener）</td>
+<td>指定 broker 间通信使用哪个 listener（如 INTERNAL）</td>
+<td>集群内部通信必须一致；常配合多 listener 使用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num.network.threads</code></td>
+<td>3</td>
+<td>网络线程数</td>
+<td>一般不需修改</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num.io.threads</code></td>
+<td>8</td>
+<td>处理请求的 IO 线程数</td>
+<td>根据 CPU 调整</td>
+</tr>
+<tr>
+<td></td>
+<td><code>socket.send.buffer.bytes</code></td>
+<td>102400</td>
+<td>发送缓冲区大小</td>
+<td>网络优化参数</td>
+</tr>
+<tr>
+<td></td>
+<td><code>socket.receive.buffer.bytes</code></td>
+<td>102400</td>
+<td>接收缓冲区大小</td>
+<td>网络优化参数</td>
+</tr>
+<tr>
+<td></td>
+<td><code>socket.request.max.bytes</code></td>
+<td>104857600</td>
+<td>单请求最大大小 (100MB)</td>
+<td>大消息需调大</td>
+</tr>
+<tr>
+<td>⚙️ <strong>集群与元数据</strong></td>
+<td><code>log.dirs</code></td>
+<td>/tmp/kafka-logs</td>
+<td>数据存储路径</td>
+<td>多目录可提升性能</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num.recovery.threads.per.data.dir</code></td>
+<td>1</td>
+<td>每个数据目录的恢复线程数</td>
+<td>多磁盘时可增加</td>
+</tr>
+<tr>
+<td></td>
+<td><code>auto.create.topics.enable</code></td>
+<td>true</td>
+<td>是否允许自动创建 Topic</td>
+<td>生产建议禁用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>controlled.shutdown.enable</code></td>
+<td>true</td>
+<td>优雅关闭 Broker</td>
+<td>建议开启</td>
+</tr>
+<tr>
+<td></td>
+<td><code>delete.topic.enable</code></td>
+<td>true</td>
+<td>是否允许删除 Topic</td>
+<td>生产慎用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>auto.leader.rebalance.enable</code></td>
+<td>true</td>
+<td>是否自动均衡 Leader</td>
+<td>建议开启</td>
+</tr>
+<tr>
+<td></td>
+<td><code>leader.imbalance.check.interval.seconds</code></td>
+<td>300</td>
+<td>检查 leader 失衡间隔</td>
+<td>与上配合使用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>leader.imbalance.per.broker.percentage</code></td>
+<td>10</td>
+<td>触发 leader 重平衡的阈值</td>
+<td>默认即可</td>
+</tr>
+<tr>
+<td>🧱 <strong>副本与复制机制</strong></td>
+<td><code>default.replication.factor</code></td>
+<td>1</td>
+<td>新 Topic 默认副本数</td>
+<td>生产建议 3</td>
+</tr>
+<tr>
+<td></td>
+<td><code>offsets.topic.replication.factor</code></td>
+<td>1</td>
+<td>消费组偏移主题副本数</td>
+<td>建议 3</td>
+</tr>
+<tr>
+<td></td>
+<td><code>transaction.state.log.replication.factor</code></td>
+<td>1</td>
+<td>事务状态主题副本数</td>
+<td>建议 3</td>
+</tr>
+<tr>
+<td></td>
+<td><code>transaction.state.log.min.isr</code></td>
+<td>1</td>
+<td>事务状态日志最小 ISR 数</td>
+<td>建议 2</td>
+</tr>
+<tr>
+<td></td>
+<td><code>min.insync.replicas</code></td>
+<td>1</td>
+<td>Leader 写入时要求的最小 ISR 副本数</td>
+<td>建议 <code>replication.factor - 1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>unclean.leader.election.enable</code></td>
+<td>false</td>
+<td>是否允许非同步副本选为 leader</td>
+<td>生产建议 false</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num.replica.fetchers</code></td>
+<td>1</td>
+<td>follower 拉取线程数</td>
+<td>可提升复制性能</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.fetch.max.bytes</code></td>
+<td>1048576 (1MB)</td>
+<td>follower 拉取单分区最大数据量</td>
+<td>增大可提速</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.fetch.response.max.bytes</code></td>
+<td>10485760 (10MB)</td>
+<td>follower 一次拉取响应总量</td>
+<td>可调大</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.fetch.wait.max.ms</code></td>
+<td>500</td>
+<td>follower 等待新数据的最大时长</td>
+<td>延迟与吞吐折中</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.fetch.backoff.ms</code></td>
+<td>1000</td>
+<td>拉取失败后退避时间</td>
+<td>网络不稳时调整</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.socket.timeout.ms</code></td>
+<td>30000</td>
+<td>follower 与 leader 通信超时</td>
+<td>≥ <a target="_blank" rel="noopener" href="http://fetch.wait.ms">fetch.wait.ms</a></td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.socket.receive.buffer.bytes</code></td>
+<td>65536</td>
+<td>拉取 socket 缓冲区</td>
+<td>调大可提速</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.lag.time.max.ms</code></td>
+<td>10000</td>
+<td>follower 落后 leader 的最大时间</td>
+<td>影响 ISR</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.high.watermark.checkpoint.interval.ms</code></td>
+<td>5000</td>
+<td>高水位写入 checkpoint 周期</td>
+<td>影响恢复速度</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.selector.class</code></td>
+<td>-</td>
+<td>自定义副本选择类</td>
+<td>一般保持默认</td>
+</tr>
+<tr>
+<td>🧮 <strong>日志与段文件</strong></td>
+<td><code>log.segment.bytes</code></td>
+<td>1073741824 (1GB)</td>
+<td>单日志段文件大小</td>
+<td>调小便于删除</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.segment.ms</code></td>
+<td>604800000 (7天)</td>
+<td>强制滚动日志的时间</td>
+<td>适用于时间控制</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.retention.hours</code></td>
+<td>168</td>
+<td>日志保留时间（小时）</td>
+<td>与磁盘空间相关</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.retention.bytes</code></td>
+<td>-1</td>
+<td>日志总大小限制</td>
+<td>-1 表示不限制</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.retention.check.interval.ms</code></td>
+<td>300000</td>
+<td>检查日志保留策略间隔</td>
+<td>默认即可</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.cleaner.enable</code></td>
+<td>true</td>
+<td>是否启用日志压缩</td>
+<td>compact 主题需启用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.cleaner.threads</code></td>
+<td>1</td>
+<td>清理线程数</td>
+<td>大集群可增加</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.cleaner.io.max.bytes.per.second</code></td>
+<td>None</td>
+<td>限制清理 IO 带宽</td>
+<td>控制磁盘负载</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.flush.interval.messages</code></td>
+<td>Long.MAX_VALUE</td>
+<td>累计消息数达到后强制 flush</td>
+<td>通常保持默认</td>
+</tr>
+<tr>
+<td></td>
+<td><code>log.flush.interval.ms</code></td>
+<td>None</td>
+<td>每隔多久强制 flush</td>
+<td>SSD 可调大</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num.partitions</code></td>
+<td>1</td>
+<td>新 Topic 默认分区数</td>
+<td>通常 3~6 起步</td>
+</tr>
+<tr>
+<td>🧵 <strong>生产与消费相关</strong></td>
+<td><code>message.max.bytes</code></td>
+<td>1048576</td>
+<td>允许的最大消息大小</td>
+<td>与 Producer <code>max.request.size</code> 对齐</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.fetch.max.bytes</code></td>
+<td>1048576</td>
+<td>与 Producer/Consumer 对应的限制</td>
+<td>防止大消息卡死</td>
+</tr>
+<tr>
+<td></td>
+<td><code>compression.type</code></td>
+<td>producer</td>
+<td>压缩算法（none, gzip, snappy, lz4, zstd）</td>
+<td>建议 zstd</td>
+</tr>
+<tr>
+<td></td>
+<td><code>queued.max.requests</code></td>
+<td>500</td>
+<td>Broker 最大排队请求数</td>
+<td>默认即可</td>
+</tr>
+<tr>
+<td>🛠️ <strong>控制器与协调器</strong></td>
+<td><code>controller.socket.timeout.ms</code></td>
+<td>30000</td>
+<td>控制器通信超时</td>
+<td>默认即可</td>
+</tr>
+<tr>
+<td></td>
+<td><code>controller.quorum.voters</code></td>
+<td>-</td>
+<td>KRaft 模式选举成员</td>
+<td>ZK 模式不需</td>
+</tr>
+<tr>
+<td></td>
+<td><code>controller.listener.names</code></td>
+<td>-</td>
+<td>控制器监听名</td>
+<td>ZK 模式忽略</td>
+</tr>
+<tr>
+<td>📈 <strong>监控与指标</strong></td>
+<td><code>metric.reporters</code></td>
+<td>空</td>
+<td>指标上报类</td>
+<td>可接 Prometheus</td>
+</tr>
+<tr>
+<td></td>
+<td><code>metrics.num.samples</code></td>
+<td>2</td>
+<td>指标采样数</td>
+<td>默认即可</td>
+</tr>
+<tr>
+<td></td>
+<td><code>metrics.sample.window.ms</code></td>
+<td>30000</td>
+<td>指标采样窗口</td>
+<td>默认即可</td>
+</tr>
+<tr>
+<td></td>
+<td><code>replica.fetchers.metrics.enabled</code></td>
+<td>true</td>
+<td>是否启用副本拉取指标</td>
+<td>Kafka 3.x 新增</td>
+</tr>
+<tr>
+<td>🔒 <strong>安全</strong></td>
+<td><code>authorizer.class.name</code></td>
+<td>空</td>
+<td>授权类实现</td>
+<td>开启 ACL 时配置</td>
+</tr>
+<tr>
+<td></td>
+<td><code>super.users</code></td>
+<td>空</td>
+<td>超级用户列表</td>
+<td>ACL 模式下配置</td>
+</tr>
+<tr>
+<td></td>
+<td><code>ssl.keystore.location</code></td>
+<td>-</td>
+<td>SSL 证书路径</td>
+<td>启用 SSL 时使用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>ssl.truststore.location</code></td>
+<td>-</td>
+<td>信任证书路径</td>
+<td>启用 SSL 时使用</td>
 </tr>
 </tbody>
 </table>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>在 <code>config/server.properties</code> 文件中 可以看到如下配置</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 套接字服务器监听的地址。</span></span><br><span class="line"><span class="comment"># 如果未配置，则主机名默认等于 `java.net.InetAddress.getCanonicalHostName()` 的返回值，</span></span><br><span class="line"><span class="comment"># 使用监听器名称 `PLAINTEXT`，端口号为 9092。</span></span><br><span class="line"><span class="comment">#   格式：</span></span><br><span class="line"><span class="comment">#     listeners = listener_name://host_name:port</span></span><br><span class="line"><span class="comment">#   示例：</span></span><br><span class="line"><span class="comment">#     listeners = PLAINTEXT://your.host.name:9092</span></span><br><span class="line"><span class="comment">#listeners=PLAINTEXT://:9092</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Broker 向客户端“通告”的监听器名称、主机名和端口。</span></span><br><span class="line"><span class="comment"># 客户端实际会连接这个地址，而不是直接使用 listeners 的地址。</span></span><br><span class="line"><span class="comment"># 如果未设置，则默认使用 `listeners` 的值。</span></span><br><span class="line"><span class="comment">#advertised.listeners=PLAINTEXT://your.host.name:9092</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将监听器名称映射到安全协议类型。</span></span><br><span class="line"><span class="comment"># 默认情况下，监听器名称与安全协议同名。</span></span><br><span class="line"><span class="comment"># 例如：PLAINTEXT→PLAINTEXT、SSL→SSL、SASL_PLAINTEXT→SASL_PLAINTEXT、SASL_SSL→SASL_SSL。</span></span><br><span class="line"><span class="comment"># 更多细节可参考 Kafka 官方配置文档。</span></span><br><span class="line"><span class="comment">#listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL</span></span><br></pre></td></tr></table></figure>
+<h2 id="参数使用建议总结">参数使用建议总结</h2>
 <table>
 <thead>
 <tr>
-<th>配置项</th>
-<th>作用</th>
-<th>说明值</th>
+<th>场景</th>
+<th>推荐配置</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>listeners</code></td>
-<td>Kafka 实际监听的地址（Broker 对外开放的端口）</td>
-<td><code>PLAINTEXT://:9092</code>这里 PLAINTEXT 是监听器名称，并不是协议名称，实际上可以配置为任何值，具体协议是通过 <code>listener.security.protocol.map</code> 配置的映射关系来确定。</td>
+<td><strong>高可靠性集群</strong></td>
+<td><code>default.replication.factor=3</code>, <code>min.insync.replicas=2</code>, <code>unclean.leader.election.enable=false</code></td>
 </tr>
 <tr>
-<td><code>advertised.listeners</code></td>
-<td>Kafka 告诉客户端应该用哪个地址连接（客户端最终连的）</td>
-<td>默认使用 <code>listeners</code> 的值</td>
+<td><strong>吞吐优先</strong></td>
+<td>提高 <code>num.replica.fetchers</code>、<code>replica.fetch.max.bytes</code></td>
 </tr>
 <tr>
-<td><code>listener.security.protocol.map</code></td>
-<td>映射监听器名称到通信安全协议（如明文、SSL、SASL 等）</td>
-<td><code>PLAINTEXT:PLAINTEXT</code>，前面是监听器名称，后面是协议名称</td>
+<td><strong>快速恢复</strong></td>
+<td>减少 <code>replica.high.watermark.checkpoint.interval.ms</code></td>
+</tr>
+<tr>
+<td><strong>节省磁盘</strong></td>
+<td>启用 <code>log.cleaner.enable</code> 并设置 <code>log.retention.hours</code></td>
+</tr>
+<tr>
+<td><strong>事务或精确一次语义</strong></td>
+<td>设置 <code>transaction.state.log.replication.factor=3</code>、<code>transaction.state.log.min.isr=2</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="仅需内网访问">仅需内网访问</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listeners=PLAINTEXT://0.0.0.0:9092</span><br><span class="line">advertised.listeners=PLAINTEXT://192.168.1.10:9092 <span class="comment"># 这里是内网ip</span></span><br></pre></td></tr></table></figure>
-<h2 id="允许外网访问">允许外网访问</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listeners=PLAINTEXT://0.0.0.0:9092</span><br><span class="line">advertised.listeners=PLAINTEXT://123.45.67.89:9092 <span class="comment"># 这里是外网ip</span></span><br></pre></td></tr></table></figure>
-<h2 id="内外网都要访问（推荐双通道方式）">内外网都要访问（推荐双通道方式）</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里 INTERNAL 和 EXTERNAL 分别是自定义的监听器名称，此时内网端口为 9092，外网端口为 9093</span></span><br><span class="line">listeners=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093</span><br><span class="line"><span class="comment"># 告诉客户端应该用哪个地址连接</span></span><br><span class="line">advertised.listeners=INTERNAL://192.168.1.10:9092,EXTERNAL://123.45.67.89:9093</span><br><span class="line"><span class="comment"># 映射监听器名称到通信安全协议的映射关系</span></span><br><span class="line">listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT</span><br><span class="line"><span class="comment"># 集群间通信仍使用内网</span></span><br><span class="line">inter.broker.listener.name=INTERNAL</span><br></pre></td></tr></table></figure>
+
     </div>
 
     
@@ -1292,7 +1676,7 @@ i.ban {
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2025/10/15/kafka-02-protocol/" title="Kafka 允许外网访问">https://blog.hanqunfeng.com/2025/10/15/kafka-02-protocol/</a>
+      <a href="https://blog.hanqunfeng.com/2025/10/14/kafka-01-server-config/" title="Kafka 的 server.properties 配置项">https://blog.hanqunfeng.com/2025/10/14/kafka-01-server-config/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1345,14 +1729,11 @@ i.ban {
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2025/10/15/kafka-01-install-zookeeper/" rel="prev" title="Kafka 的安装：基于 Zookeeper">
-                  <i class="fa fa-angle-left"></i> Kafka 的安装：基于 Zookeeper
+                <a href="/2025/10/13/kafka-03-webui/" rel="prev" title="Kafka 的 Web UI 之 Kafbat UI">
+                  <i class="fa fa-angle-left"></i> Kafka 的 Web UI 之 Kafbat UI
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2025/10/15/kafka-03-webui/" rel="next" title="Kafka 的 Web UI 之 Kafbat UI">
-                  Kafka 的 Web UI 之 Kafbat UI <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -1387,14 +1768,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">641k</span>
+    <span title="站点总字数">643k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">38:50</span>
+    <span title="站点阅读时长">38:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

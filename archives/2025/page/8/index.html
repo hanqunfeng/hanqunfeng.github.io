@@ -22,29 +22,25 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍 CentOS9 中 Kafka 的安装与使用，基于 Zookeeper。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Kafka 的安装：基于 Zookeeper">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/15/kafka-01-install-zookeeper/index.html">
+    <meta name="description" content="分享成长与快乐的地方">
+<meta property="og:type" content="website">
+<meta property="og:title" content="飘逸峰的博客">
+<meta property="og:url" content="https://blog.hanqunfeng.com/archives/2025/page/8/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 CentOS9 中 Kafka 的安装与使用，基于 Zookeeper。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
+<meta property="og:description" content="分享成长与快乐的地方">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/Xe43JY.png">
-<meta property="article:published_time" content="2025-10-15T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-13T10:32:20.240Z">
 <meta property="article:author" content="飘逸峰">
-<meta property="article:tag" content="kafka">
+<meta property="article:tag" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/Xe43JY.png">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2025/10/15/kafka-01-install-zookeeper/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/archives/2025/page/8/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/10/15/kafka-01-install-zookeeper/","path":"2025/10/15/kafka-01-install-zookeeper/","title":"Kafka 的安装：基于 Zookeeper"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"archives/2025/page/8/index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Kafka 的安装：基于 Zookeeper | 飘逸峰的博客</title>
+<title>归档 | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -69,7 +65,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
 <style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -90,7 +86,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">飘逸峰的博客</p>
+      <h1 class="site-title">飘逸峰的博客</h1>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
@@ -856,7 +852,7 @@ i.ban {
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -869,7 +865,6 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Kafka 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">Kafka 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">单机安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">集群安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA-Zookeeper-%E9%9B%86%E7%BE%A4"><span class="nav-number">3.2.1.</span> <span class="nav-text">搭建 Zookeeper 集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Kafka-%E9%9B%86%E7%BE%A4"><span class="nav-number">3.2.2.</span> <span class="nav-text">配置 Kafka 集群</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">Kafka 命令</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -884,7 +879,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">226</span>
+          <span class="site-state-item-count">227</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -955,622 +950,59 @@ i.ban {
         </ul>
       </div>
     </div>
-        <div class="sidebar-inner sidebar-post-related">
-          <div class="animated">
-              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
-    相关文章
-  </div>
-  <ul class="popular-posts">
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/15/kafka-03-webui/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-15</time>
-        <br>
-      Kafka 的 Web UI 之 Kafbat UI
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/15/kafka-02-protocol/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-15</time>
-        <br>
-      Kafka 允许外网访问
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2021/06/24/rocketmq-docker/" rel="bookmark">
-        <time class="popular-posts-time">2021-06-24</time>
-        <br>
-      RocketMQ Docker安装方式
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/09/15/zookeeper-study/" rel="bookmark">
-        <time class="popular-posts-time">2025-09-15</time>
-        <br>
-      Zookeeper 的安装及使用
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/07/20/k8s-statefulset/" rel="bookmark">
-        <time class="popular-posts-time">2025-07-20</time>
-        <br>
-      K8S 之 Statefulset
-      </a>
-    </li>
-  </ul>
-
-          </div>
-        </div>
   </aside>
 
 
     </div>
 
-    <div class="main-inner post posts-expand">
+    <div class="main-inner archive posts-collapse">
 
 
   
-
-
-<div class="post-block">
   
   
+  <div class="post-block">
+    <div class="post-content">
+      <div class="collection-title">
+        
+        <span class="collection-header">太棒了! 目前共计 227 篇日志。 继续努力。</span>
+      </div>
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/10/15/kafka-01-install-zookeeper/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Kafka 的安装：基于 Zookeeper | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          Kafka 的安装：基于 Zookeeper
-        </h1>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-10-15 21:30:05" itemprop="dateCreated datePublished" datetime="2025-10-15T21:30:05+08:00">2025-10-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-13 18:32:20" itemprop="dateModified" datetime="2025-10-13T18:32:20+08:00">2025-10-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/kafka/" itemprop="url" rel="index"><span itemprop="name">kafka</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/kafka/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
-        </span>
-    </span>
-
-  
-  
-<!-- 置顶，精品 -->
-    <span class="post-meta-item">
-    <span>
-    <span class="post-meta-item-icon">
-      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
-    </span>
-    <span class="post-meta-item">
-    <span>
-    <span class="post-meta-item-icon">
-            <i class="fa-regular fa-newspaper jingping">精品</i>
-    </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-
-
-    <span id="/2025/10/15/kafka-01-install-zookeeper/" class="leancloud_visitors" data-flag-title="Kafka 的安装：基于 Zookeeper" title="阅读次数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
-    </span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.5k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody"><!--
- **加粗**
- *斜体*
- ***加粗并斜体***
- ~~删除线~~
- ==突出显示==
- `突出显示(推荐)`
- ++下划线++
- ~下标~
- ^上标^
- 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
- 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
-
- +++ **点击折叠**
- 这是被隐藏的内容
- +++
-
-::: tips success warning danger
-这里是容器内的内容
-:::
-
-% note info % success warning danger
-这里是容器内的内容
-% endnote %
-
-引用本地其它文章连接{}
- 大括号开始% post_link 文件名称(不包含.md) %大括号结束
- -->
-<h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>本文介绍 CentOS9 中 Kafka 的安装与使用，基于 Zookeeper。</p>
-</li>
-<li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://kafka.apache.org">Kafka官网</a></p>
-</li>
-<li class="lvl-2">
-<p>本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。</p>
-</li>
-</ul>
-<span id="more"></span>
-<h2 id="Kafka-简介">Kafka 简介</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>Apache Kafka 是一个 <code>分布式的流处理/事件流平台</code>，既可以作为<code>消息系统</code>，也可以作为持久化的 <code>日志/记录存储与流处理平台</code>。</p>
-</li>
-<li class="lvl-2">
-<p>它的设计目标是高吞吐、低延迟、可水平扩展、容错，以及可持久化数据。</p>
-</li>
-<li class="lvl-2">
-<p>在 Kafka 中，消息被归类为 <code>主题（Topic）</code>，每个主题可以根据配置被拆分为多个 <code>分区（Partition）</code>，每个分区内部消息是<code>严格有序</code>的，并以<code>追加</code>方式写入。消费者可以按<code>偏移量（offset）</code>读取消息。</p>
-</li>
-<li class="lvl-2">
-<p>Kafka 提供多个 API：Producer、Consumer、Streams（流处理）、Connect（与外部系统整合）等。</p>
-</li>
-<li class="lvl-2">
-<p>Kafka 的核心架构要素与工作机制</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>组件 / 概念</th>
-<th>作用 / 描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Broker（节点 / 服务器）</td>
-<td>Kafka 集群中的服务器实例，负责接收、存储、分发消息</td>
-</tr>
-<tr>
-<td>Topic</td>
-<td>消息的“分类”逻辑单元，Producer 写入、Consumer 读取</td>
-</tr>
-<tr>
-<td>Partition</td>
-<td>一个 Topic 被划分的子单元。分区使得主题可以横向扩展，并支持并行读写</td>
-</tr>
-<tr>
-<td>Offset</td>
-<td>每条消息在某个分区中的唯一位置标识，消费者根据 offset 来决定下一条读取</td>
-</tr>
-<tr>
-<td>Replication（副本）</td>
-<td>为了容错性，每个分区可以有多个副本（副本分布在不同 Broker 上）</td>
-</tr>
-<tr>
-<td>Leader / Follower</td>
-<td>在副本中，一个副本为 Leader，接受读写请求；其他为 Follower，从 Leader 同步数据</td>
-</tr>
-<tr>
-<td>Consumer Group</td>
-<td>一组消费者共同消费一个 Topic。每个分区在同一个消费者组中通常只被一个消费者 “拥有”</td>
-</tr>
-<tr>
-<td>ZooKeeper / KRaft</td>
-<td>用于元数据管理、集群协调（在较老版本中是 ZooKeeper；新版本推向 KRaft）</td>
-</tr>
-</tbody>
-</table>
-<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/Xe43JY.png" alt="" width="900" height="600"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>消息写入流程（简化）：</p>
-<ul class="lvl-2">
-<li class="lvl-4">Producer 将消息发送给某个 Topic 的 Leader 分区节点</li>
-<li class="lvl-4">Leader 接收到消息后，将其追加写入本地日志，并返回确认（ACK）</li>
-<li class="lvl-4">Follower 副本从 Leader 拉取数据进行同步</li>
-<li class="lvl-4">消费者根据自己的 offset 从对应 Partition 中读取消息</li>
-</ul>
-</li>
-<li class="lvl-2">
-<p>消费控制与容错：</p>
-<ul class="lvl-2">
-<li class="lvl-4">消费者维护自己的 offset（可以自动提交，也可手动控制），这样即使消费者重启，也可以从上次停止的位置继续。</li>
-<li class="lvl-4">如果某个 Broker 宕机，副本可以切换（Leader 选举），保证服务继续。</li>
-<li class="lvl-4">分区与副本机制使得 Kafka 能够扩展容量 &amp; 提高可靠性。</li>
-</ul>
-</li>
-<li class="lvl-2">
-<p>Kafka 的典型使用场景</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>场景类别</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>实时数据管道 / 数据集成</strong></td>
-<td>用于将各种数据源（如日志、数据库变更、传感器、用户事件等）实时采集、传输、分发到下游系统（如 OLAP、搜索引擎、监控平台等），构建高效的数据通道。</td>
-</tr>
-<tr>
-<td><strong>事件驱动 / 事件溯源</strong></td>
-<td>记录系统内部或跨系统的事件（状态变化），实现事件驱动架构（EDA）或事件溯源（Event Sourcing），可用于审计、回放、状态重建等。</td>
-</tr>
-<tr>
-<td><strong>日志聚合 / 分析</strong></td>
-<td>将分布式系统中的应用日志、监控指标、操作日志等统一收集到 Kafka 中，集中存储与分析，常与 ELK、ClickHouse 等结合。</td>
-</tr>
-<tr>
-<td><strong>流处理</strong></td>
-<td>与 Kafka Streams、Apache Flink、Spark Streaming 等流处理框架配合，对流经 Kafka 的数据进行实时计算、聚合、过滤、窗口统计等操作。</td>
-</tr>
-<tr>
-<td><strong>系统解耦 / 异步通信</strong></td>
-<td>作为系统间的消息中间件，实现发布-订阅模式，减少系统间耦合，支持异步通信、流量削峰、缓冲等，提升系统稳定性与扩展性。</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Kafka-安装">Kafka 安装</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>这里先介绍基于 Zookeeper 的安装方式，下文会介绍基于 KRaft 的安装方式。</p>
-</li>
-<li class="lvl-2">
-<p>Kafka 3.9.1 的安装与运行需要 JDK 8+，所有我们需要提前安装 JDK 8+。可以选择OpenJDK，<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/Adoptium/">清华大学镜像站</a></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># root 用户</span></span><br><span class="line"><span class="comment"># 创建安装目录</span></span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/jdk</span><br><span class="line"><span class="built_in">cd</span> /usr/local/jdk</span><br><span class="line"><span class="comment"># 下载JDK</span></span><br><span class="line">wget https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jdk/x64/linux/OpenJDK8U-jdk_x64_linux_hotspot_8u462b08.tar.gz</span><br><span class="line">tar -zxvf OpenJDK8U-jdk_x64_linux_hotspot_8u462b08.tar.gz</span><br><span class="line"><span class="built_in">ln</span> -s jdk8u462-b08 jdk8</span><br><span class="line"><span class="comment"># 配置环境变量</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export JAVA_HOME=/usr/local/jdk/jdk8&#x27;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="comment"># 注意这里是 单引号，双引号会解析变量，导致配置失败</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=$JAVA_HOME/bin:$PATH&#x27;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br><span class="line"><span class="comment"># 检查JDK安装</span></span><br><span class="line">java -version</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>安装过程参考官网文档<a target="_blank" rel="noopener" href="https://kafka.apache.org/39/documentation.html#quickstart">Kafka Quick Start</a>。</p>
-</li>
-</ul>
-<h3 id="单机安装">单机安装</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>部署kafka都会使用集群模式，单机模式只作为学习试用。</p>
-</li>
-<li class="lvl-2">
-<p>下载Kafka，<a target="_blank" rel="noopener" href="https://kafka.apache.org/downloads">下载页面</a></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># root 用户</span></span><br><span class="line"><span class="comment"># 创建安装目录</span></span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/kafka</span><br><span class="line"><span class="built_in">cd</span> /usr/local/kafka</span><br><span class="line"><span class="comment"># 下载Kafka</span></span><br><span class="line">wget https://dlcdn.apache.org/kafka/3.9.1/kafka_2.13-3.9.1.</span><br><span class="line">tar -zxvf kafka_2.13-3.9.1.tgz</span><br><span class="line"><span class="built_in">ln</span> -s kafka_2.13-3.9.1 kafka3</span><br><span class="line"><span class="comment"># 配置环境变量</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export KAFKA_HOME=/usr/local/kafka/kafka3&#x27;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=$KAFKA_HOME/bin:$PATH&#x27;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br><span class="line"><span class="comment"># 查看Kafka版本</span></span><br><span class="line">kafka-topics.sh --version</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>启动 Zookeeper，kafka内置了zookeeper，所以不需要单独安装。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zookeeper-server-start.sh /usr/local/kafka/kafka3/config/zookeeper.properties</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>启动 kafka，需打开另一个终端</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -daemon 后台运行</span></span><br><span class="line">kafka-server-start.sh -daemon /usr/local/kafka/kafka3/config/server.properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查kafka是否启动成功</span></span><br><span class="line">jps -l | grep kafka</span><br></pre></td></tr></table></figure>
-<div class="tips">
-<p><em><strong>小贴士</strong></em></p>
-<ul class="lvl-1">
-<li class="lvl-2">注意：默认情况下 启动 kafka 需要的内存大小为 1G，这一点可以在 <a target="_blank" rel="noopener" href="http://kafka-server-start.sh">kafka-server-start.sh</a> 脚本中查看到</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;x<span class="variable">$KAFKA_HEAP_OPTS</span>&quot;</span> = <span class="string">&quot;x&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">export</span> KAFKA_HEAP_OPTS=<span class="string">&quot;-Xmx1G -Xms1G&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<ul class="lvl-1">
-<li class="lvl-2">所以如果内存不够，可以设置环境变量后再启动kafka</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> KAFKA_HEAP_OPTS=<span class="string">&quot;-Xmx512M -Xms512M&quot;</span></span><br><span class="line">kafka-server-start.sh -daemon /usr/local/kafka/kafka3/config/server.properties</span><br></pre></td></tr></table></figure>
-</div>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>测试</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 topic</span></span><br><span class="line">kafka-topics.sh --create --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动消费者</span></span><br><span class="line">kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic <span class="built_in">test</span> --from-beginning</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动生产者</span></span><br><span class="line">kafka-console-producer.sh --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br><span class="line">&gt; hello world <span class="comment"># 输入内容，消费者会收到</span></span><br></pre></td></tr></table></figure>
-<h3 id="集群安装">集群安装</h3>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>集群安装需要准备多个节点，这里我准备三个节点，分别如下：</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10.250.0.7</span><br><span class="line">10.250.0.174</span><br><span class="line">10.250.0.108</span><br></pre></td></tr></table></figure>
-<h4 id="搭建-Zookeeper-集群">搭建 Zookeeper 集群</h4>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>关于如何搭建 Zookeeper 集群，可以参考我之前的文章 <a href="/2025/09/15/zookeeper-study/" title="Zookeeper 的安装及使用">Zookeeper 的安装及使用</a></p>
-</li>
-<li class="lvl-2">
-<p>如果图省事也可以直接使用 Kafka 自带的 zookeeper，编辑其配置文件 <code>config/zookeeper.properties</code>如下，注意要在 <code>dataDir</code> 目录下创建<code>myid</code>文件</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">dataDir=/usr/local/kafka/dataDir/zookeeper</span><br><span class="line"><span class="comment"># the port at which the clients will connect</span></span><br><span class="line">clientPort=2181</span><br><span class="line"><span class="comment"># disable the per-ip limit on the number of connections since this is a non-production config</span></span><br><span class="line">maxClientCnxns=0</span><br><span class="line"><span class="comment"># Disable the adminserver by default to avoid port conflicts.</span></span><br><span class="line"><span class="comment"># Set the port to something non-conflicting if choosing to enable this</span></span><br><span class="line">admin.enableServer=<span class="literal">false</span></span><br><span class="line"><span class="comment"># admin.serverPort=8080</span></span><br><span class="line"></span><br><span class="line">initLimit=10</span><br><span class="line">syncLimit=5</span><br><span class="line"></span><br><span class="line">server.1=10.250.0.7:2888:3888</span><br><span class="line">server.2=10.250.0.174:2888:3888</span><br><span class="line">server.3=10.250.0.108:2888:3888</span><br></pre></td></tr></table></figure>
-<h4 id="配置-Kafka-集群">配置 Kafka 集群</h4>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>修改主机的主机名</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl hostname worker1</span><br><span class="line"><span class="comment"># hostnamectl hostname worker2</span></span><br><span class="line"><span class="comment"># hostnamectl hostname worker3</span></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>为了后续方便维护，将ip地址映射到 hosts 文件中</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10.250.0.7 worker1</span><br><span class="line">10.250.0.174 worker2</span><br><span class="line">10.250.0.108 worker3</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>编辑 <code>config/server.properties</code> 文件，需要修改如下配置项</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#broker 的全局唯⼀编号，不能重复，只能是数字。</span></span><br><span class="line">broker.id=1 <span class="comment"># 这里分别设置为1、2、3</span></span><br><span class="line"><span class="comment">#服务监听地址</span></span><br><span class="line">listeners=PLAINTEXT://worker1:9092</span><br><span class="line"><span class="comment">#数据⽂件地址。同样默认是给的/tmp⽬录。</span></span><br><span class="line">log.dirs=/usr/local/kafka/dataDir/kafka-logs</span><br><span class="line"><span class="comment">#默认的每个Topic的分区数，创建Topic时，如果未指定分区数，则默认为1个分区。</span></span><br><span class="line">num.partitions=1</span><br><span class="line"><span class="comment"># 每个⽇志⽂件删除之前保存的时间，默认是168小时，即7天。</span></span><br><span class="line">log.retention.hours=168</span><br><span class="line"><span class="comment">#zookeeper的服务地址，如果是自建的 Zookeeper 集群，则这里需要填写集群的连接地址</span></span><br><span class="line">zookeeper.connect=worker1:2181,worker2:2181,worker3:2181</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>分别在三个节点上启动 Kafka</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kafka-server-start.sh -daemon /usr/local/kafka/kafka3/config/server.properties</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>测试</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 topic</span></span><br><span class="line">kafka-topics.sh --bootstrap-server worker1:9092 --create --replication-factor 3 --partitions 3 --topic disTopic</span><br><span class="line"><span class="comment">## 参数说明</span></span><br><span class="line"><span class="comment"># --replication-factor 3 表示创建的副本数</span></span><br><span class="line"><span class="comment"># --partitions 3 表示创建的分区数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 topic 详情</span></span><br><span class="line">kafka-topics.sh --bootstrap-server worker1:9092 --describe --topic disTopic</span><br><span class="line">Topic: disTopic	TopicId: VUK7Mc9oQdS1mjGG7OhQzQ	PartitionCount: 3	ReplicationFactor: Configs:</span><br><span class="line">	Topic: disTopic	Partition: 0	Leader: 2	Replicas: 2,3,1	Isr: 2,3,1	Elr: N/A	LastKnownElr: N/A</span><br><span class="line">	Topic: disTopic	Partition: 1	Leader: 3	Replicas: 3,1,2	Isr: 3,1,2	Elr: N/A	LastKnownElr: N/A</span><br><span class="line">	Topic: disTopic	Partition: 2	Leader: 1	Replicas: 1,2,3	Isr: 1,2,3	Elr: N/A	LastKnownElr: N/A</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>总体信息（Topic 概览）</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Topic: disTopic	TopicId: VUK7Mc9oQdS1mjGG7OhQzQ	PartitionCount: 3	ReplicationFactor: Configs:</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Topic: disTopic</strong></td>
-<td>Topic 名称，即当前描述的主题。</td>
-</tr>
-<tr>
-<td><strong>TopicId: VUK7Mc9oQdS1mjGG7OhQzQ</strong></td>
-<td>Kafka 内部自动生成的唯一标识符（UUID），Kafka 3.x 之后引入，用于区分同名但不同生命周期的 topic。</td>
-</tr>
-<tr>
-<td><strong>PartitionCount: 3</strong></td>
-<td>该主题有 3 个分区（partition）。每个分区存储一部分消息。</td>
-</tr>
-<tr>
-<td><strong>ReplicationFactor:</strong></td>
-<td>副本因子。这里虽然输出中没显示具体值，但可从每行分区配置推断是 <strong>3</strong>（每个分区有 3 个副本）。</td>
-</tr>
-<tr>
-<td><strong>Configs:</strong></td>
-<td>topic 的配置项（例如清理策略、压缩类型等），如果为空，说明使用默认配置。</td>
-</tr>
-</tbody>
-</table>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>分区详情（每个 Partition 一行）</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Topic: disTopic	Partition: 0	Leader: 2	Replicas: 2,3,1	Isr: 2,3,1	Elr: N/A	LastKnownElr: N/A</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Partition: 0</strong></td>
-<td>第 0 号分区。</td>
-</tr>
-<tr>
-<td><strong>Leader: 2</strong></td>
-<td>该分区当前的 <strong>Leader Broker 是 broker ID = 2</strong>，只有 Leader 才处理读写请求。</td>
-</tr>
-<tr>
-<td><strong>Replicas: 2,3,1</strong></td>
-<td>该分区的所有副本存放在哪些 Broker 上（即副本分布），分别是 broker 2、3、1。</td>
-</tr>
-<tr>
-<td><strong>Isr (In-Sync Replicas): 2,3,1</strong></td>
-<td>当前与 Leader 保持同步的副本集合。这里所有副本都在同步中（健康状态 👍）。</td>
-</tr>
-<tr>
-<td><strong>Elr / LastKnownElr</strong></td>
-<td>Kafka 新版本中引入的 “Enhanced Leader Replica” 状态，目前未启用（N/A）。</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Kafka-命令">Kafka 命令</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>管理 topic</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 topic</span></span><br><span class="line">kafka-topics.sh --create --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br><span class="line"><span class="comment"># 列出 topic</span></span><br><span class="line">kafka-topics.sh --list --bootstrap-server localhost:9092</span><br><span class="line"><span class="comment"># 查看 topic 详情</span></span><br><span class="line">kafka-topics.sh --describe --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br><span class="line"><span class="comment"># 删除 topic</span></span><br><span class="line">kafka-topics.sh --delete --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+      
+    <div class="collection-year">
+      <span class="collection-header">2025<span class="collection-year-count">71</span></span>
     </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
-
-<div>
-    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
-    <link rel="stylesheet" href="/social-share/share.min.css">
-    <script src="/social-share/share.min.js"></script>
-    <div class="social-share" style="float:right">分享到：</div>
-</div>
-
-          <div class="reward-container">
-  <div>请我一杯咖啡吧！</div>
-  <button>
-    赞赏
-  </button>
-  <div class="post-reward">
-      <div>
-        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
-        <span>微信</span>
-      </div>
-      <div>
-        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
-        <span>支付宝</span>
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2025-01-02T21:55:05+08:00"
+              content="2025-01-02">
+          01-02
+        </time>
       </div>
 
-  </div>
-</div>
-
-          
-
-<div class="post-copyright">
-<ul>
-  <li class="post-copyright-author">
-      <strong>本文作者： </strong>飘逸峰
-  </li>
-  <li class="post-copyright-link">
-      <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2025/10/15/kafka-01-install-zookeeper/" title="Kafka 的安装：基于 Zookeeper">https://blog.hanqunfeng.com/2025/10/15/kafka-01-install-zookeeper/</a>
-  </li>
-  <li class="post-copyright-license">
-      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-</div>
-
-          <div class="followme">
-  <span>欢迎关注我的其它发布渠道</span>
-
-  <div class="social-list">
-
-      <div class="social-item">
-          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
-            <span class="icon">
-              <i class="fa-solid fa-book-open"></i>
-            </span>
-
-            <span class="label">简书</span>
+      <div class="post-title">
+          <a class="post-title-link" href="/2025/01/02/mermaid/" itemprop="url">
+            <span itemprop="name">Hexo-Next 主题的图形工具 -- Mermaid</span>
           </a>
       </div>
 
-      <div class="social-item">
-          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
-            <span class="icon">
-              <i class="fa-solid fa-c"></i>
-            </span>
-
-            <span class="label">CSDN</span>
-          </a>
-      </div>
-
-      <div class="social-item">
-          <a target="_blank" class="social-link" href="/atom.xml">
-            <span class="icon">
-              <i class="fa-solid fa-rss"></i>
-            </span>
-
-            <span class="label">RSS</span>
-          </a>
-      </div>
-  </div>
-</div>
-
-          <div class="post-tags">
-              <a href="/tags/kafka/" rel="tag"><i class="fa fa-tag"></i> kafka</a>
-          </div>
-
-        
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2025/09/25/rabbitmq-cluster/" rel="prev" title="RabbitMQ 之 Cluster">
-                  <i class="fa fa-angle-left"></i> RabbitMQ 之 Cluster
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2025/10/15/kafka-02-protocol/" rel="next" title="Kafka 允许外网访问">
-                  Kafka 允许外网访问 <i class="fa fa-angle-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
+      
+    </header>
   </article>
-</div>
 
 
+    </div>
+  </div>
+  
+  
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/archives/2025/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/2025/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2025/page/7/">7</a><span class="page-number current">8</span>
+  </nav>
 
-
-
-
-    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -1593,14 +1025,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">641k</span>
+    <span title="站点总字数">643k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">38:50</span>
+    <span title="站点阅读时长">38:58</span>
   </span>
 </div>
 <div class="busuanzi-count">
@@ -1831,5 +1263,5 @@ darkmode.showWidget();
 
 
 </div>
-<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</body>
 </html>
