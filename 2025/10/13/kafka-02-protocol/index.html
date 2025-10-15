@@ -24,13 +24,13 @@
 
     <meta name="description" content="摘要   本文介绍 Kafka 的 通信协议，以及如何开启外网访问。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka 允许外网访问">
+<meta property="og:title" content="Kafka 通信协议、SSL加密和身份验证">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/13/kafka-02-protocol/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
 <meta property="og:description" content="摘要   本文介绍 Kafka 的 通信协议，以及如何开启外网访问。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-10-13T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-14T10:38:01.611Z">
+<meta property="article:modified_time" content="2025-10-15T07:03:48.228Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
@@ -39,10 +39,10 @@
 <link rel="canonical" href="https://blog.hanqunfeng.com/2025/10/13/kafka-02-protocol/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/10/13/kafka-02-protocol/","path":"2025/10/13/kafka-02-protocol/","title":"Kafka 允许外网访问"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/10/13/kafka-02-protocol/","path":"2025/10/13/kafka-02-protocol/","title":"Kafka 通信协议、SSL加密和身份验证"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Kafka 允许外网访问 | 飘逸峰的博客</title>
+<title>Kafka 通信协议、SSL加密和身份验证 | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%9A%84-%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.</span> <span class="nav-text">Kafka 的 通信协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%85%E9%9C%80%E5%86%85%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="nav-number">3.</span> <span class="nav-text">仅需内网访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="nav-number">4.</span> <span class="nav-text">允许外网访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%A4%96%E7%BD%91%E9%83%BD%E8%A6%81%E8%AE%BF%E9%97%AE%EF%BC%88%E6%8E%A8%E8%8D%90%E5%8F%8C%E9%80%9A%E9%81%93%E6%96%B9%E5%BC%8F%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">内外网都要访问（推荐双通道方式）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%90%AF-SASL-PLAINTEXT"><span class="nav-number">6.</span> <span class="nav-text">开启 SASL_PLAINTEXT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AE%BF%E9%97%AE"><span class="nav-number">6.1.</span> <span class="nav-text">客户端访问</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%90%AF-SASL-SSL"><span class="nav-number">7.</span> <span class="nav-text">开启 SASL_SSL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%AF%81%E4%B9%A6"><span class="nav-number">7.1.</span> <span class="nav-text">创建证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#server-properties-%E9%85%8D%E7%BD%AE-SASL-SSL"><span class="nav-number">7.2.</span> <span class="nav-text">server.properties 配置 SASL_SSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AE%BF%E9%97%AE-2"><span class="nav-number">7.3.</span> <span class="nav-text">客户端访问</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%9A%84-%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.</span> <span class="nav-text">Kafka 的 通信协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%85%E9%9C%80%E5%86%85%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="nav-number">3.</span> <span class="nav-text">仅需内网访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="nav-number">4.</span> <span class="nav-text">允许外网访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%A4%96%E7%BD%91%E9%83%BD%E8%A6%81%E8%AE%BF%E9%97%AE%EF%BC%88%E6%8E%A8%E8%8D%90%E5%8F%8C%E9%80%9A%E9%81%93%E6%96%B9%E5%BC%8F%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">内外网都要访问（推荐双通道方式）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%90%AF-SASL-PLAINTEXT"><span class="nav-number">6.</span> <span class="nav-text">开启 SASL_PLAINTEXT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AE%BF%E9%97%AE"><span class="nav-number">6.1.</span> <span class="nav-text">客户端访问</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%90%AF-SASL-SSL"><span class="nav-number">7.</span> <span class="nav-text">开启 SASL_SSL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%AF%81%E4%B9%A6"><span class="nav-number">7.1.</span> <span class="nav-text">创建证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#server-properties-%E9%85%8D%E7%BD%AE-SASL-SSL"><span class="nav-number">7.2.</span> <span class="nav-text">server.properties 配置 SASL_SSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AE%BF%E9%97%AE-2"><span class="nav-number">7.3.</span> <span class="nav-text">客户端访问</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PEM-%E8%AF%81%E4%B9%A6"><span class="nav-number">7.3.1.</span> <span class="nav-text">PEM 证书</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -882,7 +882,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">227</span>
+          <span class="site-state-item-count">228</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -974,6 +974,13 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/15/kafka-04-command/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-15</time>
+        <br>
+      Kafka 的 常用命令
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2021/06/24/rocketmq-docker/" rel="bookmark">
         <time class="popular-posts-time">2021-06-24</time>
         <br>
@@ -985,13 +992,6 @@ i.ban {
         <time class="popular-posts-time">2025-10-14</time>
         <br>
       Kafka 的 server.properties 配置项
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/07/20/k8s-statefulset/" rel="bookmark">
-        <time class="popular-posts-time">2025-07-20</time>
-        <br>
-      K8S 之 Statefulset
       </a>
     </li>
   </ul>
@@ -1027,12 +1027,12 @@ i.ban {
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Kafka 允许外网访问 | 飘逸峰的博客">
+      <meta itemprop="name" content="Kafka 通信协议、SSL加密和身份验证 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Kafka 允许外网访问
+          Kafka 通信协议、SSL加密和身份验证
         </h1>
 
         <div class="post-meta-container">
@@ -1050,7 +1050,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-14 18:38:01" itemprop="dateModified" datetime="2025-10-14T18:38:01+08:00">2025-10-14</time>
+      <time title="修改时间：2025-10-15 15:03:48" itemprop="dateModified" datetime="2025-10-15T15:03:48+08:00">2025-10-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1090,7 +1090,7 @@ i.ban {
 </div>
 
 
-    <span id="/2025/10/13/kafka-02-protocol/" class="leancloud_visitors" data-flag-title="Kafka 允许外网访问" title="阅读次数">
+    <span id="/2025/10/13/kafka-02-protocol/" class="leancloud_visitors" data-flag-title="Kafka 通信协议、SSL加密和身份验证" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -1102,14 +1102,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
+      <span>2.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
+      <span>9 分钟</span>
     </span>
 
         </div>
@@ -1290,22 +1290,25 @@ i.ban {
 <h3 id="创建证书">创建证书</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://kafka.apache.org/39/documentation.html#security_ssl">官方文档</a></p>
+</li>
+<li class="lvl-2">
 <p>生成 Broker keystore，用于 存储 broker 的私钥和证书。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">keytool -keystore kafka.server.keystore.jks \</span><br><span class="line">  -<span class="built_in">alias</span> broker -validity 365 \</span><br><span class="line">  -genkey -keyalg RSA \</span><br><span class="line">  -dname <span class="string">&quot;CN=broker, OU=Kafka, O=YourOrg, L=City, ST=State, C=CN&quot;</span> \</span><br><span class="line">  -storepass 123456 \</span><br><span class="line">  -keypass 123456</span><br><span class="line"></span><br><span class="line"><span class="comment">## 参数说明：</span></span><br><span class="line"><span class="comment"># -keystore：生成的 keystore 文件路径</span></span><br><span class="line"><span class="comment"># -alias broker：证书别名</span></span><br><span class="line"><span class="comment"># -validity 365：有效期 365 天</span></span><br><span class="line"><span class="comment"># -dname：证书信息</span></span><br><span class="line"><span class="comment"># -storepass：keystore 密码</span></span><br><span class="line"><span class="comment"># -keypass：密钥密码</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">keytool -keystore kafka.server.keystore.jks \</span><br><span class="line">  -<span class="built_in">alias</span> broker -validity 3650 \</span><br><span class="line">  -genkey -keyalg RSA \</span><br><span class="line">  -dname <span class="string">&quot;CN=broker, OU=Kafka, O=YourOrg, L=City, ST=State, C=CN&quot;</span> \</span><br><span class="line">  -storepass 123456 \</span><br><span class="line">  -keypass 123456</span><br><span class="line"><span class="comment">## 参数说明：</span></span><br><span class="line"><span class="comment"># -keystore：生成的 keystore 文件路径</span></span><br><span class="line"><span class="comment"># -alias broker：证书别名</span></span><br><span class="line"><span class="comment"># -validity 3650：有效期 3650 天</span></span><br><span class="line"><span class="comment"># -keyalg RSA：密钥算法</span></span><br><span class="line"><span class="comment"># -dname：证书信息</span></span><br><span class="line"><span class="comment"># -storepass：keystore 密码</span></span><br><span class="line"><span class="comment"># -keypass：密钥密码</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>导出 Broker 证书（用于客户端 truststore）,生成 kafka.server.crt，客户端会用它来验证 broker。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keytool -keystore kafka.server.keystore.jks \</span><br><span class="line">  -<span class="built_in">alias</span> broker -<span class="built_in">export</span> -file kafka.server.crt \</span><br><span class="line">  -storepass 123456</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">keytool -keystore kafka.server.keystore.jks \</span><br><span class="line">  -<span class="built_in">alias</span> broker -<span class="built_in">export</span> -file kafka.server.crt \</span><br><span class="line">  -storepass 123456</span><br><span class="line"><span class="comment">## 参数说明：</span></span><br><span class="line"><span class="comment"># -keystore：keystore 文件路径</span></span><br><span class="line"><span class="comment"># -alias broker：证书别名</span></span><br><span class="line"><span class="comment"># -file kafka.server.crt：导出的证书文件路径</span></span><br><span class="line"><span class="comment"># -storepass：keystore 密码</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>生成 Broker truststore，truststore 用于 存储信任的证书（这里把自己生成的证书导入进去即可）,生成 kafka.truststore.jks</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keytool -keystore kafka.truststore.jks \</span><br><span class="line">  -<span class="built_in">alias</span> broker -import -file kafka.server.crt \</span><br><span class="line">  -storepass 123456 -noprompt</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意：这里 server 端 和 client 端 可以共用一个 truststore，也可以分别创建</span></span><br><span class="line">keytool -keystore kafka.truststore.jks \</span><br><span class="line">  -<span class="built_in">alias</span> broker -import -file kafka.server.crt \</span><br><span class="line">  -storepass 123456 -noprompt</span><br><span class="line"><span class="comment"># 参数说明：</span></span><br><span class="line"><span class="comment"># -keystore：生成的 truststore 文件路径</span></span><br><span class="line"><span class="comment"># -alias broker：证书别名</span></span><br><span class="line"><span class="comment"># -file kafka.server.crt：导入的证书文件路径</span></span><br><span class="line"><span class="comment"># -storepass：truststore 密码</span></span><br><span class="line"><span class="comment"># -noprompt：不提示</span></span><br></pre></td></tr></table></figure>
 <h3 id="server-properties-配置-SASL-SSL">server.properties 配置 SASL_SSL</h3>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 监听地址和端口，这里内网和外网分开配置</span></span><br><span class="line">listeners=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9095</span><br><span class="line"><span class="comment"># 客户端建立连接后实际返回给客户端的地址</span></span><br><span class="line">advertised.listeners=INTERNAL://worker2:9092,EXTERNAL://161.189.227.200:9095</span><br><span class="line">listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:SASL_SSL</span><br><span class="line">inter.broker.listener.name=INTERNAL</span><br><span class="line"></span><br><span class="line"><span class="comment"># SASL</span></span><br><span class="line"><span class="comment"># 认证机制（常见为 PLAIN，也可以是 SCRAM-SHA-256/512）</span></span><br><span class="line"><span class="comment"># client 连接时</span></span><br><span class="line">sasl.enabled.mechanisms=PLAIN</span><br><span class="line"><span class="comment"># broker 之间连接时，需要 inter.broker.listener.name=SASL_PLAINTEXT 才有效</span></span><br><span class="line"><span class="comment">#sasl.mechanism.inter.broker.protocol=PLAIN</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># SSL</span></span><br><span class="line">ssl.keystore.location=/usr/local/kafka/kafka3/config/ssl/kafka.server.keystore.jks</span><br><span class="line">ssl.keystore.password=123456</span><br><span class="line">ssl.key.password=123456</span><br><span class="line">ssl.truststore.location=/usr/local/kafka/kafka3/config/ssl/kafka.truststore.jks</span><br><span class="line">ssl.truststore.password=123456</span><br><span class="line"><span class="comment"># 如果不要求客户端证书，可以设置 none ，要求则设置为 required</span></span><br><span class="line">ssl.client.auth=none</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
@@ -1322,22 +1325,46 @@ i.ban {
 <p>与 SASL_PLAINTEXT 一样，创建 client.conf，并添加如下信息</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">security.protocol=SASL_SSL</span><br><span class="line">sasl.mechanism=PLAIN</span><br><span class="line">sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=<span class="string">&quot;admin&quot;</span> password=<span class="string">&quot;admin-secret&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># SSL 配置</span></span><br><span class="line">ssl.truststore.location=/Users/hanqf/develop_soft/kafka/kafka3/config/ssl/kafka.truststore.jks</span><br><span class="line">ssl.truststore.password=123456</span><br><span class="line"><span class="comment"># 禁用主机名验证，否则会校验证书的 SAN</span></span><br><span class="line">ssl.endpoint.identification.algorithm=</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">security.protocol=SASL_SSL</span><br><span class="line">sasl.mechanism=PLAIN</span><br><span class="line">sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=<span class="string">&quot;admin&quot;</span> password=<span class="string">&quot;admin-secret&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># SSL 配置</span></span><br><span class="line">ssl.truststore.location=/Users/hanqf/develop_soft/kafka/kafka3/config/ssl/kafka.truststore.jks</span><br><span class="line">ssl.truststore.password=123456</span><br><span class="line"><span class="comment"># 禁用主机名验证，否则会校验证书的 SAN，证书域名校验开关，为空则表示关闭，这里需要保持关闭状态，必须设置为空</span></span><br><span class="line">ssl.endpoint.identification.algorithm=</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>命令行访问 与 SASL_PLAINTEXT 一样，这里不再赘述</p>
 </li>
+<li class="lvl-2">
+<p>关于 Kafka JKS格式的SSL证书的创建及配置可以参考<a target="_blank" rel="noopener" href="https://support.huaweicloud.com/usermanual-kafka/kafka-ug-0008.html">制作和替换Kafka JKS格式的SSL证书</a></p>
+</li>
 </ul>
+<h4 id="PEM-证书">PEM 证书</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Kafka 的 证书 默认使用 JKS 格式，但从 2.7.0 开始支持 PEM 格式</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 监听地址和端口，这里内网和外网分开配置</span></span><br><span class="line">listeners=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9095</span><br><span class="line"><span class="comment"># 客户端建立连接后实际返回给客户端的地址</span></span><br><span class="line">advertised.listeners=INTERNAL://worker2:9092,EXTERNAL://161.189.227.200:9095</span><br><span class="line">listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:SASL_SSL</span><br><span class="line">inter.broker.listener.name=INTERNAL</span><br><span class="line"></span><br><span class="line"><span class="comment"># SASL</span></span><br><span class="line"><span class="comment"># 认证机制（常见为 PLAIN，也可以是 SCRAM-SHA-256/512）</span></span><br><span class="line"><span class="comment"># client 连接时</span></span><br><span class="line">sasl.enabled.mechanisms=PLAIN</span><br><span class="line"><span class="comment"># broker 之间连接时，需要 inter.broker.listener.name=SASL_PLAINTEXT 才有效</span></span><br><span class="line"><span class="comment">#sasl.mechanism.inter.broker.protocol=PLAIN</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># SSL-PEM</span></span><br><span class="line">ssl.keystore.type=PEM <span class="comment"># 指定证书类型是PEM，支持的类型 PEM、JKS</span></span><br><span class="line">ssl.keystore.location=/usr/local/kafka/kafka3/config/ssl/fullchain.pem <span class="comment"># 包含私钥和公钥</span></span><br><span class="line"><span class="comment"># 指定客户端使用的证书类型是PEM</span></span><br><span class="line">ssl.truststore.type=PEM</span><br><span class="line">ssl.truststore.location=/usr/local/kafka/kafka3/config/ssl/server.crt <span class="comment"># 公钥</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果不要求客户端证书，可以设置 none ，要求则设置为 required</span></span><br><span class="line">ssl.client.auth=none</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>client.conf 配置如下：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">security.protocol=SASL_SSL</span><br><span class="line">sasl.mechanism=PLAIN</span><br><span class="line">sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=<span class="string">&quot;admin&quot;</span> password=<span class="string">&quot;admin-secret&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># SSL 配置，将 server 端的 server.crt 拷贝到 client 端</span></span><br><span class="line">ssl.truststore.location=/Users/hanqf/develop_soft/kafka/kafka3/config/ssl/server.crt</span><br><span class="line">ssl.truststore.type=PEM</span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁用主机名验证</span></span><br><span class="line">ssl.endpoint.identification.algorithm=</span><br></pre></td></tr></table></figure>
 <div class="tips">
 <p><em><strong>jks 证书转换为 pem 格式</strong></em></p>
 <ul class="lvl-1">
-<li class="lvl-2">导出 证书 (.crt)</li>
+<li class="lvl-2">从 JKS 导出为 PKCS#12 (.p12)</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">keytool -exportcert -<span class="built_in">alias</span> broker \</span><br><span class="line">  -keystore kafka.server.keystore.jks \</span><br><span class="line">  -rfc -file server.crt \</span><br><span class="line">  -storepass 123456</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">keytool -importkeystore \</span><br><span class="line">  -srckeystore kafka.server.keystore.jks \</span><br><span class="line">  -srcstoretype JKS \</span><br><span class="line">  -destkeystore kafka.server.p12 \</span><br><span class="line">  -deststoretype PKCS12 \</span><br><span class="line">  -srcstorepass 123456 \</span><br><span class="line">  -deststorepass 123456 \</span><br><span class="line">  -J<span class="string">&quot;-Djdk.tls.disabledAlgorithms=&quot;</span> \</span><br><span class="line">  -J<span class="string">&quot;-Dkeystore.pkcs12.legacy=false&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 说明：</span></span><br><span class="line">  <span class="comment"># -srcstoretype JKS：原始格式；</span></span><br><span class="line">  <span class="comment"># -deststoretype PKCS12：转换为通用格式；</span></span><br><span class="line">  <span class="comment"># .p12 是 PEM 的“中间格式”。</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-1">
-<li class="lvl-2">导出私钥 (.key)</li>
+<li class="lvl-2">导出证书[公钥] (.crt，这里是 PEM 格式)</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">keytool -importkeystore \</span><br><span class="line">  -srckeystore kafka.server.keystore.jks \</span><br><span class="line">  -srcalias broker \</span><br><span class="line">  -destkeystore temp.p12 \</span><br><span class="line">  -deststoretype PKCS12 \</span><br><span class="line">  -srcstorepass 123456 \</span><br><span class="line">  -deststorepass 123456</span><br><span class="line"></span><br><span class="line">openssl pkcs12 -<span class="keyword">in</span> temp.p12 -nocerts -out server.key -nodes -legacy</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="keyword">in</span> kafka.server.p12 -clcerts -nokeys -out server.crt -password pass:123456 -provider legacy -provider default</span><br><span class="line"><span class="comment">## 说明：</span></span><br><span class="line"><span class="comment"># -clcerts：只导出证书；</span></span><br><span class="line"><span class="comment"># -nokeys：不导出密钥；</span></span><br><span class="line"><span class="comment"># -out server.crt：导出文件名；</span></span><br><span class="line"><span class="comment"># -password：kafka.server.p12的密钥密码，注意密码前面加上 pass:</span></span><br><span class="line"><span class="comment"># -provider legacy：启用旧算法支持模块，在 OpenSSL 3.0（及更高版本）中，引入了一个新机制 —— Provider（算法提供者）,默认情况下，OpenSSL 只加载 modern provider（default provider），而许多老旧算法（例如 RC2、MD5、DES、SHA1）被移到了一个单独的 legacy provider 模块中。</span></span><br><span class="line"><span class="comment"># -provider default：同时启用默认 provider，因为有些命令（比如涉及现代加密算法或证书签名）还依赖默认 provider，所以两者一起使用最安全、最兼容</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-1">
+<li class="lvl-2">导出私钥 (.key，这里是 PEM 格式)</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="keyword">in</span> kafka.server.p12 -nocerts -out server.key -nodes -password pass:123456 -provider legacy -provider default</span><br><span class="line"><span class="comment">## 说明：</span></span><br><span class="line"><span class="comment"># -nocerts：只导出密钥；</span></span><br><span class="line"><span class="comment"># -out server.key：导出文件名；</span></span><br><span class="line"><span class="comment"># -nodes：不加密导出的密钥文件</span></span><br><span class="line"><span class="comment"># -password：kafka.server.p12的密钥密码，注意密码前面加上 pass:</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-1">
+<li class="lvl-2">fullchain.pem</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="keyword">in</span> kafka.server.p12 -out fullchain.pem -nodes -password pass:123456 -provider legacy -provider default</span><br></pre></td></tr></table></figure>
 </div>
 
     </div>
@@ -1383,7 +1410,7 @@ i.ban {
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2025/10/13/kafka-02-protocol/" title="Kafka 允许外网访问">https://blog.hanqunfeng.com/2025/10/13/kafka-02-protocol/</a>
+      <a href="https://blog.hanqunfeng.com/2025/10/13/kafka-02-protocol/" title="Kafka 通信协议、SSL加密和身份验证">https://blog.hanqunfeng.com/2025/10/13/kafka-02-protocol/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1478,14 +1505,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">643k</span>
+    <span title="站点总字数">645k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">38:58</span>
+    <span title="站点阅读时长">39:04</span>
   </span>
 </div>
 <div class="busuanzi-count">
