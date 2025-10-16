@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍 Kafka 的 常用命令   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
+    <meta name="description" content="摘要   本文介绍 Kafka 的 常用命令   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   Java-Client 代码示例">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kafka 的 常用命令">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/15/kafka-04-command/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 Kafka 的 常用命令   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
+<meta property="og:description" content="摘要   本文介绍 Kafka 的 常用命令   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   Java-Client 代码示例">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-10-15T12:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-15T08:06:29.036Z">
+<meta property="article:modified_time" content="2025-10-16T06:05:44.574Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#topic"><span class="nav-number">2.</span> <span class="nav-text">topic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#consumer"><span class="nav-number">3.</span> <span class="nav-text">consumer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#consumer-group"><span class="nav-number">4.</span> <span class="nav-text">consumer-group</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#producer"><span class="nav-number">5.</span> <span class="nav-text">producer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BA%8E%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91-Kafka-%E5%88%86%E5%8C%BA-Leader-%E9%80%89%E4%B8%BE-%E8%87%AA%E5%B9%B3%E8%A1%A1"><span class="nav-number">6.</span> <span class="nav-text">用于手动触发 Kafka 分区 Leader 选举(自平衡)</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#topic"><span class="nav-number">2.</span> <span class="nav-text">topic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#consumer"><span class="nav-number">3.</span> <span class="nav-text">consumer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#consumer-group"><span class="nav-number">4.</span> <span class="nav-text">consumer-group</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#producer"><span class="nav-number">5.</span> <span class="nav-text">producer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91-Kafka-Partitoin-%E7%9A%84-Leader-%E9%80%89%E4%B8%BE-%E8%87%AA%E5%B9%B3%E8%A1%A1"><span class="nav-number">6.</span> <span class="nav-text">手动触发 Kafka Partitoin 的 Leader 选举(自平衡)</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -882,7 +882,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">228</span>
+          <span class="site-state-item-count">229</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -960,6 +960,13 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/13/kafka-01-install-zookeeper%20copy/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
+        <br>
+      Kafka 的安装：基于 Zookeeper
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/10/13/kafka-01-install-zookeeper/" rel="bookmark">
         <time class="popular-posts-time">2025-10-13</time>
         <br>
@@ -974,13 +981,6 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/13/kafka-02-protocol/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-13</time>
-        <br>
-      Kafka 通信协议、SSL加密和身份验证
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/10/14/kafka-01-server-config/" rel="bookmark">
         <time class="popular-posts-time">2025-10-14</time>
         <br>
@@ -988,10 +988,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/09/15/zookeeper-study/" rel="bookmark">
-        <time class="popular-posts-time">2025-09-15</time>
+      <a class="popular-posts-link" href="/2025/10/13/kafka-02-protocol/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
         <br>
-      Zookeeper 的安装及使用
+      Kafka 通信协议、SSL加密和身份验证
       </a>
     </li>
   </ul>
@@ -1042,9 +1042,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-10-15 20:30:05 / 修改时间：16:06:29" itemprop="dateCreated datePublished" datetime="2025-10-15T20:30:05+08:00">2025-10-15</time>
+      <time title="创建时间：2025-10-15 20:30:05" itemprop="dateCreated datePublished" datetime="2025-10-15T20:30:05+08:00">2025-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-16 14:05:44" itemprop="dateModified" datetime="2025-10-16T14:05:44+08:00">2025-10-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1096,14 +1102,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.3k</span>
+      <span>1.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
+      <span>6 分钟</span>
     </span>
 
         </div>
@@ -1151,29 +1157,32 @@ i.ban {
 <li class="lvl-2">
 <p>本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。</p>
 </li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/springbootchapter/tree/master/springboot3-demo/kafka-3-demo">Java-Client 代码示例</a></p>
+</li>
 </ul>
 <span id="more"></span>
 <h2 id="topic">topic</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 topic</span></span><br><span class="line">kafka-topics.sh --create --bootstrap-server localhost:9092 --topic <span class="built_in">test</span> --partitions 3 --replication-factor 2</span><br><span class="line"><span class="comment"># --bootstrap-server 指定 kafka 集群地址</span></span><br><span class="line"><span class="comment"># --topic 创建的 topic 名称</span></span><br><span class="line"><span class="comment"># --partitions 指定分区数，不设置则默认使用 server.properties 中设置的默认值</span></span><br><span class="line"><span class="comment"># --replication-factor 指定副本数，不设置则默认使用 server.properties 中设置的默认值</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出 topic</span></span><br><span class="line">kafka-topics.sh --list --bootstrap-server localhost:9092</span><br><span class="line"><span class="comment"># 查看 topic 详情</span></span><br><span class="line">kafka-topics.sh --describe --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Topic: <span class="built_in">test</span>	TopicId: Ru0tWQJ4RMWcjjGsKAdWQg	PartitionCount: 3	ReplicationFactor: 3	Configs:</span><br><span class="line">	Topic: <span class="built_in">test</span>	Partition: 0	Leader: 3	Replicas: 3,1,2	Isr: 3,2,1	Elr: N/A	LastKnownElr: N/A</span><br><span class="line">	Topic: <span class="built_in">test</span>	Partition: 1	Leader: 1	Replicas: 1,2,3	Isr: 3,2,1	Elr: N/A	LastKnownElr: N/A</span><br><span class="line">	Topic: <span class="built_in">test</span>	Partition: 2	Leader: 2	Replicas: 2,3,1	Isr: 3,2,1	Elr: N/A	LastKnownElr: N/A</span><br><span class="line"><span class="comment">## 输出说明</span></span><br><span class="line"><span class="comment"># 总体信息（Topic 概览）Topic: test	TopicId: Ru0tWQJ4RMWcjjGsKAdWQg	PartitionCount: 3	ReplicationFactor: 3	Configs:</span></span><br><span class="line">| 字段                                  | 含义                                                            |</span><br><span class="line">| ----------------------------------- | ------------------------------------------------------------- |</span><br><span class="line">| **Topic: disTopic**                 | Topic 名称，即当前描述的主题。                                            |</span><br><span class="line">| **TopicId: VUK7Mc9oQdS1mjGG7OhQzQ** | Kafka 内部自动生成的唯一标识符（UUID），Kafka 3.x 之后引入，用于区分同名但不同生命周期的 topic。 |</span><br><span class="line">| **PartitionCount: 3**               | 该主题有 3 个分区（partition）。每个分区存储一部分消息。                            |</span><br><span class="line">| **ReplicationFactor:**              | 副本因子。这里虽然输出中没显示具体值，但可从每行分区配置推断是 **3**（每个分区有 3 个副本）。           |</span><br><span class="line">| **Configs:**                        | topic 的配置项（例如清理策略、压缩类型等），如果为空，说明使用默认配置。                       |</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分区详情（每个 Partition 一行）</span></span><br><span class="line"></span><br><span class="line">| 字段                                | 含义                                                          |</span><br><span class="line">| --------------------------------- | ----------------------------------------------------------- |</span><br><span class="line">| **Partition: 0**                  | 第 0 号分区。                                                    |</span><br><span class="line">| **Leader: 2**                     | 该分区当前的 **Leader Broker 是 broker ID = 2**，只有 Leader 才处理读写请求。 |</span><br><span class="line">| **Replicas: 2,3,1**               | 该分区的所有副本存放在哪些 Broker 上（即副本分布），分别是 broker 2、3、1。             |</span><br><span class="line">| **Isr (In-Sync Replicas): 2,3,1** | 当前与 Leader 保持同步的副本集合。这里所有副本都在同步中（健康状态 👍）。                  |</span><br><span class="line">| **Elr / LastKnownElr**            | Kafka 新版本中引入的 <span class="string">&quot;Enhanced Leader Replica&quot;</span> 状态，目前未启用（N/A）。      |</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 topic</span></span><br><span class="line">kafka-topics.sh --delete --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 topic</span></span><br><span class="line">kafka-topics.sh --create --bootstrap-server localhost:9092 --topic <span class="built_in">test</span> --partitions 3 --replication-factor 2</span><br><span class="line"><span class="comment"># --bootstrap-server 指定 kafka 集群地址</span></span><br><span class="line"><span class="comment"># --topic 创建的 topic 名称</span></span><br><span class="line"><span class="comment"># --partitions 指定分区数，不设置则默认使用 server.properties 中设置的默认值</span></span><br><span class="line"><span class="comment"># --replication-factor 指定副本数，不设置则默认使用 server.properties 中设置的默认值</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出 topic</span></span><br><span class="line">kafka-topics.sh --list --bootstrap-server localhost:9092</span><br><span class="line"><span class="comment"># 查看 topic 详情</span></span><br><span class="line">kafka-topics.sh --describe --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Topic: <span class="built_in">test</span>	TopicId: Ru0tWQJ4RMWcjjGsKAdWQg	PartitionCount: 3	ReplicationFactor: 3	Configs:</span><br><span class="line">	Topic: <span class="built_in">test</span>	Partition: 0	Leader: 3	Replicas: 3,1,2	Isr: 3,2,1	Elr: N/A	LastKnownElr: N/A</span><br><span class="line">	Topic: <span class="built_in">test</span>	Partition: 1	Leader: 1	Replicas: 1,2,3	Isr: 3,2,1	Elr: N/A	LastKnownElr: N/A</span><br><span class="line">	Topic: <span class="built_in">test</span>	Partition: 2	Leader: 2	Replicas: 2,3,1	Isr: 3,2,1	Elr: N/A	LastKnownElr: N/A</span><br><span class="line"><span class="comment">## 输出说明</span></span><br><span class="line"><span class="comment"># 总体信息（Topic 概览）Topic: test	TopicId: Ru0tWQJ4RMWcjjGsKAdWQg	PartitionCount: 3	ReplicationFactor: 3	Configs:</span></span><br><span class="line">| 字段                                  | 含义                                                            |</span><br><span class="line">| ----------------------------------- | ------------------------------------------------------------- |</span><br><span class="line">| **Topic: disTopic**                 | Topic 名称，即当前描述的主题。                                            |</span><br><span class="line">| **TopicId: VUK7Mc9oQdS1mjGG7OhQzQ** | Kafka 内部自动生成的唯一标识符（UUID），Kafka 3.x 之后引入，用于区分同名但不同生命周期的 topic。 |</span><br><span class="line">| **PartitionCount: 3**               | 该主题有 3 个分区（partition）。每个分区存储一部分消息。                            |</span><br><span class="line">| **ReplicationFactor:**              | 副本因子。这里虽然输出中没显示具体值，但可从每行分区配置推断是 **3**（每个分区有 3 个副本）。           |</span><br><span class="line">| **Configs:**                        | topic 的配置项（例如清理策略、压缩类型等），如果为空，说明使用默认配置。                       |</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分区详情（每个 Partition 一行）</span></span><br><span class="line"></span><br><span class="line">| 字段                                | 含义                                                          |</span><br><span class="line">| --------------------------------- | ----------------------------------------------------------- |</span><br><span class="line">| **Partition: 0**                  | 第 0 号分区。                                                    |</span><br><span class="line">| **Leader: 2**                     | 该分区当前的 **Leader Broker 是 broker ID = 2**，只有 Leader 才处理读写请求。 |</span><br><span class="line">| **Replicas: 2,3,1**               | 该分区的所有副本存放在哪些 Broker 上（即副本分布,AR），分别是 broker 2、3、1。             |</span><br><span class="line">| **Isr (In-Sync Replicas): 2,3,1** | 当前与 Leader 保持同步的副本集合。这里所有副本都在同步中（健康状态 👍）。                  |</span><br><span class="line">| **Elr / LastKnownElr**            | Kafka 新版本中引入的 <span class="string">&quot;Enhanced Leader Replica&quot;</span> 状态，目前未启用（N/A）。      |</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 topic</span></span><br><span class="line">kafka-topics.sh --delete --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
 <h2 id="consumer">consumer</h2>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 consumer</span></span><br><span class="line">kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic <span class="built_in">test</span> --group <span class="built_in">test</span></span><br><span class="line"><span class="comment"># --topic 指定 topic</span></span><br><span class="line"><span class="comment"># --group 指定 consumer 组</span></span><br><span class="line"></span><br><span class="line">kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic <span class="built_in">test</span>  --from-beginning</span><br><span class="line"><span class="comment"># --from-beginning 从 topic 的最开始消费</span></span><br></pre></td></tr></table></figure>
 <h2 id="consumer-group">consumer-group</h2>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出 consumer 组</span></span><br><span class="line">kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list</span><br><span class="line"><span class="comment"># --bootstrap-server 集群地址</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 consumer 组详情</span></span><br><span class="line">kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group <span class="built_in">test</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">GROUP  TOPIC  PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG  CONSUMER-ID                                             HOST         CLIENT-ID</span><br><span class="line"><span class="built_in">test</span>   <span class="built_in">test</span>   0          2               2               0    console-consumer-2102b86e-895c-4ee3-8304-6df83523d1c1  /10.250.0.7   console-consumer</span><br><span class="line"><span class="built_in">test</span>   <span class="built_in">test</span>   1          2               2               0    console-consumer-2102b86e-895c-4ee3-8304-6df83523d1c1  /10.250.0.7   console-consumer</span><br><span class="line"><span class="built_in">test</span>   <span class="built_in">test</span>   2          1               1               0    console-consumer-9ac45b29-d8f3-4649-ab09-7b567aa2ba53  /10.250.0.108 console-consumer</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出说明</span></span><br><span class="line"><span class="comment"># GROUP       消费组名称</span></span><br><span class="line"><span class="comment"># TOPIC       topic 名称</span></span><br><span class="line"><span class="comment"># PARTITION   分区编号</span></span><br><span class="line"><span class="comment"># CURRENT-OFFSET  当前消费的 offset</span></span><br><span class="line"><span class="comment"># LOG-END-OFFSET   topic 中最大的 offset</span></span><br><span class="line"><span class="comment"># LAG         当前消费的 offset 与 topic 中最大的 offset 的差值，即剩余未消费的 消息数量</span></span><br><span class="line"><span class="comment"># CONSUMER-ID  当前消费的 consumer 的 id</span></span><br><span class="line"><span class="comment"># HOST        当前消费的 consumer 的主机名</span></span><br><span class="line"><span class="comment"># CLIENT-ID   当前消费的 consumer 的客户端名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 consumer 组</span></span><br><span class="line">kafka-consumer-groups.sh --bootstrap-server localhost:9092 --delete --group <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
 <h2 id="producer">producer</h2>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 producer</span></span><br><span class="line">kafka-console-producer.sh --bootstrap-server localhost:9092 --topic <span class="built_in">test</span></span><br><span class="line"><span class="comment"># --topic 指定 topic</span></span><br></pre></td></tr></table></figure>
-<h2 id="用于手动触发-Kafka-分区-Leader-选举-自平衡">用于手动触发 Kafka 分区 Leader 选举(自平衡)</h2>
+<h2 id="手动触发-Kafka-Partitoin-的-Leader-选举-自平衡">手动触发 Kafka Partitoin 的 Leader 选举(自平衡)</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>kafka的自平衡默认开启，每隔 300秒扫描一次，如果需要平衡的比例高于 10%，则会触发一次</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启自动平衡</span></span><br><span class="line">auto.leader.rebalance.enable=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 间隔扫描时间 默认 300 秒</span></span><br><span class="line">eader.imbalance.check.interval.seconds=300</span><br><span class="line"><span class="comment"># 触发比例，即需要平衡的 partition 占全部 partition 的比例，默认 10%</span></span><br><span class="line">leader.imbalance.per.broker.percentage=10</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启自动平衡</span></span><br><span class="line">auto.leader.rebalance.enable=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 间隔扫描时间 默认 300 秒</span></span><br><span class="line">eader.imbalance.check.interval.seconds=300</span><br><span class="line"><span class="comment"># 触发比例，即扫描的 broker 上需要平衡的 partition 占当前 broker 全部 partition 的比例，默认 10%</span></span><br><span class="line">leader.imbalance.per.broker.percentage=10</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>建议关闭，改为业务低峰时手动触发</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出消费者自动平衡</span></span><br><span class="line">kafka-leader-election.sh --bootstrap-server localhost:9092  --election-type preferred --topic <span class="built_in">test</span> --partition 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自动平衡</span></span><br><span class="line">kafka-leader-election.sh --bootstrap-server localhost:9092  --election-type preferred --topic <span class="built_in">test</span> --partition 0</span><br><span class="line"><span class="comment"># --topic 指定要触发的 topic</span></span><br><span class="line"><span class="comment"># --partition 0 触发 partition 0 的 leader 选举</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>🧩 参数说明：–election-type</p>
@@ -1203,6 +1212,19 @@ i.ban {
 </tr>
 </tbody>
 </table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Leader Partition⾃动平衡机制</p>
+<ul class="lvl-2">
+<li class="lvl-6">Leader Partitoin选举机制能够保证每⼀个Partition同⼀时刻有且仅有⼀个Leader Partition。但是，是不是只要分配好了Leader Partition就够了呢？</li>
+<li class="lvl-6">在⼀组Partiton中，Leader Partition通常是⽐较繁忙的节点，因为他要负责与客户端的数据交互，以及向Follower同步数据。默认情况下，Kafka会尽量将Leader Partition分配到不同的Broker节点上，⽤以保证整个集群的性能压⼒能够⽐较平均。</li>
+<li class="lvl-6">但是，经过Leader Partition选举后，这种平衡就有可能会被打破，让Leader Partition过多的集中到同⼀个Broker上。这样，这个Broker的压⼒就会明显⾼于其他Broker，从⽽影响到集群的整体性能。</li>
+<li class="lvl-6">为此，Kafka设计了Leader Partition⾃动平衡机制，当发现Leader分配不均衡时，⾃动进⾏Leader Partition调整。</li>
+<li class="lvl-6">Kafka在进⾏Leader Partition⾃平衡时的逻辑是这样的：他会认为AR(Replicas副本集)当中的第⼀个节点就应该是Leader节点。这种选举结果成为preferred election 理想选举结果。</li>
+<li class="lvl-6">Controller会定期检测集群的Partition平衡情况，在开始检测时，Controller会依次检查所有的Broker。当发现这个Broker上的不平衡的Partition⽐例⾼于<code>leader.imbalance.per.broker.percentage</code>阈值时，就会触发⼀次Leader Partiton的⾃平衡。</li>
+</ul>
+</li>
+</ul>
 
     </div>
 
@@ -1339,14 +1361,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">645k</span>
+    <span title="站点总字数">647k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">39:04</span>
+    <span title="站点阅读时长">39:13</span>
   </span>
 </div>
 <div class="busuanzi-count">
