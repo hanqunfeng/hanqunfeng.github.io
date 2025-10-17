@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 如何将 Kafka 集群从 Zookeeper 模式迁移到 KRaft 模式   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-10-16T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-17T10:37:19.074Z">
+<meta property="article:modified_time" content="2025-10-17T11:39:40.080Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E-Zookeeper-%E6%A8%A1%E5%BC%8F%E8%BF%81%E7%A7%BB%E5%88%B0-KRaft-%E6%A8%A1%E5%BC%8F%EF%BC%88%E5%B9%B3%E6%BB%91%E8%BF%81%E7%A7%BB%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">从 Zookeeper 模式迁移到 KRaft 模式（平滑迁移）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E8%BF%81%E7%A7%BB"><span class="nav-number">3.</span> <span class="nav-text">开始迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA-Controller-%E8%8A%82%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">启动一个 Controller 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E5%8E%9F%E5%85%88%E7%9A%84%E4%B8%89%E4%B8%AA%E8%8A%82%E7%82%B9%E4%BD%9C%E4%B8%BA-Broker-%E8%8A%82%E7%82%B9%E9%87%8D%E6%96%B0%E5%90%AF%E5%8A%A8"><span class="nav-number">3.2.</span> <span class="nav-text">将原先的三个节点作为 Broker 节点重新启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E4%B8%89%E4%B8%AABroker%E8%8A%82%E7%82%B9%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9%E4%B8%BA-KRaft-%E6%A8%A1%E5%BC%8F%E7%9A%84-broker-%E8%8A%82%E7%82%B9"><span class="nav-number">3.3.</span> <span class="nav-text">将三个Broker节点的配置修改为 KRaft 模式的 broker 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86-Controller-%E8%8A%82%E7%82%B9%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9%E4%B8%BA-KRaft-%E6%A8%A1%E5%BC%8F%E7%9A%84-controller-%E8%8A%82%E7%82%B9"><span class="nav-number">3.4.</span> <span class="nav-text">将 Controller 节点的配置修改为 KRaft 模式的 controller 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E6%96%B0%E7%9A%84-Controller-%E8%8A%82%E7%82%B9"><span class="nav-number">3.5.</span> <span class="nav-text">加入新的 Controller 节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E5%90%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">迁移后注意事项</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E-Zookeeper-%E6%A8%A1%E5%BC%8F%E8%BF%81%E7%A7%BB%E5%88%B0-KRaft-%E6%A8%A1%E5%BC%8F%EF%BC%88%E5%B9%B3%E6%BB%91%E8%BF%81%E7%A7%BB%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">从 Zookeeper 模式迁移到 KRaft 模式（平滑迁移）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E8%BF%81%E7%A7%BB"><span class="nav-number">3.</span> <span class="nav-text">开始迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA-Controller-%E8%8A%82%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">启动一个 Controller 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E5%8E%9F%E5%85%88%E7%9A%84%E4%B8%89%E4%B8%AA%E8%8A%82%E7%82%B9%E4%BD%9C%E4%B8%BA-Broker-%E8%8A%82%E7%82%B9%E9%87%8D%E6%96%B0%E5%90%AF%E5%8A%A8"><span class="nav-number">3.2.</span> <span class="nav-text">将原先的三个节点作为 Broker 节点重新启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E4%B8%89%E4%B8%AABroker%E8%8A%82%E7%82%B9%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9%E4%B8%BA-KRaft-%E6%A8%A1%E5%BC%8F%E7%9A%84-broker-%E8%8A%82%E7%82%B9"><span class="nav-number">3.3.</span> <span class="nav-text">将三个Broker节点的配置修改为 KRaft 模式的 broker 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86-Controller-%E8%8A%82%E7%82%B9%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9%E4%B8%BA-KRaft-%E6%A8%A1%E5%BC%8F%E7%9A%84-controller-%E8%8A%82%E7%82%B9"><span class="nav-number">3.4.</span> <span class="nav-text">将 Controller 节点的配置修改为 KRaft 模式的 controller 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E6%96%B0%E7%9A%84-Controller-%E8%8A%82%E7%82%B9"><span class="nav-number">3.5.</span> <span class="nav-text">加入新的 Controller 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5-%E6%96%B0%E7%9A%84-Broker-%E8%8A%82%E7%82%B9"><span class="nav-number">3.6.</span> <span class="nav-text">加入 新的 Broker 节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E5%90%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">迁移后注意事项</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -967,6 +967,13 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2021/06/24/rocketmq-docker/" rel="bookmark">
+        <time class="popular-posts-time">2021-06-24</time>
+        <br>
+      RocketMQ Docker安装方式
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/10/13/kafka-01-install-zookeeper/" rel="bookmark">
         <time class="popular-posts-time">2025-10-13</time>
         <br>
@@ -974,10 +981,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/13/kafka-03-webui/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-13</time>
+      <a class="popular-posts-link" href="/2023/07/07/aws-eks07-loadbalancer/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-07</time>
         <br>
-      Kafka 的 Web UI 之 Kafbat UI
+      AWS-EKS-07--安装 AWS Load Balancer Controller 附加组件
       </a>
     </li>
     <li class="popular-posts-item">
@@ -985,13 +992,6 @@ i.ban {
         <time class="popular-posts-time">2025-10-13</time>
         <br>
       Kafka 通信协议、SSL加密和身份验证
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/07/07/aws-eks07-loadbalancer/" rel="bookmark">
-        <time class="popular-posts-time">2023-07-07</time>
-        <br>
-      AWS-EKS-07--安装 AWS Load Balancer Controller 附加组件
       </a>
     </li>
   </ul>
@@ -1050,7 +1050,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-17 18:37:19" itemprop="dateModified" datetime="2025-10-17T18:37:19+08:00">2025-10-17</time>
+      <time title="修改时间：2025-10-17 19:39:40" itemprop="dateModified" datetime="2025-10-17T19:39:40+08:00">2025-10-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1102,14 +1102,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.8k</span>
+      <span>3.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>10 分钟</span>
+      <span>11 分钟</span>
     </span>
 
         </div>
@@ -1262,7 +1262,7 @@ i.ban {
 <h3 id="启动一个-Controller-节点">启动一个 Controller 节点</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>在任意一个节点上启动一个 Controller 节点，这里假设为 worker1</p>
+<p>在任意一个节点上启动一个 Controller 节点，这里为 worker1</p>
 </li>
 <li class="lvl-2">
 <p>启动前需要先获取当前 Kafka 集群的 Cluster ID</p>
@@ -1274,13 +1274,37 @@ i.ban {
 <p>准备好 Controller 节点的配置文件，这里可以用 <code>config/kraft/controller.properties</code> 为模板进行修改</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置当前节点的角色，这里只能是controller</span></span><br><span class="line">process.roles=controller</span><br><span class="line"><span class="comment"># 节点ID，不能与现有Broker节点的ID一致</span></span><br><span class="line">node.id=3000</span><br><span class="line"><span class="comment"># 配置集群的投票节点，因为我们当前只启动了一个controller节点，所以只能配置一个投票节点</span></span><br><span class="line">controller.quorum.bootstrap.servers=worker1:9098</span><br><span class="line"><span class="comment"># 配置监听器，注意端口不能重复</span></span><br><span class="line">listeners=CONTROLLER://:9098</span><br><span class="line">advertised.listeners=CONTROLLER://worker1:9098</span><br><span class="line">controller.listener.names=CONTROLLER</span><br><span class="line"><span class="comment"># 日志存放目录，这里存放的是元数据</span></span><br><span class="line">log.dirs=/usr/local/kafka/dataDir/kraft-meta</span><br><span class="line"></span><br><span class="line"><span class="comment"># 控制是否启用 ZooKeeper → KRaft 的元数据迁移过程</span></span><br><span class="line">zookeeper.metadata.migration.enable=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ZooKeeper client 连接</span></span><br><span class="line">zookeeper.connect=worker1:2181,worker2:2181,worker3:2181</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 Kafka 集群内部（broker 与 broker、KRaft 控制器与 broker）通信所使用的监听器（listener）名称。</span></span><br><span class="line"><span class="comment"># 注意这里要与原先的 server.properties 中配置的监听器名称一致</span></span><br><span class="line">inter.broker.listener.name=PLAINTEXT</span><br><span class="line"></span><br><span class="line"><span class="comment"># 其它参数尽量保持与旧集群的配置一致</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置当前节点的角色，这里只能是controller</span></span><br><span class="line">process.roles=controller</span><br><span class="line"><span class="comment"># 节点ID，不能与现有Broker节点的ID一致</span></span><br><span class="line">node.id=3000</span><br><span class="line"><span class="comment"># 配置集群的投票节点，因为我们当前只启动了一个controller节点，所以只能配置一个投票节点</span></span><br><span class="line">controller.quorum.bootstrap.servers=worker1:9098</span><br><span class="line"><span class="comment"># 配置监听器，注意端口不能重复</span></span><br><span class="line">listeners=CONTROLLER://:9098</span><br><span class="line">advertised.listeners=CONTROLLER://worker1:9098</span><br><span class="line">controller.listener.names=CONTROLLER</span><br><span class="line"><span class="comment"># 日志存放目录，这里存放的是元数据，在格式化时这个目录必须为空目录</span></span><br><span class="line">log.dirs=/usr/local/kafka/dataDir/kraft-meta</span><br><span class="line"></span><br><span class="line"><span class="comment"># 控制是否启用 ZooKeeper → KRaft 的元数据迁移过程</span></span><br><span class="line">zookeeper.metadata.migration.enable=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ZooKeeper client 连接</span></span><br><span class="line">zookeeper.connect=worker1:2181,worker2:2181,worker3:2181</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 Kafka 集群内部（broker 与 broker、KRaft 控制器与 broker）通信所使用的监听器（listener）名称。</span></span><br><span class="line"><span class="comment"># 注意这里要与原先的 server.properties 中配置的监听器名称一致</span></span><br><span class="line">inter.broker.listener.name=PLAINTEXT</span><br><span class="line"></span><br><span class="line"><span class="comment"># 其它参数尽量保持与旧集群的配置一致</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>启动 Controller 节点</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -t 参数指定集群的 Cluster ID，就是前面获取的 Cluster ID</span></span><br><span class="line">kafka-storage.sh format --standalone -t hp_Q0pihQ0ORcIvXlfHobQ -c /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">kafka-server-start.sh /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 格式化元数据目录，log.dirs 参数指定元数据存放目录，首次运行前必须为空目录</span></span><br><span class="line"><span class="comment"># -t 参数指定集群的 Cluster ID，就是前面获取的 Cluster ID</span></span><br><span class="line">kafka-storage.sh format --standalone -t hp_Q0pihQ0ORcIvXlfHobQ -c /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br><span class="line"><span class="comment"># 启动，这里没有后台启动是为了方便观察日志输出</span></span><br><span class="line">kafka-server-start.sh /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>format 命令</th>
+<th>quorum 状态</th>
+<th>是否从 ZK 加载</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>迁移阶段（standalone）</td>
+<td><code>--standalone</code></td>
+<td>无（单节点）</td>
+<td>✅ 是</td>
+</tr>
+<tr>
+<td>正式 KRaft 模式</td>
+<td>无 <code>--standalone</code></td>
+<td>✅ 多节点</td>
+<td>❌ 否（独立运行）</td>
+</tr>
+</tbody>
+</table>
 <h3 id="将原先的三个节点作为-Broker-节点重新启动">将原先的三个节点作为 Broker 节点重新启动</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1308,7 +1332,7 @@ i.ban {
 <h3 id="将三个Broker节点的配置修改为-KRaft-模式的-broker-节点">将三个Broker节点的配置修改为 KRaft 模式的 broker 节点</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>修个三个节点的配置文件 <code>server.properties</code></p>
+<p>修改三个节点的配置文件 <code>server.properties</code></p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加process.roles=broker</span></span><br><span class="line">process.roles=broker</span><br><span class="line"><span class="comment"># 用 node.id 替换 broker.id，注意，node.id 需要与 broker.id 一致</span></span><br><span class="line"><span class="comment"># broker.id=1</span></span><br><span class="line">node.id=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 去掉 zookeeper 相关配置</span></span><br><span class="line"><span class="comment"># Don&#x27;t set the IBP, KRaft uses &quot;metadata.version&quot; feature flag</span></span><br><span class="line"><span class="comment"># inter.broker.protocol.version=3.9</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove the migration enabled flag</span></span><br><span class="line"><span class="comment"># zookeeper.metadata.migration.enable=true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove ZooKeeper client configuration</span></span><br><span class="line"><span class="comment"># zookeeper.connect=worker1:2181,worker2:2181,worker3:2181</span></span><br></pre></td></tr></table></figure>
@@ -1339,13 +1363,43 @@ i.ban {
 <h3 id="加入新的-Controller-节点">加入新的 Controller 节点</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>之前已经在 <code>worker1</code> 节点上启动了 controller ，现在 <code>worker2</code> 和 <code>worker3</code> 上也启动了 controller 节点，并将它们加入到 kafka 集群中。</p>
+<p>Controller 尽量保持 奇数个节点。</p>
+</li>
+<li class="lvl-2">
+<p>之前已经在 <code>worker1</code> 节点上启动了 controller ，现在 <code>worker2</code> 和 <code>worker3</code> 上也来启动 controller 节点，并将它们加入到 kafka 集群中。</p>
 </li>
 <li class="lvl-2">
 <p>在开始配置前，先将上面的 controller 节点 和 三个 broker 节点 的如下配置进行修改，并重启启动。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 controller.quorum.bootstrap.servers 替换为 controller.quorum.voters</span></span><br><span class="line">controller.quorum.voters=3000@worker1:9098,3001@worker2:9098,3002@worker3:9098</span><br><span class="line"><span class="comment"># controller.quorum.bootstrap.servers=worker1:9098</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 controller.quorum.bootstrap.servers 替换为 controller.quorum.voters</span></span><br><span class="line">controller.quorum.voters=3000@worker1:9098,3001@worker2:9098,3002@worker3:9098</span><br><span class="line"><span class="comment"># controller.quorum.bootstrap.servers=worker1:9098</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># controller.quorum.voters = 谁是正式投票成员（固定配置）</span></span><br><span class="line"><span class="comment"># controller.quorum.bootstrap.servers = 临时找谁引导连接（迁移或初始化用）</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>作用</th>
+<th>适用阶段</th>
+<th>是否必需</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>controller.quorum.voters</code></strong></td>
+<td>定义 <strong>正式的 KRaft 控制器投票成员列表（voter set）</strong></td>
+<td>集群正常运行时</td>
+<td>✅ 是</td>
+<td>所有节点必须配置相同的值</td>
+</tr>
+<tr>
+<td><strong><code>controller.quorum.bootstrap.servers</code></strong></td>
+<td>定义 <strong>迁移阶段或初始化阶段的控制器连接地址（bootstrap controller endpoint）</strong></td>
+<td><strong>ZK → KRaft 迁移阶段</strong> 或 <strong>KRaft 集群初次启动</strong></td>
+<td>⚙️ 可选（仅特定阶段）</td>
+<td>用于在 controller quorum 尚未形成时的临时发现</td>
+</tr>
+</tbody>
+</table>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>参考 worker1 上的 controller 节点的配置文件 <code>controller.properties</code>，配置 woker2 的 controller 节点配置文件<code>controller.properties</code> ，worker3 也是类似的。</p>
@@ -1357,7 +1411,7 @@ i.ban {
 <p>初始化日志目录</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -t 参数指定集群的 Cluster ID，就是前面获取的 Cluster ID</span></span><br><span class="line">kafka-storage.sh format -t hp_Q0pihQ0ORcIvXlfHobQ -c /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只有 Controller 节点才需要初始化日志目录</span></span><br><span class="line"><span class="comment"># -t 参数指定集群的 Cluster ID，就是前面获取的 Cluster ID</span></span><br><span class="line">kafka-storage.sh format -t hp_Q0pihQ0ORcIvXlfHobQ -c /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>分别启动 worker2 和 worker3 上的 controller 节点</p>
@@ -1366,7 +1420,7 @@ i.ban {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kafka-server-start.sh -daemon /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>此时新的 controller 节点不会立刻加入选举队列，需要执行下面的命令将节点加入选举队列</p>
+<p>此时新的 controller 节点不会立刻加入选举队列，新节点初始状态默认是 observer，需要执行下面的命令将节点加入选举队列</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分别在 worker2 和 worker3 上执行</span></span><br><span class="line">kafka-metadata-quorum.sh --bootstrap-server localhost:9092 --command-config /usr/local/kafka/kafka3/config/kraft/controller.properties add-controller</span><br></pre></td></tr></table></figure>
@@ -1375,7 +1429,16 @@ i.ban {
 <p>查看集群节点状态</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ kafka-metadata-quorum.sh --bootstrap-server worker1:9092 describe --replication</span><br><span class="line">NodeId	DirectoryId           	LogEndOffset	Lag	LastFetchTimestamp	LastCaughtUpTimestamp	Status</span><br><span class="line">3000  	RJ4oOPGgTw-KxHFNn4SmiQ	27820       	0  	1760696136345     	1760696136345        	Leader</span><br><span class="line">3001  	zGnWA7zYmRHG6bcTlFV2qA	27820       	0  	1760696136259     	1760696136259        	Follower</span><br><span class="line">3002  	gIDkhOQJEHqg-GJBdezU1Q	27820       	0  	1760696136257     	1760696136257        	Follower</span><br><span class="line">2     	9KeeAYKEQHT92DxqNSwYuA	27820       	0  	1760696136257     	1760696136257        	Observer</span><br><span class="line">1     	Q8lr8JQ2vrDS35_DrI1MxA	27820       	0  	1760696136257     	1760696136257        	Observer</span><br><span class="line">3     	rgQR5wd_i5hLgU97dCKIvA	27820       	0  	1760696136257     	1760696136257        	Observer</span><br><span class="line"></span><br><span class="line">$ kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --status</span><br><span class="line">ClusterId:              hp_Q0pihQ0ORcIvXlfHobQ</span><br><span class="line">LeaderId:               3000</span><br><span class="line">LeaderEpoch:            5</span><br><span class="line">HighWatermark:          30094</span><br><span class="line">MaxFollowerLag:         0</span><br><span class="line">MaxFollowerLagTimeMs:   0</span><br><span class="line">CurrentVoters:          [&#123;<span class="string">&quot;id&quot;</span>: 3000, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;RJ4oOPGgTw-KxHFNn4SmiQ&quot;</span>, <span class="string">&quot;endpoints&quot;</span>: [<span class="string">&quot;CONTROLLER://worker1:9098&quot;</span>]&#125;, &#123;<span class="string">&quot;id&quot;</span>: 3001, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;zGnWA7zYmRHG6bcTlFV2qA&quot;</span>, <span class="string">&quot;endpoints&quot;</span>: [<span class="string">&quot;CONTROLLER://worker2:9098&quot;</span>]&#125;, &#123;<span class="string">&quot;id&quot;</span>: 3002, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;gIDkhOQJEHqg-GJBdezU1Q&quot;</span>, <span class="string">&quot;endpoints&quot;</span>: [<span class="string">&quot;CONTROLLER://worker3:9098&quot;</span>]&#125;]</span><br><span class="line">CurrentObservers:       [&#123;<span class="string">&quot;id&quot;</span>: 2, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;9KeeAYKEQHT92DxqNSwYuA&quot;</span>&#125;, &#123;<span class="string">&quot;id&quot;</span>: 1, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;Q8lr8JQ2vrDS35_DrI1MxA&quot;</span>&#125;, &#123;<span class="string">&quot;id&quot;</span>: 3, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;rgQR5wd_i5hLgU97dCKIvA&quot;</span>&#125;]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ kafka-metadata-quorum.sh --bootstrap-server worker1:9092 describe --replication</span><br><span class="line">NodeId	DirectoryId           	LogEndOffset	Lag	LastFetchTimestamp	LastCaughtUpTimestamp	Status</span><br><span class="line">3000  	RJ4oOPGgTw-KxHFNn4SmiQ	27820       	0  	1760696136345     	1760696136345        	Leader</span><br><span class="line">3001  	zGnWA7zYmRHG6bcTlFV2qA	27820       	0  	1760696136259     	1760696136259        	Follower</span><br><span class="line">3002  	gIDkhOQJEHqg-GJBdezU1Q	27820       	0  	1760696136257     	1760696136257        	Follower</span><br><span class="line">2     	9KeeAYKEQHT92DxqNSwYuA	27820       	0  	1760696136257     	1760696136257        	Observer</span><br><span class="line">1     	Q8lr8JQ2vrDS35_DrI1MxA	27820       	0  	1760696136257     	1760696136257        	Observer</span><br><span class="line">3     	rgQR5wd_i5hLgU97dCKIvA	27820       	0  	1760696136257     	1760696136257        	Observer</span><br><span class="line"></span><br><span class="line">$ kafka-metadata-quorum.sh --bootstrap-server worker1:9092 describe --status</span><br><span class="line">ClusterId:              hp_Q0pihQ0ORcIvXlfHobQ</span><br><span class="line">LeaderId:               3000</span><br><span class="line">LeaderEpoch:            5</span><br><span class="line">HighWatermark:          30094</span><br><span class="line">MaxFollowerLag:         0</span><br><span class="line">MaxFollowerLagTimeMs:   0</span><br><span class="line">CurrentVoters:          [&#123;<span class="string">&quot;id&quot;</span>: 3000, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;RJ4oOPGgTw-KxHFNn4SmiQ&quot;</span>, <span class="string">&quot;endpoints&quot;</span>: [<span class="string">&quot;CONTROLLER://worker1:9098&quot;</span>]&#125;, &#123;<span class="string">&quot;id&quot;</span>: 3001, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;zGnWA7zYmRHG6bcTlFV2qA&quot;</span>, <span class="string">&quot;endpoints&quot;</span>: [<span class="string">&quot;CONTROLLER://worker2:9098&quot;</span>]&#125;, &#123;<span class="string">&quot;id&quot;</span>: 3002, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;gIDkhOQJEHqg-GJBdezU1Q&quot;</span>, <span class="string">&quot;endpoints&quot;</span>: [<span class="string">&quot;CONTROLLER://worker3:9098&quot;</span>]&#125;]</span><br><span class="line">CurrentObservers:       [&#123;<span class="string">&quot;id&quot;</span>: 2, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;9KeeAYKEQHT92DxqNSwYuA&quot;</span>&#125;, &#123;<span class="string">&quot;id&quot;</span>: 1, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;Q8lr8JQ2vrDS35_DrI1MxA&quot;</span>&#125;, &#123;<span class="string">&quot;id&quot;</span>: 3, <span class="string">&quot;directoryId&quot;</span>: <span class="string">&quot;rgQR5wd_i5hLgU97dCKIvA&quot;</span>&#125;]</span><br></pre></td></tr></table></figure>
+<h3 id="加入-新的-Broker-节点">加入 新的 Broker 节点</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建新的 Broker 节点时，参考其它 Broker 节点 配置好配置文件 <code>server.properties</code>，并启动 Broker 节点即可。</p>
+</li>
+<li class="lvl-2">
+<p>无需运行日志目录初始化命令，因为 Broker 节点只存放 消息 数据。</p>
+</li>
+</ul>
 <h2 id="迁移后注意事项">迁移后注意事项</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1533,7 +1596,7 @@ i.ban {
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">39:23</span>
+    <span title="站点阅读时长">39:24</span>
   </span>
 </div>
 <div class="busuanzi-count">
