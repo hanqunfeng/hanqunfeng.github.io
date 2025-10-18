@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍 CentOS9 中 Kafka 的安装与使用，基于 KRaft 模式。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   官方文档：ZooKeeper到KRaft迁移">
+    <meta name="description" content="摘要   本文介绍 CentOS9 中 Kafka 的安装与使用，基于 KRaft 模式。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   本文的安装方法同样适用于 Kafka 4.x 版本，只不过 Kafka 4.x">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kafka 的安装：基于 KRaft 模式">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/16/kafka-05-install-kraft/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 CentOS9 中 Kafka 的安装与使用，基于 KRaft 模式。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   官方文档：ZooKeeper到KRaft迁移">
+<meta property="og:description" content="摘要   本文介绍 CentOS9 中 Kafka 的安装与使用，基于 KRaft 模式。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   本文的安装方法同样适用于 Kafka 4.x 版本，只不过 Kafka 4.x">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-10-16T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-16T10:03:13.338Z">
+<meta property="article:modified_time" content="2025-10-18T12:36:02.502Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KRaft-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">KRaft 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%9A%84-KRaft-%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Kafka 的 KRaft 集群配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Kafka%E9%9B%86%E7%BE%A4"><span class="nav-number">4.</span> <span class="nav-text">启动Kafka集群</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KRaft-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">KRaft 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%9A%84-KRaft-%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Kafka 的 KRaft 集群配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Kafka%E9%9B%86%E7%BE%A4"><span class="nav-number">4.</span> <span class="nav-text">启动Kafka集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-4-0-%E7%9A%84%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">Kafka 4.0 的新特性</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -960,13 +960,6 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/16/kafka-06-zk-to-kraft/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-16</time>
-        <br>
-      Kafka 从 Zookeeper 迁移到 KRaft
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/10/13/kafka-03-webui/" rel="bookmark">
         <time class="popular-posts-time">2025-10-13</time>
         <br>
@@ -974,10 +967,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/13/kafka-01-install-zookeeper/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-13</time>
+      <a class="popular-posts-link" href="/2025/10/16/kafka-06-zk-to-kraft/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-16</time>
         <br>
-      Kafka 的安装：基于 Zookeeper
+      Kafka 从 Zookeeper 迁移到 KRaft
       </a>
     </li>
     <li class="popular-posts-item">
@@ -985,6 +978,13 @@ i.ban {
         <time class="popular-posts-time">2025-10-13</time>
         <br>
       Kafka 通信协议、SSL加密和身份验证
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/13/kafka-01-install-zookeeper/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
+        <br>
+      Kafka 的安装：基于 Zookeeper
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1042,9 +1042,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-10-16 21:30:05 / 修改时间：18:03:13" itemprop="dateCreated datePublished" datetime="2025-10-16T21:30:05+08:00">2025-10-16</time>
+      <time title="创建时间：2025-10-16 21:30:05" itemprop="dateCreated datePublished" datetime="2025-10-16T21:30:05+08:00">2025-10-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-18 20:36:02" itemprop="dateModified" datetime="2025-10-18T20:36:02+08:00">2025-10-18</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1096,14 +1102,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2k</span>
+      <span>3.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
+      <span>11 分钟</span>
     </span>
 
         </div>
@@ -1152,7 +1158,7 @@ i.ban {
 <p>本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。</p>
 </li>
 <li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://kafka.apache.org/39/documentation.html#kraft_zk_migration">官方文档：ZooKeeper到KRaft迁移</a></p>
+<p>本文的安装方法同样适用于 Kafka 4.x 版本，只不过 Kafka 4.x 中已经不再包含 ZooKeeper 相关的配置文件以及相关的命令，另外要求JDK17+。</p>
 </li>
 </ul>
 <span id="more"></span>
@@ -1288,13 +1294,131 @@ i.ban {
 <p>启动前要对日志目录进行格式化</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在worker1节点上生成集群ID</span></span><br><span class="line">$ kafka-storage.sh random-uuid</span><br><span class="line">oGwJsVANRDKYwE7Lhn2zIA</span><br><span class="line"><span class="comment"># 然后在集群的每个节点上执行如下命令，格式化日志目录，注意 --cluster-id 必须一致</span></span><br><span class="line"><span class="comment"># 必须在第一次启动前执行</span></span><br><span class="line"><span class="comment"># 不可以重复执行，否则会清空数据目录并破坏已有元数据</span></span><br><span class="line">$ kafka-storage.sh format --cluster-id oGwJsVANRDKYwE7Lhn2zIA --config /usr/local/kafka/kafka3/config/kraft/server.properties</span><br><span class="line"><span class="comment">## 格式化后会在日志目录下生成两个文件</span></span><br><span class="line"><span class="comment"># bootstrap.checkpoint # 存储元数据日志（Metadata Log）对应的初始快照偏移量（snapshot offset）。用于控制器在启动时恢复状态的起点。</span></span><br><span class="line"><span class="comment"># meta.properties # 存储节点元信息：cluster.id、node.id、version 等</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在worker1节点上生成集群ID</span></span><br><span class="line">$ kafka-storage.sh random-uuid</span><br><span class="line">oGwJsVANRDKYwE7Lhn2zIA</span><br><span class="line"><span class="comment"># 然后在集群的每个节点上执行如下命令，格式化日志目录，注意 --cluster-id 必须一致</span></span><br><span class="line"><span class="comment"># 必须在第一次启动前执行</span></span><br><span class="line"><span class="comment"># 不可以重复执行，否则会清空数据目录并破坏已有元数据</span></span><br><span class="line"><span class="comment"># 千万不要在已有 broker 的数据目录（包含消息数据的 log.dirs）上运行 kafka-storage.sh format ，那会把原有数据结构重置或踩坏。</span></span><br><span class="line"><span class="comment"># 必须明确：格式化只针对 新 controller 的 metadata 目录（且该目录必须为空）。</span></span><br><span class="line">$ kafka-storage.sh format --cluster-id oGwJsVANRDKYwE7Lhn2zIA --config /usr/local/kafka/kafka3/config/kraft/server.properties</span><br><span class="line"><span class="comment">## 格式化后会在日志目录下生成两个文件</span></span><br><span class="line"><span class="comment"># bootstrap.checkpoint # 存储元数据日志（Metadata Log）对应的初始快照偏移量（snapshot offset）。用于控制器在启动时恢复状态的起点。</span></span><br><span class="line"><span class="comment"># meta.properties # 存储节点元信息：cluster.id、node.id、version 等</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>启动集群，所以节点启动 kafka 服务</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kafka-server-start.sh -daemon /usr/local/kafka/kafka3/config/kraft/server.properties</span><br></pre></td></tr></table></figure>
+<h2 id="Kafka-4-0-的新特性">Kafka 4.0 的新特性</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>彻底以 KRaft（Kafka Raft）取代 ZooKeeper（KRaft 成为默认且唯一的元数据管理）</p>
+<ul class="lvl-2">
+<li class="lvl-4">说明：4.x 系列标志性变化是完全移除 ZooKeeper，元数据由 KRaft 管理（Controller 与 Broker 更紧密集成）。对运维而言：不再部署/维护 ZooKeeper 集群、元数据迁移/格式化步骤是升级时的关键。</li>
+<li class="lvl-4">影响/提示：必须按官方迁移流程把元数据从 ZK 导入 KRaft（若从旧版本升级）。测试迁移/备份元数据是必须项。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>新的 consumer-group 协议（更高效的 rebalance/群组管理）与消费模型改进（包括“Queues/Shared Group”支持）</p>
+<ul class="lvl-2">
+<li class="lvl-4">说明：引入/稳定了新的 Consumer Group 协议（相关 KIP），显著改善大群组下的重平衡延迟与稳定性；同时引入了类似“队列/共享组（Queues for Kafka）”的消费模式（用例：点对点消费），允许多消费者同时处理同一分区消息。</li>
+<li class="lvl-4">影响/提示：如果你有大规模消费者群组或依赖旧 rebalance 行为，需要测试新协议行为；某些客户端配置/行为可能需要调整。</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>指标类别</th>
+<th>旧协议（Eager Rebalance）</th>
+<th>新协议（Incremental / Cooperative Rebalance）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>重平衡延迟（大规模群组）</td>
+<td>约 <strong>60 秒</strong>（万级消费者规模）</td>
+<td>小于 <strong>1 秒</strong>（测试显示在千级任务时可在一分钟内完成） (<a target="_blank" rel="noopener" href="https://www.confluent.io/blog/incremental-cooperative-rebalancing-in-kafka/?utm_source=chatgpt.com" title="Incremental Cooperative Rebalancing in Apache Kafka">Confluent</a>)</td>
+</tr>
+<tr>
+<td>资源消耗（CPU）</td>
+<td>较高（在重平衡期间系统停止或大规模迁移资源）</td>
+<td>据称可降低约 <strong>70%</strong> 的 CPU／系统中断负荷（社区经验）</td>
+</tr>
+<tr>
+<td>消费者群组扩展上限</td>
+<td>适用于“千级消费者”规模</td>
+<td>可扩展至“十万级消费者”规模（理论/社区宣称）</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>传统消费者组（Consumer Group）</strong></th>
+<th><strong>共享组（Shared Group / Queues for Kafka）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>并行消费模型</strong></td>
+<td>分区数 = 消费者数（一个分区只能被一个消费者消费）</td>
+<td>消费者数 &gt; 分区数（同一分区可由多个消费者并行处理）</td>
+</tr>
+<tr>
+<td><strong>消息确认机制</strong></td>
+<td>通过提交偏移量（Offset Commit）实现确认</td>
+<td>每条消息单独确认（ACK/NACK 机制）</td>
+</tr>
+<tr>
+<td><strong>投递语义</strong></td>
+<td><strong>At-Least-Once</strong>（至少一次投递）</td>
+<td><strong>Exactly-Once（可选）</strong>，支持精确一次处理</td>
+</tr>
+<tr>
+<td><strong>典型场景</strong></td>
+<td>流式日志、监控、顺序性要求高的场景</td>
+<td>任务队列、并行计算、高吞吐任务处理</td>
+</tr>
+<tr>
+<td><strong>实现方式</strong></td>
+<td>基于 Topic-Partition 分配与偏移管理</td>
+<td>基于共享队列模型，允许多消费者竞争消费同一分区</td>
+</tr>
+<tr>
+<td><strong>Kafka 版本支持</strong></td>
+<td>Kafka ≤ 3.x</td>
+<td>Kafka 4.x 引入（KIP-932 “Queues for Kafka”）</td>
+</tr>
+<tr>
+<td><strong>优势</strong></td>
+<td>顺序保证强、模型成熟稳定</td>
+<td>并行能力强、吞吐提升、支持精确一次语义</td>
+</tr>
+<tr>
+<td><strong>劣势</strong></td>
+<td>分区限制吞吐，扩展受限</td>
+<td>顺序性可能减弱，实现更复杂</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>删除长期弃用的旧 API / 协议（向后不兼容的清理）</p>
+<ul class="lvl-2">
+<li class="lvl-4">说明：4.x 移除了那些已弃用 ≥12 个月的接口/协议，旨在简化代码库并鼓励采用新功能。</li>
+<li class="lvl-4">影响/提示：升级前务必检查你使用到的 Broker/Client/Streams/Connect API 是否依赖被移除的功能；测试客户端与第三方 Connector/插件兼容性。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>Java 运行环境最低版本更新：Clients/Streams 与 Broker/Tools 的 JDK 要求提高</p>
+<ul class="lvl-2">
+<li class="lvl-4">说明：Kafka 4.x 将客户端（Kafka Clients、Kafka Streams）与 Broker/Connect/工具分别提出了更高的 Java baseline（Clients/Streams 最低 Java 11，Broker/Connect/Tools 最低 Java 17 等）。</li>
+<li class="lvl-4">影响/提示：升级集群前先统一平台 JDK 版本，CI/CD/容器镜像也要对应更新。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>许多新的 KIP（功能增强）与性能/可观测性改进</p>
+<ul class="lvl-2">
+<li class="lvl-4">说明：包含改进的 Streams rebalance、更多 Admin/运维命令、节点注册/列举能力、插件/指标扩展点等（多项 KIP 在 4.0/4.1 陆续落地）。这些改进覆盖 Broker、Controller、Producer、Consumer、Admin 和 Streams 子系统。</li>
+<li class="lvl-4">影响/提示：运维与监控面板可能受益（新增可观测指标/API）；如果你有自定义插件或监控接入，需要检查新的插件/metrics 注册机制。</li>
+</ul>
+</li>
+</ul>
+
     </div>
 
     
@@ -1433,14 +1557,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">650k</span>
+    <span title="站点总字数">651k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">39:24</span>
+    <span title="站点阅读时长">39:29</span>
   </span>
 </div>
 <div class="busuanzi-count">

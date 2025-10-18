@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍 如何将 Kafka 集群从 Zookeeper 模式迁移到 KRaft 模式   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
+    <meta name="description" content="摘要   本文介绍 如何将 Kafka 集群从 Zookeeper 模式迁移到 KRaft 模式   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   官方文档：ZooKeeper到KRaft迁移">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kafka 从 Zookeeper 迁移到 KRaft">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/16/kafka-06-zk-to-kraft/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 如何将 Kafka 集群从 Zookeeper 模式迁移到 KRaft 模式   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。">
+<meta property="og:description" content="摘要   本文介绍 如何将 Kafka 集群从 Zookeeper 模式迁移到 KRaft 模式   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   官方文档：ZooKeeper到KRaft迁移">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-10-16T14:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-17T11:39:40.080Z">
+<meta property="article:modified_time" content="2025-10-18T11:56:31.757Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
@@ -981,17 +981,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/07/07/aws-eks07-loadbalancer/" rel="bookmark">
-        <time class="popular-posts-time">2023-07-07</time>
-        <br>
-      AWS-EKS-07--安装 AWS Load Balancer Controller 附加组件
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/10/13/kafka-02-protocol/" rel="bookmark">
         <time class="popular-posts-time">2025-10-13</time>
         <br>
       Kafka 通信协议、SSL加密和身份验证
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/13/kafka-03-webui/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
+        <br>
+      Kafka 的 Web UI 之 Kafbat UI
       </a>
     </li>
   </ul>
@@ -1050,7 +1050,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-17 19:39:40" itemprop="dateModified" datetime="2025-10-17T19:39:40+08:00">2025-10-17</time>
+      <time title="修改时间：2025-10-18 19:56:31" itemprop="dateModified" datetime="2025-10-18T19:56:31+08:00">2025-10-18</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1102,14 +1102,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.1k</span>
+      <span>3.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
+      <span>12 分钟</span>
     </span>
 
         </div>
@@ -1156,6 +1156,9 @@ i.ban {
 </li>
 <li class="lvl-2">
 <p>本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://kafka.apache.org/39/documentation.html#kraft_zk_migration">官方文档：ZooKeeper到KRaft迁移</a></p>
 </li>
 </ul>
 <span id="more"></span>
@@ -1280,6 +1283,10 @@ i.ban {
 <p>启动 Controller 节点</p>
 </li>
 </ul>
+<blockquote>
+<p>千万不要在已有 broker 的数据目录（包含消息数据的 log.dirs）上运行 <a target="_blank" rel="noopener" href="http://kafka-storage.sh">kafka-storage.sh</a> format ，那会把原有数据结构重置或踩坏。<br>
+必须明确：格式化只针对 新 controller 的 metadata 目录（且该目录必须为空）。</p>
+</blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 格式化元数据目录，log.dirs 参数指定元数据存放目录，首次运行前必须为空目录</span></span><br><span class="line"><span class="comment"># -t 参数指定集群的 Cluster ID，就是前面获取的 Cluster ID</span></span><br><span class="line">kafka-storage.sh format --standalone -t hp_Q0pihQ0ORcIvXlfHobQ -c /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br><span class="line"><span class="comment"># 启动，这里没有后台启动是为了方便观察日志输出</span></span><br><span class="line">kafka-server-start.sh /usr/local/kafka/kafka3/config/kraft/controller.properties</span><br></pre></td></tr></table></figure>
 <table>
 <thead>
@@ -1311,7 +1318,7 @@ i.ban {
 <p>修改原先的配置文件 <code>server.properties</code>，只需要修改如下内容即可</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在最后加入 CONTROLLER:PLAINTEXT</span></span><br><span class="line">listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL,CONTROLLER:PLAINTEXT</span><br><span class="line"></span><br><span class="line"><span class="comment">## 以下是新加入的 配置项</span></span><br><span class="line"><span class="comment"># Set the IBP</span></span><br><span class="line">inter.broker.protocol.version=3.9</span><br><span class="line"></span><br><span class="line"><span class="comment"># 控制是否启用 ZooKeeper → KRaft 的元数据迁移过程</span></span><br><span class="line">zookeeper.metadata.migration.enable=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># KRaft controller quorum configuration，因为目前只启动了一个 controller 节点，所以只能配置一个投票节点</span></span><br><span class="line">controller.quorum.bootstrap.servers=worker1:9098</span><br><span class="line"><span class="comment"># 控制器监听器名称，要与 contreller 节点配置文件 controller.properties 中的配置一致</span></span><br><span class="line">controller.listener.names=CONTROLLER</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在最后加入 CONTROLLER:PLAINTEXT</span></span><br><span class="line">listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL,CONTROLLER:PLAINTEXT</span><br><span class="line"></span><br><span class="line"><span class="comment">## 以下是新加入的 配置项</span></span><br><span class="line"><span class="comment"># Set the IBP，当前 kafka 版本是 3.9.1，所以这里设置为 3.9</span></span><br><span class="line">inter.broker.protocol.version=3.9</span><br><span class="line"></span><br><span class="line"><span class="comment"># 控制是否启用 ZooKeeper → KRaft 的元数据迁移过程</span></span><br><span class="line">zookeeper.metadata.migration.enable=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># KRaft controller quorum configuration，因为目前只启动了一个 controller 节点，所以只能配置一个投票节点</span></span><br><span class="line">controller.quorum.bootstrap.servers=worker1:9098</span><br><span class="line"><span class="comment"># 控制器监听器名称，要与 contreller 节点配置文件 controller.properties 中的配置一致</span></span><br><span class="line">controller.listener.names=CONTROLLER</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>分别重新启动三个节点</p>
@@ -1589,14 +1596,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">650k</span>
+    <span title="站点总字数">651k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">39:24</span>
+    <span title="站点阅读时长">39:29</span>
   </span>
 </div>
 <div class="busuanzi-count">
