@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 CentOS9 中 Kafka 的安装与使用，基于 KRaft 模式。   Kafka官网   本文使用的 Kafka 版本为 3.9.1。Kafka 团队宣布 3.9 会是 最后一个还带有被弃用的 ZooKeeper 模式 的主要版本。以后版本（如 4.0）将完全弃用 ZooKeeper。   本文的安装方法同样适用于 Kafka 4.x 版本，只不过 Kafka 4.x">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-10-16T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-18T12:36:02.502Z">
+<meta property="article:modified_time" content="2025-10-19T02:48:43.911Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
@@ -867,7 +867,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KRaft-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">KRaft 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%9A%84-KRaft-%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Kafka 的 KRaft 集群配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Kafka%E9%9B%86%E7%BE%A4"><span class="nav-number">4.</span> <span class="nav-text">启动Kafka集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-4-0-%E7%9A%84%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">Kafka 4.0 的新特性</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KRaft-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">KRaft 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%9A%84-KRaft-%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Kafka 的 KRaft 集群配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Kafka%E9%9B%86%E7%BE%A4"><span class="nav-number">4.</span> <span class="nav-text">启动Kafka集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">5.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-4-0-%E7%9A%84%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">Kafka 4.0 的新特性</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -882,13 +882,13 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">230</span>
+          <span class="site-state-item-count">231</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-count">50</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -960,17 +960,17 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/13/kafka-03-webui/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-13</time>
-        <br>
-      Kafka 的 Web UI 之 Kafbat UI
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/10/16/kafka-06-zk-to-kraft/" rel="bookmark">
         <time class="popular-posts-time">2025-10-16</time>
         <br>
       Kafka 从 Zookeeper 迁移到 KRaft
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/13/kafka-03-webui/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
+        <br>
+      Kafka 的 Web UI 之 Kafbat UI
       </a>
     </li>
     <li class="popular-posts-item">
@@ -988,10 +988,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/15/kafka-04-command/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-15</time>
+      <a class="popular-posts-link" href="/2021/06/24/rocketmq-docker/" rel="bookmark">
+        <time class="popular-posts-time">2021-06-24</time>
         <br>
-      Kafka 的 常用命令
+      RocketMQ Docker安装方式
       </a>
     </li>
   </ul>
@@ -1050,7 +1050,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-18 20:36:02" itemprop="dateModified" datetime="2025-10-18T20:36:02+08:00">2025-10-18</time>
+      <time title="修改时间：2025-10-19 10:48:43" itemprop="dateModified" datetime="2025-10-19T10:48:43+08:00">2025-10-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1102,14 +1102,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.1k</span>
+      <span>3.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
+      <span>12 分钟</span>
     </span>
 
         </div>
@@ -1275,7 +1275,7 @@ i.ban {
 <li class="lvl-2">
 <p>在Kafka的config目录下，提供了一个kraft的文件夹，在这里面提供了三个Kraft协议的参考配置文件</p>
 <ul class="lvl-2">
-<li class="lvl-4">broker.properties: 数据节点</li>
+<li class="lvl-4">broker.properties: 数据节点，client连接时只连接broker数据节点</li>
 <li class="lvl-4">controller.properties: Controller控制节点</li>
 <li class="lvl-4">server.properties: 即可以是数据节点，又可以是Controller控制节点。</li>
 </ul>
@@ -1301,6 +1301,18 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kafka-server-start.sh -daemon /usr/local/kafka/kafka3/config/kraft/server.properties</span><br></pre></td></tr></table></figure>
+<h2 id="注意事项">注意事项</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Kafka 集群的启动顺序不能乱，必须先启动 Controller 节点，再启动 Broker 节点，我们这里是将节点同时做为Controller 和 Broker ，实际生产环境建议分开。</p>
+</li>
+<li class="lvl-2">
+<p>Controller 节点至少3个，建议配置为奇数个。Broker 节点数量任意，但建议至少2个以上，以保证分区的备份可以分开存储。</p>
+</li>
+<li class="lvl-2">
+<p>Client 仅能与 Broker 节点通信，不能与 Controller 节点通信。</p>
+</li>
+</ul>
 <h2 id="Kafka-4-0-的新特性">Kafka 4.0 的新特性</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1557,14 +1569,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">651k</span>
+    <span title="站点总字数">655k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">39:29</span>
+    <span title="站点阅读时长">39:42</span>
   </span>
 </div>
 <div class="busuanzi-count">
