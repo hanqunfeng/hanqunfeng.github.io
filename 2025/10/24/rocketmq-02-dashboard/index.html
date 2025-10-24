@@ -22,27 +22,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要   本文介绍 CentOS9 中 RocketMQ 的安装与使用。   RocketMQ官网   本文使用的 RocketMQ 版本为 5.3.2。">
+    <meta name="description" content="摘要   本文介绍 CentOS9 中 RocketMQ Dashboard 的安装与使用。   RocketMQ官网   本文使用的 RocketMQ 版本为 5.3.2。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RocketMQ 的安装及使用">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/23/rocketmq-install-01/index.html">
+<meta property="og:title" content="RocketMQ Dashboard 的安装及使用">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/10/24/rocketmq-02-dashboard/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 CentOS9 中 RocketMQ 的安装与使用。   RocketMQ官网   本文使用的 RocketMQ 版本为 5.3.2。">
+<meta property="og:description" content="摘要   本文介绍 CentOS9 中 RocketMQ Dashboard 的安装与使用。   RocketMQ官网   本文使用的 RocketMQ 版本为 5.3.2。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-10-23T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-23T10:05:06.570Z">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/9F26eh.png">
+<meta property="article:published_time" content="2025-10-24T13:30:05.000Z">
+<meta property="article:modified_time" content="2025-10-24T11:50:46.835Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="rocketmq">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/9F26eh.png">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2025/10/23/rocketmq-install-01/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/10/24/rocketmq-02-dashboard/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/10/23/rocketmq-install-01/","path":"2025/10/23/rocketmq-install-01/","title":"RocketMQ 的安装及使用"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/10/24/rocketmq-02-dashboard/","path":"2025/10/24/rocketmq-02-dashboard/","title":"RocketMQ Dashboard 的安装及使用"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>RocketMQ 的安装及使用 | 飘逸峰的博客</title>
+<title>RocketMQ Dashboard 的安装及使用 | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -867,7 +869,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-RocketMQ-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Apache RocketMQ 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81RocketMQ-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">一、RocketMQ 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E7%89%B9%E7%82%B9%E4%B8%8E%E4%BC%98%E5%8A%BF"><span class="nav-number">2.2.</span> <span class="nav-text">二、核心特点与优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%A6%82%E5%BF%B5"><span class="nav-number">2.3.</span> <span class="nav-text">三、核心架构与概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E7%BB%8F%E5%85%B8%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6-RocketMQ-4-x"><span class="nav-number">2.3.1.</span> <span class="nav-text">3.1 经典核心组件 (RocketMQ 4.x)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-RocketMQ-5-%E7%9A%84%E6%96%B0%E6%A0%B8%E5%BF%83%EF%BC%9AProxy"><span class="nav-number">2.3.2.</span> <span class="nav-text">3.2 RocketMQ 5 的新核心：Proxy</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.4.</span> <span class="nav-text">四、典型应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RocketMQ-%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">RocketMQ 的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">单机安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-Proxy-%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.1.1.</span> <span class="nav-text">启动 Proxy 遇到的问题</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RocketMQ-Dashboard-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">RocketMQ Dashboard 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RocketMQ-Dashboard-%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">RocketMQ Dashboard 的安装</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -882,7 +884,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">231</span>
+          <span class="site-state-item-count">232</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -960,6 +962,27 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/23/rocketmq-01-install/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-23</time>
+        <br>
+      RocketMQ 的安装及使用
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/24/k8s-ui-dashboard/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-24</time>
+        <br>
+      K8S UI 之 Dashboard
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/07/07/aws-eks12-dashboard/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-07</time>
+        <br>
+      AWS-EKS-12--部署 Dashboard UI
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2021/06/24/rocketmq-docker/" rel="bookmark">
         <time class="popular-posts-time">2021-06-24</time>
         <br>
@@ -967,31 +990,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/09/04/springboot3-shardingsphere-proxy/" rel="bookmark">
-        <time class="popular-posts-time">2025-09-04</time>
-        <br>
-      SpringBoot3 + ShardingSphere-Proxy5.5.2 分库分表
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/10/16/kafka-06-zk-to-kraft/" rel="bookmark">
         <time class="popular-posts-time">2025-10-16</time>
         <br>
       Kafka 从 Zookeeper 迁移到 KRaft
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/13/kafka-02-protocol/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-13</time>
-        <br>
-      Kafka 通信协议、SSL加密和身份验证
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/07/07/aws-eks04-vpc-cni/" rel="bookmark">
-        <time class="popular-posts-time">2023-07-07</time>
-        <br>
-      AWS-EKS-04--安装 Amazon VPC CNI
       </a>
     </li>
   </ul>
@@ -1014,7 +1016,7 @@ i.ban {
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/10/23/rocketmq-install-01/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/10/24/rocketmq-02-dashboard/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -1027,12 +1029,12 @@ i.ban {
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="RocketMQ 的安装及使用 | 飘逸峰的博客">
+      <meta itemprop="name" content="RocketMQ Dashboard 的安装及使用 | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          RocketMQ 的安装及使用
+          RocketMQ Dashboard 的安装及使用
         </h1>
 
         <div class="post-meta-container">
@@ -1044,7 +1046,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-10-23 21:30:05 / 修改时间：18:05:06" itemprop="dateCreated datePublished" datetime="2025-10-23T21:30:05+08:00">2025-10-23</time>
+      <time title="创建时间：2025-10-24 21:30:05 / 修改时间：19:50:46" itemprop="dateCreated datePublished" datetime="2025-10-24T21:30:05+08:00">2025-10-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1084,7 +1086,7 @@ i.ban {
 </div>
 
 
-    <span id="/2025/10/23/rocketmq-install-01/" class="leancloud_visitors" data-flag-title="RocketMQ 的安装及使用" title="阅读次数">
+    <span id="/2025/10/24/rocketmq-02-dashboard/" class="leancloud_visitors" data-flag-title="RocketMQ Dashboard 的安装及使用" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -1096,14 +1098,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.3k</span>
+      <span>929</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>8 分钟</span>
+      <span>3 分钟</span>
     </span>
 
         </div>
@@ -1143,7 +1145,7 @@ i.ban {
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>本文介绍 CentOS9 中 RocketMQ 的安装与使用。</p>
+<p>本文介绍 CentOS9 中 RocketMQ Dashboard 的安装与使用。</p>
 </li>
 <li class="lvl-2">
 <p><a target="_blank" rel="noopener" href="https://rocketmq.apache.org/zh/">RocketMQ官网</a></p>
@@ -1153,202 +1155,159 @@ i.ban {
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="Apache-RocketMQ-简介">Apache RocketMQ 简介</h2>
-<h3 id="一、RocketMQ-是什么？">一、RocketMQ 是什么？</h3>
-<p>RocketMQ 是一个<strong>分布式、队列模型的消息中间件</strong>。它由阿里巴巴在2012年开源，并于2017年正式成为 Apache 基金会的顶级项目。</p>
-<p>你可以把它想象成一个在分布式系统中负责可靠传递消息的“邮局”或“快递系统”。当系统A需要发送数据给系统B，但它们之间不直接通信时，就可以通过 RocketMQ 来中转，确保消息不丢失、不重复，并且能按顺序送达。</p>
-<p><strong>RocketMQ 是一个高性能、高可靠、高实时的分布式消息中间件</strong>。它就像分布式系统的“中枢神经系统”，负责在各个服务之间可靠、高效地传递数据，是现代互联网架构中不可或缺的基础组件之一。</p>
-<p><strong>RocketMQ 5.x 通过引入 Proxy 模式，极大地提升了架构的灵活性、多语言支持能力和云原生亲和力</strong>，是其在消息中间件领域持续演进的重要里程碑。</p>
-<p>它与 Kafka、RabbitMQ 等都是业界顶级的消息队列，但各有侧重。RocketMQ 在事务消息、顺序消息和对在线业务的稳定性支持方面表现尤为出色。</p>
-<hr>
-<h3 id="二、核心特点与优势">二、核心特点与优势</h3>
-<p>RocketMQ 之所以流行，主要归功于以下几个核心特点：</p>
-<ol>
-<li class="lvl-4">
-<p><strong>削峰填谷</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8"><strong>场景</strong>：电商秒杀活动时，瞬时会有海量下单请求涌来，后端处理系统可能无法承受。</li>
-<li class="lvl-8"><strong>作用</strong>：RocketMQ 可以将这些突发的请求消息先缓存起来，然后让后端系统按照自己能处理的速率慢慢消费，避免了系统被冲垮。这就好比用一个大水库先拦住洪水，再平稳地向下游放水。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>异步解耦</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8"><strong>场景</strong>：用户注册后，需要发送欢迎邮件、发放优惠券、初始化积分等。</li>
-<li class="lvl-8"><strong>作用</strong>：主注册流程只需要向 RocketMQ 发送一个“用户已注册”的消息，而不需要等待所有后续操作完成。负责邮件、优惠券的系统会自己去 RocketMQ 取消息并处理。这样，系统之间的依赖关系就变弱了，提高了整体的灵活性和可维护性。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>顺序消息</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8"><strong>场景</strong>：一个订单的状态必须严格按照 <code>创建 -&gt; 付款 -&gt; 发货 -&gt; 确认收货</code> 的顺序来变更。</li>
-<li class="lvl-8"><strong>作用</strong>：RocketMQ 可以保证同一个订单ID的消息被存储在同一个队列中，并按照发送顺序被消费，确保了业务逻辑的正确性。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>持久性与高可靠</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">RocketMQ 会将所有消息持久化到磁盘，即使服务器重启，消息也不会丢失。</li>
-<li class="lvl-8">它本身采用分布式集群架构，支持主从复制，提供了极高的可用性。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>消息回溯</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">消费者可以重置消费位点，重新消费过去某个时间点的消息。这在业务逻辑出错、需要重新处理时非常有用。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>海量消息堆积能力</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">能够支持万亿级别的消息堆积，不会因为大量未消费消息而导致性能急剧下降。</li>
-</ul>
-</li>
-</ol>
-<hr>
-<h3 id="三、核心架构与概念">三、核心架构与概念</h3>
-<p>要理解 RocketMQ，需要知道几个关键角色：</p>
-<h4 id="3-1-经典核心组件-RocketMQ-4-x">3.1 经典核心组件 (RocketMQ 4.x)</h4>
-<ul class="lvl-0">
-<li class="lvl-4">
-<p><strong>Producer（生产者）</strong>：发送消息的客户端。</p>
-</li>
-<li class="lvl-4">
-<p><strong>Consumer（消费者）</strong>：接收消息的客户端。</p>
-</li>
-<li class="lvl-4">
-<p><strong>Broker</strong>：消息服务器，负责存储和转发消息。它是 RocketMQ 的核心。</p>
-</li>
-<li class="lvl-4">
-<p><strong>Topic（主题）</strong>：消息的分类，生产者向指定的 Topic 发送消息，消费者订阅指定的 Topic 来消费消息。例如，可以有一个 “Order_Topic” 专门用来处理所有订单相关的消息。</p>
-</li>
-<li class="lvl-4">
-<p><strong>Name Server（名字服务）</strong>：一个轻量级的注册中心，负责管理所有 Broker 的地址信息，帮助生产者和消费者找到对应的 Broker。</p>
-</li>
-</ul>
-<h4 id="3-2-RocketMQ-5-的新核心：Proxy">3.2 RocketMQ 5 的新核心：Proxy</h4>
-<p>在 RocketMQ 5.x 版本中，引入了一个新的关键组件——<strong>Proxy</strong>。</p>
-<ul class="lvl-0">
-<li class="lvl-4">
-<p><strong>Proxy（代理）</strong>：一个无状态的网络代理层，可以独立部署。</p>
-</li>
-</ul>
-<p><strong>引入 Proxy 主要有两种模式：</strong></p>
-<ol>
-<li class="lvl-4">
-<p><strong>集群部署模式 (Cluster Mode)</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">这是经典的部署方式。生产者和消费者直接与 Broker 通信。</li>
-<li class="lvl-8"><strong>架构</strong>：<code>Producer/Consumer &lt;--&gt; Broker &lt;--&gt; Name Server</code></li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>Proxy 部署模式</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">这是 RocketMQ 5.x 推荐的新模式。所有客户端的请求都先经过 Proxy，由 Proxy 代理与 Broker 和 Name Server 进行交互。</li>
-<li class="lvl-8"><strong>架构</strong>：<code>Producer/Consumer &lt;--&gt; Proxy &lt;--&gt; Broker &lt;--&gt; Name Server</code></li>
-</ul>
-</li>
-</ol>
-<p><strong>引入 Proxy 模式的优势：</strong></p>
-<ul class="lvl-0">
-<li class="lvl-4">
-<p><strong>架构解耦与语言无关</strong>：Proxy 作为通用代理，将复杂的 Broker 协议封装成更简单的接口（如 gRPC），使得用不同编程语言（如 Go, Python, C++ 等）开发的客户端更容易接入，而无需实现复杂的原生协议。</p>
-</li>
-<li class="lvl-4">
-<p><strong>简化客户端</strong>：客户端不再需要感知 Name Server 和 Broker 的地址变化，只需连接固定的 Proxy 地址即可，大大降低了客户端的复杂度。</p>
-</li>
-<li class="lvl-4">
-<p><strong>增强安全性</strong>：可以在 Proxy 层统一实现安全认证、限流、审计等策略，作为Broker集群的安全屏障。</p>
-</li>
-<li class="lvl-4">
-<p><strong>云原生友好</strong>：无状态的 Proxy 非常适合在 Kubernetes 等容器化环境中进行部署和弹性伸缩。</p>
-</li>
-</ul>
-<hr>
-<h3 id="四、典型应用场景">四、典型应用场景</h3>
-<ul class="lvl-0">
-<li class="lvl-4">
-<p><strong>电商/金融交易系统</strong>：保证交易核心流程的可靠、顺序和最终一致性。</p>
-</li>
-<li class="lvl-4">
-<p><strong>大数据采集</strong>：将大量日志、行为数据先写入消息队列，再由后端的大数据处理系统（如 Flink, Spark）消费。</p>
-</li>
-<li class="lvl-4">
-<p><strong>微服务间的异步通信</strong>：在微服务架构中，作为服务之间的通信总线。</p>
-</li>
-</ul>
-<hr>
-<h2 id="RocketMQ-的安装">RocketMQ 的安装</h2>
+<h2 id="RocketMQ-Dashboard-简介">RocketMQ Dashboard 简介</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>RocketMQ 5.x 依赖 JDK 1.8+。</p>
+<p><a target="_blank" rel="noopener" href="https://rocketmq.apache.org/zh/docs/deploymentOperations/04Dashboard">官方文档</a></p>
+</li>
+<li class="lvl-2">
+<p>RocketMQ Dashboard 是 RocketMQ 的管控利器，为用户提供客户端和应用程序的各种事件、性能的统计信息，支持以可视化工具代替 Topic 配置、Broker 管理等命令行操作。</p>
+</li>
+<li class="lvl-2">
+<p>功能概览</p>
 </li>
 </ul>
-<h3 id="单机安装">单机安装</h3>
+<table>
+<thead>
+<tr>
+<th>面板</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>运维</strong></td>
+<td>修改 <strong>NameServer 地址</strong>；选择 <strong>VIPChannel</strong> 等运维配置。</td>
+</tr>
+<tr>
+<td><strong>驾驶舱</strong></td>
+<td>查看 <strong>Broker、Topic 消息量</strong> 等运行总览信息。</td>
+</tr>
+<tr>
+<td><strong>集群</strong></td>
+<td>查看 <strong>集群分布</strong>、Broker 配置、运行状态及详细信息。</td>
+</tr>
+<tr>
+<td><strong>主题（Topic）</strong></td>
+<td>搜索、筛选、删除、更新/新增主题；查看 <strong>消息路由</strong>；执行 <strong>发送消息</strong>、<strong>重置消费位点</strong> 等操作。</td>
+</tr>
+<tr>
+<td><strong>消费者（Consumer）</strong></td>
+<td>搜索、删除、新增/更新消费者组；查看 <strong>终端信息、消费详情、配置项</strong>。</td>
+</tr>
+<tr>
+<td><strong>消息（Message）</strong></td>
+<td>查看 <strong>消息记录、死信消息、消息轨迹</strong> 等消息级详情。</td>
+</tr>
+</tbody>
+</table>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><a target="_blank" rel="noopener" href="https://rocketmq.apache.org/zh/docs/quickStart/01quickstart">官方文档</a></p>
-</li>
-<li class="lvl-2">
-<p>下载RocketMQ</p>
+<p>系统要求 与 网络配置</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /usr/local/soft/rocketmq/</span><br><span class="line">wget https://dist.apache.org/repos/dist/release/rocketmq/5.3.2/rocketmq-all-5.3.2-bin-release.zip</span><br><span class="line">unzip rocketmq-all-5.3.2-bin-release.zip</span><br><span class="line"><span class="built_in">ln</span> -s rocketmq-all-5.3.2-bin-release rocketmq5</span><br><span class="line"><span class="built_in">cd</span> rocketmq5</span><br></pre></td></tr></table></figure>
-<div class="tips">
-<p><em><strong>小贴士</strong></em><br>
-默认脚本中，NameServer需要4G内存，Broker 需要8G内存，如果内存不够，可以进入bin目录，对其中的<code>runserver.sh</code>和<code>runbroker.sh</code>两个脚本进行一下修改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用vi runserver.sh指令，编辑这个脚本，找到下面的一行配置，调整Java进程的内存大小。</span></span><br><span class="line">JAVA_OPT=<span class="string">&quot;<span class="variable">$&#123;JAVA_OPT&#125;</span> -server -Xms4g -Xmx4g -Xmn2G -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m&quot;</span></span><br><span class="line">修改为：</span><br><span class="line">JAVA_OPT=<span class="string">&quot;<span class="variable">$&#123;JAVA_OPT&#125;</span> -server -Xms1g -Xmx1g -Xmn512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 接下来，同样调整runbroker.sh中的内存大小。</span></span><br><span class="line">JAVA_OPT=<span class="string">&quot;<span class="variable">$&#123;JAVA_OPT&#125;</span> -server -Xms8g -Xmx8g&quot;</span></span><br><span class="line">修改为：</span><br><span class="line">JAVA_OPT=<span class="string">&quot;<span class="variable">$&#123;JAVA_OPT&#125;</span> -server -Xms2g -Xmx2g&quot;</span></span><br></pre></td></tr></table></figure>
-</div>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>系统要求</strong></td>
+<td>操作系统</td>
+<td>Linux / Unix / macOS</td>
+</tr>
+<tr>
+<td></td>
+<td>JDK</td>
+<td>64 位 JDK, 1.x 版本需要<strong>1.8+</strong>，2.x版本需要 <strong>17+</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>构建工具</td>
+<td><strong>Maven 3.2.x</strong> 或更高版本</td>
+</tr>
+<tr>
+<td></td>
+<td>启动项</td>
+<td>启动 <strong>RocketMQ</strong>（包括 NameServer 与 Broker）</td>
+</tr>
+<tr>
+<td><strong>网络配置</strong></td>
+<td>网络访问</td>
+<td>云服务器需可远程访问，或本地虚拟机需可 <strong>PING 通外网</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="RocketMQ-Dashboard-的安装">RocketMQ Dashboard 的安装</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>启动 NameServer</p>
+<p>部署 RocketMQ Dashboard 2.x，需要安装 JDK17</p>
+</li>
+<li class="lvl-2">
+<p>源码安装，<a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq-dashboard">源码下载</a></p>
 </li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载源码</span></span><br><span class="line"><span class="built_in">cd</span> /usr/local/soft/rocketmq</span><br><span class="line">wget https://github.com/apache/rocketmq-dashboard/archive/refs/tags/rocketmq-dashboard-2.1.0.tar.gz</span><br><span class="line">tar -zxvf rocketmq-dashboard-2.1.0.tar.gz</span><br><span class="line"><span class="built_in">ln</span> -s rocketmq-dashboard-rocketmq-dashboard-2.1.0 rocketmq-dashboard</span><br><span class="line"><span class="built_in">cd</span> rocketmq-dashboard</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>bug 修复，当前<code>2.1.0</code>版本存在bug，只能通过<code>http://localhost:8082</code>访问，如果需要ip或域名访问，则需要修改源码</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> frontend-new/src/api/remoteApi</span><br><span class="line">sed -i <span class="string">&#x27;s|apiBaseUrl: &#x27;</span>\&#x27;<span class="string">&#x27;http://localhost:8082&#x27;</span>\&#x27;<span class="string">&#x27;|apiBaseUrl: process.env.REACT_APP_API_BASE_URL \|\| window.location.origin|&#x27;</span> remoteApi.js.bck</span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换前：</span></span><br><span class="line">const appConfig = &#123;</span><br><span class="line">    apiBaseUrl: <span class="string">&#x27;http://localhost:8082&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment"># 替换后：</span></span><br><span class="line">const appConfig = &#123;</span><br><span class="line">    apiBaseUrl: process.env.REACT_APP_API_BASE_URL || window.location.origin</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>环境</th>
+<th>环境变量值</th>
+<th>结果 (<code>appConfig.apiBaseUrl</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开发环境</td>
+<td><code>REACT_APP_API_BASE_URL=http://localhost:8080</code></td>
+<td><code>http://localhost:8080</code></td>
+</tr>
+<tr>
+<td>测试环境</td>
+<td><code>REACT_APP_API_BASE_URL=https://api.test.example.com</code></td>
+<td><code>https://api.test.example.com</code></td>
+</tr>
+<tr>
+<td>未设置变量</td>
+<td><em>(无该环境变量)</em> 则使用默认的 <code>window.location.origin</code>，其表示 当前网页的 协议 + 域名 + 端口号</td>
+<td>自动使用当前网站地址，如 <code>https://myapp.example.com</code></td>
+</tr>
+</tbody>
+</table>
 <blockquote>
-<p>安装完RocketMQ包后，我们启动NameServer</p>
+<p>目前<code>2.1.0</code>版本的bug还比较多，GitHub仓库中的代码已经修复了包括该bug在内的部分bug，不过还没有发布到 release。<br>
+着急的小伙伴可以通过 <code>git clone</code> 项目，编译并运行，或者等待作者发布新版本。</p>
 </blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 启动namesrv</span></span><br><span class="line">$ <span class="built_in">nohup</span> sh bin/mqnamesrv &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">### 验证namesrv是否启动成功</span></span><br><span class="line">$ <span class="built_in">tail</span> -f ~/logs/rocketmqlogs/namesrv.log</span><br><span class="line"><span class="comment"># 我们可以在namesrv.log 中看到 &#x27;The Name Server boot success..&#x27;， 表示NameServer 已成功启动。</span></span><br><span class="line">The Name Server boot success. serializeType=JSON, address 0.0.0.0:9876</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>启动 Broker+Proxy</p>
+<p>编译</p>
 </li>
 </ul>
-<blockquote>
-<p>NameServer成功启动后，我们启动Broker和Proxy。这里我们使用 Local 模式部署，即 Broker 和 Proxy 同进程部署。5.x 版本也支持 Broker 和 Proxy 分离部署以实现更灵活的集群能力。</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 先启动broker</span></span><br><span class="line">$ <span class="built_in">nohup</span> sh bin/mqbroker -n localhost:9876 --enable-proxy &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">### 验证broker是否启动成功, 比如, broker的ip是192.168.1.2 然后名字是broker-a</span></span><br><span class="line">$ <span class="built_in">tail</span> -f ~/logs/rocketmqlogs/proxy.log</span><br><span class="line"><span class="comment"># 我们可以在 proxy.log 中看到“The broker[brokerName,ip:port] boot success..”，这表明 broker 已成功启动。</span></span><br><span class="line">The broker[broker-a, 10.250.0.175:10911] boot success. serializeType=JSON and name server is localhost:9876</span><br></pre></td></tr></table></figure>
-<h4 id="启动-Proxy-遇到的问题">启动 Proxy 遇到的问题</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/soft/rocketmq/rocketmq-dashboard</span><br><span class="line"><span class="comment"># 编译</span></span><br><span class="line">JAVA_HOME=/usr/local/jdk/jdk17 mvn clean package -Dmaven.test.skip=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 将jar包复制到run目录下，以避免重新编译时被覆盖</span></span><br><span class="line"><span class="built_in">mkdir</span> run</span><br><span class="line"><span class="built_in">cp</span> target/rocketmq-dashboard-2.1.0.jar run/</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>无论是 <code>Broker+Proxy</code> 启动，还是 单独启动 <code>Proxy</code>，都报如下错误：</p>
+<p>按需替换配置，</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Exception <span class="keyword">in</span> thread <span class="string">&quot;main&quot;</span> java.lang.UnsatisfiedLinkError: failed to load the required native library</span><br><span class="line"></span><br><span class="line">Caused by: java.lang.IllegalArgumentException: Failed to load any of the given libraries: [netty_tcnative_linux_x86_64_fedora, netty_tcnative_linux_x86_64, netty_tcnative_x86_64, netty_tcnative]</span><br><span class="line"></span><br><span class="line">Suppressed: java.lang.UnsatisfiedLinkError: /tmp/libnetty_tcnative_linux_x86_642308675901892111861.so: libcrypt.so.1: cannot open shared object file: No such file or directory</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vim run/application.yaml # 按需替换配置</span></span><br><span class="line"></span><br><span class="line"><span class="attr">rocketmq:</span></span><br><span class="line">  <span class="attr">config:</span></span><br><span class="line">    <span class="attr">namesrvAddrs:</span>                <span class="comment"># 填写NameServer地址列表</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">10.250</span><span class="number">.0</span><span class="number">.175</span><span class="string">:9876</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">10.250</span><span class="number">.0</span><span class="number">.188</span><span class="string">:9876</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">10.250</span><span class="number">.0</span><span class="number">.131</span><span class="string">:9876</span></span><br><span class="line">    <span class="attr">proxyAddrs:</span>                  <span class="comment"># 填写Proxy地址列表</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">10.250</span><span class="number">.0</span><span class="number">.175</span><span class="string">:8080</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">10.250</span><span class="number">.0</span><span class="number">.188</span><span class="string">:8080</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">10.250</span><span class="number">.0</span><span class="number">.131</span><span class="string">:8080</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>原因分析</p>
-<ul class="lvl-2">
-<li class="lvl-4">
-<ol>
-<li class="lvl-7">Netty-tcnative 的编译依赖：RocketMQ 使用的 Netty 的 tcnative 模块是在较旧的环境中编译的，而动态链接的版本锁定：编译时链接的是 libcrypt.so.1，运行时必须找到相同主版本号的库</li>
-</ol>
-</li>
-<li class="lvl-4">
-<ol start="2">
-<li class="lvl-7">而我当前使用的系统为 Amazon Linux 2023，基于更新的 glibc，其加密功能已经迁移到 libcrypt.so.2。（Amazon Linux 2：基于较旧的 glibc 版本，libcrypt.so.1 是主要的加密库）</li>
-</ol>
+<p>启动</p>
 </li>
 </ul>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查 libcrypt 是否存在</span></span><br><span class="line">$ ldconfig -p | grep libcrypt</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">  libcryptsetup.so.12 (libc6,x86-64) =&gt; /lib64/libcryptsetup.so.12</span><br><span class="line">	libcrypto.so.3 (libc6,x86-64) =&gt; /lib64/libcrypto.so.3</span><br><span class="line">	libcrypto.so (libc6,x86-64) =&gt; /lib64/libcrypto.so</span><br><span class="line">	libcrypt.so.2 (libc6,x86-64) =&gt; /lib64/libcrypt.so.2</span><br><span class="line">	libcrypt.so (libc6,x86-64) =&gt; /lib64/libcrypt.so</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>解决办法</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装兼容性包</span></span><br><span class="line"><span class="built_in">sudo</span> yum install libxcrypt-compat</span><br><span class="line"><span class="comment"># 检查 libcrypt 是否存在</span></span><br><span class="line">$ ldconfig -p | grep libcrypt</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">  libcryptsetup.so.12 (libc6,x86-64) =&gt; /lib64/libcryptsetup.so.12</span><br><span class="line">	libcrypto.so.3 (libc6,x86-64) =&gt; /lib64/libcrypto.so.3</span><br><span class="line">	libcrypto.so (libc6,x86-64) =&gt; /lib64/libcrypto.so</span><br><span class="line">	libcrypt.so.2 (libc6,x86-64) =&gt; /lib64/libcrypt.so.2</span><br><span class="line">	libcrypt.so.1 (libc6,x86-64) =&gt; /lib64/libcrypt.so.1</span><br><span class="line">	libcrypt.so (libc6,x86-64) =&gt; /lib64/libcrypt.so</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> run</span><br><span class="line"><span class="comment"># 启动，默认会加载与jar包同级目录下的application.yaml文件</span></span><br><span class="line"><span class="built_in">nohup</span> /usr/local/jdk/jdk17/bin/java -jar rocketmq-dashboard-2.1.0.jar 1&gt;dashboard.log 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看日志</span></span><br><span class="line"><span class="built_in">tail</span> -f dashboard.log</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/9F26eh.png" alt="" width="1400" height="800"></p>
+
     </div>
 
     
@@ -1392,7 +1351,7 @@ i.ban {
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2025/10/23/rocketmq-install-01/" title="RocketMQ 的安装及使用">https://blog.hanqunfeng.com/2025/10/23/rocketmq-install-01/</a>
+      <a href="https://blog.hanqunfeng.com/2025/10/24/rocketmq-02-dashboard/" title="RocketMQ Dashboard 的安装及使用">https://blog.hanqunfeng.com/2025/10/24/rocketmq-02-dashboard/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1445,8 +1404,8 @@ i.ban {
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2025/10/16/kafka-06-zk-to-kraft/" rel="prev" title="Kafka 从 Zookeeper 迁移到 KRaft">
-                  <i class="fa fa-angle-left"></i> Kafka 从 Zookeeper 迁移到 KRaft
+                <a href="/2025/10/23/rocketmq-01-install/" rel="prev" title="RocketMQ 的安装及使用">
+                  <i class="fa fa-angle-left"></i> RocketMQ 的安装及使用
                 </a>
             </div>
             <div class="post-nav-item">
@@ -1484,14 +1443,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">655k</span>
+    <span title="站点总字数">658k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">39:42</span>
+    <span title="站点阅读时长">39:54</span>
   </span>
 </div>
 <div class="busuanzi-count">
