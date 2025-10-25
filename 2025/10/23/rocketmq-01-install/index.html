@@ -29,11 +29,13 @@
 <meta property="og:site_name" content="飘逸峰的博客">
 <meta property="og:description" content="摘要   本文介绍 CentOS9 中 RocketMQ 的安装与使用。   RocketMQ官网   本文使用的 RocketMQ 版本为 5.3.2。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/frTwo1.png">
 <meta property="article:published_time" content="2025-10-23T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-10-24T11:53:08.383Z">
+<meta property="article:modified_time" content="2025-10-25T06:25:23.063Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="rocketmq">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/frTwo1.png">
 
 
 <link rel="canonical" href="https://blog.hanqunfeng.com/2025/10/23/rocketmq-01-install/">
@@ -867,7 +869,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-RocketMQ-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Apache RocketMQ 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81RocketMQ-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">一、RocketMQ 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E7%89%B9%E7%82%B9%E4%B8%8E%E4%BC%98%E5%8A%BF"><span class="nav-number">2.2.</span> <span class="nav-text">二、核心特点与优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%A6%82%E5%BF%B5"><span class="nav-number">2.3.</span> <span class="nav-text">三、核心架构与概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E7%BB%8F%E5%85%B8%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6-RocketMQ-4-x"><span class="nav-number">2.3.1.</span> <span class="nav-text">3.1 经典核心组件 (RocketMQ 4.x)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-RocketMQ-5-%E7%9A%84%E6%96%B0%E6%A0%B8%E5%BF%83%EF%BC%9AProxy"><span class="nav-number">2.3.2.</span> <span class="nav-text">3.2 RocketMQ 5 的新核心：Proxy</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.4.</span> <span class="nav-text">四、典型应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RocketMQ-%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">RocketMQ 的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">单机安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E8%B7%AF%E5%BE%84"><span class="nav-number">3.1.1.</span> <span class="nav-text">日志及数据存储路径</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">集群安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2-NameServer"><span class="nav-number">3.2.1.</span> <span class="nav-text">部署 NameServer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2Broker"><span class="nav-number">3.2.2.</span> <span class="nav-text">部署Broker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Proxy"><span class="nav-number">3.2.3.</span> <span class="nav-text">配置 Proxy</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E8%AF%B4%E6%98%8E"><span class="nav-number">4.</span> <span class="nav-text">端口说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">安装过程中遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%90%AF%E5%8A%A8-Proxy-%E5%A4%B1%E8%B4%A5"><span class="nav-number">5.1.</span> <span class="nav-text">1.启动 Proxy 失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%86%99%E5%85%A5%E6%B6%88%E6%81%AF%E5%A4%B1%E8%B4%A5%EF%BC%8C%E5%B9%B6%E6%8A%A5%E5%A6%82%E4%B8%8B%E9%94%99%E8%AF%AF"><span class="nav-number">5.2.</span> <span class="nav-text">2.写入消息失败，并报如下错误</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-RocketMQ-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Apache RocketMQ 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81RocketMQ-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">一、RocketMQ 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E7%89%B9%E7%82%B9%E4%B8%8E%E4%BC%98%E5%8A%BF"><span class="nav-number">2.2.</span> <span class="nav-text">二、核心特点与优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%A6%82%E5%BF%B5"><span class="nav-number">2.3.</span> <span class="nav-text">三、核心架构与概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="nav-number">2.3.1.</span> <span class="nav-text">经典核心组件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RocketMQ-%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">RocketMQ 的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">单机安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85-%E5%A4%9A%E8%8A%82%E7%82%B9%EF%BC%88%E9%9B%86%E7%BE%A4%EF%BC%89%E5%A4%9A%E5%89%AF%E6%9C%AC%E6%A8%A1%E5%BC%8F-%E5%BC%82%E6%AD%A5%E5%A4%8D%E5%88%B6"><span class="nav-number">3.2.</span> <span class="nav-text">集群安装:多节点（集群）多副本模式-异步复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2-NameServer"><span class="nav-number">3.2.1.</span> <span class="nav-text">部署 NameServer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2Broker"><span class="nav-number">3.2.2.</span> <span class="nav-text">部署Broker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Proxy"><span class="nav-number">3.2.3.</span> <span class="nav-text">配置 Proxy</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85-%E4%B8%BB%E5%A4%87%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E6%A8%A1%E5%BC%8F%E9%83%A8%E7%BD%B2"><span class="nav-number">3.3.</span> <span class="nav-text">集群安装:主备自动切换模式部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E8%AF%B4%E6%98%8E"><span class="nav-number">4.</span> <span class="nav-text">端口说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E8%B7%AF%E5%BE%84"><span class="nav-number">4.0.1.</span> <span class="nav-text">日志及数据存储路径</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">安装过程中遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%90%AF%E5%8A%A8-Proxy-%E5%A4%B1%E8%B4%A5"><span class="nav-number">5.1.</span> <span class="nav-text">1.启动 Proxy 失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%86%99%E5%85%A5%E6%B6%88%E6%81%AF%E5%A4%B1%E8%B4%A5%EF%BC%8C%E5%B9%B6%E6%8A%A5%E5%A6%82%E4%B8%8B%E9%94%99%E8%AF%AF"><span class="nav-number">5.2.</span> <span class="nav-text">2.写入消息失败，并报如下错误</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -981,10 +983,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/09/04/springboot3-shardingsphere-proxy/" rel="bookmark">
-        <time class="popular-posts-time">2025-09-04</time>
+      <a class="popular-posts-link" href="/2025/10/16/kafka-05-install-kraft/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-16</time>
         <br>
-      SpringBoot3 + ShardingSphere-Proxy5.5.2 分库分表
+      Kafka 的安装：基于 KRaft 模式
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1050,7 +1052,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-24 19:53:08" itemprop="dateModified" datetime="2025-10-24T19:53:08+08:00">2025-10-24</time>
+      <time title="修改时间：2025-10-25 14:25:23" itemprop="dateModified" datetime="2025-10-25T14:25:23+08:00">2025-10-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1102,14 +1104,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.8k</span>
+      <span>6.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>18 分钟</span>
+      <span>23 分钟</span>
     </span>
 
         </div>
@@ -1168,122 +1170,123 @@ i.ban {
 <p>它与 Kafka、RabbitMQ 等都是业界顶级的消息队列，但各有侧重。RocketMQ 在事务消息、顺序消息和对在线业务的稳定性支持方面表现尤为出色。</p>
 <hr>
 <h3 id="二、核心特点与优势">二、核心特点与优势</h3>
-<p>RocketMQ 之所以流行，主要归功于以下几个核心特点：</p>
-<ol>
-<li class="lvl-4">
-<p><strong>削峰填谷</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8"><strong>场景</strong>：电商秒杀活动时，瞬时会有海量下单请求涌来，后端处理系统可能无法承受。</li>
-<li class="lvl-8"><strong>作用</strong>：RocketMQ 可以将这些突发的请求消息先缓存起来，然后让后端系统按照自己能处理的速率慢慢消费，避免了系统被冲垮。这就好比用一个大水库先拦住洪水，再平稳地向下游放水。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>异步解耦</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8"><strong>场景</strong>：用户注册后，需要发送欢迎邮件、发放优惠券、初始化积分等。</li>
-<li class="lvl-8"><strong>作用</strong>：主注册流程只需要向 RocketMQ 发送一个“用户已注册”的消息，而不需要等待所有后续操作完成。负责邮件、优惠券的系统会自己去 RocketMQ 取消息并处理。这样，系统之间的依赖关系就变弱了，提高了整体的灵活性和可维护性。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>顺序消息</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8"><strong>场景</strong>：一个订单的状态必须严格按照 <code>创建 -&gt; 付款 -&gt; 发货 -&gt; 确认收货</code> 的顺序来变更。</li>
-<li class="lvl-8"><strong>作用</strong>：RocketMQ 可以保证同一个订单ID的消息被存储在同一个队列中，并按照发送顺序被消费，确保了业务逻辑的正确性。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>持久性与高可靠</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">RocketMQ 会将所有消息持久化到磁盘，即使服务器重启，消息也不会丢失。</li>
-<li class="lvl-8">它本身采用分布式集群架构，支持主从复制，提供了极高的可用性。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>消息回溯</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">消费者可以重置消费位点，重新消费过去某个时间点的消息。这在业务逻辑出错、需要重新处理时非常有用。</li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>海量消息堆积能力</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">能够支持万亿级别的消息堆积，不会因为大量未消费消息而导致性能急剧下降。</li>
-</ul>
-</li>
-</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">序号</th>
+<th style="text-align:left">特性</th>
+<th style="text-align:left">典型场景</th>
+<th style="text-align:left">主要作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>1</strong></td>
+<td style="text-align:left"><strong>削峰填谷</strong></td>
+<td style="text-align:left">电商秒杀、大促活动时大量下单请求瞬间涌入</td>
+<td style="text-align:left">将突发请求先缓存为消息，后端系统按自身能力平稳消费，避免系统过载崩溃</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>2</strong></td>
+<td style="text-align:left"><strong>异步解耦</strong></td>
+<td style="text-align:left">用户注册后触发多系统任务（邮件、优惠券、积分）</td>
+<td style="text-align:left">主流程只负责发送消息，其他系统独立异步处理，降低系统间耦合、提高扩展性</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>3</strong></td>
+<td style="text-align:left"><strong>顺序消息</strong></td>
+<td style="text-align:left">订单状态变更（创建 → 付款 → 发货 → 收货）</td>
+<td style="text-align:left">同一业务键（如订单ID）的消息按顺序发送和消费，保证业务逻辑正确性</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>4</strong></td>
+<td style="text-align:left"><strong>持久化与高可靠性</strong></td>
+<td style="text-align:left">关键业务消息必须不丢失（交易、支付、日志）</td>
+<td style="text-align:left">所有消息写入磁盘并支持主从复制，即使服务器重启也能恢复，保证高可用</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>5</strong></td>
+<td style="text-align:left"><strong>消息回溯</strong></td>
+<td style="text-align:left">消费逻辑出错、数据重算、补偿任务</td>
+<td style="text-align:left">支持重置消费位点，重新消费历史消息，实现业务补偿与追溯</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>6</strong></td>
+<td style="text-align:left"><strong>海量消息堆积能力</strong></td>
+<td style="text-align:left">大规模异步日志收集、IoT 数据汇聚、埋点分析</td>
+<td style="text-align:left">支持万亿级消息堆积，性能稳定不衰减，适用于大规模数据场景</td>
+</tr>
+</tbody>
+</table>
 <hr>
 <h3 id="三、核心架构与概念">三、核心架构与概念</h3>
-<p>要理解 RocketMQ，需要知道几个关键角色：</p>
-<h4 id="3-1-经典核心组件-RocketMQ-4-x">3.1 经典核心组件 (RocketMQ 4.x)</h4>
-<ul class="lvl-0">
-<li class="lvl-4">
-<p><strong>Producer（生产者）</strong>：发送消息的客户端。</p>
-</li>
-<li class="lvl-4">
-<p><strong>Consumer（消费者）</strong>：接收消息的客户端。</p>
-</li>
-<li class="lvl-4">
-<p><strong>Broker</strong>：消息服务器，负责存储和转发消息。它是 RocketMQ 的核心。</p>
-</li>
-<li class="lvl-4">
-<p><strong>Topic（主题）</strong>：消息的分类，生产者向指定的 Topic 发送消息，消费者订阅指定的 Topic 来消费消息。例如，可以有一个 “Order_Topic” 专门用来处理所有订单相关的消息。</p>
-</li>
-<li class="lvl-4">
-<p><strong>Name Server（名字服务）</strong>：一个轻量级的注册中心，负责管理所有 Broker 的地址信息，帮助生产者和消费者找到对应的 Broker。</p>
-</li>
-</ul>
-<h4 id="3-2-RocketMQ-5-的新核心：Proxy">3.2 RocketMQ 5 的新核心：Proxy</h4>
-<p>在 RocketMQ 5.x 版本中，引入了一个新的关键组件——<strong>Proxy</strong>。</p>
-<ul class="lvl-0">
-<li class="lvl-4">
-<p><strong>Proxy（代理）</strong>：一个无状态的网络代理层，可以独立部署。</p>
-</li>
-</ul>
-<p><strong>引入 Proxy 主要有两种模式：</strong></p>
-<ol>
-<li class="lvl-4">
-<p><strong>集群部署模式 (Cluster Mode)</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">这是经典的部署方式。生产者和消费者直接与 Broker 通信。</li>
-<li class="lvl-8"><strong>架构</strong>：<code>Producer/Consumer &lt;--&gt; Broker &lt;--&gt; Name Server</code></li>
-</ul>
-</li>
-<li class="lvl-4">
-<p><strong>Proxy 部署模式</strong></p>
-<ul class="lvl-2">
-<li class="lvl-8">这是 RocketMQ 5.x 推荐的新模式。所有客户端的请求都先经过 Proxy，由 Proxy 代理与 Broker 和 Name Server 进行交互。</li>
-<li class="lvl-8"><strong>架构</strong>：<code>Producer/Consumer &lt;--&gt; Proxy &lt;--&gt; Broker &lt;--&gt; Name Server</code></li>
-</ul>
-</li>
-</ol>
+<p>要理解 RocketMQ，需要知道几个关键角色：<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/frTwo1.png" alt=""></p>
+<h4 id="经典核心组件">经典核心组件</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">序号</th>
+<th style="text-align:left">组件名称</th>
+<th style="text-align:left">主要作用</th>
+<th style="text-align:left">说明 / 特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>1</strong></td>
+<td style="text-align:left"><strong>Producer（生产者）</strong></td>
+<td style="text-align:left">发送消息的客户端</td>
+<td style="text-align:left">负责将业务系统的消息发送到指定的 <strong>Topic</strong>，支持同步、异步、单向三种发送方式</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>2</strong></td>
+<td style="text-align:left"><strong>Consumer（消费者）</strong></td>
+<td style="text-align:left">接收并消费消息的客户端</td>
+<td style="text-align:left">从 Broker 拉取消息并进行业务处理，可分为 <strong>Push</strong> 和 <strong>Pull</strong> 两种消费模式</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>3</strong></td>
+<td style="text-align:left"><strong>Consumer Group（消费者组）</strong></td>
+<td style="text-align:left">实现负载均衡与高可用消费</td>
+<td style="text-align:left">多个消费者订阅同一 Topic 时组成消费者组，一个分区只会被组内一个消费者消费</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>4</strong></td>
+<td style="text-align:left"><strong>Broker（消息服务器）</strong></td>
+<td style="text-align:left">存储和转发消息</td>
+<td style="text-align:left">RocketMQ 的核心组件，负责消息的持久化、转发、主从复制和高可用</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>5</strong></td>
+<td style="text-align:left"><strong>Topic（主题）</strong></td>
+<td style="text-align:left">消息的分类与路由单元</td>
+<td style="text-align:left">Producer 发送消息到指定 Topic，Consumer 订阅 Topic 消费消息；一个 Topic 可包含多个消息队列（分区）</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>6</strong></td>
+<td style="text-align:left"><strong>Name Server（名字服务）</strong></td>
+<td style="text-align:left">管理 Broker 地址信息</td>
+<td style="text-align:left">类似轻量级注册中心，维护 Broker 元数据，帮助 Producer 和 Consumer 定位消息存储位置</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>7</strong></td>
+<td style="text-align:left"><strong>Controller（控制器）</strong></td>
+<td style="text-align:left">主从自动切换与高可用控制</td>
+<td style="text-align:left">RocketMQ 5.x 引入，基于 Raft（DLedger）协议实现 Broker 自动选主和元数据管理</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>8</strong></td>
+<td style="text-align:left"><strong>Proxy（代理层）</strong></td>
+<td style="text-align:left">客户端访问入口与协议转换</td>
+<td style="text-align:left">RocketMQ 5.x 新组件，无状态，可横向扩展；统一接入层，支持多协议（如 HTTP、gRPC），隔离客户端与 Broker</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
 <p><strong>引入 Proxy 模式的优势：</strong></p>
-<ul class="lvl-0">
-<li class="lvl-4">
-<p><strong>架构解耦与语言无关</strong>：Proxy 作为通用代理，将复杂的 Broker 协议封装成更简单的接口（如 gRPC），使得用不同编程语言（如 Go, Python, C++ 等）开发的客户端更容易接入，而无需实现复杂的原生协议。</p>
-</li>
-<li class="lvl-4">
-<p><strong>简化客户端</strong>：客户端不再需要感知 Name Server 和 Broker 的地址变化，只需连接固定的 Proxy 地址即可，大大降低了客户端的复杂度。</p>
-</li>
-<li class="lvl-4">
-<p><strong>增强安全性</strong>：可以在 Proxy 层统一实现安全认证、限流、审计等策略，作为Broker集群的安全屏障。</p>
-</li>
-<li class="lvl-4">
-<p><strong>云原生友好</strong>：无状态的 Proxy 非常适合在 Kubernetes 等容器化环境中进行部署和弹性伸缩。</p>
-</li>
-</ul>
-<hr>
-<h3 id="四、典型应用场景">四、典型应用场景</h3>
-<ul class="lvl-0">
-<li class="lvl-4">
-<p><strong>电商/金融交易系统</strong>：保证交易核心流程的可靠、顺序和最终一致性。</p>
-</li>
-<li class="lvl-4">
-<p><strong>大数据采集</strong>：将大量日志、行为数据先写入消息队列，再由后端的大数据处理系统（如 Flink, Spark）消费。</p>
-</li>
-<li class="lvl-4">
-<p><strong>微服务间的异步通信</strong>：在微服务架构中，作为服务之间的通信总线。</p>
-</li>
-</ul>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">**架构解耦与语言无关**：Proxy 作为通用代理，将复杂的 Broker 协议封装成更简单的接口（如 gRPC），使得用不同编程语言（如 Go, Python, C++ 等）开发的客户端更容易接入，而无需实现复杂的原生协议。</span><br><span class="line">**简化客户端**：客户端不再需要感知 Name Server 和 Broker 的地址变化，只需连接固定的 Proxy 地址即可，大大降低了客户端的复杂度。</span><br><span class="line">**增强安全性**：可以在 Proxy 层统一实现安全认证、限流、审计等策略，作为Broker集群的安全屏障。</span><br><span class="line">**云原生友好**：无状态的 Proxy 非常适合在 Kubernetes 等容器化环境中进行部署和弹性伸缩。</span><br></pre></td></tr></table></figure>
 <hr>
 <h2 id="RocketMQ-的安装">RocketMQ 的安装</h2>
 <ul class="lvl-0">
@@ -1334,70 +1337,7 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先停止 Broker</span></span><br><span class="line">$ sh bin/mqshutdown broker</span><br><span class="line"><span class="comment"># 停止 NameServer</span></span><br><span class="line">$ sh bin/mqshutdown namesrv</span><br></pre></td></tr></table></figure>
-<h4 id="日志及数据存储路径">日志及数据存储路径</h4>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>RocketMQ 5 主要有三类服务组件需要关注它们的存储目录</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>组件</th>
-<th>功能</th>
-<th>默认存储内容</th>
-<th>默认路径（Linux 环境）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>NameServer</strong></td>
-<td>路由服务</td>
-<td>日志配置文件： <code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq.namesrv.logback.xml</code></td>
-<td><code>~/logs/rocketmqlogs/namesrv.log</code></td>
-</tr>
-<tr>
-<td><strong>Broker</strong></td>
-<td>核心消息存储服务</td>
-<td>消息数据（CommitLog、ConsumeQueue、Index、Config）</td>
-<td><strong>数据目录</strong>：<br><code>~/store</code><br>├── <code>commitlog/</code> → 消息物理文件<br>├── <code>consumequeue/</code> → 消费队列索引<br>├── <code>index/</code> → 消息索引<br>├── <code>config/</code> → topic、consumer offset、subscription 信息<br>├── <code>checkpoint</code> → 存储校验点<br>├── <code>abort</code> → 异常退出标志</td>
-</tr>
-<tr>
-<td></td>
-<td>运行日志</td>
-<td>日志配置文件：<code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq.broker.logback.xml</code></td>
-<td><code>~/logs/rocketmqlogs/broker.log</code></td>
-</tr>
-<tr>
-<td></td>
-<td>配置文件</td>
-<td>broker配置文件</td>
-<td><code>$&#123;ROCKETMQ_HOME&#125;/conf/broker.conf</code></td>
-</tr>
-<tr>
-<td><strong>Proxy</strong></td>
-<td>客户端访问入口（可选）</td>
-<td>访问日志、转发日志：  <code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq.proxy.logback.xml</code></td>
-<td><code>~/logs/rocketmqlogs/proxy.log</code></td>
-</tr>
-<tr>
-<td></td>
-<td>配置文件</td>
-<td>代理配置文件</td>
-<td><code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq-proxy.json</code></td>
-</tr>
-</tbody>
-</table>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>NameServer 和 Proxy 都是无状态（stateless）组件，不会持久化业务数据。</p>
-</li>
-<li class="lvl-2">
-<p>修改 Broker 数据路径，比如 <code>conf/broker.conf</code></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 消息存储根目录</span></span><br><span class="line">storePathRootDir=/data/rocketmq/store</span><br><span class="line"></span><br><span class="line"><span class="comment"># CommitLog 存储路径</span></span><br><span class="line">storePathCommitLog=/data/rocketmq/store/commitlog</span><br><span class="line"></span><br><span class="line"><span class="comment"># ConsumeQueue 存储路径</span></span><br><span class="line">storePathConsumeQueue=/data/rocketmq/store/consumequeue</span><br><span class="line"></span><br><span class="line"><span class="comment"># 消息索引文件存储路径</span></span><br><span class="line">storePathIndex=/data/rocketmq/store/index</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行时配置存储路径</span></span><br><span class="line">storePathConfig=/data/rocketmq/store/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># checkpoint 文件路径</span></span><br><span class="line">storeCheckpoint=/data/rocketmq/store/checkpoint</span><br><span class="line"></span><br><span class="line"><span class="comment"># abort 文件路径</span></span><br><span class="line">abortFile=/data/rocketmq/store/abort</span><br></pre></td></tr></table></figure>
-<h3 id="集群安装">集群安装</h3>
+<h3 id="集群安装-多节点（集群）多副本模式-异步复制">集群安装:多节点（集群）多副本模式-异步复制</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><a target="_blank" rel="noopener" href="https://rocketmq.apache.org/zh/docs/deploymentOperations/01deploy">官网文档</a> 对集群安装的方式介绍了多种，本文仅实战一种：<code>多节点（集群）多副本模式-异步复制</code></p>
@@ -1430,7 +1370,7 @@ i.ban {
 <p>broker-a.properties</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=DefaultCluster <span class="comment"># 集群名称必须一致</span></span><br><span class="line">brokerName=broker-a              <span class="comment"># broker 名称，master 和 slave 的 brokerName 必须一致</span></span><br><span class="line">brokerId=0                       <span class="comment"># brokerId 必须唯一 ，且 master 的 brokerId 必须为 0</span></span><br><span class="line">deleteWhen=04                    <span class="comment"># 表示凌晨 4 点清理</span></span><br><span class="line">fileReservedTime=48              <span class="comment"># 表示保存 48 小时的数据</span></span><br><span class="line">brokerRole=ASYNC_MASTER          <span class="comment"># 角色，表示异步复制的主节点</span></span><br><span class="line">flushDiskType=ASYNC_FLUSH        <span class="comment"># 表示异步刷盘</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 因为同一台服务器上启动多个 Broker，所以需要指定不同的存储路径和端口</span></span><br><span class="line"><span class="comment"># 存储数据路径</span></span><br><span class="line">storePathRootDir=/usr/local/soft/rocketmq/data/store-a</span><br><span class="line">storePathCommitLog=/usr/local/soft/rocketmq/data/store-a/commitlog</span><br><span class="line">storePathConsumeQueue=/usr/local/soft/rocketmq/data/store-a/consumequeue</span><br><span class="line">storePathIndex=/usr/local/soft/rocketmq/data/store-a/index</span><br><span class="line">storePathConfig=/usr/local/soft/rocketmq/data/store-a/config</span><br><span class="line">storeCheckpoint=/usr/local/soft/rocketmq/data/store-a/checkpoint</span><br><span class="line">abortFile=/usr/local/soft/rocketmq/data/store-a/abort</span><br><span class="line"><span class="comment">#Broker 对外服务的监听端口，同一台机器上启动多个Broker，需要指定不同的端口</span></span><br><span class="line">listenPort=10911</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=DefaultCluster <span class="comment"># 集群名称必须一致</span></span><br><span class="line">brokerName=broker-a              <span class="comment"># broker 名称，master 和 slave 的 brokerName 必须一致</span></span><br><span class="line">brokerId=0                       <span class="comment"># brokerId 必须唯一 ，且 master 的 brokerId 必须为 0</span></span><br><span class="line">deleteWhen=04                    <span class="comment"># 表示凌晨 4 点清理</span></span><br><span class="line">fileReservedTime=48              <span class="comment"># 表示保存 48 小时的数据</span></span><br><span class="line">brokerRole=ASYNC_MASTER          <span class="comment"># 角色，表示异步复制的主节点</span></span><br><span class="line">flushDiskType=ASYNC_FLUSH        <span class="comment"># 表示异步刷盘</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 因为同一台服务器上启动多个 Broker，所以需要指定不同的存储路径和端口</span></span><br><span class="line"><span class="comment"># 存储数据路径，后面会介绍</span></span><br><span class="line">storePathRootDir=/usr/local/soft/rocketmq/data/store-a</span><br><span class="line">storePathCommitLog=/usr/local/soft/rocketmq/data/store-a/commitlog</span><br><span class="line">storePathConsumeQueue=/usr/local/soft/rocketmq/data/store-a/consumequeue</span><br><span class="line">storePathIndex=/usr/local/soft/rocketmq/data/store-a/index</span><br><span class="line">storePathConfig=/usr/local/soft/rocketmq/data/store-a/config</span><br><span class="line">storeCheckpoint=/usr/local/soft/rocketmq/data/store-a/checkpoint</span><br><span class="line">abortFile=/usr/local/soft/rocketmq/data/store-a/abort</span><br><span class="line"><span class="comment">#Broker 对外服务的监听端口，同一台机器上启动多个Broker，需要指定不同的端口</span></span><br><span class="line">listenPort=10911</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>broker-a-s.properties</p>
@@ -1454,7 +1394,7 @@ i.ban {
 <p>在 Broker1 10.250.0.188 上启动 broker-a 和 broker-b-s</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 broker-a</span></span><br><span class="line"><span class="built_in">nohup</span> sh bin/mqbroker -n <span class="string">&quot;10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876&quot;</span> -c conf/2m-2s-async/broker-a.properties &amp;</span><br><span class="line"><span class="comment"># 启动 broker-b-s</span></span><br><span class="line"><span class="built_in">nohup</span> sh bin/mqbroker -n <span class="string">&quot;10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876&quot;</span> -c conf/2m-2s-async/broker-b-s.properties &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">## nohup.out 中的输出类似与下面这种就表示启动成功</span></span><br><span class="line">The broker[broker-a, 10.250.0.31:11011] boot success. serializeType=JSON and name server is 10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 broker-a</span></span><br><span class="line"><span class="built_in">nohup</span> sh bin/mqbroker -n <span class="string">&quot;10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876&quot;</span> -c conf/2m-2s-async/broker-a.properties &amp;</span><br><span class="line"><span class="comment"># 启动 broker-b-s</span></span><br><span class="line">  <span class="built_in">nohup</span> sh bin/mqbroker -n <span class="string">&quot;10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876&quot;</span> -c conf/2m-2s-async/broker-b-s.properties &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">## nohup.out 中的输出类似与下面这种就表示启动成功</span></span><br><span class="line">The broker[broker-a, 10.250.0.31:11011] boot success. serializeType=JSON and name server is 10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>在 Broker2 10.250.0.31 上启动 broker-b 和 broker-a-s</p>
@@ -1474,6 +1414,153 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">nohup</span> sh bin/mqproxy -n <span class="string">&quot;10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876&quot;</span> &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">## 指定配置文件，这里要注意，集群的名称要与 conf/proxy.conf 中配置的集群名称必须一致，默认是 DefaultCluster</span></span><br><span class="line"><span class="built_in">nohup</span> sh bin/mqproxy -n <span class="string">&quot;10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876&quot;</span> -pc conf/proxy.conf &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看日志，输出如下内容就表示启动成功，tail -f nohup.out</span></span><br><span class="line">rocketmq-proxy startup successfully</span><br></pre></td></tr></table></figure>
+<h3 id="集群安装-主备自动切换模式部署">集群安装:主备自动切换模式部署</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RocketMQ 5.x 提供了一种新的部署方式 <code>Controller</code>，可以在主从模式下实现主备自动切换，当主节点挂掉时，自动切换到从节点上运行。</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://rocketmq.apache.org/zh/docs/deploymentOperations/03autofailover">官方文档:主备自动切换模式部署</a></p>
+</li>
+<li class="lvl-2">
+<p>Controller 组件提供选主能力，若需要保证 Controller 具备容错能力，Controller 部署需要三副本及以上（遵循 Raft 的多数派协议）。</p>
+</li>
+<li class="lvl-2">
+<p>本文在上文“集群安装:多节点（集群）多副本模式-异步复制”的基础上进行修改</p>
+</li>
+<li class="lvl-2">
+<p>Controller 部署有两种方式。一种是嵌入于 NameServer 进行部署，另一种是独立部署，本文采用独立部署 Controller 组件的方式。</p>
+</li>
+<li class="lvl-2">
+<p>集群规划</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Controller 3 台</span></span><br><span class="line">Controller1 10.250.0.175</span><br><span class="line">Controller2 10.250.0.188</span><br><span class="line">Controller3 10.250.0.31</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>分别在每台机器上创建<code>controller.conf</code>配置文件，内容如下(注意修改节点Id)</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># controller.conf</span></span><br><span class="line"><span class="comment"># ---------------------------------------------------------</span></span><br><span class="line"><span class="comment"># DLedger Raft Group 的名字，同一集群保持一致</span></span><br><span class="line">controllerDLegerGroup = group1</span><br><span class="line"><span class="comment"># 集群中三个节点的成员定义，每个节点都必须一致</span></span><br><span class="line">controllerDLegerPeers = n0-10.250.0.175:9877;n1-10.250.0.188:9877;n2-10.250.0.31:9877</span><br><span class="line"><span class="comment"># 节点 id，必须属于 controllerDLegerPeers 中的一个；同 Group 内各个节点要唯一</span></span><br><span class="line">controllerDLegerSelfId = n0</span><br><span class="line"><span class="comment"># Controller 数据存储路径（非常关键！不要删除）</span></span><br><span class="line">controllerStorePath = /usr/local/soft/rocketmq/data/DledgerController</span><br><span class="line"><span class="comment"># 是否允许从 SyncStateSet 外选举 Master</span></span><br><span class="line"><span class="comment"># true 会加快选举但可能丢消息，建议生产保持 false</span></span><br><span class="line">enableElectUncleanMaster = <span class="literal">false</span></span><br><span class="line"><span class="comment"># 当 Broker 副本角色变化时是否主动通知（建议开启）</span></span><br><span class="line">notifyBrokerRoleChanged = <span class="literal">true</span></span><br><span class="line"><span class="comment"># 启动端口，端口不能与 NameServer、Broker、Proxy 端口冲突</span></span><br><span class="line">listenPort = 9877</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>分别启动每台机器上的 Controller</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">nohup</span> sh bin/mqcontroller -n <span class="string">&quot;10.250.0.175:9876;10.250.0.188:9876;10.250.0.31:9876&quot;</span> -c conf/controller.conf &amp;</span><br><span class="line"><span class="comment">## 启动成功后，查看 nohup.out 文件，输出如下内容就表示启动成功</span></span><br><span class="line">load config properties file OK, conf/controller.conf</span><br><span class="line">The Controller Server boot success. serializeType=JSON</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>修改 broker 配置文件，以 <code>broker-a.properties</code> 为例</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 去掉如下配置，Controller 模式下 会自动分配</span></span><br><span class="line"><span class="comment"># brokerId=1                       # brokerId 必须唯一 ，且 slave 的 brokerId 必须大于 0</span></span><br><span class="line"><span class="comment"># brokerRole=ASYNC_MASTER          # 角色，表示异步复制的主节点</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加如下配置</span></span><br><span class="line"><span class="comment"># 启用 Controller 模式（自动主从切换模式的总开关）</span></span><br><span class="line">enableControllerMode = <span class="literal">true</span></span><br><span class="line"><span class="comment"># Controller 集群地址列表（建议与 Controller 集群保持一致）</span></span><br><span class="line">controllerAddr = 10.250.0.175:9877;10.250.0.188:9877;10.250.0.31:9877</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>RocketMQ 5 Broker Controller 模式配置参数表</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">参数名</th>
+<th style="text-align:left">说明</th>
+<th style="text-align:center">默认值</th>
+<th style="text-align:left">备注 / 建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>enableControllerMode</strong></td>
+<td style="text-align:left">是否启用 Controller 模式（自动主从切换总开关）</td>
+<td style="text-align:center"><code>false</code></td>
+<td style="text-align:left">必须设为 <code>true</code> 才能启用自动主从切换</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>controllerAddr</strong></td>
+<td style="text-align:left">Controller 集群地址列表（以分号分隔）</td>
+<td style="text-align:center">无</td>
+<td style="text-align:left">所有 Broker 配置应一致，例如 <code>10.250.0.175:9877;10.250.0.188:9877;10.250.0.31:9877</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>syncBrokerMetadataPeriod</strong></td>
+<td style="text-align:left">向 Controller 同步 Broker 副本信息的时间间隔（毫秒）</td>
+<td style="text-align:center"><code>5000</code> (5s)</td>
+<td style="text-align:left">保持默认即可；用于上报心跳与元数据</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>checkSyncStateSetPeriod</strong></td>
+<td style="text-align:left">检查同步状态集（SyncStateSet）的时间间隔（毫秒）</td>
+<td style="text-align:center"><code>5000</code> (5s)</td>
+<td style="text-align:left">Controller 会定期剔除落后副本</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>syncControllerMetadataPeriod</strong></td>
+<td style="text-align:left">同步 Controller 元数据的时间间隔（毫秒）</td>
+<td style="text-align:center"><code>10000</code> (10s)</td>
+<td style="text-align:left">Broker 定期从集群获取当前活跃 Controller 地址</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>haMaxTimeSlaveNotCatchup</strong></td>
+<td style="text-align:left">Slave 未跟上 Master 的最大时间间隔（毫秒）</td>
+<td style="text-align:center"><code>15000</code> (15s)</td>
+<td style="text-align:left">超过该时间将 Slave 移出 SyncStateSet</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>storePathEpochFile</strong></td>
+<td style="text-align:left">Epoch 文件存储路径</td>
+<td style="text-align:center"><code>store/epochFile</code></td>
+<td style="text-align:left">非常重要！不要删除；存储主从任期、epoch 等元信息</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>allAckInSyncStateSet</strong></td>
+<td style="text-align:left">是否要求所有同步副本都 ACK 后才返回成功</td>
+<td style="text-align:center"><code>false</code></td>
+<td style="text-align:left"><code>true</code> 可保证强一致但性能下降；建议保持默认</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>syncFromLastFile</strong></td>
+<td style="text-align:left">Slave 是否从最后一个文件开始复制（空盘启动时）</td>
+<td style="text-align:center"><code>false</code></td>
+<td style="text-align:left">若历史日志很大且 Slave 新建，可设为 <code>true</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>asyncLearner</strong></td>
+<td style="text-align:left">是否为异步 learner 副本（不参与选主）</td>
+<td style="text-align:center"><code>false</code></td>
+<td style="text-align:left">用于远程灾备副本，不会被选举为 Master</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>inSyncReplicas</strong></td>
+<td style="text-align:left">需保持同步的副本组数量</td>
+<td style="text-align:center"><code>1</code></td>
+<td style="text-align:left">若 <code>allAckInSyncStateSet=true</code>，该参数无效</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>minInSyncReplicas</strong></td>
+<td style="text-align:left">最小同步副本数量，低于该值则拒绝写入</td>
+<td style="text-align:center"><code>1</code></td>
+<td style="text-align:left">防止写入过多未同步副本导致数据丢失风险</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>重新启动 Broker，为保证主从数据一致性在重启时不被破坏，启动顺序应为先重新原Master，再重启原Slave</p>
+</li>
+<li class="lvl-2">
+<p>启动成功后，可以通过如下命令检查机器状态，可以看到集群内部自动分配了主从</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 确认 Broker 是否已经成功注册到 Nameserver，执行以下命令（在任意一台机器上）</span></span><br><span class="line">sh bin/mqadmin clusterList -n 10.250.0.175:9876</span><br><span class="line"><span class="comment">## 输出类似如下</span></span><br><span class="line"><span class="comment">#Cluster Name           #Broker Name            #BID  #Addr                  #Version              #InTPS(LOAD)                   #OutTPS(LOAD)  #Timer(Progress)        #PCWait(ms)  #Hour         #SPACE    #ACTIVATED</span></span><br><span class="line">DefaultCluster          broker-a                0     10.250.0.188:10911     V5_3_2                 0.00(0,0ms)               0.00(0,0ms|0,0ms)  0-0(0.0w, 0.0, 0.0)               0  489268.48     0.2900          <span class="literal">true</span></span><br><span class="line">DefaultCluster          broker-a                2     10.250.0.31:11011      V5_3_2                 0.00(0,0ms)               0.00(0,0ms|0,0ms)  2-0(0.0w, 0.0, 0.0)               0  489268.48     0.2700         <span class="literal">false</span></span><br><span class="line">DefaultCluster          broker-b                0     10.250.0.31:10911      V5_3_2                 0.00(0,0ms)               0.00(0,0ms|0,0ms)  0-0(0.0w, 0.0, 0.0)               0  489268.48     0.2700          <span class="literal">true</span></span><br><span class="line">DefaultCluster          broker-b                2     10.250.0.188:11011     V5_3_2                 0.00(0,0ms)               0.00(0,0ms|0,0ms)  3-0(0.0w, 0.0, 0.0)               0  489268.48     0.2900         <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>验证主备自动切换，此时关闭 <code>broker-b</code> 的 Master，并查看集群状态</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sh bin/mqadmin clusterList -n 10.250.0.175:9876</span><br><span class="line"><span class="comment">## 输出类似如下，可以看到`broker-b`原来的 Slave 被切换为 Master</span></span><br><span class="line"><span class="comment">#Cluster Name           #Broker Name            #BID  #Addr                  #Version              #InTPS(LOAD)                   #OutTPS(LOAD)  #Timer(Progress)        #PCWait(ms)  #Hour         #SPACE    #ACTIVATED</span></span><br><span class="line">DefaultCluster          broker-a                0     10.250.0.188:10911     V5_3_2                 0.00(0,0ms)               0.00(0,0ms|0,0ms)  0-0(0.0w, 0.0, 0.0)               0  489268.58     0.2900          <span class="literal">true</span></span><br><span class="line">DefaultCluster          broker-a                2     10.250.0.31:11011      V5_3_2                 0.00(0,0ms)               0.00(0,0ms|0,0ms)  1-0(0.0w, 0.0, 0.0)               0  489268.58     0.2700         <span class="literal">false</span></span><br><span class="line">DefaultCluster          broker-b                0     10.250.0.188:11011     V5_3_2                 0.00(0,0ms)               0.00(0,0ms|0,0ms)  0-0(0.0w, 0.0, 0.0)               0  489268.58     0.2900          <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>重新启动刚才关闭的 <code>broker-b</code> ，节点会自动加入集群，角色为 Slave</p>
+</li>
+</ul>
 <h2 id="端口说明">端口说明</h2>
 <table>
 <thead>
@@ -1520,6 +1607,110 @@ i.ban {
 <td>TCP</td>
 <td><strong>Broker HA 客户端端口</strong></td>
 <td>Broker <strong>主从复制中的 Slave 连接 Master</strong> 时使用的 <strong>客户端监听端口</strong>。<br>通常与 10909 配合使用，一主多从模式中 Slave 主动连接 Master。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="日志及数据存储路径">日志及数据存储路径</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RocketMQ 5 主要有三类服务组件需要关注它们的存储目录</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">组件</th>
+<th style="text-align:left">功能</th>
+<th style="text-align:left">默认存储内容</th>
+<th style="text-align:left">默认路径（Linux 环境）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>NameServer</strong></td>
+<td style="text-align:left">路由服务（注册中心）</td>
+<td style="text-align:left">各个组件的的注册</td>
+<td style="text-align:left">日志文件：<code>~/logs/rocketmqlogs/namesrv.log</code><br>日志配置：<code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq.namesrv.logback.xml</code> <br> 配置文件：<code>$&#123;ROCKETMQ_HOME&#125;/conf/namesrv.conf</code>（可选）</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Broker</strong></td>
+<td style="text-align:left">核心消息存储与转发服务</td>
+<td style="text-align:left">消息数据（CommitLog、ConsumeQueue、Index、Config）<br><strong>目录结构：</strong><br>├── <code>commitlog/</code> → 消息物理文件<br>├── <code>consumequeue/</code> → 消费队列索引<br>├── <code>index/</code> → 消息索引<br>├── <code>config/</code> → topic、offset、subscription 信息<br>├── <code>checkpoint</code> → 存储校验点<br>├── <code>abort</code> → 异常退出标志</td>
+<td style="text-align:left"><strong>数据目录</strong>：<code>~/store</code><br>日志文件：<code>~/logs/rocketmqlogs/broker.log</code><br>日志配置：<code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq.broker.logback.xml</code><br>配置文件：<code>$&#123;ROCKETMQ_HOME&#125;/conf/broker.conf</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Proxy</strong></td>
+<td style="text-align:left">客户端访问入口层（无状态代理）<br>（5.x 新引入组件）</td>
+<td style="text-align:left">转发日志、访问日志</td>
+<td style="text-align:left">日志配置：<code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq.proxy.logback.xml</code><br>日志文件：<code>~/logs/rocketmqlogs/proxy.log</code><br>配置文件：<code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq-proxy.json</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Controller</strong></td>
+<td style="text-align:left"><strong>Broker 主从协调与高可用管理</strong><br>（5.x 新引入组件）</td>
+<td style="text-align:left">- 集群主从元数据（主从关系、broker注册信息）<br>- Controller 自身运行状态与选举元数据</td>
+<td style="text-align:left"><strong>数据目录</strong>：<code>~/store/controller</code><br>日志文件：<code>~/logs/rocketmqlogs/controller.log</code><br>日志配置：<code>$&#123;ROCKETMQ_HOME&#125;/conf/rmq.controller.logback.xml</code><br>配置文件：<code>$&#123;ROCKETMQ_HOME&#125;/conf/controller.conf</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>NameServer 和 Proxy 都是无状态（stateless）组件，不会持久化业务数据。</p>
+</li>
+<li class="lvl-2">
+<p>Broker 数据路径说明</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">配置项</th>
+<th style="text-align:left">默认路径</th>
+<th style="text-align:left">说明</th>
+<th style="text-align:left">主要作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>storePathRootDir</strong></td>
+<td style="text-align:left"><code>/home/rocketmq/store</code><br>（默认）</td>
+<td style="text-align:left">消息存储的根目录</td>
+<td style="text-align:left">作为所有存储文件的父级目录，其他路径若未单独配置，则在此目录下创建</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>storePathCommitLog</strong></td>
+<td style="text-align:left"><code>$&#123;storePathRootDir&#125;/commitlog</code></td>
+<td style="text-align:left">CommitLog 文件存放路径</td>
+<td style="text-align:left">存储消息主体内容，是最核心的数据文件（顺序写入）</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>storePathConsumeQueue</strong></td>
+<td style="text-align:left"><code>$&#123;storePathRootDir&#125;/consumequeue</code></td>
+<td style="text-align:left">消费队列文件存放路径</td>
+<td style="text-align:left">存储消息在队列中的索引（逻辑队列），指向 CommitLog 的物理位置</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>storePathIndex</strong></td>
+<td style="text-align:left"><code>$&#123;storePathRootDir&#125;/index</code></td>
+<td style="text-align:left">索引文件存放路径</td>
+<td style="text-align:left">提供按 Key 查询消息的索引结构，便于通过 Message Key 快速检索消息</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>storePathConfig</strong></td>
+<td style="text-align:left"><code>$&#123;storePathRootDir&#125;/config</code></td>
+<td style="text-align:left">Broker 运行时配置存储路径</td>
+<td style="text-align:left">存储运行时生成的配置文件，如 topic、consumerOffset、subscriptionGroup 等</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>storeCheckpoint</strong></td>
+<td style="text-align:left"><code>$&#123;storePathRootDir&#125;/checkpoint</code></td>
+<td style="text-align:left">Checkpoint 文件路径</td>
+<td style="text-align:left">记录 CommitLog、ConsumeQueue、Index 三者的刷盘进度，用于崩溃恢复</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>abortFile</strong></td>
+<td style="text-align:left"><code>$&#123;storePathRootDir&#125;/abort</code></td>
+<td style="text-align:left">异常退出标志文件路径</td>
+<td style="text-align:left">用于标识 Broker 是否异常退出，启动时据此判断是否执行恢复流程</td>
 </tr>
 </tbody>
 </table>
@@ -1764,14 +1955,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">658k</span>
+    <span title="站点总字数">660k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">39:54</span>
+    <span title="站点阅读时长">40:01</span>
   </span>
 </div>
 <div class="busuanzi-count">
