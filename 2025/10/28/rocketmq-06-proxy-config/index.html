@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍 RocketMQ Proxy 的配置项。   RocketMQ官网   本文使用的 RocketMQ 版本为 5.3.2。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-10-28T13:33:05.000Z">
-<meta property="article:modified_time" content="2025-10-28T05:48:07.735Z">
+<meta property="article:modified_time" content="2025-10-30T06:45:46.620Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="rocketmq">
 <meta name="twitter:card" content="summary">
@@ -882,7 +882,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">237</span>
+          <span class="site-state-item-count">239</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -960,6 +960,20 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/31/rocketmq-08-acl2.0/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-31</time>
+        <br>
+      RocketMQ ACL 2.0
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/29/rocketmq-08-acl1.0/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-29</time>
+        <br>
+      RocketMQ ACL 1.0
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/10/24/rocketmq-02-dashboard/" rel="bookmark">
         <time class="popular-posts-time">2025-10-24</time>
         <br>
@@ -978,20 +992,6 @@ i.ban {
         <time class="popular-posts-time">2025-09-04</time>
         <br>
       SpringBoot3 + ShardingSphere-Proxy5.5.2 分库分表
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/28/rocketmq-07-admin-tool/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-28</time>
-        <br>
-      RocketMQ Admin Tool
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/10/28/rocketmq-04-broker-config/" rel="bookmark">
-        <time class="popular-posts-time">2025-10-28</time>
-        <br>
-      RocketMQ Broker 的配置项
       </a>
     </li>
   </ul>
@@ -1042,9 +1042,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-10-28 21:33:05 / 修改时间：13:48:07" itemprop="dateCreated datePublished" datetime="2025-10-28T21:33:05+08:00">2025-10-28</time>
+      <time title="创建时间：2025-10-28 21:33:05" itemprop="dateCreated datePublished" datetime="2025-10-28T21:33:05+08:00">2025-10-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-30 14:45:46" itemprop="dateModified" datetime="2025-10-30T14:45:46+08:00">2025-10-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1096,7 +1102,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
+      <span>1.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1156,10 +1162,10 @@ i.ban {
 <h2 id="配置项项目源码简介">配置项项目源码简介</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>当前版本尚不支持通过命令行查看 Proxy 的配置项</p>
+<p>当前版本尚不支持通过命令行查看 Proxy 的配置项，但是在启动Proxy的日志中可以看到当前生效的配置项。</p>
 </li>
 <li class="lvl-2">
-<p>在源码 <code>rocketmq-all-5.3.2-source-release/proxy</code> 的启动类 <code>org.apache.rocketmq.proxy.ProxyStartup</code>中 可以看到其启动时会初始化如下配置项的类</p>
+<p>另外在源码 <code>rocketmq-all-5.3.2-source-release/proxy</code> 的启动类 <code>org.apache.rocketmq.proxy.ProxyStartup</code>中 可以看到其启动时会初始化如下配置项的类</p>
 </li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.rocketmq.proxy.config.ProxyConfig</span><br></pre></td></tr></table></figure>
@@ -1183,296 +1189,296 @@ i.ban {
 <tr>
 <td style="text-align:left"><strong>基础信息</strong></td>
 <td style="text-align:left"><code>rocketMQClusterName</code></td>
-<td style="text-align:left">DefaultCluster</td>
-<td style="text-align:left">RocketMQ 集群名称</td>
-<td style="text-align:left">若有多个集群，应设置唯一名称</td>
+<td style="text-align:left"><code>DefaultCluster</code></td>
+<td style="text-align:left">Broker 集群名称（Proxy 用于关联 RocketMQ 集群）</td>
+<td style="text-align:left">若有多个集群，应唯一命名</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>proxyClusterName</code></td>
-<td style="text-align:left">DefaultCluster</td>
-<td style="text-align:left">Proxy 所属集群名</td>
-<td style="text-align:left">✅建议独立于 broker 集群命名</td>
+<td style="text-align:left"><code>DefaultCluster</code></td>
+<td style="text-align:left">Proxy 所属集群名称（与 brokerClusterName 可不同）</td>
+<td style="text-align:left">✅建议独立命名，区分 Proxy 集群</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>proxyName</code></td>
-<td style="text-align:left">主机名或 DEFAULT_PROXY</td>
-<td style="text-align:left">Proxy 实例名</td>
-<td style="text-align:left">使用唯一命名防止冲突</td>
+<td style="text-align:left">主机名（例：<code>ip-10-250-0-175...</code>）</td>
+<td style="text-align:left">Proxy 实例名称，用于唯一标识</td>
+<td style="text-align:left">✅建议设置唯一名称</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>localServeAddr</code></td>
-<td style="text-align:left">空</td>
-<td style="text-align:left">Proxy 服务监听地址</td>
-<td style="text-align:left">建议显式指定本机 IP</td>
+<td style="text-align:left">本地 IP</td>
+<td style="text-align:left">Proxy 本地服务地址（Remoting 通信使用）</td>
+<td style="text-align:left">✅建议显式指定 IP</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Namesrv</strong></td>
 <td style="text-align:left"><code>namesrvAddr</code></td>
-<td style="text-align:left">环境变量或系统属性</td>
-<td style="text-align:left">NameServer 地址</td>
-<td style="text-align:left">✅推荐配置为 proxy 可访问的内部地址</td>
+<td style="text-align:left">多个地址（分号分隔）</td>
+<td style="text-align:left">NameServer 地址，Proxy 通过它同步路由</td>
+<td style="text-align:left">✅推荐配置为可访问的内网地址</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>namesrvDomain</code></td>
 <td style="text-align:left">空</td>
-<td style="text-align:left">NameServer 域名</td>
-<td style="text-align:left">可配合域名发现机制</td>
+<td style="text-align:left">NameServer 域名（可用于动态解析）</td>
+<td style="text-align:left">可选，DNS 方式时使用</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>namesrvDomainSubgroup</code></td>
 <td style="text-align:left">空</td>
-<td style="text-align:left">子域名分组</td>
-<td style="text-align:left">可忽略，或多集群时配置</td>
+<td style="text-align:left">子域分组（多集群域名发现用）</td>
+<td style="text-align:left">一般可忽略</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>TLS 配置</strong></td>
 <td style="text-align:left"><code>tlsTestModeEnable</code></td>
 <td style="text-align:left">true</td>
-<td style="text-align:left">是否启用 TLS 测试模式</td>
-<td style="text-align:left">生产环境禁用（false）</td>
+<td style="text-align:left">测试模式下跳过验证（仅用于本地测试）</td>
+<td style="text-align:left">❗生产应设为 false</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>tlsKeyPath</code></td>
-<td style="text-align:left"><code>$&#123;PROXY_HOME&#125;/conf/tls/rocketmq.key</code></td>
+<td style="text-align:left"><code>/conf/tls/rocketmq.key</code></td>
 <td style="text-align:left">TLS 私钥路径</td>
-<td style="text-align:left">✅根据证书路径修改</td>
+<td style="text-align:left">✅根据证书路径调整</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>tlsCertPath</code></td>
-<td style="text-align:left"><code>$&#123;PROXY_HOME&#125;/conf/tls/rocketmq.crt</code></td>
+<td style="text-align:left"><code>/conf/tls/rocketmq.crt</code></td>
 <td style="text-align:left">TLS 证书路径</td>
-<td style="text-align:left">✅根据证书路径修改</td>
+<td style="text-align:left">✅根据证书路径调整</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>gRPC 基础</strong></td>
 <td style="text-align:left"><code>proxyMode</code></td>
-<td style="text-align:left">CLUSTER</td>
-<td style="text-align:left">模式（CLUSTER / LOCAL / REMOTING）</td>
+<td style="text-align:left"><code>CLUSTER</code></td>
+<td style="text-align:left">Proxy 模式：CLUSTER / LOCAL / REMOTING</td>
 <td style="text-align:left">✅生产推荐 CLUSTER</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>grpcServerPort</code></td>
 <td style="text-align:left">8081</td>
-<td style="text-align:left">gRPC 监听端口</td>
-<td style="text-align:left">若冲突可改</td>
+<td style="text-align:left">gRPC 服务端监听端口</td>
+<td style="text-align:left">若冲突可修改</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>grpcShutdownTimeSeconds</code></td>
 <td style="text-align:left">30</td>
 <td style="text-align:left">优雅关闭等待时间</td>
-<td style="text-align:left">可略调大</td>
+<td style="text-align:left">可适当调大</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>enableGrpcEpoll</code></td>
 <td style="text-align:left">false</td>
-<td style="text-align:left">启用 Epoll 模式（Linux）</td>
-<td style="text-align:left">✅在 Linux 上开启提高性能</td>
+<td style="text-align:left">启用 Linux epoll I/O 模型</td>
+<td style="text-align:left">✅Linux 建议开启</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>grpcMaxInboundMessageSize</code></td>
-<td style="text-align:left">130MB</td>
-<td style="text-align:left">gRPC 接收最大消息</td>
-<td style="text-align:left">根据消息体调整</td>
+<td style="text-align:left">136314880 (~130MB)</td>
+<td style="text-align:left">最大入站消息大小</td>
+<td style="text-align:left">根据消息大小调整</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>消息限制</strong></td>
 <td style="text-align:left"><code>maxMessageSize</code></td>
-<td style="text-align:left">4MB</td>
+<td style="text-align:left">4194304 (4MB)</td>
 <td style="text-align:left">最大消息体大小</td>
-<td style="text-align:left">✅与 broker 限制一致</td>
+<td style="text-align:left">✅应与 Broker 一致</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>enableMessageBodyEmptyCheck</code></td>
 <td style="text-align:left">true</td>
-<td style="text-align:left">校验空消息体</td>
-<td style="text-align:left">保持默认</td>
+<td style="text-align:left">校验消息体是否为空</td>
+<td style="text-align:left">保持默认即可</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>maxUserPropertySize</code></td>
-<td style="text-align:left">16KB</td>
+<td style="text-align:left">16384 (16KB)</td>
 <td style="text-align:left">用户属性最大长度</td>
-<td style="text-align:left">视业务复杂度调整</td>
+<td style="text-align:left">根据业务复杂度调整</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>userPropertyMaxNum</code></td>
 <td style="text-align:left">128</td>
-<td style="text-align:left">最大属性数</td>
-<td style="text-align:left">可根据情况调小</td>
+<td style="text-align:left">单条消息最大属性数量</td>
+<td style="text-align:left">可适当调低防止性能损耗</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>maxMessageGroupSize</code></td>
 <td style="text-align:left">64</td>
-<td style="text-align:left">最大分组大小</td>
+<td style="text-align:left">最大消息组大小（批量 pop 使用）</td>
 <td style="text-align:left">默认即可</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>消息可见性与延迟</strong></td>
 <td style="text-align:left"><code>defaultInvisibleTimeMills</code></td>
-<td style="text-align:left">60s</td>
-<td style="text-align:left">pop 消息默认不可见时长</td>
-<td style="text-align:left">✅高并发可调低</td>
+<td style="text-align:left">60000 (60s)</td>
+<td style="text-align:left">pop 消息默认不可见时间</td>
+<td style="text-align:left">✅高并发时可调低</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>maxInvisibleTimeMills</code></td>
-<td style="text-align:left">12h</td>
-<td style="text-align:left">最大不可见时间</td>
-<td style="text-align:left">生产环境可降低</td>
+<td style="text-align:left">43200000 (12h)</td>
+<td style="text-align:left">最大不可见时长</td>
+<td style="text-align:left">✅可根据业务降低</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>maxDelayTimeMills</code></td>
-<td style="text-align:left">1d</td>
-<td style="text-align:left">最大延迟</td>
+<td style="text-align:left">86400000 (1d)</td>
+<td style="text-align:left">最大延迟时间</td>
 <td style="text-align:left">与 Broker 保持一致</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>useDelayLevel</code></td>
 <td style="text-align:left">false</td>
-<td style="text-align:left">是否使用延迟等级</td>
-<td style="text-align:left">✅若 Broker 开启等级延迟则开启</td>
+<td style="text-align:left">是否使用延迟等级模式</td>
+<td style="text-align:left">若 Broker 启用等级延迟则开启</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>messageDelayLevel</code></td>
-<td style="text-align:left"><code>&quot;1s 5s 10s 30s 1m ...&quot;</code></td>
-<td style="text-align:left">延迟等级表</td>
-<td style="text-align:left">需与 broker.conf 对齐</td>
+<td style="text-align:left"><code>&quot;1s 5s 10s ... 2h&quot;</code></td>
+<td style="text-align:left">延迟等级配置表</td>
+<td style="text-align:left">✅需与 broker.conf 对齐</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>线程池（gRPC 模块）</strong></td>
 <td style="text-align:left"><code>grpcBossLoopNum</code></td>
 <td style="text-align:left">1</td>
-<td style="text-align:left">Boss 线程数</td>
+<td style="text-align:left">Netty boss 线程</td>
 <td style="text-align:left">默认即可</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>grpcWorkerLoopNum</code></td>
-<td style="text-align:left">2 × CPU核数</td>
-<td style="text-align:left">Worker 线程数</td>
-<td style="text-align:left">✅CPU核数较多时限制上线</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">gRPC worker 线程</td>
+<td style="text-align:left">✅CPU&gt;4 时可调高至核数</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>grpcThreadPoolNums</code></td>
-<td style="text-align:left">16 + 2×CPU</td>
-<td style="text-align:left">RPC 线程池大小</td>
-<td style="text-align:left">✅过大会浪费内存</td>
+<td style="text-align:left">20</td>
+<td style="text-align:left">gRPC 业务线程数</td>
+<td style="text-align:left">✅建议 ≈ CPU 核数×2</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>grpcThreadPoolQueueCapacity</code></td>
 <td style="text-align:left">100000</td>
 <td style="text-align:left">队列容量</td>
-<td style="text-align:left">✅建议 ≤ 20000 防止OOM</td>
+<td style="text-align:left">⚠️建议 ≤20000，防 OOM</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>线程池（内部模块）</strong></td>
 <td style="text-align:left"><code>producerProcessorThreadPoolNums</code></td>
-<td style="text-align:left">CPU核数</td>
-<td style="text-align:left">生产者请求处理线程</td>
-<td style="text-align:left">✅根据QPS调整</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">生产者处理线程</td>
+<td style="text-align:left">✅可根据QPS调整</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>consumerProcessorThreadPoolNums</code></td>
-<td style="text-align:left">CPU核数</td>
-<td style="text-align:left">消费者请求处理线程</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">消费者处理线程</td>
 <td style="text-align:left">同上</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>topicRouteServiceThreadPoolNums</code></td>
-<td style="text-align:left">CPU核数</td>
-<td style="text-align:left">路由服务线程数</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">路由服务线程</td>
 <td style="text-align:left">默认即可</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>renewThreadPoolNums</code></td>
 <td style="text-align:left">2</td>
-<td style="text-align:left">自动续期线程数</td>
-<td style="text-align:left">可视场景调大</td>
+<td style="text-align:left">自动续期线程</td>
+<td style="text-align:left">高并发时可调大</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>缓存配置</strong></td>
 <td style="text-align:left"><code>topicRouteServiceCacheExpiredSeconds</code></td>
 <td style="text-align:left">300</td>
-<td style="text-align:left">路由缓存过期时间</td>
-<td style="text-align:left">✅可调大减少namesrv压力</td>
+<td style="text-align:left">路由缓存有效期</td>
+<td style="text-align:left">✅可适当调大</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>topicConfigCacheExpiredSeconds</code></td>
 <td style="text-align:left">300</td>
-<td style="text-align:left">Topic 配置缓存时间</td>
+<td style="text-align:left">Topic 配置缓存有效期</td>
 <td style="text-align:left">同上</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>subscriptionGroupConfigCacheExpiredSeconds</code></td>
 <td style="text-align:left">300</td>
-<td style="text-align:left">订阅组缓存</td>
+<td style="text-align:left">订阅组缓存有效期</td>
 <td style="text-align:left">同上</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>aclCacheExpiredSeconds</code></td>
 <td style="text-align:left">300</td>
-<td style="text-align:left">ACL 缓存时间</td>
-<td style="text-align:left">同上</td>
+<td style="text-align:left">ACL 缓存有效期</td>
+<td style="text-align:left">✅同上</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>事务与心跳</strong></td>
 <td style="text-align:left"><code>transactionHeartbeatThreadPoolNums</code></td>
 <td style="text-align:left">20</td>
-<td style="text-align:left">事务心跳线程</td>
-<td style="text-align:left">可视并发调整</td>
+<td style="text-align:left">事务心跳线程数</td>
+<td style="text-align:left">✅根据事务量调整</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>transactionHeartbeatPeriodSecond</code></td>
 <td style="text-align:left">20</td>
-<td style="text-align:left">心跳周期</td>
-<td style="text-align:left">建议保持默认</td>
+<td style="text-align:left">事务心跳周期</td>
+<td style="text-align:left">默认即可</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>transactionDataExpireMillis</code></td>
-<td style="text-align:left">30s</td>
-<td style="text-align:left">数据过期时间</td>
-<td style="text-align:left">默认</td>
+<td style="text-align:left">30000</td>
+<td style="text-align:left">事务数据过期时间</td>
+<td style="text-align:left">默认即可</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>指标与监控</strong></td>
 <td style="text-align:left"><code>metricsExporterType</code></td>
 <td style="text-align:left">DISABLE</td>
-<td style="text-align:left">指标导出方式 (PROM, GRPC, LOG)</td>
+<td style="text-align:left">指标导出方式：DISABLE / PROM / GRPC / LOG</td>
 <td style="text-align:left">✅建议启用 PROM</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>metricsPromExporterPort</code></td>
 <td style="text-align:left">5557</td>
-<td style="text-align:left">Prometheus 端口</td>
-<td style="text-align:left">✅建议暴露以监控 proxy 性能</td>
+<td style="text-align:left">Prometheus 导出端口</td>
+<td style="text-align:left">✅建议暴露监控</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
@@ -1485,43 +1491,43 @@ i.ban {
 <td style="text-align:left"><strong>Remoting 模式</strong></td>
 <td style="text-align:left"><code>enableRemotingLocalProxyGrpc</code></td>
 <td style="text-align:left">true</td>
-<td style="text-align:left">是否启用本地 proxy gRPC 通信</td>
+<td style="text-align:left">启用本地 Proxy gRPC 转发</td>
 <td style="text-align:left">默认即可</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>remotingListenPort</code></td>
 <td style="text-align:left">8080</td>
-<td style="text-align:left">Remoting 监听端口</td>
-<td style="text-align:left">✅若有冲突修改</td>
+<td style="text-align:left">Remoting 通信端口</td>
+<td style="text-align:left">若冲突修改</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>sendLatencyEnable</code></td>
 <td style="text-align:left">false</td>
-<td style="text-align:left">启用发送延迟探测</td>
-<td style="text-align:left">✅建议开启优化负载均衡</td>
+<td style="text-align:left">启用发送延迟探测（LoadBalance 优化）</td>
+<td style="text-align:left">✅建议开启</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>startDetectorEnable</code></td>
 <td style="text-align:left">false</td>
-<td style="text-align:left">启用探测功能</td>
-<td style="text-align:left">可视情况开启</td>
+<td style="text-align:left">启用启动探测功能</td>
+<td style="text-align:left">可选，测试阶段使用</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>可观测性</strong></td>
 <td style="text-align:left"><code>traceOn</code></td>
 <td style="text-align:left">false</td>
-<td style="text-align:left">启用 trace</td>
-<td style="text-align:left">✅建议开启，便于问题追踪</td>
+<td style="text-align:left">启用链路追踪</td>
+<td style="text-align:left">✅建议开启</td>
 </tr>
 <tr>
 <td style="text-align:left"></td>
 <td style="text-align:left"><code>enablePrintJstack</code></td>
 <td style="text-align:left">true</td>
-<td style="text-align:left">打印线程堆栈信息</td>
-<td style="text-align:left">✅生产环境保留但周期可延长</td>
+<td style="text-align:left">打印线程堆栈（用于诊断）</td>
+<td style="text-align:left">✅可延长周期减少日志</td>
 </tr>
 </tbody>
 </table>
@@ -1699,14 +1705,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">670k</span>
+    <span title="站点总字数">674k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">40:35</span>
+    <span title="站点阅读时长">40:51</span>
   </span>
 </div>
 <div class="busuanzi-count">
