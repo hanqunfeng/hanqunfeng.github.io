@@ -254,8 +254,11 @@ i.ban {
 <img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
 <img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
 <img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+<img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
 
 <img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+<img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
 
 
 </div>
@@ -283,6 +286,10 @@ i.ban {
     $("#img_year").show();
 
     // 阳历节日、纪念日
+    // 显示9月3日抗战胜利纪念日图片
+    if(month==9 && day==3){
+        $("#img_93").show();
+    }
     // 显示918图片
     if(month==9 && day==18){
         $("#img_918").show();
@@ -309,6 +316,7 @@ i.ban {
     }
     // 其它日期不显示任何图片
     else{
+        $("#img_93").hide();
         $("#img_918").hide();
         $("#img_910").hide();
         $("#img_101").hide();
@@ -318,6 +326,12 @@ i.ban {
     }
 
     // 农历节日、纪念日
+    // 将“初一”“初二”…“十五”映射成数字 1~15
+    const dayMap = {
+        "初一": 1, "初二": 2, "初三": 3, "初四": 4, "初五": 5,
+        "初六": 6, "初七": 7, "初八": 8, "初九": 9, "初十": 10,
+        "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15
+    };
     let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
     let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
     var fulltime = year + "-" + monthStr + "-" + dayStr;
@@ -340,11 +354,16 @@ i.ban {
             else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
                 $("#img_yxj").show();
             }
+            // 农历新年
+            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+                $("#img_new_year").show();
+            }
             // 其它日期不显示任何图片
             else {
                 $("#img_zqj").hide();
                 $("#img_dwj").hide();
                 $("#img_yxj").hide();
+                $("#img_new_year").hide();
             }
         },
         error: function(xhr, status, error) {
@@ -978,9 +997,9 @@ i.ban {
       <div class="post-body">
           
 
-<!-- <style>.xgplayer{width: 100%; max-width: 850px; margin: auto}</style><div class="xgplayer"><iframe class="xgplayer" id="mmedia-zCtTimrOpIZoqQVK" src="https://www.ixigua.com/iframe/7013674238489920013?autoplay=1&startTime=undefined" allowfullscreen="allowfullscreen" scrolling="no" border="0" frameborder="0" framespacing="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div><script> document.getElementById("mmedia-zCtTimrOpIZoqQVK").style.height=document.getElementById("mmedia-zCtTimrOpIZoqQVK").scrollWidth*0.7+"px";
+<!-- <style>.xgplayer{width: 100%; max-width: 850px; margin: auto}</style><div class="xgplayer"><iframe class="xgplayer" id="mmedia-jmrbfiigRUJFYitf" src="https://www.ixigua.com/iframe/7013674238489920013?autoplay=1&startTime=undefined" allowfullscreen="allowfullscreen" scrolling="no" border="0" frameborder="0" framespacing="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div><script> document.getElementById("mmedia-jmrbfiigRUJFYitf").style.height=document.getElementById("mmedia-jmrbfiigRUJFYitf").scrollWidth*0.7+"px";
     window.onresize = function(){
-      document.getElementById("mmedia-zCtTimrOpIZoqQVK").style.height=document.getElementById("mmedia-zCtTimrOpIZoqQVK").scrollWidth*0.7+"px";
+      document.getElementById("mmedia-jmrbfiigRUJFYitf").style.height=document.getElementById("mmedia-jmrbfiigRUJFYitf").scrollWidth*0.7+"px";
     }; </script> -->
 <!--
 <iframe src="https://player.bilibili.com/player.html?aid=7013674238489920013&bvid=BV17J4m187ST&cid=7013674238489920013&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
