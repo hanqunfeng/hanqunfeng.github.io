@@ -6,7 +6,7 @@
   <link href="https://blog.hanqunfeng.com/atom.xml" rel="self"/>
   
   <link href="https://blog.hanqunfeng.com/"/>
-  <updated>2025-11-20T08:36:36.524Z</updated>
+  <updated>2025-11-26T09:20:50.697Z</updated>
   <id>https://blog.hanqunfeng.com/</id>
   
   <author>
@@ -15,6 +15,65 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux常用命令--lsof</title>
+    <link href="https://blog.hanqunfeng.com/2025/11/26/linux-command16-lsof/"/>
+    <id>https://blog.hanqunfeng.com/2025/11/26/linux-command16-lsof/</id>
+    <published>2025-11-26T13:30:05.000Z</published>
+    <updated>2025-11-26T09:20:50.697Z</updated>
+    
+    <content type="html"><![CDATA[<!-- **加粗** *斜体* ***加粗并斜体*** ~~删除线~~ ==突出显示== `突出显示(推荐)` ++下划线++ ~下标~ ^上标^ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference. 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600) +++ **点击折叠** 这是被隐藏的内容 +++::: tips success warning danger这里是容器内的内容:::% note info % success warning danger这里是容器内的内容% endnote % --><h2 id="摘要">摘要</h2><ul class="lvl-0"><li class="lvl-2"><p>本文介绍 lsof 命令的使用方法</p></li><li class="lvl-2"><p>本文基于CentOS8。</p></li></ul><span id="more"></span><h2 id="lsof-是什么？">lsof 是什么？</h2><ul class="lvl-0"><li class="lvl-2"><p>lsof = list open files</p></li><li class="lvl-2"><p>它用来查看：</p><ul class="lvl-2"><li class="lvl-4">当前系统中所有进程打开的文件</li><li class="lvl-4">包含普通文件、目录、socket、管道、网络连接、设备等</li></ul></li><li class="lvl-2"><p>在 Linux 中：“一切皆文件”</p></li><li class="lvl-2"><p>所以你可以用 lsof 查看：</p><ul class="lvl-2"><li class="lvl-4">谁在占用你的端口？</li><li class="lvl-4">哪个进程正在读/写某个文件？</li><li class="lvl-4">为什么文件删除了却还占磁盘？</li><li class="lvl-4">哪个文件被锁住？</li><li class="lvl-4">哪些程序在访问某个目录？</li></ul></li><li class="lvl-2"><p>CentOS 默认包含 lsof，但如果没有，可以通过 yum 安装</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install lsof -y</span><br></pre></td></tr></table></figure><h2 id="lsof-的基本用法">lsof 的基本用法</h2><h3 id="查看被删除但仍被占用的文件">查看被删除但仍被占用的文件</h3><ul class="lvl-0"><li class="lvl-2"><p>如果进程正在运行且保持文件的句柄，此时没有停止进程就执行了<code>rm</code>命令，此时文件的**目录项（名字）**被删除，但是文件数据本身没有被删除，只要有进程还在打开这个文件（保持文件句柄），它就继续占用磁盘空间。</p></li><li class="lvl-2"><p>此时可以通过如下命令查询哪些被删除的文件还被占用：</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出所有 link count 小于 1 的（deleted）文件</span></span><br><span class="line">lsof +L1</span><br><span class="line"><span class="comment"># 列出所有被删除的文件</span></span><br><span class="line">lsof | grep deleted</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>如果查询到这种文件，则需要停止进程，才能真正删除文件。</p></li></ul><h3 id="查端口被哪个进程占用">查端口被哪个进程占用</h3><ul class="lvl-0"><li class="lvl-2"><p>通过如下命令查询：</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出指定端口对应的进程</span></span><br><span class="line">lsof -i:8080</span><br><span class="line"><span class="comment">## 输出示例</span></span><br><span class="line">COMMAND   PID USER   FD   TYPE     DEVICE SIZE/OFF NODE NAME</span><br><span class="line">java    18548 boss   39u  IPv6 1251548211      0t0  TCP *:webcache (LISTEN)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将服务名称替换为端口</span></span><br><span class="line">lsof -i :8080 -P</span><br><span class="line"><span class="comment">## 输出示例</span></span><br><span class="line">COMMAND   PID USER   FD   TYPE     DEVICE SIZE/OFF NODE NAME</span><br><span class="line">java    18548 boss   39u  IPv6 1251548211      0t0  TCP *:8080 (LISTEN)</span><br></pre></td></tr></table></figure><h3 id="查看某个进程打开的所有文件">查看某个进程打开的所有文件</h3><ul class="lvl-0"><li class="lvl-2"><p>通过如下命令查询：</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lsof -p &lt;PID&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出示例</span></span><br><span class="line">COMMAND   PID USER   FD   TYPE     DEVICE  SIZE/OFF       NODE NAME</span><br><span class="line">java    18548 boss  cwd    DIR      202,1      4096      35377 /home/boss</span><br><span class="line">java    18548 boss  rtd    DIR      202,1      4096          2 /</span><br><span class="line">java    18548 boss  mem    REG      202,1 106065056      60671 /usr/lib/locale/locale-archive</span><br><span class="line"></span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>能看到这个进程：</p><ul class="lvl-2"><li class="lvl-4">打开的日志文件</li><li class="lvl-4">使用的 jar 文件</li><li class="lvl-4">使用的 socket</li><li class="lvl-4">使用的 config 文件</li></ul></li><li class="lvl-2"><p>输出结果字段说明</p></li></ul><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td>COMMAND</td><td>程序名（java）</td></tr><tr><td>PID</td><td>进程号（18548）</td></tr><tr><td>USER</td><td>运行用户（boss）</td></tr><tr><td>FD</td><td>文件描述符</td></tr><tr><td>TYPE</td><td>文件类型</td></tr><tr><td>DEVICE</td><td>所在磁盘分区 ID</td></tr><tr><td>SIZE/OFF</td><td>文件大小（字节）</td></tr><tr><td>NODE</td><td>inode 编号</td></tr><tr><td>NAME</td><td>文件名（或网络连接信息）</td></tr></tbody></table><h3 id="查看指定用户占用的文件">查看指定用户占用的文件</h3><ul class="lvl-0"><li class="lvl-2"><p>通过如下命令查询：</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsof -u &lt;USER&gt;</span><br></pre></td></tr></table></figure><h3 id="查看指定程序-COMMAND-打开的文件">查看指定程序(COMMAND)打开的文件</h3><ul class="lvl-0"><li class="lvl-2"><p>通过如下命令查询：</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsof -c &lt;<span class="built_in">command</span>&gt;</span><br></pre></td></tr></table></figure><h3 id="查某个目录或文件正在被哪些进程占用">查某个目录或文件正在被哪些进程占用</h3><ul class="lvl-0"><li class="lvl-2"><p>目录</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 能显示所有正在访问该目录中文件的进程</span></span><br><span class="line">lsof +D /home/boss/logs</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>文件</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsof /home/boss/logs/access.log</span><br></pre></td></tr></table></figure><h3 id="查看网络连接">查看网络连接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">lsof -i</span><br><span class="line"><span class="comment"># 过滤协议</span></span><br><span class="line">lsof -i tcp</span><br><span class="line">lsof -i udp</span><br><span class="line"><span class="comment"># 过滤状态</span></span><br><span class="line">lsof -i -s tcp:listen</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出所有监听端口，</span></span><br><span class="line"><span class="comment"># -i: 显示网络相关的文件</span></span><br><span class="line"><span class="comment"># -P: 显示端口(不加-P则显示的是服务名)</span></span><br><span class="line"><span class="comment"># -n: 不将 IP 映射成主机名（禁用 DNS 查询）</span></span><br><span class="line"><span class="comment"># -s: 过滤显示连接状态</span></span><br><span class="line">lsof -i -P -n -s tcp:listen</span><br><span class="line"><span class="comment">## 输出示例</span></span><br><span class="line">mongod     1782     root    5u  IPv4       8697      0t0  TCP *:27017 (LISTEN)</span><br><span class="line">java       1808     boss   36u  IPv6       9221      0t0  TCP *:8082 (LISTEN)</span><br><span class="line">java       1808     boss   39u  IPv6       9230      0t0  TCP 127.0.0.1:7093 (LISTEN)</span><br></pre></td></tr></table></figure><h2 id="常用参数详解">常用参数详解</h2><table><thead><tr><th>参数</th><th>作用</th><th>示例</th></tr></thead><tbody><tr><td><code>-i</code></td><td>查看网络相关文件/端口</td><td><code>lsof -i</code></td></tr><tr><td><code>-i :端口</code></td><td>查看指定端口</td><td><code>lsof -i :8080</code></td></tr><tr><td><code>-p PID</code></td><td>查看某个进程所有打开文件</td><td><code>lsof -p 1836</code></td></tr><tr><td><code>-u 用户名</code></td><td>查看某个用户进程的打开文件</td><td><code>lsof -u nginx</code></td></tr><tr><td><code>-c 进程名关键字</code></td><td>查看某个进程名相关的文件</td><td><code>lsof -c java</code></td></tr><tr><td><code>+D 目录</code></td><td>查看目录中所有被访问的文件</td><td><code>lsof +D /usr/local/netqin/boss/netqin/logs</code></td></tr><tr><td><code>+L1</code></td><td>查找已删除但仍被打开的文件</td><td><code>lsof +L1</code>（=查找“(deleted)”占盘问题）</td></tr><tr><td><code>-d FD</code></td><td>查看指定文件描述符</td><td><code>lsof -d 1 -p 1836</code>（看进程 stdout）</td></tr><tr><td><code>-n</code></td><td>不做 DNS 解析，提高速度</td><td><code>lsof -i -n</code></td></tr><tr><td><code>-P</code></td><td>显示端口号（不解析为服务名）</td><td><code>lsof -i -P</code></td></tr><tr><td><code>-s</code></td><td>按连接状态过滤（TCP/UDP）</td><td><code>lsof -i -sTCP:LISTEN</code></td></tr><tr><td><code>-r</code></td><td>持续输出（实时监控）</td><td><code>lsof -i -r 1</code>（每秒刷新网络连接）</td></tr></tbody></table><h2 id="lsof-文件-FD-字段详细解释">lsof 文件 FD 字段详细解释</h2><ul class="lvl-0"><li class="lvl-2"><p>FD（文件描述符）格式总规则：数字 + 标志位</p></li><li class="lvl-2"><p>lsof 输出中的 FD（文件描述符）列，每一个都代表进程打开的一个“文件”（包括普通文件、目录、设备、socket、pipe 等）。</p></li><li class="lvl-2"><p>示例</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10r   → FD=10，<span class="built_in">read</span> only（只读）</span><br><span class="line">1w    → FD=1，write only（只写）</span><br><span class="line">36u   → FD=36，<span class="built_in">read</span>/write（可读可写）</span><br></pre></td></tr></table></figure><ul class="lvl-0"><li class="lvl-2"><p>解释</p></li></ul><table><thead><tr><th>部分</th><th>含义</th></tr></thead><tbody><tr><td><strong>数字（0、1、2、3、10、36…）</strong></td><td>文件描述符编号</td></tr><tr><td><strong>字母（r / w / u）</strong></td><td>访问模式：读/写/读写</td></tr></tbody></table><table><thead><tr><th>FD 编号</th><th>标准含义</th></tr></thead><tbody><tr><td><strong>0</strong></td><td>stdin（标准输入）</td></tr><tr><td><strong>1</strong></td><td>stdout（标准输出）</td></tr><tr><td><strong>2</strong></td><td>stderr（标准错误输出）</td></tr><tr><td><strong>3</strong> 及以上</td><td>进程打开的普通文件、日志、socket、管道等</td></tr></tbody></table><ul class="lvl-0"><li class="lvl-2"><p>特殊 FD 类型（没有数字）</p></li></ul><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td><code>cwd</code></td><td>当前工作目录，说明进程在这个目录下运行</td></tr><tr><td><code>rtd</code></td><td>进程的根目录，大多数情况下是 /，容器里可能是别的 rootfs</td></tr><tr><td><code>txt</code></td><td>可执行文件本体</td></tr><tr><td><code>mem</code></td><td>内存映射（mmap）文件，进程加载到内存中的库 / jar / so 文件</td></tr></tbody></table><h2 id="lsof-文件-TYPE-字段详细解释">lsof 文件 TYPE 字段详细解释</h2><table><thead><tr><th>文件类型</th><th>全称</th><th>含义</th><th>常见场景</th></tr></thead><tbody><tr><td><strong>REG</strong></td><td>Regular file</td><td>普通文件</td><td>日志、配置、可执行程序等</td></tr><tr><td><strong>DIR</strong></td><td>Directory</td><td>目录</td><td>进程访问的目录，例如当前工作目录</td></tr><tr><td><strong>CHR</strong></td><td>Character special file</td><td>字符设备文件</td><td><code>/dev/null</code>、<code>/dev/tty</code>、串口、键盘等</td></tr><tr><td><strong>BLK</strong></td><td>Block special file</td><td>块设备文件</td><td><code>/dev/sda</code>、硬盘、分区等</td></tr><tr><td><strong>FIFO</strong></td><td>Named pipe</td><td>命名管道</td><td>Linux 进程间通信，如 Nginx 和 PHP-FPM 的通信</td></tr><tr><td><strong>sock</strong></td><td>Socket</td><td>套接字（Unix 域 socket）</td><td><code>/var/run/docker.sock</code>、MySQL UNix socket</td></tr><tr><td><strong>IPv4</strong></td><td>IPv4 socket</td><td>IPv4 网络连接/监听</td><td><code>TCP *:80</code>、<code>UDP 127.0.0.1:53</code></td></tr><tr><td><strong>IPv6</strong></td><td>IPv6 socket</td><td>IPv6 网络连接/监听</td><td><code>TCP [::]:22</code></td></tr><tr><td><strong>unix</strong></td><td>Unix domain socket</td><td>本地进程通信</td><td><code>/run/systemd/journal/stdout</code></td></tr></tbody></table>]]></content>
+    
+    
+    <summary type="html">&lt;!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ --&gt;
+&lt;h2 id=&quot;摘要&quot;&gt;摘要&lt;/h2&gt;
+&lt;ul class=&quot;lvl-0&quot;&gt;
+&lt;li class=&quot;lvl-2&quot;&gt;
+&lt;p&gt;本文介绍 lsof 命令的使用方法&lt;/p&gt;
+&lt;/li&gt;
+&lt;li class=&quot;lvl-2&quot;&gt;
+&lt;p&gt;本文基于CentOS8。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="技术" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="linux" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/linux/"/>
+    
+    <category term="linux常用命令" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    
+    
+    <category term="linux常用命令" scheme="https://blog.hanqunfeng.com/tags/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    
+  </entry>
   
   <entry>
     <title>什么是 UTC？一篇人人都能看懂的科普文章</title>
@@ -1226,73 +1285,6 @@
 &lt;ul class=&quot;lvl-0&quot;&gt;
 &lt;li class=&quot;lvl-2&quot;&gt;
 &lt;p&gt;本文介绍 RabbitMQ 的 Message 的基本概念和用法。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.rabbitmq.com&quot;&gt;Zookeeper官网&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;本文使用的 RabbitMQ 版本为 4.1.4。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/hanqunfeng/springbootchapter/tree/master/springboot3-demo/rabbitmq-demo&quot;&gt;Java Client 示例&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    
-    
-    
-    <category term="技术" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="rabbitmq" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/rabbitmq/"/>
-    
-    <category term="分布式" scheme="https://blog.hanqunfeng.com/categories/%E6%8A%80%E6%9C%AF/rabbitmq/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
-    
-    
-    <category term="rabbitmq" scheme="https://blog.hanqunfeng.com/tags/rabbitmq/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>RabbitMQ 之 Exchange</title>
-    <link href="https://blog.hanqunfeng.com/2025/09/21/rabbitmq-exchange/"/>
-    <id>https://blog.hanqunfeng.com/2025/09/21/rabbitmq-exchange/</id>
-    <published>2025-09-21T13:30:05.000Z</published>
-    <updated>2025-09-22T13:17:07.914Z</updated>
-    
-    <content type="html"><![CDATA[<!-- **加粗** *斜体* ***加粗并斜体*** ~~删除线~~ ==突出显示== `突出显示(推荐)` ++下划线++ ~下标~ ^上标^ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference. 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600) +++ **点击折叠** 这是被隐藏的内容 +++::: tips success warning danger这里是容器内的内容:::% note info % success warning danger这里是容器内的内容% endnote %引用本地其它文章连接{} 大括号开始% post_link 文件名称(不包含.md) %大括号结束 --><h2 id="摘要">摘要</h2><ul class="lvl-0"><li class="lvl-2"><p>本文介绍 RabbitMQ 的 Exchange 的基本概念和用法。</p></li><li class="lvl-2"><p><a href="https://www.rabbitmq.com">Zookeeper官网</a></p></li><li class="lvl-2"><p>本文使用的 RabbitMQ 版本为 4.1.4。</p></li><li class="lvl-2"><p><a href="https://github.com/hanqunfeng/springbootchapter/tree/master/springboot3-demo/rabbitmq-demo">Java Client 示例</a></p></li></ul><span id="more"></span><h2 id="Exchange-交换机-是什么？">Exchange(交换机) 是什么？</h2><ul class="lvl-0"><li class="lvl-2"><p>在 RabbitMQ 中，<a href="https://www.rabbitmq.com/docs/exchanges">Exchange（交换机）</a> 是消息路由的核心组件。它负责接收生产者发送的消息，并根据预定义的路由规则将消息转发到一个或多个队列。</p></li><li class="lvl-2"><p>Exchange 类型决定了消息的路由方式。RabbitMQ 支持的 Exchange 类型</p></li></ul><table><thead><tr><th>Exchange 类型</th><th>声明类型</th><th>路由规则描述</th><th>典型用途</th></tr></thead><tbody><tr><td><strong>Direct</strong></td><td><code>direct</code></td><td>消息根据 <strong>路由键（routing key）</strong> 精确匹配绑定键（binding key）进行路由。</td><td>精确消息传递，如日志分类、任务分发等。</td></tr><tr><td><strong>Fanout</strong></td><td><code>fanout</code></td><td>消息广播到所有绑定的队列，<strong>忽略路由键</strong>。</td><td>广播消息，如发布/订阅模式、实时通知等。</td></tr><tr><td><strong>Topic</strong></td><td><code>topic</code></td><td>消息根据路由键与绑定键模式的匹配进行路由，支持通配符 <code>*</code>（匹配一个词）和 <code>#</code>（匹配零个或多个词）。</td><td>模块化路由，如日志系统、事件驱动架构等。</td></tr><tr><td><strong>Headers</strong></td><td><code>headers</code></td><td>消息根据 <strong>消息头部（headers）</strong> 与绑定时指定的头部匹配进行路由，支持 <code>x-match</code> 参数（<code>any</code> 或 <code>all</code>）。</td><td>多条件路由，如复杂过滤、动态路由等。</td></tr><tr><td><strong>Local Random Exchange</strong></td><td><code>x-local-random</code></td><td>消息始终被路由到本地队列，如果有多个本地队列绑定，则随机选择一个进行投递。</td><td>请求-响应（RPC）模式，低延迟通信</td></tr></tbody></table><ul class="lvl-0"><li class="lvl-2"><p>RabbitMQ 默认为我们提供了如下的交换机<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/SKlqQK.png" alt=""></p></li><li class="lvl-2"><p>每新创建一个 Vhost，RabbitMQ 就会自动创建以下交换机，比如 <code>/vtest</code><br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/oGJ1oj.png" alt=""></p></li><li class="lvl-2"><p>当然我们也可以根据需要创建新的交换机<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/QjnZin.png" alt=""></p></li><li class="lvl-2"><p>配置说明</p><ul class="lvl-2"><li class="lvl-4">Durability: 指定 Exchange 是否持久化。<ul class="lvl-4"><li class="lvl-6">Durable: 持久化的 Exchange 会被保存在磁盘上，重启 RabbitMQ 时会自动恢复。</li><li class="lvl-6">Transient: 非持久化的 Exchange 会被保存在内存中，重启 RabbitMQ 时会丢失。</li></ul></li><li class="lvl-4">Auto-delete: 指定 Exchange 是否自动删除。<ul class="lvl-4"><li class="lvl-6">yes: 如果没有队列或交换机绑定该 Exchange，则该 Exchange 会自动删除。</li><li class="lvl-6">no: 该 Exchange 不会自动删除。</li></ul></li><li class="lvl-4">Internal: 用于控制交换机是否可以被生产者直接发布消息<ul class="lvl-4"><li class="lvl-6">yes: 不能被生产者直接发送消息，该交换机只能用于 将消息从其他交换机转发到该交换机。</li><li class="lvl-6">no: 可以被生产者直接发送消息。</li></ul></li><li class="lvl-4">Arguments: 用于设置 Exchange 的其他参数，目前仅支持一个参数<ul class="lvl-4"><li class="lvl-6">Alternate exchange(alternate-exchange): 指定该 Exchange 的备用交换机，如果无法以其他方式将发往此交换机的消息路由出去，则将它们发送至此处指定的备用交换机。</li></ul></li></ul></li></ul><h2 id="Direct-Exchange（直接交换机）">Direct Exchange（直接交换机）</h2><ul class="lvl-0"><li class="lvl-2"><p>路由规则：消息的路由键与队列的绑定键完全匹配时，消息被路由到该队列。</p></li><li class="lvl-2"><p>示例：如果队列绑定键为 error，则只有路由键为 error 的消息会被路由到该队列。</p></li><li class="lvl-2"><p>适用场景：需要精确匹配的场景，如日志分类、任务分发等。</p></li></ul><h2 id="Fanout-Exchange（扇出交换机）">Fanout Exchange（扇出交换机）</h2><ul class="lvl-0"><li class="lvl-2"><p>路由规则：消息广播到所有绑定的队列，忽略路由键。</p></li><li class="lvl-2"><p>示例：无论消息的路由键是什么，都会被路由到所有绑定的队列。</p></li><li class="lvl-2"><p>适用场景：广播消息，如发布/订阅模式、实时通知等。</p></li></ul><h2 id="Topic-Exchange（主题交换机）">Topic Exchange（主题交换机）</h2><ul class="lvl-0"><li class="lvl-2"><p>路由规则：消息的路由键与队列的绑定键模式匹配时，消息被路由到该队列。支持通配符 *（匹配一个词）和 #（匹配零个或多个词）。</p></li><li class="lvl-2"><p>示例：如果队列绑定键为 <em>.orange.</em>，则路由键为 quick.orange.rabbit 的消息会被路由到该队列。</p></li><li class="lvl-2"><p>适用场景：模块化路由，如日志系统、事件驱动架构等。</p></li></ul><h2 id="Headers-Exchange（头部交换机）">Headers Exchange（头部交换机）</h2><ul class="lvl-0"><li class="lvl-2"><p>路由规则：消息的头部与队列的绑定头部匹配时，消息被路由到该队列。支持 x-match 参数（any 或 all）。即使配置了路由键也会忽略。</p></li><li class="lvl-2"><p>示例：如果队列绑定头部为 { “x-match”: “all”, “format”: “pdf”, “priority”: “high” }，则只有同时满足这两个条件的消息会被路由到该队列。</p></li><li class="lvl-2"><p>适用场景：多条件路由，如复杂过滤、动态路由等。</p></li></ul><h2 id="Local-Random-Exchange（本地随机交换机）">Local Random Exchange（本地随机交换机）</h2><ul class="lvl-0"><li class="lvl-2"><p>Local Random Exchange 是 RabbitMQ 4.0 引入的交换机类型，旨在优化<code>请求-响应</code>模式下的消息路由，特别适用于低延迟和高吞吐量的场景。通过结合独占队列使用，可以确保消息快速传递到本地消费者，减少网络延迟，提高系统性能。</p></li><li class="lvl-2"><p>路由规则：消息始终被路由到本地队列（位于同一节点上），如果有多个本地队列绑定，则随机选择一个进行投递。</p></li><li class="lvl-2"><p>示例：假设节点 A 上有两个绑定了 x-local-random 交换机的队列 Q1 和 Q2，发布的消息会随机路由到 Q1 或 Q2，但不会路由到其他节点的队列。</p></li><li class="lvl-2"><p>适用场景：请求-响应（RPC）模式下的低延迟通信，适合微服务架构中每个节点上都有消费者的场景。</p></li><li class="lvl-2"><p>在使用 Local Random Exchange 时，必须满足以下条件：</p><ul class="lvl-2"><li class="lvl-4">独占队列：消费者应声明独占队列，以确保队列仅绑定到当前节点。</li><li class="lvl-4">每个节点至少一个消费者：每个 RabbitMQ 节点上应至少有一个消费者，否则在该节点上发布的消息将被丢弃。</li><li class="lvl-4">交换机类型声明：使用 <code>x-local-random</code> 类型声明交换机。</li></ul></li></ul><h2 id="Exchange-与-Queue-绑定-Binding">Exchange 与 Queue 绑定(Binding)</h2><ul class="lvl-0"><li class="lvl-2"><p>创建好 Exchange 之后，需要将 Exchange 与 Queue 绑定，才能将消息发送到指定的队列。</p></li><li class="lvl-2"><p>Exchange 与 Queue 的绑定关系，即 Exchange 发送的消息，会根据路由键与队列的绑定键进行匹配，如果匹配成功，则将消息发送到对应的队列。</p></li><li class="lvl-2"><p>在 Exchange 页面点击 Exchange 的名称，进入 Exchange 详情页面，此处可以进行 Exchange 与 Queue 绑定配置<br><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/taKUjm.png" alt=""></p><blockquote><p>这里的<code>Arguments</code>用于设置 绑定 的其他参数，比如 <code>Headers Exchange</code> 需要设置 <code>x-match</code> 参数等。</p></blockquote></li></ul>]]></content>
-    
-    
-    <summary type="html">&lt;!--
- **加粗**
- *斜体*
- ***加粗并斜体***
- ~~删除线~~
- ==突出显示==
- `突出显示(推荐)`
- ++下划线++
- ~下标~
- ^上标^
- 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
- 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
-
- +++ **点击折叠**
- 这是被隐藏的内容
- +++
-
-::: tips success warning danger
-这里是容器内的内容
-:::
-
-% note info % success warning danger
-这里是容器内的内容
-% endnote %
-
-引用本地其它文章连接{}
- 大括号开始% post_link 文件名称(不包含.md) %大括号结束
- --&gt;
-&lt;h2 id=&quot;摘要&quot;&gt;摘要&lt;/h2&gt;
-&lt;ul class=&quot;lvl-0&quot;&gt;
-&lt;li class=&quot;lvl-2&quot;&gt;
-&lt;p&gt;本文介绍 RabbitMQ 的 Exchange 的基本概念和用法。&lt;/p&gt;
 &lt;/li&gt;
 &lt;li class=&quot;lvl-2&quot;&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.rabbitmq.com&quot;&gt;Zookeeper官网&lt;/a&gt;&lt;/p&gt;
