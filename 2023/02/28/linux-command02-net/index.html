@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   网络相关命令，如ping、ifconfig、netstat以及查看DNS、检查域名和证书的到期时间等等   本文基于CentOS8(x86_64)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-28T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-06-07T14:55:35.407Z">
+<meta property="article:modified_time" content="2025-12-01T03:00:28.709Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux常用命令">
 <meta name="twitter:card" content="summary">
@@ -988,6 +988,13 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/03/06/linux-command03-sort/" rel="bookmark">
+        <time class="popular-posts-time">2023-03-06</time>
+        <br>
+      Linux常用命令--文本排序和去重相关命令
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2023/03/10/linux-command04-ctrl/" rel="bookmark">
         <time class="popular-posts-time">2023-03-10</time>
         <br>
@@ -1002,17 +1009,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/02/24/linux-command01-zip/" rel="bookmark">
-        <time class="popular-posts-time">2023-02-24</time>
+      <a class="popular-posts-link" href="/2022/09/26/mysql8-user/" rel="bookmark">
+        <time class="popular-posts-time">2022-09-26</time>
         <br>
-      Linux常用命令--文件与目录的压缩
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/07/21/linux-nfs/" rel="bookmark">
-        <time class="popular-posts-time">2025-07-21</time>
-        <br>
-      Linux 安装 NFS
+      MySql--用户管理
       </a>
     </li>
   </ul>
@@ -1071,7 +1071,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-07 22:55:35" itemprop="dateModified" datetime="2025-06-07T22:55:35+08:00">2025-06-07</time>
+      <time title="修改时间：2025-12-01 11:00:28" itemprop="dateModified" datetime="2025-12-01T11:00:28+08:00">2025-12-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1123,14 +1123,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2k</span>
+      <span>2.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
+      <span>9 分钟</span>
     </span>
 
         </div>
@@ -1176,7 +1176,7 @@ i.ban {
 </ul>
 <span id="more"></span>
 <h2 id="1-测试网络和服务的连通性">1.测试网络和服务的连通性</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试网络连通性</span></span><br><span class="line">ping 192.168.36.49 -c 3 : -c 测试次数</span><br><span class="line">ping 192.168.36.49 -c 3 -s 1000 : -s 发送icmp包的大小bytes</span><br><span class="line"></span><br><span class="line"><span class="comment"># ping 域名，可以查看到负载均衡器名及其分发到的ip</span></span><br><span class="line"><span class="comment"># 可以看到多次ping baidu的域名，得到了不同的ip地址</span></span><br><span class="line">ping www.baidu.com</span><br><span class="line">PING www.a.shifen.com (110.242.68.4) 56(84) bytes of data.</span><br><span class="line">64 bytes from 110.242.68.4 (110.242.68.4): icmp_seq=1 ttl=50 time=19.7 ms</span><br><span class="line">64 bytes from 110.242.68.4 (110.242.68.4): icmp_seq=2 ttl=50 time=19.8 ms</span><br><span class="line">64 bytes from 110.242.68.4 (110.242.68.4): icmp_seq=3 ttl=50 time=19.8 ms</span><br><span class="line"></span><br><span class="line">ping www.baidu.com</span><br><span class="line">PING www.a.shifen.com (110.242.68.3) 56(84) bytes of data.</span><br><span class="line">64 bytes from 110.242.68.3 (110.242.68.3): icmp_seq=1 ttl=49 time=19.6 ms</span><br><span class="line">64 bytes from 110.242.68.3 (110.242.68.3): icmp_seq=2 ttl=49 time=19.6 ms</span><br><span class="line">64 bytes from 110.242.68.3 (110.242.68.3): icmp_seq=3 ttl=49 time=19.6 ms</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试服务连通性</span></span><br><span class="line">telnet 192.168.36.49 3306</span><br><span class="line"><span class="comment"># 退出telnet</span></span><br><span class="line"><span class="comment"># 如果没有给出命令输入符：比如 `&gt;` ,此时可以通过键盘快捷键 `ctrl`+`]` ,然后不管输出什么，直接输入 `quit` 即可正常退出telnet</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试网络连通性</span></span><br><span class="line">ping 192.168.36.49 -c 3 : -c 测试次数</span><br><span class="line">ping 192.168.36.49 -c 3 -s 1000 : -s 发送icmp包的大小bytes</span><br><span class="line"></span><br><span class="line"><span class="comment"># ping 域名，可以查看到负载均衡器名及其分发到的ip</span></span><br><span class="line"><span class="comment"># 可以看到多次ping baidu的域名，得到了不同的ip地址</span></span><br><span class="line">ping www.baidu.com</span><br><span class="line">PING www.a.shifen.com (110.242.68.4) 56(84) bytes of data.</span><br><span class="line">64 bytes from 110.242.68.4 (110.242.68.4): icmp_seq=1 ttl=50 time=19.7 ms</span><br><span class="line">64 bytes from 110.242.68.4 (110.242.68.4): icmp_seq=2 ttl=50 time=19.8 ms</span><br><span class="line">64 bytes from 110.242.68.4 (110.242.68.4): icmp_seq=3 ttl=50 time=19.8 ms</span><br><span class="line"></span><br><span class="line">ping www.baidu.com</span><br><span class="line">PING www.a.shifen.com (110.242.68.3) 56(84) bytes of data.</span><br><span class="line">64 bytes from 110.242.68.3 (110.242.68.3): icmp_seq=1 ttl=49 time=19.6 ms</span><br><span class="line">64 bytes from 110.242.68.3 (110.242.68.3): icmp_seq=2 ttl=49 time=19.6 ms</span><br><span class="line">64 bytes from 110.242.68.3 (110.242.68.3): icmp_seq=3 ttl=49 time=19.6 ms</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试服务连通性</span></span><br><span class="line">telnet 192.168.36.49 3306</span><br><span class="line"><span class="comment"># 退出telnet</span></span><br><span class="line"><span class="comment"># 如果没有给出命令输入符：比如 `&gt;` ,此时可以通过键盘快捷键 `ctrl`+`]` ,然后不管输出什么，直接输入 `quit` 即可正常退出telnet</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># nc 命令 比 telnet 更强、更专业、更适合脚本</span></span><br><span class="line"><span class="comment"># 安装 nc</span></span><br><span class="line">yum install nmap-ncat</span><br><span class="line"><span class="comment"># 测试服务连通性，什么都不会输出，等待接收信息</span></span><br><span class="line">nc 192.168.36.49 3306</span><br><span class="line"><span class="comment"># 更专业的测试服务连通性</span></span><br><span class="line">nc -v -w 3 192.168.36.49 3306</span><br><span class="line"><span class="comment">## -v: 详细输出, -w 3: 超时3秒</span></span><br><span class="line"><span class="comment">## 成功输出</span></span><br><span class="line">Ncat: Version 7.50 ( https://nmap.org/ncat )</span><br><span class="line">Ncat: Connected to 192.168.36.49:3306.</span><br><span class="line"><span class="comment">## 失败输出</span></span><br><span class="line">Ncat: Version 7.50 ( https://nmap.org/ncat )</span><br><span class="line">Ncat: Connection refused.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者使用如下命令，更适合脚本</span></span><br><span class="line">nc -z -w 3 192.168.36.49 3306</span><br><span class="line"><span class="built_in">echo</span> $? <span class="comment"># 返回0表示成功，返回1表示失败</span></span><br><span class="line"><span class="comment">## -z: 扫描端口，-w 3: 超时时间为3秒</span></span><br></pre></td></tr></table></figure>
 <div class="tips">
 <p><em><strong>禁止ping</strong></em></p>
 <ul class="lvl-1">
@@ -1206,9 +1206,50 @@ i.ban {
 <p>2.2 通过 <code>nmcli</code> 设置静态IP</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看网卡配置，这个是新版本的网卡文件，不过不推荐修改文件，而是通过nmcli进行设置</span></span><br><span class="line">vi /etc/NetworkManager/system-connections/xxx.nmconnection</span><br><span class="line"><span class="comment"># 设置静态IP</span></span><br><span class="line">nmcli con mod enp0s5 ipv4.addresses 10.211.55.9/24</span><br><span class="line">nmcli con mod enp0s5 ipv4.gateway 10.211.55.1</span><br><span class="line">nmcli con mod enp0s5 ipv4.method manual</span><br><span class="line">nmcli con mod enp0s5 ipv4.dns <span class="string">&quot;10.211.55.1,8.8.8.8&quot;</span></span><br><span class="line">nmcli con up enp0s5</span><br><span class="line">Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/4)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nmcli</code></td>
+<td>NetworkManager 的命令行工具</td>
+</tr>
+<tr>
+<td><code>con</code></td>
+<td><code>connection</code></td>
+</tr>
+<tr>
+<td><code>mod</code></td>
+<td><code>modify</code></td>
+</tr>
+<tr>
+<td><code>enp0s5</code></td>
+<td>连接名称 / 网卡名称（你的网卡）</td>
+</tr>
+<tr>
+<td><code>ipv4.method manual</code></td>
+<td>IPv4 地址获取方式：改为手动（静态）</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看网卡配置，这个是新版本的网卡文件，不过不推荐修改文件，而是通过nmcli进行设置</span></span><br><span class="line"><span class="comment"># vi /etc/NetworkManager/system-connections/xxx.nmconnection</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置ipv4静态IP</span></span><br><span class="line">nmcli con mod enp0s5 ipv4.addresses 10.211.55.9/24</span><br><span class="line"><span class="comment"># 设置ipv4网关</span></span><br><span class="line">nmcli con mod enp0s5 ipv4.gateway 10.211.55.1</span><br><span class="line"><span class="comment"># IPv4 地址获取方式：manual--改为手动（静态）,auto--改为自动（DHCP）</span></span><br><span class="line">nmcli con mod enp0s5 ipv4.method manual</span><br><span class="line"><span class="comment"># 设置ipv4 DNS</span></span><br><span class="line">nmcli con mod enp0s5 ipv4.dns <span class="string">&quot;10.211.55.1,8.8.8.8&quot;</span></span><br><span class="line"><span class="comment"># 激活网卡</span></span><br><span class="line">nmcli con up enp0s5</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/4)</span><br></pre></td></tr></table></figure>
 <h2 id="3-查看进程端口">3.查看进程端口</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>3.1 netstat: 正在被淘汰，来自 net-tools，很多发行版默认已移除</p>
+</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunpl : 查看端口是否启动，或者查看占用端口的进程</span><br><span class="line"></span><br><span class="line">-t 或 --tcp：显示所有TCP网络连接。</span><br><span class="line">-u 或 --udp：显示所有UDP网络连接。</span><br><span class="line">-n 或 --numeric：直接使用IP地址而不是主机名显示网络连接，使用端口号而不是服务名显示本地和远程地址。这样可以避免网络查找而加快命令的执行速度。</span><br><span class="line">-p 或 --programs：显示每个套接字/网络连接对应的进程。</span><br><span class="line">-l 或 --listening：只显示处于监听状态的套接字（也就是说，只显示服务器的网络连接）。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行netstat -tunpl命令后，你可能会看到如下的列：</span></span><br><span class="line">Active Internet connections (only servers)</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name</span><br><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1158/sshd</span><br><span class="line">tcp6       0      0 :::3306                 :::*                    LISTEN      777/mysqld</span><br><span class="line">udp        0      0 172.19.230.128:68       0.0.0.0:*                           598/systemd-network</span><br><span class="line">udp        0      0 127.0.0.1:323           0.0.0.0:*                           569/chronyd</span><br><span class="line">udp6       0      0 :::546                  :::*                                598/systemd-network</span><br><span class="line">udp6       0      0 ::1:323                 :::*                                569/chronyd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 各列含义说明</span></span><br><span class="line">Proto：协议名称，如TCP或UDP。</span><br><span class="line">Recv-Q和Send-Q：分别表示接收和发送队列的大小。在理想情况下，这些数字应为0。如果不是，可能会有网络问题。有时服务进程活着呢，但是就是不能响应客户端的请求，此时就要查看Recv-Q是否不为0，不为0则说明可能服务端在处理接收到的数据时速度较慢，导致接收队列中的数据在等待处理。这可能是由于服务器负载过重、资源不足或者应用程序本身存在性能问题，也可能是网络延迟导致的系统瓶颈，总之此时服务端已经不能响应客户端的请求了。</span><br><span class="line">Local Address：本地端点的IP地址和端口号。</span><br><span class="line">Foreign Address：远程端点的IP地址和端口号。如果该连接处于监听状态，这里将显示为0.0.0.0:*或:::*。</span><br><span class="line">State：网络连接的状态。对于TCP，可能的状态包括LISTEN、ESTABLISHED、CLOSE_WAIT等。对于UDP或处于监听状态的网络连接，这一列为空。</span><br><span class="line">PID/Program name：创建该网络连接的进程ID和程序名称。如果没有相应的权限，这一列可能为空。</span><br><span class="line"></span><br><span class="line">条件过滤示例，只显示指定进程或端口的信息：</span><br><span class="line">netstat -tunpl | grep sshd</span><br><span class="line">netstat -tunpl | grep 3306</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>3.2 ss: 推荐，更快、更准确、内置于 iproute2</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 参数含义与netstat一致</span></span><br><span class="line">ss -tunlp</span><br><span class="line"><span class="comment">## 输出类似</span></span><br><span class="line">Netid   State   Recv-Q  Send-Q      Local Address:Port      Peer Address:Port</span><br><span class="line">tcp     LISTEN  0       128         0.0.0.0:22              0.0.0.0:*           <span class="built_in">users</span>:((&quot;sshd&quot;,pid=<span class="number">1158</span>,fd=<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">### 输出说明</span></span><br><span class="line">Netid：网络ID，表示网络类型，如TCP、UDP等。</span><br><span class="line">State：网络连接的状态。LISTEN表示正在监听，ESTABLISHED表示已经建立连接，CLOSE_WAIT表示等待关闭连接。</span><br><span class="line">Recv-Q：接收队列的大小。</span><br><span class="line">Send-Q：发送队列的大小。</span><br><span class="line">Local Address:Port：本地端点的IP地址和端口号。</span><br><span class="line">Peer Address:Port：远程端点的IP地址和端口号。</span><br><span class="line"><span class="built_in">users</span>：创建该网络连接的进程信息。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 只显示指定端口的信息</span></span><br><span class="line">ss -tunlp | grep <span class="string">&quot;:3306&quot;</span></span><br></pre></td></tr></table></figure>
 <h2 id="4-查看DNS">4.查看DNS</h2>
 <h3 id="4-1-查看DNS">4.1 查看DNS</h3>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line">nslookup localhost</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3</span></span><br><span class="line">dig</span><br></pre></td></tr></table></figure>
@@ -1360,14 +1401,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">681k</span>
+    <span title="站点总字数">682k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">41:17</span>
+    <span title="站点阅读时长">41:19</span>
   </span>
 </div>
 <div class="busuanzi-count">
