@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要   本文介绍java并发编程相关技术   本文基于jdk1.8   并发编程是为了解决什么问题的？ 性能+线程安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发编程--基本概念">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要   本文介绍java并发编程相关技术   本文基于jdk1.8   并发编程是为了解决什么问题的？ 性能+线程安全">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/3bVMls.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/2aB7dM.jpg">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/vz5BJt.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/QMgkD0.jpg">
+<meta property="article:published_time" content="2023-05-18T14:30:05.000Z">
+<meta property="article:modified_time" content="2024-04-03T03:45:37.078Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/3bVMls.png">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/","path":"2023/05/18/java-concurrency01-base/","title":"Java并发编程--基本概念"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java并发编程--基本概念 | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="java,多线程,hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+<img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
+<img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
+
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示9月3日抗战胜利纪念日图片
+    if(month==9 && day==3){
+        $("#img_93").show();
+    }
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_93").hide();
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    // 将“初一”“初二”…“十五”映射成数字 1~15
+    const dayMap = {
+        "初一": 1, "初二": 2, "初三": 3, "初四": 4, "初五": 5,
+        "初六": 6, "初七": 7, "初八": 8, "初九": 9, "初十": 10,
+        "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15
+    };
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 农历新年
+            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+                $("#img_new_year").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+                $("#img_new_year").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Java并发编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%B8%8E%E5%B9%B6%E8%A1%8C"><span class="nav-number">2.1.</span> <span class="nav-text">并发与并行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.2.</span> <span class="nav-text">线程的状态&#x2F;生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread%E4%B8%8ERunnable"><span class="nav-number">2.3.</span> <span class="nav-text">Thread与Runnable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%EF%BC%88Deadlock%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">死锁（Deadlock）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized%EF%BC%9A%E5%8F%AF%E4%BB%A5%E4%BD%9C%E7%94%A8%E5%9C%A8%E6%96%B9%E6%B3%95%E6%88%96%E4%BB%A3%E7%A0%81%E5%9D%97%E4%B8%8A"><span class="nav-number">2.5.</span> <span class="nav-text">synchronized：可以作用在方法或代码块上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wait%E4%B8%8Enotify-notifyAll%EF%BC%9A%E7%AD%89%E5%BE%85%E5%94%A4%E9%86%92%E6%9C%BA%E5%88%B6"><span class="nav-number">2.6.</span> <span class="nav-text">wait与notify&#x2F;notifyAll：等待唤醒机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E4%B8%AD%E7%9A%84%E7%AD%89%E5%BE%85%E5%94%A4%E9%86%92%E6%9C%BA%E5%88%B6%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">2.7.</span> <span class="nav-text">Java中的等待唤醒机制有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Callable-T-%E3%80%81Future-T-%E4%B8%8EFutureTask-T"><span class="nav-number">2.8.</span> <span class="nav-text">Callable&lt;T&gt;、Future&lt;T&gt;与FutureTask&lt;T&gt;:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile%EF%BC%9A%E6%9C%80%E8%BD%BB%E9%87%8F%E7%9A%84%E9%80%9A%E4%BF%A1-%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6%EF%BC%8C%E4%BF%9D%E8%AF%81%E5%8F%98%E9%87%8F%E5%9C%A8%E5%A4%9A%E4%B8%AA%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E5%8F%AF%E8%A7%81%E6%80%A7%EF%BC%8C%E5%8D%B3%E5%80%BC%E8%A2%AB%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E4%BF%AE%E6%94%B9%EF%BC%8C%E5%85%B6%E5%AE%83%E7%BA%BF%E7%A8%8B%E7%AB%8B%E5%88%BB%E5%8F%AF%E8%A7%81"><span class="nav-number">2.9.</span> <span class="nav-text">volatile：最轻量的通信&#x2F;同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadLocal-T-%EF%BC%9A%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%8B%AC%E4%BA%AB"><span class="nav-number">2.10.</span> <span class="nav-text">ThreadLocal ：保证线程变量独享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CAS"><span class="nav-number">2.11.</span> <span class="nav-text">CAS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%B1%BB"><span class="nav-number">2.12.</span> <span class="nav-text">原子操作类:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ABA"><span class="nav-number">2.13.</span> <span class="nav-text">ABA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="nav-number">2.14.</span> <span class="nav-text">重排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%A8%8B%E4%B8%8EMESA%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.15.</span> <span class="nav-text">管程与MESA模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AQS"><span class="nav-number">2.16.</span> <span class="nav-text">AQS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JMM"><span class="nav-number">2.17.</span> <span class="nav-text">JMM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7"><span class="nav-number">2.18.</span> <span class="nav-text">并发三大特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="nav-number">2.18.1.</span> <span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="nav-number">2.18.2.</span> <span class="nav-text">可见性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E5%BA%8F%E6%80%A7"><span class="nav-number">2.18.3.</span> <span class="nav-text">有序性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.18.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">246</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">58</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/05/23/java-concurrency08-LockSupport/" rel="bookmark">
+        <time class="popular-posts-time">2023-05-23</time>
+        <br>
+      Java并发编程--JUC并发工具类之LockSupport
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/05/19/java-concurrency02-ReentrantLock/" rel="bookmark">
+        <time class="popular-posts-time">2023-05-19</time>
+        <br>
+      Java并发编程--JUC并发工具类之ReentrantLock
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/05/22/java-concurrency06-CountDownLatch/" rel="bookmark">
+        <time class="popular-posts-time">2023-05-22</time>
+        <br>
+      Java并发编程--JUC并发工具类之CountDownLatch
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java并发编程--基本概念 | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java并发编程--基本概念
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-05-18 22:30:05" itemprop="dateCreated datePublished" datetime="2023-05-18T22:30:05+08:00">2023-05-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/java/java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">java多线程</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2023/05/18/java-concurrency01-base/" class="leancloud_visitors" data-flag-title="Java并发编程--基本概念" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>27 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍java并发编程相关技术</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>jdk1.8</code></p>
+</li>
+<li class="lvl-2">
+<p>并发编程是为了解决什么问题的？<br>
+<em><strong>性能+线程安全</strong></em></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="Java并发编程">Java并发编程</h2>
+<h3 id="并发与并行">并发与并行</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>并发 <code>Concurrent</code>：指应用能够交替执行不同的任务，比如单 CPU 核心下执行多线程并非是同时执行多个任务,如果你开两个线程执行,就是在你几乎不可能察觉到的速度不断去切换这两个任务,已达到&quot;同时执行效果&quot;,其实并不是的,只是计算机的速度太快,我们无法察觉到而已。</p>
+</li>
+<li class="lvl-2">
+<p>并行 <code>Parallel</code>：指应用能够同时在多个CPU核心下执行不同的任务，例:吃饭的时候可以边吃饭边打电话,这两件事情可以同时执行</p>
+</li>
+<li class="lvl-2">
+<p>两者区别：一个是单核交替执行,一个是多核同时执行。</p>
+</li>
+</ul>
+<h3 id="线程的状态-生命周期">线程的状态/生命周期</h3>
+<p>Java 中线程的状态分为 6 种：</p>
+<ol>
+<li class="lvl-3">
+<p>初始(<code>NEW</code>)：新创建了一个线程对象，但还没有调用 start()方法。</p>
+</li>
+<li class="lvl-3">
+<p>运行(<code>RUNNABLE</code>)：Java 线程中将就绪（ready）和运行中（running）两种状态笼统的称为“运行”。线程对象创建后，其他线程(比如 main 线程）调用了该对象的 start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获取 CPU 的使用权，此时处于就绪状态（ready）。就绪状态的线程在获得 CPU 时间片后变为运行中状态（running）。</p>
+</li>
+<li class="lvl-3">
+<p>阻塞(<code>BLOCKED</code>)：表示线程阻塞于锁。</p>
+</li>
+<li class="lvl-3">
+<p>等待(<code>WAITING</code>)：进入该状态的线程需要等待其他线程做出一些特定动作（通知或中断）。</p>
+</li>
+<li class="lvl-3">
+<p>超时等待(<code>TIMED_WAITING</code>)：该状态不同于 WAITING，它可以在指定的时间后自行返回。</p>
+</li>
+<li class="lvl-3">
+<p>终止(<code>TERMINATED</code>)：表示该线程已经执行完毕。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/3bVMls.png" alt="" width="900" height="600"></p>
+</li>
+</ol>
+<h3 id="Thread与Runnable">Thread与Runnable</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Thread 才是 Java 里对线程的唯一抽象，Runnable 只是对任务（业务逻辑）的抽象。Thread 可以接受任意一个 Runnable 的实例并执行。</p>
+</li>
+<li class="lvl-2">
+<p>官方说法是在 Java 中有两种方式创建一个线程用以执行，一种是派生自Thread 类，另一种是实现 Runnable 接口。当然本质上 Java 中实现线程只有一种方式，都是通过 new Thread()创建线程对象，调用 Thread#start 启动线程。至于基于 callable 接口的方式，因为最终是要把实现了 callable 接口的对象通过 FutureTask 包装成 Runnable，再交给 Thread 去执行，所以这个其实可以和实现 Runnable 接口看成同一类。</p>
+</li>
+<li class="lvl-2">
+<p>java的多线程最终是交由操作系统来维护和调度的。只有调用Thread对象的start方法才能启动一个线程，start方法不能多次调用，重复调用会抛出异常。Thread 的 start 方法中调用了 start0()方法，而start0()是个 native 方法，这就说明Thread#start 一定和操作系统是密切相关的。</p>
+</li>
+<li class="lvl-2">
+<p>创建并启动线程</p>
+<ul class="lvl-2">
+<li class="lvl-6">扩展自Thread类</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">UseThread</span> <span class="variable">useThread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UseThread</span>();</span><br><span class="line">useThread.start();</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">实现Runnable接口</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">UseRunnable</span> <span class="variable">useRunnable</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UseRunnable</span>();</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Thread</span>(useRunnable).start();</span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-2">
+<p>static方法</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>Thread.currentThread()</code>：获取当前线程对象</li>
+<li class="lvl-6"><code>Thread.sleep(10)</code> ：休眠10毫秒</li>
+<li class="lvl-6"><code>Thread.activeCount()</code> ：获取当前活动线程的数量，活动线程是指尚未终止的线程，包括正在运行、等待或阻塞的线程。包括守护线程和非守护线程</li>
+<li class="lvl-6"><code>Thread.yield()</code> : 暂停当前线程，给其他线程执行的机会
+<blockquote>
+<p>1.具体作用如下：提示调度器当前线程愿意放弃当前的 CPU 执行时间片，给其他具有相同优先级的线程执行的机会。不保证一定能让其他线程执行，只是给其他线程执行的机会更大。通常情况下，操作系统的线程调度器会按照一定的算法分配 CPU 时间给各个线程，而 yield() 方法可以用于向调度器发出提示，表明当前线程愿意让出 CPU 时间，让其他线程有更多的机会执行。<br>
+2.当一个线程调用 yield() 方法后，它会进入就绪状态，让出当前的 CPU 时间片，并允许其他线程有更大的机会获得 CPU 时间。然后，调度器会在众多就绪状态的线程中选择一个线程来运行，但选择哪个线程运行是由调度器决定的，可能会选择当前线程继续执行，也可能选择其他线程执行。所以，调用 yield() 方法后，当前线程可能会被立即重新调度并继续执行，也可能在稍后的时间被调度器重新选中并继续执行，也可能在一段时间内都没有被重新调度。</p>
+</blockquote>
+</li>
+<li class="lvl-6"><code>Thread.interrupted()</code> : 用于检查当前线程是否被中断，并返回一个布尔值。调用<code>interrupted()</code>方法会清除当前线程的中断状态。线程是中断状态时，则只有第一次调用<code>interrupted()</code>方法会返回 true。而Thread对象的<code>isInterrupted()</code>方法不会清除中断状态。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>守护线程：主线程结束，则守护线程立即停止</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建并启动线程：</span></span><br><span class="line"><span class="type">UseThread</span> <span class="variable">useThread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UseThread</span>();</span><br><span class="line">useThread.setDaemon(<span class="literal">true</span>); <span class="comment">//设置线程为守护线程，主线程结束，则守护线程立即停止</span></span><br><span class="line">useThread.start();</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>join()</code>: 将指定线程运行完成后再运行后面的代码</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建并启动线程：</span></span><br><span class="line"><span class="type">ThreadA</span> <span class="variable">threadA</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadA</span>();</span><br><span class="line">threadA.start();</span><br><span class="line"><span class="comment">//threadA要运行完成后再运行后面的代码：</span></span><br><span class="line">threadA.join();</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>setPriority()</code>：设置线程优先级</p>
+<blockquote>
+<p>1.优先级的范围从 1~10，其中1表示最低优先级，10表示最高优先级。默认优先级是 5，优先级高的线程分配时间片的数量要多于优先级低的线程。设置线程优先级时，针对频繁阻塞（休眠或者 I/O 操作）的线程需要设置较高优先级，而偏重计算（需要较多 CPU 时间或者偏运算）的线程则设置较低的优先级，确保处理器不会被独占。需要注意的是，线程优先级只是给操作系统提供一个建议，操作系统不保证严格按照优先级来调度线程。在不同的 JVM 以及操作系统上，线程规划会存在差异，有些操作系统甚至会忽略对线程优先级的设定。慎重使用。<br>
+2.Java 线程调度是抢占式调度的，而且 Java 中的线程优先级是通过映射到操作系统的原生线程上实现的，所以线程的调度最终取决于操作系统，操作系统中线程的优先级有时并不能和 Java 中的一一对应，所以Java 优先级并不是特别靠谱。</p>
+</blockquote>
+</li>
+<li class="lvl-2">
+<p>中断线程：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建并启动线程：</span></span><br><span class="line"><span class="type">ThreadA</span> <span class="variable">threadA</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadA</span>();</span><br><span class="line">threadA.start();</span><br><span class="line"><span class="comment">//中断线程：</span></span><br><span class="line">threadA.interrupt();</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程方法中判断是否被中断：</span></span><br><span class="line">Thread.currentThread().isInterrupted(); <span class="comment">//中断返回true</span></span><br><span class="line"><span class="comment">//注意：处于死锁状态的线程无法被中断</span></span><br></pre></td></tr></table></figure>
+<h3 id="死锁（Deadlock）">死锁（Deadlock）</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>死锁（Deadlock）是指两个或多个线程在执行过程中，由于竞争资源或者由于彼此通信而造成的一种阻塞的现象，彼此互相等待对方释放资源，导致程序无法继续执行的状态。</p>
+</li>
+<li class="lvl-2">
+<p>死锁通常发生在多个线程同时持有多个共享资源，并试图获取对方持有的资源时。</p>
+</li>
+<li class="lvl-2">
+<p>死锁的发生必须具备以下四个必要条件:</p>
+<ul class="lvl-2">
+<li class="lvl-6">1）互斥条件：指进程对所分配到的资源进行排它性使用，即在一段时间内某资源只由一个进程占用。如果此时还有其它进程请求资源，则请求者只能等待，直至占有资源的进程用毕释放。</li>
+<li class="lvl-6">2）请求和保持条件：指进程已经保持至少一个资源，但又提出了新的资源请求，而该资源已被其它进程占有，此时请求进程阻塞，但又对自己已获得的其它资源保持不放。</li>
+<li class="lvl-6">3）不剥夺条件：指进程已获得的资源，在未使用完之前，不能被剥夺，只能在使用完时由自己释放。</li>
+<li class="lvl-6">4）环路等待条件：指在发生死锁时，必然存在一个进程–资源的环形链，即进程集合{P0，P1，P2，···，Pn}中的 P0 正在等待一个 P1 占用的资源；P1正在等待 P2 占用的资源，……，Pn 正在等待已被 P0 占用的资源。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>只要打破四个必要条件之一就能有效预防死锁的发生</p>
+<ul class="lvl-2">
+<li class="lvl-6">打破互斥条件：改造独占性资源为虚拟资源，大部分资源已无法改造。</li>
+<li class="lvl-6">打破不可抢占条件：当一进程占有一独占性资源后又申请一独占性资源而无法满足，则退出原占有的资源。</li>
+<li class="lvl-6">打破占有且申请条件：采用资源预先分配策略，即进程运行前申请全部资源，满足则运行，不然就等待，这样就不会占有且申请。</li>
+<li class="lvl-6">打破循环等待条件：实现资源有序分配策略，对所有设备实现分类编号，所有进程只能采用按序号递增的形式申请资源。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>死锁的危害</p>
+<ul class="lvl-2">
+<li class="lvl-6">1、线程不工作了，但是整个程序还是活着的</li>
+<li class="lvl-6">2、没有任何的异常信息可以供我们检查。</li>
+<li class="lvl-6">3、一旦程序发生了发生了死锁，是没有任何的办法恢复的，只能重启程序，对生产平台的程序来说，这是个很严重的问题。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>如何查看运行的程序是否有死锁线程</p>
+<ul class="lvl-2">
+<li class="lvl-6">通过 jps 查询应用的 id，再通过 jstack id 查看应用的锁的持有情况，进程状态为 BLOCKED 表示死锁</li>
+<li class="lvl-6">jdk1.8以后，jstack 专门给出了死锁的检查，一般在显示信息的最下方展示是否发现死锁信息</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>如何避免死锁</p>
+<ul class="lvl-2">
+<li class="lvl-6">1、内部通过顺序比较，确定拿锁的顺序；</li>
+<li class="lvl-6">2、采用尝试拿锁的机制。
+<blockquote>
+<p>尝试拿锁会存在<code>活锁</code>的问题，即多个线程在尝试拿锁的机制中，发生多个线程之间互相谦让，不断发生同一个线程总是拿到同一把锁，在尝试拿另一把锁时因为拿不到，而将本来已经持有的锁释放的过程。<br>
+解决办法：每个线程休眠随机数，错开拿锁的时间。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="synchronized：可以作用在方法或代码块上"><code>synchronized</code>：可以作用在方法或代码块上</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>方法: 当前对象锁，等价于 <code>synchronized (this)</code></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">incCountMethod</span><span class="params">()</span>&#123;</span><br><span class="line">    count++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>方法: 当前类锁，等价于 <code>synchronized (Object.class)</code></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">incCountMethod</span><span class="params">()</span>&#123;</span><br><span class="line">    count++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>代码块：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//任意对象锁</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">incCountObj</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (obj)&#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//当前对象锁</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">incCountBlock</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>)&#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//类锁</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">incCountBlock</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (Object.class)&#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="wait与notify-notifyAll：等待唤醒机制"><code>wait</code>与<code>notify</code>/<code>notifyAll</code>：等待唤醒机制</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>一个线程：<code>synchronized (pool)；</code> <code>while(某种条件)</code> 线程等待：<code>pool.wait();</code> 另一个线程：<code>synchronized (pool);</code>  通知其他等待的线程：<code>pool.notifyAll();</code></p>
+</li>
+<li class="lvl-2">
+<p><code>synchronized</code>作用在方法上时，就是当前对象，直接在方法内使用<code>wait();</code></p>
+</li>
+<li class="lvl-2">
+<p><code>wait()</code> 和 <code>wait(long timeout)</code> 都是用于线程间进行协作和同步的方法，用于在对象上进行等待。<code>wait()</code> 方法是没有超时参数的形式，它使当前线程进入等待状态，直到其他线程调用相同对象上的 <code>notify()</code> 或 <code>notifyAll()</code> 方法来唤醒等待的线程，或者当前线程被中断（<code>InterruptedException</code>）。<code>wait(long timeout)</code> 方法是带有超时参数的形式，它使当前线程进入等待状态，但最多等待指定的时间（以毫秒为单位）。如果超过指定时间还未被唤醒，线程将自动唤醒并继续执行。这个方法可以防止线程永久地等待下去，即使没有其他线程调用相同对象上的 <code>notify()</code> 或 <code>notifyAll()</code> 方法。因此，<code>wait()</code> 方法是一直等待直到被唤醒或中断，而 <code>wait(long timeout)</code> 方法是等待一段时间后自动唤醒，或者在被唤醒之前超过了指定的等待时间。需要注意的是，这两个方法必须在同步代码块（<code>synchronized</code>）内部调用，并且在调用这些方法前，线程必须拥有对象的监视器（即获取了对象的锁）。否则，将会抛出 <code>IllegalMonitorStateException</code> 异常。</p>
+</li>
+<li class="lvl-2">
+<p>尽可能用 <code>notifyall()</code>，谨慎使用 <code>notify()</code>，因为 <code>notify()</code>只会唤醒一个线程，我们无法确保被唤醒的这个线程一定就是我们需要唤醒的线程</p>
+</li>
+<li class="lvl-2">
+<p><code>yield()</code> 、<code>sleep()</code>被调用后，都不会释放当前线程所持有的锁。调用 <code>wait()</code>方法后，会释放当前线程持有的锁，而且当前被唤醒后，会重新去竞争锁，锁竞争到后才会执行 <code>wait()</code> 方法后面的代码。调用 <code>notify()</code>系列方法后，对锁无影响，线程只有在 <code>synchronized</code> 同步代码执行完后才会自然而然的释放锁，所以 <code>notify()</code>系列方法一般都是 <code>synchronized</code> 同步代码的最后一行。</p>
+</li>
+<li class="lvl-2">
+<p>为什么你应该在循环中检查等待条件?</p>
+<blockquote>
+<p>处于等待状态的线程可能会收到错误警报和伪唤醒(被唤醒时不一定满足等待条件)，如果不在循环中检查等待条件，程序就会在没有满足结束条件的情况下退出。因此，当一个等待线程醒来时，不能认为它原来的等待状态仍然是有效的，在 <code>notify()</code>方法调用之后和等待线程醒来之前这段时间它可能会改变。这就是在循环中使用 <code>wait()</code>方法效果更好的原因。</p>
+</blockquote>
+</li>
+</ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em></p>
+<h3 id="Java中的等待唤醒机制有哪些？">Java中的等待唤醒机制有哪些？</h3>
+<ul class="lvl-1">
+<li class="lvl-2">synchronized + wait/notify/notifyAll</li>
+<li class="lvl-2">ReentrantLock + Condition(await/singal/singalAll)</li>
+<li class="lvl-2">CAS + park/unpark(CAS是LockSupport底层实现机制)</li>
+</ul>
+</div>
+<h3 id="Callable-T-、Future-T-与FutureTask-T"><code>Callable&lt;T&gt;</code>、<code>Future&lt;T&gt;</code>与<code>FutureTask&lt;T&gt;</code>:</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>Callable</code> 位于 <code>java.util.concurrent</code> 包下，它也是一个接口，在它里面也只声明了一个方法，只不过这个方法叫做 <code>call()</code>，这是一个泛型接口，<code>call()</code>函数返回的类型就是传递进来的 <code>T</code> 类型。</p>
+</li>
+<li class="lvl-2">
+<p><code>FutureTask</code> 类实现了 <code>RunnableFuture</code> 接口，<code>RunnableFuture</code> 继承了 <code>Runnable</code>接口和 <code>Future</code> 接口，而 <code>FutureTask</code> 实现了 <code>RunnableFuture</code> 接口。所以它既可以作为 <code>Runnable</code> 被线程执行，又可以作为 <code>Future</code> 得到 <code>Callable</code> 的返回值。</p>
+</li>
+<li class="lvl-2">
+<p>自定义<code>Callable&lt;T&gt;</code>的实现类，其有返回值，比如：<code>public class UseCallable implements Callable&lt;Integer&gt;</code></p>
+</li>
+<li class="lvl-2">
+<p>创建<code>FutureTask</code>：<code>FutureTask&lt;Integer&gt; futureTask = new FutureTask&lt;&gt;(new UseCallable());</code></p>
+</li>
+<li class="lvl-2">
+<p>启动线程：<code>new Thread(futureTask).start();</code></p>
+</li>
+<li class="lvl-2">
+<p>获取返回值：<code>futureTask.get();</code></p>
+</li>
+<li class="lvl-2">
+<p>中断线程：<code>futureTask.cancel(true);</code></p>
+</li>
+</ul>
+<h3 id="volatile：最轻量的通信-同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见">volatile：最轻量的通信/同步机制，保证变量在多个线程间的可见性，即值被一个线程修改，其它线程立刻可见</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="type">boolean</span> ready;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>volatile</code> 不能保证数据在多个线程下同时写时的线程安全</p>
+</li>
+<li class="lvl-2">
+<p><code>volatile</code> 最适用的场景：一个线程写，多个线程读。</p>
+</li>
+</ul>
+<h3 id="ThreadLocal-T-：保证线程变量独享">ThreadLocal<T> ：保证线程变量独享</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal&lt;String&gt; threadLocal = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;&gt;();</span><br><span class="line"><span class="comment">//设置当前线程的线程局部变量的值。</span></span><br><span class="line">threadLocal.set(<span class="string">&quot;线程变量&quot;</span>);</span><br><span class="line"><span class="comment">//返回当前线程所对应的线程局部变量。</span></span><br><span class="line"><span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> threadLocal.get();</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>初始化方法</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//方式1</span></span><br><span class="line">ThreadLocal&lt;Integer&gt; threadLocal = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;Integer&gt;()&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> Integer <span class="title function_">initialValue</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//方式2，Java 8及更高版本</span></span><br><span class="line">ThreadLocal&lt;Integer&gt; threadLocal = ThreadLocal.withInitial(() -&gt; <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>为了避免内存泄露，ThreadLocal变量用完后要进行销毁：<code>threadLocal.remove();</code></p>
+</li>
+</ul>
+<h3 id="CAS">CAS</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>CAS 是 <code>Compare and Swap</code>（比较并交换）的缩写，是一种常见的并发编程技术，也是原子类实现线程安全的基础操作。CAS 操作包括三个参数：一个内存位置（通常是一个变量的内存地址）、期望的值和新值。CAS 操作会先比较内存位置的当前值与期望的值是否相等，如果相等，则将内存位置的值替换为新值，否则不进行任何操作。ßCAS 操作是原子的，即在进行比较和交换的过程中不会被其他线程干扰。</p>
+</li>
+<li class="lvl-2">
+<p>CAS 实现原子操作的三大问题</p>
+<ul class="lvl-2">
+<li class="lvl-6">ABA 问题
+<blockquote>
+<p>下文有对ABA问题的介绍</p>
+</blockquote>
+</li>
+<li class="lvl-6">循环时间长开销大
+<blockquote>
+<p>自旋 CAS 如果长时间不成功，会给 CPU 带来非常大的执行开销。</p>
+</blockquote>
+</li>
+<li class="lvl-6">只能保证一个共享变量的原子操作
+<blockquote>
+<p>当对一个共享变量执行操作时，我们可以使用循环 CAS 的方式来保证原子操作，但是对多个共享变量操作时，循环 CAS 就无法保证操作的原子性，这个时候就可以用锁。<br>
+从 Java 1.5开始，JDK 提供了 <code>AtomicReference</code> 类来保证引用对象之间的原子性，就可以把多个变量放在一个对象里来进行 CAS 操作。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="原子操作类">原子操作类:</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Integer：AtomicInteger，AtomicIntegerArray</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">AtomicInteger</span> <span class="variable">ai</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">10</span>);</span><br><span class="line">ai.get(); <span class="comment">//获取当前值</span></span><br><span class="line">ai.set(<span class="number">10</span>); <span class="comment">//设置新值</span></span><br><span class="line">ai.getAndIncrement();  <span class="comment">//获取原值并自增，getAndDecrement()自减</span></span><br><span class="line">ai.incrementAndGet(); <span class="comment">//获取自增后的值，decrementAndGet()自减</span></span><br><span class="line">ai.compareAndSet(原值,新值); <span class="comment">//比较并设置新值，成功返回true</span></span><br><span class="line">ai.getAndAdd(<span class="number">24</span>); <span class="comment">//增加指定的值后返回原值</span></span><br><span class="line">ai.addAndGet(<span class="number">24</span>); <span class="comment">//增加指定的值后返回新值</span></span><br><span class="line"><span class="comment">//基于数组初始化</span></span><br><span class="line"><span class="type">AtomicIntegerArray</span> <span class="variable">ai</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicIntegerArray</span>(<span class="keyword">new</span> <span class="title class_">int</span>[] &#123; <span class="number">1</span>, <span class="number">2</span> &#125;);</span><br><span class="line"><span class="comment">//基于数组长度初始化</span></span><br><span class="line"><span class="type">AtomicIntegerArray</span> <span class="variable">ai</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicIntegerArray</span>(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Long：<code>AtomicLong</code>，<code>AtomicLongArray</code></p>
+</li>
+<li class="lvl-2">
+<p>Long：<code>LongAdder</code>，加、减、求和等操作性能高于<code>AtomicLong</code></p>
+</li>
+</ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em><br>
+AtomicLong 是利用了底层的 CAS 操作来提供并发性的，调用了 Unsafe 类的getAndAddLong 方法，该方法是个 native 方法，它的逻辑是采用自旋的方式不断更新目标值，直到更新成功。<br>
+在并发量较低的环境下，线程冲突的概率比较小，自旋的次数不会很多。但是，高并发环境下，N 个线程同时进行自旋操作，会出现大量失败并不断自旋的情况，此时 AtomicLong 的自旋会成为瓶颈。<br>
+这就是 LongAdder 引入的初衷——解决高并发环境下 AtomicLong 的自旋瓶颈问题。</p>
+<p>AtomicLong 中有个内部变量 value 保存着实际的 long 值，所有的操作都是针对该变量进行。也就是说，高并发环境下，value 变量其实是一个热点，也就是 N 个线程竞争一个热点。<br>
+LongAdder 的基本思路就是分散热点，将 value 值分散到一个数组中，不同线程会命中到数组的不同槽中，各个线程只对自己槽中的那个值进行 CAS 操作，这样热点就被分散了，冲突的概率就小很多。<br>
+如果要获取真正的 long 值，只要将各个槽中的变量值累加返回。</p>
+<p>这种做法和 ConcurrentHashMap 中的“分段锁”其实就是类似的思路。<br>
+LongAdder 提供的 API 和 AtomicLong 比较接近，两者都能以原子的方式对long 型变量进行增减。</p>
+<p>但是 AtomicLong 提供的功能其实更丰富，尤其是 addAndGet、decrementAndGet、compareAndSet 这些方法。<br>
+addAndGet、decrementAndGet 除了单纯的做自增自减外，还可以立即获取增减后的值，而 LongAdder 则需要做同步控制才能精确获取增减后的值。如果业务需求需要精确的控制计数，做计数比较，AtomicLong 也更合适。</p>
+<p>另外，从空间方面考虑，LongAdder 其实是一种“空间换时间”的思想，从这一点来讲 AtomicLong 更适合。<br>
+总之，低并发、一般的业务场景下 AtomicLong 是足够了。如果并发量很多，存在大量写多读少的情况，那 LongAdder 可能更合适。</p>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Double：<code>DoubleAdder</code></p>
+</li>
+<li class="lvl-2">
+<p>对象：<code>AtomicReference</code>，<code>AtomicReferenceArray</code></p>
+</li>
+<li class="lvl-2">
+<p>对象：<code>AtomicStampedReference</code>：引入版本号，用于解决ABA问题</p>
+</li>
+</ul>
+<div class="tips">
+<p><em><strong>小贴士</strong></em><br>
+如果你想比较AtomicReference中存储的User对象，你需要确保User类正确实现了适当的equals()和hashCode()方法。<br>
+在Java中，对象的比较通常是通过equals()方法来实现的。equals()方法用于判断两个对象是否相等。当你使用AtomicReference进行比较时，它将使用equals()方法来比较存储在AtomicReference中的对象。<br>
+默认情况下，Object类的equals()方法比较的是对象的引用，而不是内容。因此，如果你想在AtomicReference中比较User对象的内容而不是引用，你需要在User类中重写equals()方法来进行内容比较。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 省略构造函数和其他方法</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span> == o) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="literal">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> (User) o;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (age != user.age) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> name != <span class="literal">null</span> ? name.equals(user.name) : user.name == <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> name != <span class="literal">null</span> ? name.hashCode() : <span class="number">0</span>;</span><br><span class="line">        result = <span class="number">31</span> * result + age;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述示例中，我们重写了equals()方法以比较User对象的name和age属性。我们使用了自动生成的hashCode()方法来生成哈希码，以保证在使用哈希表等数据结构时的正确性。<br>
+重写了equals()和hashCode()方法后，你可以使用AtomicReference<User>来比较User对象。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AtomicReference&lt;User&gt; atomicReference = <span class="keyword">new</span> <span class="title class_">AtomicReference</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;Alice&quot;</span>, <span class="number">25</span>));</span><br><span class="line"><span class="type">User</span> <span class="variable">expectedUser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;Alice&quot;</span>, <span class="number">25</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">updated</span> <span class="operator">=</span> atomicReference.compareAndSet(expectedUser, <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;Bob&quot;</span>, <span class="number">30</span>));</span><br></pre></td></tr></table></figure>
+<p>而AtomicStampedReference是为了解决ABA问题而设计的，并提供了对对象引用的比较以及对标记（stamp）的比较。<br>
+AtomicStampedReference通过引入一个标记（stamp）来解决ABA问题。它不仅比较对象引用，还比较对象的标记值。当对象和标记值都相等时，才认为对象相等。</p>
+</div>
+<h3 id="ABA">ABA</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>ABA 问题指的是在并发环境下，某个线程对一个值进行比较并操作时，可能出现以下情况：</p>
+</li>
+</ul>
+<ol>
+<li class="lvl-3">
+<p>初始状态下，值为 A。</p>
+</li>
+<li class="lvl-3">
+<p>线程 1 将值从 A 修改为 B。</p>
+</li>
+<li class="lvl-3">
+<p>线程 1 又将值从 B 修改回 A。</p>
+</li>
+<li class="lvl-3">
+<p>线程 2 检查值，发现值仍然是 A，于是做出操作。<br>
+从线程 2 的角度来看，值似乎没有被修改过，但实际上经历了从 A 到 B 再到 A 的变化。这种情况可能会导致意外的结果或错误的判断。<br>
+ABA 问题的发生是因为 CAS 操作只关注当前值和期望值是否相等，而不考虑期间发生的其他变化。<br>
+在上述示例中，CAS 操作在进行比较时，发现当前值仍然是 A，与期望值相等，因此会执行操作，但它无法感知到值的中间变化。<br>
+ABA 问题可能会对某些并发算法和数据结构产生影响，例如自旋锁、无锁算法等。<br>
+为了解决 ABA 问题，可以使用一种称为 “版本号” 的技术，每次修改值时都会增加一个版本号，这样在进行 CAS 操作时除了比较值本身，还会比较版本号，从而避免了 ABA 问题的发生。<br>
+在Java中，<code>AtomicStampedReference</code>就是通过引入版本号（标记）来解决ABA问题的一种原子类。</p>
+</li>
+</ol>
+<h3 id="重排序">重排序</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在Java中，重排序是指编译器和处理器为了提高程序性能而对指令执行顺序进行重新排序的优化技术。重排序可以改变程序中指令的执行顺序，但不会改变程序的最终结果（即保持串行语义），因为这些重排序是在保持依赖关系的前提下进行的。</p>
+</li>
+<li class="lvl-2">
+<p>然而，重排序可能会导致并发安全问题。并发安全问题主要涉及到多线程的执行顺序和对共享数据的访问。</p>
+</li>
+<li class="lvl-2">
+<p>考虑以下示例代码：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>上述代码是一个经典的基于双重检查锁定的懒汉式单例模式。在单线程环境下，这段代码是没有问题的。但是在多线程环境下，由于重排序的存在会导致线程安全问题，为什么呢？</p>
+</li>
+<li class="lvl-2">
+<p>这是因为<code>instance = new Singleton();</code>虽然只有一行代码，但是其实在具体执行的时候有好几步操作：</p>
+<ul class="lvl-2">
+<li class="lvl-6">1、JVM 为 <code>Singleton</code> 的对象实例在内存中分配空间</li>
+<li class="lvl-6">2、进行对象初始化，完成 <code>new</code> 操作</li>
+<li class="lvl-6">3、JVM 把这个空间的地址赋给我们的引用 <code>instance</code></li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>因为 JVM 内部的实现原理会导致重排序，就会产生一种情况，第 3 步会在第 2 步之前执行。</p>
+</li>
+<li class="lvl-2">
+<p>于是在多线程下就会产生问题：</p>
+<ul class="lvl-2">
+<li class="lvl-6">A 线程正在 syn 同步块中执行 <code>instance = new Singleton();</code>，</li>
+<li class="lvl-6">此时 B 线程也来执行 <code>getInstance()</code>，进行了 <code>instance == null</code> 的检查，</li>
+<li class="lvl-6">因为第 3 步会在第 2 步之前执行，B 线程检查发现 <code>instance</code> 不为 <code>null</code>，会直接拿着 <code>instance</code> 实例使用，</li>
+<li class="lvl-6">但是这时 A 线程还在执行对象初始化，这就导致 B 线程拿到的 <code>instance</code> 实例可能只初始化了一半，B 线程访问 <code>instance</code> 实例中的对象域就很有可能出错。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>这些问题是由于编译器和处理器进行的重排序导致的，并发安全问题不会在单线程环境下出现，只有在多线程环境下才会显现。</p>
+</li>
+<li class="lvl-2">
+<p>另外，即使在同步块内部没有发生重排序，当一个线程在初始化实例时，由于处理器和内存之间的交互延迟，也可能存在可见性问题。</p>
+</li>
+<li class="lvl-2">
+<p>为了解决这些问题，可以使用<code>volatile</code>关键字来修饰<code>instance</code>，<code>volatile</code>会禁止编译器和处理器进行重排序，同时使用<code>volatile</code>修饰的变量时，会先清除当前线程的本地缓存再从主内存中重新加载数据，以确保可见性：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance;</span><br></pre></td></tr></table></figure>
+<h3 id="管程与MESA模型">管程与MESA模型</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>管程(Monitor): 是一种并发编程的概念模型，旨在解决多线程程序中的互斥访问和同步问题。它提供了一种结构化的方式来管理共享资源，并确保线程在访问共享资源时的安全性。</p>
+</li>
+<li class="lvl-2">
+<p>MESA(Meta-Environment for Scheduling Agents)模型: 是现在正在广泛使用的管程模型。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/2aB7dM.jpg" alt=""></p>
+</li>
+</ul>
+<h3 id="AQS">AQS</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>java.util.concurrent</code>包中的大多数同步器实现都是围绕着共同的基础行为，比如等待队列、条件队列、独占获取、共享获取等，而这些行为的抽象就是基于<code>AbstractQueuedSynchronizer</code>（简称<code>AQS</code>）实现的，<code>AQS</code>是一个抽象同步框架，可以用来实现一个依赖状态的同步器。</p>
+</li>
+<li class="lvl-2">
+<p>JDK中提供的大多数的同步器如<code>Lock</code>, <code>Latch</code>, <code>Barrier</code>等，都是基于AQS框架来实现的。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/vz5BJt.png" alt=""></p>
+</li>
+<li class="lvl-2">
+<p>基于AQS构建的<code>ReentrantLock</code>和<code>CountDownLatch</code>等同步类就是借鉴了MESA模型中的概念和技术，如互斥锁、条件变量等，以提供线程间的同步和互斥功能。</p>
+</li>
+</ul>
+<h3 id="JMM">JMM</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Java线程之间的通信由Java内存模型（Java Memory Model，简称JMM）控制，JMM决定一个线程对共享变量的写入何时对另一个线程可见。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/QMgkD0.jpg" alt="" width="600" height="400"></p>
+</li>
+</ul>
+<h3 id="并发三大特性">并发三大特性</h3>
+<h4 id="原子性">原子性</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>一个或多个操作，要么全部执行且在执行过程中不被任何因素打断，要么全部不执行。</p>
+</li>
+<li class="lvl-2">
+<p>在 Java中，对基本数据类型的变量的读取和赋值操作是原子性操作（64位处理器）,自增/自减操作并不是原子性的。</p>
+</li>
+<li class="lvl-2">
+<p>如何保证原子性:</p>
+<ul class="lvl-2">
+<li class="lvl-6">通过 <code>synchronized</code> 关键字保证原子性</li>
+<li class="lvl-6">通过 <code>Lock</code> 锁保证原子性</li>
+<li class="lvl-6">通过 <code>CAS</code> 保证原子性</li>
+</ul>
+</li>
+</ul>
+<h4 id="可见性">可见性</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>可见性是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。</p>
+</li>
+<li class="lvl-2">
+<p>如何保证可见性:</p>
+<ul class="lvl-2">
+<li class="lvl-6">通过 <code>volatile</code> 关键字保证可见性</li>
+<li class="lvl-6">通过 <code>内存屏障</code>保证可见性</li>
+<li class="lvl-6">通过 <code>synchronized</code> 关键字保证可见性</li>
+<li class="lvl-6">通过 <code>Lock</code> 锁保证可见性</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>Java中可见性底层有两种实现：</p>
+<ul class="lvl-2">
+<li class="lvl-6">
+<ol>
+<li class="lvl-9">内存屏障，以下实现都是基于内存屏障</li>
+</ol>
+<ul class="lvl-4">
+<li class="lvl-10">synchronized</li>
+<li class="lvl-10">Threed.sleep(10)</li>
+<li class="lvl-10">volatile</li>
+</ul>
+</li>
+<li class="lvl-6">
+<ol start="2">
+<li class="lvl-9">cup上下文切换</li>
+</ol>
+<ul class="lvl-4">
+<li class="lvl-10">Threed.yield()</li>
+<li class="lvl-10">Threed.sleep(0)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>synchronized关键字的作用</p>
+<ul class="lvl-2">
+<li class="lvl-6">是确保多个线程访问共享资源时的互斥性和可见性</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>锁的内存语义</p>
+<ul class="lvl-2">
+<li class="lvl-6">当线程获取锁时，JMM会把该线程对应的本地内存置为无效。</li>
+<li class="lvl-6">当线程释放锁时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存中。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>volatile内存语义</p>
+<ul class="lvl-2">
+<li class="lvl-6">写：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。</li>
+<li class="lvl-6">读：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量。</li>
+</ul>
+</li>
+</ul>
+<h4 id="有序性">有序性</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>即程序执行的顺序按照代码的先后顺序执行。</p>
+</li>
+<li class="lvl-2">
+<p>为了提升性能，编译器和处理器常常会对指令做重排序，所以存在有序性问题。</p>
+</li>
+<li class="lvl-2">
+<p>如何保证有序性:</p>
+<ul class="lvl-2">
+<li class="lvl-6">通过 <code>volatile</code> 关键字保证有序性</li>
+<li class="lvl-6">通过 <code>内存屏障</code>保证有序性</li>
+<li class="lvl-6">通过 <code>synchronized</code> 关键字保证有序性</li>
+<li class="lvl-6">通过 <code>Lock</code> 锁保证有序性</li>
+</ul>
+</li>
+</ul>
+<h4 id="总结">总结</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.保证了可见性就保证了有序性</p>
+</li>
+<li class="lvl-2">
+<p>2.<code>volatile</code>并不能保证原子性，但可以保证多线程操作共享变量的可见性以及禁止指令重排序</p>
+</li>
+<li class="lvl-2">
+<p>3.<code>synchronized</code>关键字不仅保证可见性，同时也保证了原子性（互斥性）</p>
+</li>
+<li class="lvl-2">
+<p>4.JMM通过<code>内存屏障</code>来实现内存的可见性以及禁止重排序</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/" title="Java并发编程--基本概念">https://blog.hanqunfeng.com/2023/05/18/java-concurrency01-base/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/04/20/linux-command11-user/" rel="prev" title="Linux常用命令--用户管理">
+                  <i class="fa fa-angle-left"></i> Linux常用命令--用户管理
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/05/18/java-concurrency01-CompletableFuture/" rel="next" title="Java并发编程--JUC并发工具类之CompletableFuture">
+                  Java并发编程--JUC并发工具类之CompletableFuture <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">695k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">42:07</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.min.js","integrity":"sha256-G8ouPAnw4zzMbnAenHnVz6h9XpKbNdOkrqTh7AadyHs="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>

@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要  Poetry是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与 conda 相比 poetry 更轻量，同时与 venv + pip Python--virtualenv 的方式相比具有如下优点：  使用缓存机制，避免重复下载依赖包 包管理上更加精确，删除不需要的包时会同时删除与其关联的且没有被使用的那些依赖包，避免无用的依赖包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Poetry--轻量级的python包管理器">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2024/11/22/python_poetry/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要  Poetry是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与 conda 相比 poetry 更轻量，同时与 venv + pip Python--virtualenv 的方式相比具有如下优点：  使用缓存机制，避免重复下载依赖包 包管理上更加精确，删除不需要的包时会同时删除与其关联的且没有被使用的那些依赖包，避免无用的依赖包">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/iShot_2024-11-21_18.00.50.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/iShot_2024-11-21_18.13.21.png">
+<meta property="article:published_time" content="2024-11-22T15:33:15.000Z">
+<meta property="article:modified_time" content="2024-12-05T03:41:10.947Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/iShot_2024-11-21_18.00.50.png">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2024/11/22/python_poetry/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2024/11/22/python_poetry/","path":"2024/11/22/python_poetry/","title":"Poetry--轻量级的python包管理器"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Poetry--轻量级的python包管理器 | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+<img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
+<img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
+
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示9月3日抗战胜利纪念日图片
+    if(month==9 && day==3){
+        $("#img_93").show();
+    }
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_93").hide();
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    // 将“初一”“初二”…“十五”映射成数字 1~15
+    const dayMap = {
+        "初一": 1, "初二": 2, "初三": 3, "初四": 4, "初五": 5,
+        "初六": 6, "初七": 7, "初八": 8, "初九": 9, "初十": 10,
+        "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15
+    };
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 农历新年
+            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+                $("#img_new_year").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+                $("#img_new_year").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">查看所有命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#new-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.1.</span> <span class="nav-text">new : 创建项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init-%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%80%E4%B8%AA%E5%B7%B2%E6%9C%89%E7%9A%84%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95"><span class="nav-number">4.2.</span> <span class="nav-text">init : 初始化一个已有的项目目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-poetry%E7%9A%84%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">config : poetry的全局配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#env-%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86"><span class="nav-number">4.4.</span> <span class="nav-text">env : 虚拟环境管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%8C%85%E7%AE%A1%E7%90%86"><span class="nav-number">4.5.</span> <span class="nav-text">依赖包管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lock-%E9%94%81%E5%AE%9A%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.6.</span> <span class="nav-text">lock : 锁定依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#source-%E9%95%9C%E5%83%8F%E6%BA%90%E7%AE%A1%E7%90%86"><span class="nav-number">4.7.</span> <span class="nav-text">source : 镜像源管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">4.8.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E5%8F%91%E5%B8%83"><span class="nav-number">4.9.</span> <span class="nav-text">打包和发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#self-update-%E5%8D%87%E7%BA%A7-poetry-%E7%89%88%E6%9C%AC"><span class="nav-number">4.10.</span> <span class="nav-text">self update : 升级 poetry 版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#debug-resolve-%E6%9F%A5%E7%9C%8B%E5%8C%85%E7%9A%84%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB"><span class="nav-number">4.11.</span> <span class="nav-text">debug resolve : 查看包的依赖关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cache-%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">4.12.</span> <span class="nav-text">cache : 缓存管理</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">246</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">58</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/18/python_pip/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-18</time>
+        <br>
+      pip--CERTIFICATE_VERIFY_FAILED
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2024/11/22/python_poetry/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Poetry--轻量级的python包管理器 | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Poetry--轻量级的python包管理器
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-11-22 23:33:15" itemprop="dateCreated datePublished" datetime="2024-11-22T23:33:15+08:00">2024-11-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-12-05 11:41:10" itemprop="dateModified" datetime="2024-12-05T11:41:10+08:00">2024-12-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2024/11/22/python_poetry/" class="leancloud_visitors" data-flag-title="Poetry--轻量级的python包管理器" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>26 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2"><a target="_blank" rel="noopener" href="https://python-poetry.org/docs/">Poetry</a>是一个轻量级的python包管理器，其目标是帮助开发者快速、轻松地构建、发布和分享python包。说它轻量，是与 <a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/stable/">conda</a> 相比 poetry 更轻量，同时与 <code>venv + pip</code> <a href="/2018/04/28/python_virtualenv/" title="Python--virtualenv">Python--virtualenv</a> 的方式相比具有如下优点：
+<ul class="lvl-2">
+<li class="lvl-6">使用缓存机制，避免重复下载依赖包</li>
+<li class="lvl-6">包管理上更加精确，删除不需要的包时会同时删除与其关联的且没有被使用的那些依赖包，避免无用的依赖包造成打包体积过大</li>
+<li class="lvl-6">打包和发布更加简单，只需要一个命令就可以打包和发布</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="安装">安装</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>参考官方文档<a target="_blank" rel="noopener" href="https://python-poetry.org/docs/#installation">Installation</a></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 官方推荐使用pipx安装，当然也可以使用 pip</span></span><br><span class="line">$ pipx install poetry</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否安装成功</span></span><br><span class="line">$ poetry --version</span><br><span class="line">Poetry (version 1.8.4)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加命令自动补全</span></span><br><span class="line">$ <span class="built_in">mkdir</span>  ~/.zfunc</span><br><span class="line">$ poetry completions zsh &gt; ~/.zfunc/_poetry</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 ~/.zshrc 中添加以下配置（我是用的是zsh，其他shell可以参考官方文档）</span></span><br><span class="line">fpath+=~/.zfunc</span><br><span class="line"><span class="built_in">autoload</span> -Uz compinit &amp;&amp; compinit</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>pipx简介</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/pypa/pipx">pipx</a> 是一个 Python 包管理工具，使用pipx安装工具包时，每个工具都会被安装在一个独立的虚拟环境中，避免不同工具之间的依赖冲突。</p>
+</li>
+<li class="lvl-2">
+<p>场景：两个工具依赖不同版本的同一个库<br>
+假设我们有两个命令行工具：</p>
+<p>工具A 依赖于 requests 库的版本 2.27.1。<br>
+工具B 依赖于 requests 库的版本 2.31.0。</p>
+<p>如果使用 pip 安装<br>
+工具会被安装到全局环境，共享相同的依赖版本：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install toolA  <span class="comment"># 安装时会安装 requests 2.27.1</span></span><br><span class="line">pip install toolB  <span class="comment"># 安装时会将 requests 升级到 2.31.0</span></span><br></pre></td></tr></table></figure>
+<p>结果：<br>
+当你运行工具A时，它可能会报错，因为它依赖的 requests 2.27.1 已被 requests 2.31.0 替换。<br>
+全局环境中的所有工具都共享一个 requests，版本冲突不可避免。</p>
+<p>如果使用 pipx 安装<br>
+每个工具会被安装到独立的虚拟环境中，各自的依赖互不影响：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pipx install toolA  <span class="comment"># 在虚拟环境A中安装 toolA 和 requests 2.27.1</span></span><br><span class="line">pipx install toolB  <span class="comment"># 在虚拟环境B中安装 toolB 和 requests 2.31.0</span></span><br></pre></td></tr></table></figure>
+<p>结果：<br>
+虚拟环境A 只包含 toolA 和它的依赖 requests 2.27.1。<br>
+虚拟环境B 只包含 toolB 和它的依赖 requests 2.31.0。<br>
+工具之间完全隔离，不会因为依赖版本冲突而导致问题。</p>
+</li>
+<li class="lvl-2">
+<p>所以，当需要安装全局命令行工具时，使用pipx是个很好的选择</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/pypa/pipx">pipx</a> 的安装</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装pipx</span></span><br><span class="line">pip install pipx</span><br><span class="line"><span class="comment"># 配置环境变量，运行该命令会将</span></span><br><span class="line">pipx ensurepath</span><br><span class="line"><span class="comment"># 运行上面的命令会将如下内容加入你的shell配置文件中，我的是 .zshrc 文件，实际上你也可以手工添加该配置，将$HOME/.local/bin放到前面更好一些。</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="variable">$PATH</span>:<span class="variable">$HOME</span>/.local/bin&quot;</span></span><br><span class="line"><span class="comment"># 注意添加完成后要重启shell</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加pipx自动代码补全</span></span><br><span class="line"><span class="comment"># 运行如下命令，并根据提示完成</span></span><br><span class="line">pipx completions</span><br><span class="line"><span class="comment"># 我的是zsh，所以在 .zshrc中添加如下内容</span></span><br><span class="line"><span class="built_in">autoload</span> -Uz compinit &amp;&amp; compinit <span class="comment"># 如果没有添加过就需要先添加这个</span></span><br><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(register-python-argcomplete pipx)</span>&quot;</span> <span class="comment"># 添加自动代码补全</span></span><br><span class="line"><span class="comment"># 注意添加完成后要重启shell</span></span><br></pre></td></tr></table></figure>
+</div>
+<h2 id="查看所有命令">查看所有命令</h2>
+<blockquote>
+<p>我已经将其翻译为中文</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">$ poetry list</span><br><span class="line">Poetry (版本 1.8.4)</span><br><span class="line"></span><br><span class="line">用法：</span><br><span class="line">  <span class="built_in">command</span> [选项] [参数]</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -h, --<span class="built_in">help</span>                 显示给定命令的帮助。如果没有指定命令，则显示列表命令的帮助。</span><br><span class="line">  -q, --quiet                不输出任何消息。</span><br><span class="line">  -V, --version              显示此应用程序版本。</span><br><span class="line">      --ansi                强制输出ANSI格式。</span><br><span class="line">      --no-ansi             禁用ANSI输出。</span><br><span class="line">  -n, --no-interaction       不要提问任何交互性问题。</span><br><span class="line">      --no-plugins           禁用插件。</span><br><span class="line">      --no-cache            禁用源缓存。</span><br><span class="line">  -C, --directory=目录      Poetry命令的工作目录（默认为当前工作目录）。</span><br><span class="line">  -v|vv|vvv, --verbose       增加消息的冗长度：1 表示正常输出，2 表示更详细的输出，3 表示调试。</span><br><span class="line"></span><br><span class="line">可用命令：</span><br><span class="line">  about              显示关于Poetry的信息。</span><br><span class="line">  add                将新依赖项添加到pyproject.toml并安装它。</span><br><span class="line">  build              默认构建一个包，分别是tarball和wheel。</span><br><span class="line">  check              验证pyproject.toml文件的内容及其与poetry.lock文件的一致性。</span><br><span class="line">  config             管理配置设置。</span><br><span class="line">  <span class="built_in">export</span>             将锁文件导出到其他格式。</span><br><span class="line">  <span class="built_in">help</span>               显示特定命令的帮助。</span><br><span class="line">  init               在当前目录创建一个基础的pyproject.toml文件。</span><br><span class="line">  install            安装项目依赖项。</span><br><span class="line">  list               列出命令。</span><br><span class="line">  lock              锁定项目依赖项。</span><br><span class="line">  new               在&lt;path&gt;处创建一个新的Python项目。</span><br><span class="line">  publish           将包发布到远程仓库。</span><br><span class="line">  remove            从项目依赖项中移除包。</span><br><span class="line">  run                在适当的环境中运行命令。</span><br><span class="line">  search            在远程仓库中搜索包。</span><br><span class="line">  shell            在虚拟环境中启动shell。</span><br><span class="line">  show              显示有关包的信息。</span><br><span class="line">  update            根据pyproject.toml文件更新依赖项。</span><br><span class="line">  version           显示项目的版本或在提供有效版本规则时更新它。</span><br><span class="line"></span><br><span class="line">缓存</span><br><span class="line">  cache clear        按名称清除Poetry缓存。</span><br><span class="line">  cache list         列出Poetry的缓存列表。</span><br><span class="line"></span><br><span class="line">调试</span><br><span class="line">  debug info        显示调试信息。</span><br><span class="line">  debug resolve    调试依赖项解析。</span><br><span class="line"></span><br><span class="line">环境</span><br><span class="line">  <span class="built_in">env</span> info         显示当前环境的信息。</span><br><span class="line">  <span class="built_in">env</span> list          列出与当前项目关联的所有虚拟环境。</span><br><span class="line">  <span class="built_in">env</span> remove        移除与项目关联的虚拟环境。</span><br><span class="line">  <span class="built_in">env</span> use           激活或创建当前项目的新的虚拟环境。</span><br><span class="line"></span><br><span class="line">自身</span><br><span class="line">  self add          向Poetry的运行时环境添加其他包。</span><br><span class="line">  self install      安装此Poetry安装所需的锁定包（包括插件）。</span><br><span class="line">  self lock         锁定Poetry安装的系统要求。</span><br><span class="line">  self remove       从Poetry的运行时环境中移除其他包。</span><br><span class="line">  self show         显示Poetry运行时环境中的包。</span><br><span class="line">  self show plugins 显示当前已安装插件的信息。</span><br><span class="line">  self update       更新Poetry到最新版本。</span><br><span class="line"></span><br><span class="line">源</span><br><span class="line">  <span class="built_in">source</span> add         为项目添加源配置。</span><br><span class="line">  <span class="built_in">source</span> remove      移除为项目配置的源。</span><br><span class="line">  <span class="built_in">source</span> show        显示为项目配置的源信息。</span><br></pre></td></tr></table></figure>
+<h2 id="常用命令">常用命令</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这里只对日常开发中比较常用的命令进行简要说明，详细介绍可以参考<a target="_blank" rel="noopener" href="https://python-poetry.org/docs/">官方文档</a></p>
+</li>
+</ul>
+<h3 id="new-创建项目">new : 创建项目</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按照默认规则创建一个基于 poetry 的项目</span></span><br><span class="line">$ poetry new my-project</span><br><span class="line">Created package my_project <span class="keyword">in</span> my-project</span><br><span class="line">$ <span class="built_in">cd</span> my-project</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看生成的目录结构</span></span><br><span class="line">$ exa -T</span><br><span class="line">.</span><br><span class="line">├── my_project</span><br><span class="line">│  └── __init__.py</span><br><span class="line">├── pyproject.toml</span><br><span class="line">├── README.md</span><br><span class="line">└── tests</span><br><span class="line">   └── __init__.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 pyproject.toml 内容，该文件为项目的配置的配置文件</span></span><br><span class="line">$ more pyproject.toml</span><br><span class="line">[tool.poetry]</span><br><span class="line">name = <span class="string">&quot;my-project&quot;</span></span><br><span class="line">version = <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line">description = <span class="string">&quot;&quot;</span></span><br><span class="line">authors = [<span class="string">&quot;hanqunfeng &lt;hanqf2008@163.com&gt;&quot;</span>]</span><br><span class="line">readme = <span class="string">&quot;README.md&quot;</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies]</span><br><span class="line">python = <span class="string">&quot;^3.11&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires = [<span class="string">&quot;poetry-core&quot;</span>]</span><br><span class="line">build-backend = <span class="string">&quot;poetry.core.masonry.api&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="init-初始化一个已有的项目目录">init : 初始化一个已有的项目目录</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设我们已经有个项目目录，目录名称为 poetryDemo</span></span><br><span class="line">$ <span class="built_in">cd</span> poetryDemo</span><br><span class="line"><span class="comment"># 初始化 poetryDemo ，在当前目录下创建 pyproject.toml 文件，注意该操作只会创建该文件，包目录以及readme文件都没有，需要手工创建</span></span><br><span class="line">$ poetry init</span><br><span class="line">This <span class="built_in">command</span> will guide you through creating your pyproject.toml config.</span><br><span class="line"></span><br><span class="line">Package name [poetrydemo]:  <span class="comment"># 包名称</span></span><br><span class="line">Version [0.1.0]:  <span class="comment"># 版本号</span></span><br><span class="line">Description []:   <span class="comment"># 描述信息</span></span><br><span class="line">Author [hanqunfeng &lt;hanqf2008@163.com&gt;, n to skip]:  <span class="comment"># 作者</span></span><br><span class="line">License []:  <span class="comment"># License</span></span><br><span class="line">Compatible Python versions [^3.11]:  <span class="comment"># python 版本</span></span><br><span class="line"></span><br><span class="line">Would you like to define your main dependencies interactively? (<span class="built_in">yes</span>/no) [<span class="built_in">yes</span>] <span class="comment"># 您想以交互方式定义您的主环境依赖关系吗？默认yes</span></span><br><span class="line">You can specify a package <span class="keyword">in</span> the following forms:  <span class="comment"># 您可以按以下形式指定包：</span></span><br><span class="line">  - A single name (requests): this will search <span class="keyword">for</span> matches on PyPI <span class="comment"># 单个名称（requests）：这将在官方仓库PyPI上搜索匹配项，如果指定了其它镜像源就会从指定的源下载</span></span><br><span class="line">  - A name and a constraint (requests@^2.23.0) <span class="comment"># 名称和版本约束</span></span><br><span class="line">  - A git url (git+https://github.com/python-poetry/poetry.git) <span class="comment"># git地址</span></span><br><span class="line">  - A git url with a revision (git+https://github.com/python-poetry/poetry.git#develop) <span class="comment"># git地址，指定某个分支</span></span><br><span class="line">  - A file path (../my-package/my-package.whl) <span class="comment"># 文件路径</span></span><br><span class="line">  - A directory (../my-package/) <span class="comment"># 目录路径</span></span><br><span class="line">  - A url (https://example.com/packages/my-package-0.1.0.tar.gz) <span class="comment"># 一个安装包的地址</span></span><br><span class="line"></span><br><span class="line">Package to add or search <span class="keyword">for</span> (leave blank to skip): <span class="comment"># 添加主环境依赖，按上面的格式要求填写</span></span><br><span class="line"></span><br><span class="line">Would you like to define your development dependencies interactively? (<span class="built_in">yes</span>/no) [<span class="built_in">yes</span>] <span class="comment"># 您想以交互方式定义您的开发依赖关系吗？默认yes</span></span><br><span class="line">Package to add or search <span class="keyword">for</span> (leave blank to skip): <span class="comment"># 添加开发环境依赖，按上面的格式要求填写</span></span><br><span class="line"></span><br><span class="line">Generated file</span><br><span class="line"><span class="comment"># 要生成的 pyproject.toml 内容</span></span><br><span class="line">[tool.poetry]</span><br><span class="line">name = <span class="string">&quot;poetrydemo&quot;</span>  <span class="comment"># 包名称</span></span><br><span class="line">version = <span class="string">&quot;0.1.0&quot;</span>    <span class="comment"># 版本</span></span><br><span class="line">description = <span class="string">&quot;&quot;</span>     <span class="comment"># 描述信息</span></span><br><span class="line">authors = [<span class="string">&quot;hanqunfeng &lt;hanqf2008@163.com&gt;&quot;</span>] <span class="comment"># 作者信息</span></span><br><span class="line">readme = <span class="string">&quot;README.md&quot;</span> <span class="comment"># 说明文件</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies] <span class="comment"># 主环境依赖</span></span><br><span class="line">python = <span class="string">&quot;^3.11&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires = [<span class="string">&quot;poetry-core&quot;</span>]</span><br><span class="line">build-backend = <span class="string">&quot;poetry.core.masonry.api&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Do you confirm generation? (<span class="built_in">yes</span>/no) [<span class="built_in">yes</span>] <span class="comment"># 确认是否按照上面的内容创建 pyproject.toml 文件，默认yes</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>上面的方式在初始化时会询问你相关的信息，如果你希望都用默认值的话，可以使用如下命令</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry init -n</span><br></pre></td></tr></table></figure>
+<h3 id="config-poetry的全局配置">config : poetry的全局配置</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看全局配置</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ poetry config --list</span><br><span class="line">cache-dir = <span class="string">&quot;/Users/hanqf/Library/Caches/pypoetry&quot;</span>  <span class="comment"># 缓存目录,用于存储项目依赖和虚拟环境等缓存信息。</span></span><br><span class="line">experimental.system-git-client = <span class="literal">false</span>              <span class="comment"># 是否使用系统自带的git客户端,false表示使用Poetry内置的git客户端</span></span><br><span class="line">installer.max-workers = null                        <span class="comment"># 安装依赖时的最大线程数,null表示使用默认线程数，可以设置为cpu核数+4</span></span><br><span class="line">installer.modern-installation = <span class="literal">true</span>                <span class="comment"># 是否使用Poetry的现代安装方案,true表示使用</span></span><br><span class="line">installer.no-binary = null                          <span class="comment"># 是否不使用预编译的二进制包,null表示不限制</span></span><br><span class="line">installer.parallel = <span class="literal">true</span>                           <span class="comment"># 是否并行安装依赖,true表示并行安装</span></span><br><span class="line">keyring.enabled = <span class="literal">true</span>                              <span class="comment"># 是否启用密钥环（keyring）以保存认证信息。true 表示启用。</span></span><br><span class="line">solver.lazy-wheel = <span class="literal">true</span>                            <span class="comment"># 是否延迟解析 wheel 包。true 表示延迟解析。</span></span><br><span class="line">virtualenvs.create = <span class="literal">true</span>                           <span class="comment"># 是否自动创建虚拟环境,true表示创建</span></span><br><span class="line">virtualenvs.in-project = null                       <span class="comment"># 是否在项目内创建虚拟环境，null 表示使用默认值（通常为 false），即不在项目中创建。true表示在项目中创建</span></span><br><span class="line">virtualenvs.options.always-copy = <span class="literal">false</span>             <span class="comment"># 如果设置为 true，Poetry 会始终复制文件到虚拟环境中，而不是使用符号链接（symlinks）。这可以避免某些系统上的权限问题，但会增加虚拟环境的存储需求。</span></span><br><span class="line">virtualenvs.options.no-pip = <span class="literal">false</span>                  <span class="comment"># 如果设置为 true，Poetry 在创建虚拟环境时不会安装 pip。如果你的项目不需要直接使用 pip，并且你希望通过 Poetry 管理所有的依赖项，可以将 no-pip 设置为 true，以减少虚拟环境中的不必要的依赖项。</span></span><br><span class="line">virtualenvs.options.no-setuptools = <span class="literal">false</span>           <span class="comment"># 如果设置为 true，Poetry 在创建虚拟环境时不会安装 setuptools。默认情况下，Poetry 会安装 pip 和 setuptools，以便你可以使用这些工具来管理依赖项。</span></span><br><span class="line">virtualenvs.options.system-site-packages = <span class="literal">false</span>    <span class="comment"># 默认值false，此时 Poetry 创建的虚拟环境将不会包含全局 Python 安装的 site-packages 目录中的包。这有助于确保项目依赖项的隔离性，避免与系统中的其他包发生冲突。</span></span><br><span class="line">virtualenvs.path = <span class="string">&quot;&#123;cache-dir&#125;/virtualenvs&quot;</span>  <span class="comment"># /Users/hanqf/Library/Caches/pypoetry/virtualenvs # 虚拟环境存放的路径，如果virtualenvs.in-project设置为true，就只会在项目中创建</span></span><br><span class="line">virtualenvs.prefer-active-python = <span class="literal">false</span>            <span class="comment"># 是否优先使用系统激活的Python解释器</span></span><br><span class="line">virtualenvs.prompt = <span class="string">&quot;&#123;project_name&#125;-py&#123;python_version&#125;&quot;</span>  <span class="comment"># 虚拟环境的命令提示格式</span></span><br><span class="line">warnings.export = <span class="literal">true</span>                              <span class="comment"># 是否在导出时显示警告信息。true 表示显示</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>修改全局配置</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改全局配置，此后会在项目目录下创建 .venv 目录存放虚拟环境</span></span><br><span class="line">$ poetry config virtualenvs.in-project <span class="literal">true</span></span><br><span class="line"><span class="comment"># 进入虚拟环境，如果虚拟环境尚未创建会自动创建</span></span><br><span class="line">$ poetry shell</span><br><span class="line"><span class="comment"># 退出虚拟环境</span></span><br><span class="line">$ <span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 只对当前项目有效，此时会在当前项目目录下创建 poetry.toml 来保存这些配置信息</span></span><br><span class="line">$ poetry config virtualenvs.in-project <span class="literal">true</span> --<span class="built_in">local</span></span><br><span class="line">$ poetry config virtualenvs.options.system-site-packages <span class="literal">true</span> --<span class="built_in">local</span></span><br><span class="line">$ more poetry.toml</span><br><span class="line">[virtualenvs]</span><br><span class="line">in-project = <span class="literal">true</span></span><br><span class="line">[virtualenvs.options]</span><br><span class="line">system-site-packages = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里要注意 virtualenvs 下的属性必须在创建虚拟环境前设置才会有效</span></span><br></pre></td></tr></table></figure>
+<h3 id="env-虚拟环境管理">env : 虚拟环境管理</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Poetry 会在你第一次运行某些命令（如 <code>poetry shell</code> 或者 <code>poetry add somepackage</code>）时自动创建虚拟环境。</p>
+</li>
+<li class="lvl-2">
+<p>不过这种时候都是使用系统默认的python来创建虚拟环境，如果系统中安装了多个python，则可以通过如下方式设置虚拟环境要使用哪个python版本</p>
+</li>
+<li class="lvl-2">
+<p>创建/切换虚拟环境</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 指定python的版本，这会从python的默认安装路径下查找对应的版本</span></span><br><span class="line"><span class="comment"># 比如macOs会从该路径下查找：/Library/Frameworks/Python.framework/Versions</span></span><br><span class="line">$ poetry <span class="built_in">env</span> use 3.11</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果可以直接在命令行使用python命令,比如：python3.12 -V，则可以使用如下方式创建虚拟环境</span></span><br><span class="line">$ poetry <span class="built_in">env</span> use python3.12</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果python安装到了其它路径，可以指定python安装路径</span></span><br><span class="line">$ poetry <span class="built_in">env</span> use /pythonDir/3.13/bin/python3</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看当前项目的虚拟环境信息</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个基于 python3.13 的虚拟环境</span></span><br><span class="line">$ poetry <span class="built_in">env</span> use python3.13</span><br><span class="line">Creating virtualenv poetrydemo-fyqYbfje-py3.13 <span class="keyword">in</span> /Users/hanqf/Library/Caches/pypoetry/virtualenvs</span><br><span class="line">Using virtualenv: /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.13</span><br><span class="line"><span class="comment"># 再创建一个基于 python3.11 的虚拟环境，最后被use的处于默认激活状态</span></span><br><span class="line">$ poetry <span class="built_in">env</span> use python3.11</span><br><span class="line">Creating virtualenv poetrydemo-fyqYbfje-py3.11 <span class="keyword">in</span> /Users/hanqf/Library/Caches/pypoetry/virtualenvs</span><br><span class="line">Using virtualenv: /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11</span><br><span class="line"><span class="comment"># 查看当前项目有多少个虚拟环境</span></span><br><span class="line">$ poetry <span class="built_in">env</span> list</span><br><span class="line">poetrydemo-fyqYbfje-py3.11 (Activated) <span class="comment"># poetrydemo-fyqYbfje-py3.11 表示虚拟环境名称，Activated表示当前虚拟环境已经被激活</span></span><br><span class="line">poetrydemo-fyqYbfje-py3.13</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看虚拟化环境路径</span></span><br><span class="line">$ poetry <span class="built_in">env</span> list  --full-path</span><br><span class="line">/Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11 (Activated)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前激活的虚拟环境信息</span></span><br><span class="line">$ poetry <span class="built_in">env</span> info</span><br><span class="line"></span><br><span class="line">Virtualenv</span><br><span class="line">Python:         3.11.3</span><br><span class="line">Implementation: CPython</span><br><span class="line">Path:           /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11</span><br><span class="line">Executable:     /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11/bin/python</span><br><span class="line">Valid:          True</span><br><span class="line"></span><br><span class="line">Base</span><br><span class="line">Platform:   darwin</span><br><span class="line">OS:         posix</span><br><span class="line">Python:     3.11.3</span><br><span class="line">Path:       /Library/Frameworks/Python.framework/Versions/3.11</span><br><span class="line">Executable: /Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除虚拟环境</span></span><br><span class="line">$ poetry <span class="built_in">env</span> remove python3.13</span><br><span class="line">Deleted virtualenv: /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.13</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除全部虚拟环境</span></span><br><span class="line">$ poetry <span class="built_in">env</span> remove --all</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>注意，当<code>virtualenvs.in-project</code>被设置为<code>true</code>时，即只在项目目录下创建虚拟环境时，只会保留一个环境，即<code>.venv</code></p>
+</li>
+<li class="lvl-2">
+<p>切换到新的虚拟环境时会全新创建一个新的环境，原先的环境会被删除，所以要使用<code>poetry install</code>命令重新安装依赖</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ poetry <span class="built_in">env</span> use python3.11</span><br><span class="line">Recreating virtualenv poetrydemo <span class="keyword">in</span> /Users/hanqf/Desktop/pythonDir/poetryDir/poetryDemo/.venv</span><br><span class="line">Using virtualenv: /Users/hanqf/Desktop/pythonDir/poetryDir/poetryDemo/.venv</span><br><span class="line"></span><br><span class="line">$ poetry <span class="built_in">env</span> list <span class="comment"># 虽然可以通过 poetry env use 的方式来创建新的虚拟环境，但实际上只会有一个环境被保留，所以这里只会显示一个</span></span><br><span class="line">.venv (Activated) <span class="comment"># .venv 表示虚拟环境名称，Activated表示当前虚拟环境已经被激活</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看虚拟环境信息</span></span><br><span class="line">$ poetry <span class="built_in">env</span> info</span><br><span class="line"></span><br><span class="line">Virtualenv</span><br><span class="line">Python:         3.11.3</span><br><span class="line">Implementation: CPython</span><br><span class="line">Path:           /Users/hanqf/Desktop/pythonDir/poetryDir/poetryDemo/.venv</span><br><span class="line">Executable:     /Users/hanqf/Desktop/pythonDir/poetryDir/poetryDemo/.venv/bin/python</span><br><span class="line">Valid:          True</span><br><span class="line"></span><br><span class="line">Base</span><br><span class="line">Platform:   darwin</span><br><span class="line">OS:         posix</span><br><span class="line">Python:     3.11.3</span><br><span class="line">Path:       /Library/Frameworks/Python.framework/Versions/3.11</span><br><span class="line">Executable: /Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11</span><br></pre></td></tr></table></figure>
+<h3 id="依赖包管理">依赖包管理</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>add : 安装依赖包</p>
+</li>
+</ul>
+<blockquote>
+<p>这个命令会修改 pyproject.toml 文件，在 [tool.poetry.dependencies] 部分添加新的依赖项。还会自动更新 poetry.lock 文件，锁定依赖的确切版本。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖，安装后会将依赖信息写入 pyproject.toml 中</span></span><br><span class="line"><span class="comment"># 不指定版本则安装最新版</span></span><br><span class="line">$ poetry add fastapi</span><br><span class="line">Using version ^0.115.5 <span class="keyword">for</span> fastapi</span><br><span class="line"></span><br><span class="line">Updating dependencies</span><br><span class="line">Resolving dependencies... (1.3s)</span><br><span class="line"></span><br><span class="line">Package operations: 9 installs, 0 updates, 0 removals</span><br><span class="line"></span><br><span class="line">  - Installing idna (3.10)</span><br><span class="line">  - Installing sniffio (1.3.1)</span><br><span class="line">  - Installing typing-extensions (4.12.2)</span><br><span class="line">  - Installing annotated-types (0.7.0)</span><br><span class="line">  - Installing anyio (4.6.2.post1)</span><br><span class="line">  - Installing pydantic-core (2.23.4)</span><br><span class="line">  - Installing pydantic (2.9.2)</span><br><span class="line">  - Installing starlette (0.41.3)</span><br><span class="line">  - Installing fastapi (0.115.5)</span><br><span class="line"></span><br><span class="line">Writing lock file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定版本号安装依赖</span></span><br><span class="line">poetry add package_name@^1.2.3</span><br><span class="line">    <span class="comment"># 规则说明</span></span><br><span class="line">    ^1.2.3 表示兼容 1.2.3 及更高的小版本，但不包括 2.0.0。    如：poetry add requests@^2.28.0</span><br><span class="line">    ~1.2.3：允许升级到 1.2.x，但不包括 1.3.0。               如：poetry add requests@~2.28.0</span><br><span class="line">    1.2.3：固定为 1.2.3。                                   如：poetry add requests@2.28.0</span><br><span class="line">    &gt;=1.2.3：允许使用 1.2.3 及以上版本。注意zsh下要加上双引号，如：poetry add <span class="string">&quot;requests@&gt;=2.28.0&quot;</span></span><br><span class="line">    &lt;2.0.0：允许使用小于 2.0.0 的版本。 注意zsh下要加上双引号，如：poetry add <span class="string">&quot;requests@&lt;3.0.0&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装到指定的分组，默认都是安装到主环境中的，poetry build默认只会打包主环境的依赖</span></span><br><span class="line">poetry add flask <span class="comment"># 安装到主环境中</span></span><br><span class="line">poetry add flask --group=<span class="built_in">test</span> <span class="comment">#添加分组名 test</span></span><br><span class="line">poetry add flask --dev  <span class="comment">#相当于--group=dev</span></span><br><span class="line"><span class="comment"># 分别执行上面3个安装命令后，输出 pyproject.toml 的内容如下</span></span><br><span class="line">[tool.poetry]</span><br><span class="line">name = <span class="string">&quot;poetrydemo&quot;</span></span><br><span class="line">version = <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line">description = <span class="string">&quot;&quot;</span></span><br><span class="line">authors = [<span class="string">&quot;hanqunfeng &lt;hanqf2008@163.com&gt;&quot;</span>]</span><br><span class="line">readme = <span class="string">&quot;README.md&quot;</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies] <span class="comment"># 主环境</span></span><br><span class="line">python = <span class="string">&quot;^3.11&quot;</span></span><br><span class="line">flask = <span class="string">&quot;^3.1.0&quot;</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.group.test.dependencies] <span class="comment"># test分组依赖</span></span><br><span class="line">flask = <span class="string">&quot;^3.1.0&quot;</span></span><br><span class="line"></span><br><span class="line">[tool.poetry.group.dev.dependencies] <span class="comment"># dev分组依赖</span></span><br><span class="line">flask = <span class="string">&quot;^3.1.0&quot;</span></span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires = [<span class="string">&quot;poetry-core&quot;</span>]</span><br><span class="line">build-backend = <span class="string">&quot;poetry.core.masonry.api&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>show : 查看依赖包</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前项目都需要哪些依赖，这些依赖不一定都安装了，它只是解析 pyproject.toml 中的声明来解析依赖树</span></span><br><span class="line">$ poetry show</span><br><span class="line">annotated-types   0.7.0       Reusable constraint types to use with typing.Annotated</span><br><span class="line">anyio             4.6.2.post1 High level compatibility layer <span class="keyword">for</span> multiple asynchronous ...</span><br><span class="line">fastapi           0.115.5     FastAPI framework, high performance, easy to learn, fast ...</span><br><span class="line">idna              3.10        Internationalized Domain Names <span class="keyword">in</span> Applications (IDNA)</span><br><span class="line">pydantic          2.9.2       Data validation using Python <span class="built_in">type</span> hints</span><br><span class="line">pydantic-core     2.23.4      Core functionality <span class="keyword">for</span> Pydantic validation and serialization</span><br><span class="line">sniffio           1.3.1       Sniff out <span class="built_in">which</span> async library your code is running under</span><br><span class="line">starlette         0.41.3      The little ASGI library that shines.</span><br><span class="line">typing-extensions 4.12.2      Backported and Experimental Type Hints <span class="keyword">for</span> Python 3.8+</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只查看顶级依赖，即只查看在 pyproject.toml 中声明的依赖</span></span><br><span class="line">$ poetry show --top-level</span><br><span class="line">fastapi           0.115.5     FastAPI framework, high performance, easy to learn, fast ...</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>remove : 删除依赖包</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除依赖，此时会将当前包及其所有依赖一块删除</span></span><br><span class="line">$ poetry remove fastapi</span><br><span class="line">Updating dependencies</span><br><span class="line">Resolving dependencies... (0.1s)</span><br><span class="line"></span><br><span class="line">Package operations: 0 installs, 0 updates, 9 removals</span><br><span class="line"></span><br><span class="line">  - Removing annotated-types (0.7.0)</span><br><span class="line">  - Removing anyio (4.6.2.post1)</span><br><span class="line">  - Removing fastapi (0.115.5)</span><br><span class="line">  - Removing idna (3.10)</span><br><span class="line">  - Removing pydantic (2.9.2)</span><br><span class="line">  - Removing pydantic-core (2.23.4)</span><br><span class="line">  - Removing sniffio (1.3.1)</span><br><span class="line">  - Removing starlette (0.41.3)</span><br><span class="line">  - Removing typing-extensions (4.12.2)</span><br><span class="line"></span><br><span class="line">Writing lock file</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>search : 搜索远程仓库</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索远程仓库</span></span><br><span class="line">$ poetry search fastapi</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>install 和 update : 安装和更新依赖包<br>
+<em><strong>在 Poetry 中，install 和 update 是两个常用的命令，但它们的作用和使用场景不同</strong></em></p>
+<ul class="lvl-2">
+<li class="lvl-7">
+<p><code>poetry install</code> 的作用是根据现有的 poetry.lock 文件来安装依赖，确保安装的依赖版本与锁文件中记录的版本完全一致。<br>
+核心特点：</p>
+<ul class="lvl-4">
+<li class="lvl-10">安装锁定的版本：它只会安装 poetry.lock 文件中指定的版本，即使 pyproject.toml 文件中定义的版本范围已经有更新版本。</li>
+<li class="lvl-10">重现依赖环境：适用于团队协作或部署环境，确保所有人或机器安装的依赖版本完全相同。</li>
+<li class="lvl-10">锁文件存在时更高效：如果 poetry.lock 文件存在，poetry install 不会重新解析依赖树。</li>
+<li class="lvl-10">首次运行时生成锁文件：如果没有 poetry.lock 文件，poetry install 会解析依赖并生成锁文件。<br>
+使用场景：</li>
+<li class="lvl-10">新克隆的项目，需要安装依赖环境。</li>
+<li class="lvl-10">部署生产环境，确保依赖版本的稳定性。</li>
+<li class="lvl-10">重新安装之前已定义的依赖（例如清空了虚拟环境）。</li>
+</ul>
+</li>
+<li class="lvl-6">
+<p><code>poetry update</code> 的作用是根据 pyproject.toml 文件中定义的依赖范围重新解析依赖树，并更新 poetry.lock 文件为最新的版本。<br>
+核心特点：</p>
+<ul class="lvl-4">
+<li class="lvl-10">更新到最新版本：它会尝试安装依赖范围内的最新版本，并更新 poetry.lock 文件。</li>
+<li class="lvl-10">解析新的依赖树：即使 poetry.lock 文件存在，poetry update 也会忽略它并重新解析依赖。</li>
+<li class="lvl-10">更改锁文件：它会覆盖现有的 poetry.lock 文件，因此团队其他成员需要重新运行 poetry install 以同步。<br>
+使用场景：</li>
+<li class="lvl-10">更新依赖到最新版本（在依赖范围内）。</li>
+<li class="lvl-10">当添加新依赖后，想要安装并更新锁文件。</li>
+<li class="lvl-10">修复可能的版本冲突或不兼容问题。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="lock-锁定依赖包">lock : 锁定依赖包</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>poetry lock</code> 是 Poetry（一个 Python 包管理工具）中的一个命令，用于锁定项目的依赖关系。使用这个命令可以创建或更新 <code>poetry.lock</code> 文件，确保你的项目中所使用的每个包的版本都被明确记录下来。这样做对于项目的可复现性和稳定性至关重要。</p>
+</li>
+<li class="lvl-2">
+<p>实际上，当运行 <code>poetry install</code> 、 <code>poetry update</code> 或者 <code>poetry add</code> 等命令时， poetry 都会根据<br>
+<code>pyproject.toml</code> 文件中的依赖范围，解析依赖树，并在项目目录下创建或更新 <code>poetry.lock</code> 文件。</p>
+</li>
+<li class="lvl-2">
+<p>当我们手工修改了 <code>pyproject.toml</code> 文件中的依赖范围，此时又不想立刻更新依赖，而是希望在某个时机再更新，此时就可以使用 <code>poetry lock</code> 命令，先锁定这些依赖，之后再通过 <code>poetry install</code> 命令安装。</p>
+</li>
+<li class="lvl-2">
+<p>可以使用 <code>poetry check</code> 命令检查 <code>pyproject.toml</code> 文件 与 <code>poetry.lock</code> 文件的一致性。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 比如我手工删除了 `pyproject.toml` 文件中的某个依赖</span></span><br><span class="line"><span class="comment"># 此时运行 check 检查一致性会报错</span></span><br><span class="line">$ poetry check</span><br><span class="line">Error: pyproject.toml changed significantly since poetry.lock was last generated. Run `poetry lock [--no-update]` to fix the lock file.</span><br><span class="line"><span class="comment"># 锁定依赖</span></span><br><span class="line">$ poetry lock</span><br><span class="line">Updating dependencies</span><br><span class="line">Resolving dependencies... (0.1s)</span><br><span class="line"></span><br><span class="line">Writing lock file</span><br><span class="line"><span class="comment"># 检查一致性通过</span></span><br><span class="line">$ poetry check</span><br><span class="line">All <span class="built_in">set</span>!</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>小贴士</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2">注意，此时通过 <code>poetry show</code> 查看不到那个手工删除的依赖包，但实际上依赖依旧在于虚拟环境中</li>
+<li class="lvl-2">所以尽量避免手工删除依赖，而是通过 <code>poetry remove</code> 命令来删除依赖</li>
+</ul>
+</div>
+<h3 id="source-镜像源管理">source : 镜像源管理</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>默认情况下都是从Pypi的官方仓库下载，国内一般需要指定镜像源来加速下载</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加镜像源，默认就是主要源，注意该方式只对当前项目有效</span></span><br><span class="line"><span class="comment"># 命令格式：poetry source add [选项] [--] &lt;name&gt; [&lt;url&gt;]，name：源仓库的名称，url：源仓库的 URL</span></span><br><span class="line">$ poetry <span class="built_in">source</span> add tsinghua https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line">Adding <span class="built_in">source</span> with name tsinghua.</span><br><span class="line"></span><br><span class="line"><span class="comment"># --priority=PRIORITY设置此源的优先级。可以是以下值之一：default（默认）、primary（主要）、supplemental（备用）、explicit（显式源，只有当包明确声明使用该源时才会被使用）。默认为 primary。</span></span><br><span class="line">$ poetry <span class="built_in">source</span> add  --priority=supplemental aliyun http://mirrors.aliyun.com/pypi/simple/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看镜像源信息</span></span><br><span class="line">$ poetry <span class="built_in">source</span> show</span><br><span class="line"> name      : tsinghua</span><br><span class="line"> url       : https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line"> priority  : primary</span><br><span class="line"></span><br><span class="line"> name      : aliyun</span><br><span class="line"> url       : http://mirrors.aliyun.com/pypi/simple/</span><br><span class="line"> priority  : supplemental</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时查看 pyproject.toml 文件可以看到镜像源信息</span></span><br><span class="line">[[tool.poetry.source]]</span><br><span class="line">name = <span class="string">&quot;tsinghua&quot;</span></span><br><span class="line">url = <span class="string">&quot;https://pypi.tuna.tsinghua.edu.cn/simple&quot;</span></span><br><span class="line">priority = <span class="string">&quot;primary&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[[tool.poetry.source]]</span><br><span class="line">name = <span class="string">&quot;aliyun&quot;</span></span><br><span class="line">url = <span class="string">&quot;http://mirrors.aliyun.com/pypi/simple/&quot;</span></span><br><span class="line">priority = <span class="string">&quot;supplemental&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除镜像源</span></span><br><span class="line">$ poetry <span class="built_in">source</span> remove aliyun <span class="comment"># 指定镜像源名称</span></span><br><span class="line">Removing <span class="built_in">source</span> with name aliyun.</span><br></pre></td></tr></table></figure>
+<h3 id="运行">运行</h3>
+<p>这里以一个小示例来说明这个功能</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个新的项目</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ poetry new poetryDemo</span><br><span class="line">Created package poetrydemo <span class="keyword">in</span> poetryDemo</span><br><span class="line"><span class="comment"># 进入项目目录</span></span><br><span class="line">$ <span class="built_in">cd</span> poetryDemo</span><br><span class="line"><span class="comment"># 查看生成的文件</span></span><br><span class="line">$ ll</span><br><span class="line">total 8</span><br><span class="line">drwxr-xr-x  6 hanqf  staff  192 11 21 17:32 .</span><br><span class="line">drwxr-xr-x  4 hanqf  staff  128 11 21 17:32 ..</span><br><span class="line">-rw-r--r--  1 hanqf  staff    0 11 21 17:32 README.md</span><br><span class="line">drwxr-xr-x  3 hanqf  staff   96 11 21 17:32 poetrydemo</span><br><span class="line">-rw-r--r--  1 hanqf  staff  266 11 21 17:32 pyproject.toml</span><br><span class="line">drwxr-xr-x  3 hanqf  staff   96 11 21 17:32 tests</span><br><span class="line"><span class="comment"># 进入包目录</span></span><br><span class="line">$ <span class="built_in">cd</span> poetrydemo</span><br><span class="line"><span class="comment"># 查看包目录下的文件</span></span><br><span class="line">$ ll</span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  3 hanqf  staff   96 11 21 17:32 .</span><br><span class="line">drwxr-xr-x  6 hanqf  staff  192 11 21 17:32 ..</span><br><span class="line">-rw-r--r--  1 hanqf  staff    0 11 21 17:32 __init__.py</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在包目录下创建 array_util.py，内容如下</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line"></span><br><span class="line">def generate_random_array(shape, distribution=<span class="string">&quot;uniform&quot;</span>, params=None, seed=None):</span><br><span class="line">    <span class="string">&quot;&quot;</span><span class="string">&quot;</span></span><br><span class="line"><span class="string">    生成随机数组的工具方法。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param shape: tuple，指定数组的形状，例如 (3, 4) 表示 3 行 4 列。</span></span><br><span class="line"><span class="string">    :param distribution: str，指定随机数分布类型，可选值：</span></span><br><span class="line"><span class="string">        - &quot;</span>uniform<span class="string">&quot;：均匀分布（默认）。</span></span><br><span class="line"><span class="string">        - &quot;</span>normal<span class="string">&quot;：正态分布。</span></span><br><span class="line"><span class="string">        - &quot;</span><span class="built_in">integer</span><span class="string">&quot;：随机整数。</span></span><br><span class="line"><span class="string">    :param params: dict，分布的参数配置：</span></span><br><span class="line"><span class="string">        - 均匀分布：&#123;&quot;</span>low<span class="string">&quot;: 最小值, &quot;</span>high<span class="string">&quot;: 最大值&#125;，默认 low=0, high=1。</span></span><br><span class="line"><span class="string">        - 正态分布：&#123;&quot;</span>mean<span class="string">&quot;: 均值, &quot;</span>std<span class="string">&quot;: 标准差&#125;，默认 mean=0, std=1。</span></span><br><span class="line"><span class="string">        - 随机整数：&#123;&quot;</span>low<span class="string">&quot;: 最小值, &quot;</span>high<span class="string">&quot;: 最大值, &quot;</span>dtype<span class="string">&quot;: 类型&#125;，默认 low=0, high=10。</span></span><br><span class="line"><span class="string">    :param seed: int，随机数种子（可选），用于结果可复现。</span></span><br><span class="line"><span class="string">    :return: np.ndarray，生成的随机数组。</span></span><br><span class="line"><span class="string">    &quot;</span><span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> seed is not None:</span><br><span class="line">        np.random.seed(seed)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> params is None:</span><br><span class="line">        params = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> distribution == <span class="string">&quot;uniform&quot;</span>:</span><br><span class="line">        low = params.get(<span class="string">&quot;low&quot;</span>, 0)</span><br><span class="line">        high = params.get(<span class="string">&quot;high&quot;</span>, 1)</span><br><span class="line">        <span class="built_in">return</span> np.random.uniform(low, high, size=shape)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">elif</span> distribution == <span class="string">&quot;normal&quot;</span>:</span><br><span class="line">        mean = params.get(<span class="string">&quot;mean&quot;</span>, 0)</span><br><span class="line">        std = params.get(<span class="string">&quot;std&quot;</span>, 1)</span><br><span class="line">        <span class="built_in">return</span> np.random.normal(mean, std, size=shape)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">elif</span> distribution == <span class="string">&quot;integer&quot;</span>:</span><br><span class="line">        low = params.get(<span class="string">&quot;low&quot;</span>, 0)</span><br><span class="line">        high = params.get(<span class="string">&quot;high&quot;</span>, 10)</span><br><span class="line">        dtype = params.get(<span class="string">&quot;dtype&quot;</span>, int)</span><br><span class="line">        <span class="built_in">return</span> np.random.randint(low, high, size=shape, dtype=dtype)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        raise ValueError(<span class="string">&quot;不支持的分布类型！可选值为 &#x27;uniform&#x27;, &#x27;normal&#x27;, &#x27;integer&#x27;。&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例用法</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    array_uniform = generate_random_array((<span class="number">3</span>, <span class="number">4</span>), distribution=&quot;uniform&quot;, params=&#123;&quot;low&quot;: <span class="number">1</span>, &quot;high&quot;: <span class="number">10</span>&#125;)</span><br><span class="line">    array_normal = generate_random_array((<span class="number">2</span>, <span class="number">3</span>), distribution=&quot;normal&quot;, params=&#123;&quot;mean&quot;: <span class="number">0</span>, &quot;std&quot;: <span class="number">1</span>&#125;, seed=<span class="number">42</span>)</span><br><span class="line">    array_integer = generate_random_array((<span class="number">4</span>, <span class="number">5</span>), distribution=&quot;integer&quot;, params=&#123;&quot;low&quot;: <span class="number">0</span>, &quot;high&quot;: <span class="number">20</span>&#125;)</span><br><span class="line"></span><br><span class="line">    print(&quot;均匀分布随机数组：\n&quot;, array_uniform)</span><br><span class="line">    print(&quot;正态分布随机数组：\n&quot;, array_normal)</span><br><span class="line">    print(&quot;随机整数数组：\n&quot;, array_integer)</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>安装依赖</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ poetry add numpy</span><br><span class="line">Using version ^2.1.3 <span class="keyword">for</span> numpy</span><br><span class="line"></span><br><span class="line">Updating dependencies</span><br><span class="line">Resolving dependencies... (1.1s)</span><br><span class="line"></span><br><span class="line">Package operations: 1 install, 0 updates, 0 removals</span><br><span class="line"></span><br><span class="line">  - Installing numpy (2.1.3)</span><br><span class="line"></span><br><span class="line">Writing lock file</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>运行，两种方法</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>poetry run</code></li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ poetry run python array_util.py</span><br><span class="line">均匀分布随机数组：</span><br><span class="line">[[7.44623063 1.89415788 4.81008329 4.25556572]</span><br><span class="line">[3.31925154 6.44037063 5.3216543  7.54950573]</span><br><span class="line">[3.97160747 5.04800698 3.28299934 3.42841887]]</span><br><span class="line">正态分布随机数组：</span><br><span class="line">[[ 0.49671415 -0.1382643   0.64768854]</span><br><span class="line">[ 1.52302986 -0.23415337 -0.23413696]]</span><br><span class="line">随机整数数组：</span><br><span class="line">[[10 10  3  7  2]</span><br><span class="line">[ 1 11  5  1  0]</span><br><span class="line">[11 11 16  9 15]</span><br><span class="line">[14 14 18 11 19]]</span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6"><code>poetry shell</code> : 此时会开启一个新的shell，并开启虚拟环境</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启虚拟环境</span></span><br><span class="line">$ poetry shell</span><br><span class="line">Spawning shell within /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11</span><br><span class="line">Restored session: 2024年11月21日 星期四 15时31分52秒 CST</span><br><span class="line">➜  poetrydemo <span class="built_in">emulate</span> bash -c <span class="string">&#x27;. /Users/hanqf/Library/Caches/pypoetry/virtualenvs/poetrydemo-fyqYbfje-py3.11/bin/activate&#x27;</span></span><br><span class="line"><span class="comment"># 在虚拟环境下运行</span></span><br><span class="line">$ python array_util.py</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="打包和发布">打包和发布</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>接着上面的项目</p>
+</li>
+<li class="lvl-2">
+<p>打包</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 会在项目目录下创建 dist 目录，并将打好的包存放于此</span></span><br><span class="line">$ poetry build</span><br><span class="line">Building poetrydemo (0.1.0)</span><br><span class="line">  - Building sdist</span><br><span class="line">  - Built poetrydemo-0.1.0.tar.gz</span><br><span class="line">  - Building wheel</span><br><span class="line">  - Built poetrydemo-0.1.0-py3-none-any.whl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看生成的打包文件</span></span><br><span class="line">$ exa -1 dist</span><br><span class="line">hqf_poetrydemo-0.1.0-py3-none-any.whl</span><br><span class="line">hqf_poetrydemo-0.1.0.tar.gz</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>发布</p>
+</li>
+<li class="lvl-2">
+<p>首先要先在<a target="_blank" rel="noopener" href="https://pypi.org/">PyPI</a>上注册个帐号，需要开启“双要素身份验证 （2FA）”，否则不能获取发布时的API令牌。</p>
+</li>
+<li class="lvl-2">
+<p>获取API令牌<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/iShot_2024-11-21_18.00.50.png" alt=""></p>
+</li>
+<li class="lvl-2">
+<p>发布，不过这次发布提示包名已经存在了</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 发布时提示包名已经存在了</span></span><br><span class="line">$ poetry publish -u __token__  -p pypi-AgEIcHlwaS5vcmcCJDU0Y2Q5NjhkLWYyYTEtN</span><br><span class="line">Publishing poetrydemo (0.1.0) to PyPI</span><br><span class="line"> - Uploading poetrydemo-0.1.0-py3-none-any.whl FAILED</span><br><span class="line"></span><br><span class="line">HTTP Error 400: The name <span class="string">&#x27;poetrydemo&#x27;</span> is too similar to an existing project. See https://pypi.org/help/#project-name <span class="keyword">for</span> more information. | b<span class="string">&quot;&lt;html&gt;\n &lt;head&gt;\n  &lt;title&gt;400 The name &#x27;poetrydemo&#x27; is too similar to an existing project. See https://pypi.org/help/#project-name for more information.\n \n &lt;body&gt;\n  &lt;h1&gt;400 The name &#x27;poetrydemo&#x27; is too similar to an existing project. See https://pypi.org/help/#project-name for more information.\n  The server could not comply with the request since it is either malformed or otherwise incorrect.&lt;br/&gt;&lt;br/&gt;\nThe name &amp;#x27;poetrydemo&amp;#x27; is too similar to an existing project. See https://pypi.org/help/#project-name for more information.\n\n\n \n&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>先修改包名，直接编辑 pyproject.toml 即可，将name属性修改为“hqf_poetrydemo”，然后将包目录的名称也修改为这个<code>mv poetrydemo hqf_poetrydemo</code>，并删除dist目录，之后重新打包<code>poetry build</code>，再次发布</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ vim pyproject.toml <span class="comment"># 将name属性修改为“hqf_poetrydemo”</span></span><br><span class="line">$ <span class="built_in">mv</span> poetrydemo hqf_poetrydemo <span class="comment"># 将包目录的名称也修改为这个</span></span><br><span class="line">$ <span class="built_in">rm</span> -rf dist <span class="comment"># 删除dist目录</span></span><br><span class="line">$ poetry build    <span class="comment"># 重新打包</span></span><br><span class="line">Creating virtualenv hqf-poetrydemo-fyqYbfje-py3.11 <span class="keyword">in</span> /Users/hanqf/Library/Caches/pypoetry/virtualenvs</span><br><span class="line">Building hqf_poetrydemo (0.1.0)</span><br><span class="line">  - Building sdist</span><br><span class="line">  - Built hqf_poetrydemo-0.1.0.tar.gz</span><br><span class="line">  - Building wheel</span><br><span class="line">  - Built hqf_poetrydemo-0.1.0-py3-none-any.whl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次发布</span></span><br><span class="line">$ poetry publish -u __token__  -p pypi-AgEIcHlwaS5vcmcCJDU0Y2Q5NjhkLWYyYTEtN</span><br><span class="line"></span><br><span class="line">Publishing hqf_poetrydemo (0.1.0) to PyPI</span><br><span class="line"> - Uploading hqf_poetrydemo-0.1.0-py3-none-any.whl 100%</span><br><span class="line"> - Uploading hqf_poetrydemo-0.1.0.tar.gz 100%</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/iShot_2024-11-21_18.13.21.png" alt=""></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>之后就可以在其它项目中安装这个包了</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pip install</span></span><br><span class="line">$ pip install hqf_poetrydemo</span><br><span class="line"></span><br><span class="line"><span class="comment"># poetry add</span></span><br><span class="line">$ poetry add hqf_poetrydemo</span><br><span class="line">Using version ^0.1.0 <span class="keyword">for</span> hqf-poetrydemo</span><br><span class="line"></span><br><span class="line">Updating dependencies</span><br><span class="line">Resolving dependencies... (0.5s)</span><br><span class="line"></span><br><span class="line">Package operations: 2 installs, 0 updates, 0 removals</span><br><span class="line"></span><br><span class="line">  - Installing numpy (2.1.3)</span><br><span class="line">  - Installing hqf-poetrydemo (0.1.0)</span><br><span class="line"></span><br><span class="line">Writing lock file</span><br></pre></td></tr></table></figure>
+<h3 id="self-update-升级-poetry-版本"><code>self update</code> : 升级 poetry 版本</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>self 相关命令主要用于 poetry 自身安装插件使用</p>
+</li>
+<li class="lvl-2">
+<p>估计插件功能目前还不成熟，官网也没有进行详细的说明，并且 windows 下无法使用，所以这里不讨论。</p>
+</li>
+<li class="lvl-2">
+<p><code>self</code>命令下目前只需要记住一个命令： <code>self update</code> : 升级 poetry 版本</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ poetry self update</span><br></pre></td></tr></table></figure>
+<h3 id="debug-resolve-查看包的依赖关系"><code>debug resolve</code> : 查看包的依赖关系</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只查看，不安装</span></span><br><span class="line">$ poetry debug resolve requests</span><br><span class="line">Resolving dependencies... (0.4s)</span><br><span class="line"></span><br><span class="line">Resolution results:</span><br><span class="line"></span><br><span class="line">certifi            2024.8.30</span><br><span class="line">charset-normalizer 3.4.0</span><br><span class="line">idna               3.10</span><br><span class="line">urllib3            2.2.3</span><br><span class="line">requests           2.32.3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看指定版本的依赖关系</span></span><br><span class="line">$ poetry debug resolve requests@2.32.3</span><br></pre></td></tr></table></figure>
+<h3 id="cache-缓存管理">cache : 缓存管理</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>poetry一个很重要的功能就是缓存安装包，可以 <code>减少</code> 相同的安装包被重复下载。为什么是减少而不是避免呢？因为不同的镜像源的包是分别缓存的。</p>
+</li>
+<li class="lvl-2">
+<p>通过 <code>poetry config --list </code> 可以看到 <code>cache-dir</code> 的地址，这里就是缓存下载包的目录。</p>
+</li>
+<li class="lvl-2">
+<p>以下是一些常见的使用场景</p>
+<ul class="lvl-2">
+<li class="lvl-6">解决依赖安装问题：<br>
+如果你在安装或更新依赖时遇到问题（例如，某个包无法正确安装或版本不对），清空缓存可以帮助你确保 Poetry 重新下载所有必要的文件，从而解决问题。</li>
+<li class="lvl-6">清理磁盘空间：<br>
+如果你的项目很多或者经常修改依赖项，缓存可能会变得非常大。使用 poetry cache clear 可以帮助释放磁盘空间，特别是当你不经常使用某些包时。</li>
+<li class="lvl-6">测试最新版本的依赖：<br>
+如果你想测试某个包的新版本是否解决了某个问题，或者想确保你使用的确实是最新的版本，清除缓存可以强制 Poetry 从远程仓库重新下载最新的包。</li>
+<li class="lvl-6">环境变化：<br>
+如果你的开发或生产环境发生了变化（例如，切换了操作系统、更新了 Python 版本等），清除缓存可以帮助你确保依赖项在新环境中正确安装。</li>
+<li class="lvl-6">调试依赖问题：<br>
+在调试依赖项问题时，有时候清除缓存可以帮助你确定问题是否与缓存中的旧版本有关。</li>
+<li class="lvl-6">CI/CD 环境的一致性：<br>
+在持续集成或持续部署 (CI/CD) 环境中，为了确保每次构建都基于最新的依赖，有时会在构建脚本中包含清除缓存的步骤。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看缓存列表，这里会按镜像源进行分组</span></span><br><span class="line">$ poetry cache list</span><br><span class="line">PyPI</span><br><span class="line">_default_cache</span><br><span class="line">tsinghua</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清除指定源的全部缓存</span></span><br><span class="line">$ poetry cache clear pypi --all</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清除指定源下某个包的缓存</span></span><br><span class="line">$ poetry cache clear pypi:requests:2.24.0</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2024/11/22/python_poetry/" title="Poetry--轻量级的python包管理器">https://blog.hanqunfeng.com/2024/11/22/python_poetry/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/18/python_pip/" rel="prev" title="pip--CERTIFICATE_VERIFY_FAILED">
+                  <i class="fa fa-angle-left"></i> pip--CERTIFICATE_VERIFY_FAILED
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/28/brew/" rel="next" title="MacOS软件包管理器--brew">
+                  MacOS软件包管理器--brew <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">695k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">42:07</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.min.js","integrity":"sha256-G8ouPAnw4zzMbnAenHnVz6h9XpKbNdOkrqTh7AadyHs="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>

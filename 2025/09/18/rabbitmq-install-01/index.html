@@ -1,0 +1,2801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要   本文介绍 CentOS9 中 RabbitMQ 的安装与使用。   Zookeeper官网   本文使用的 RabbitMQ 版本为 4.1.4。   Java Client 示例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ 的安装及使用">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/09/18/rabbitmq-install-01/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要   本文介绍 CentOS9 中 RabbitMQ 的安装与使用。   Zookeeper官网   本文使用的 RabbitMQ 版本为 4.1.4。   Java Client 示例">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/qgdFHL.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/4lP2cD.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/VqNm1y.png">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/980Wwu.png">
+<meta property="article:published_time" content="2025-09-18T13:30:05.000Z">
+<meta property="article:modified_time" content="2025-09-28T02:30:21.901Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="rabbitmq">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/qgdFHL.png">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/09/18/rabbitmq-install-01/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/09/18/rabbitmq-install-01/","path":"2025/09/18/rabbitmq-install-01/","title":"RabbitMQ 的安装及使用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RabbitMQ 的安装及使用 | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+<img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
+<img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
+
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示9月3日抗战胜利纪念日图片
+    if(month==9 && day==3){
+        $("#img_93").show();
+    }
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_93").hide();
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    // 将“初一”“初二”…“十五”映射成数字 1~15
+    const dayMap = {
+        "初一": 1, "初二": 2, "初三": 3, "初四": 4, "初五": 5,
+        "初六": 6, "初七": 7, "初八": 8, "初九": 9, "初十": 10,
+        "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15
+    };
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 农历新年
+            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+                $("#img_new_year").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+                $("#img_new_year").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">RabbitMQ 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-4-0-%E6%9C%89%E5%93%AA%E4%BA%9B%E5%8D%87%E7%BA%A7"><span class="nav-number">3.</span> <span class="nav-text">RabbitMQ 4.0+ 有哪些升级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">RabbitMQ 单机安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Erlang"><span class="nav-number">4.1.</span> <span class="nav-text">安装Erlang</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-RabbitMQ"><span class="nav-number">4.2.</span> <span class="nav-text">安装 RabbitMQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RabbitMQ-%E5%90%AF%E5%8A%A8%E4%B8%8E%E5%81%9C%E6%AD%A2%E5%91%BD%E4%BB%A4"><span class="nav-number">4.3.</span> <span class="nav-text">RabbitMQ 启动与停止命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BF%80%E6%B4%BBWeb%E7%AE%A1%E7%90%86%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%8F%92%E4%BB%B6"><span class="nav-number">4.4.</span> <span class="nav-text">激活Web管理控制台插件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%B8%90%E5%8F%B7"><span class="nav-number">4.4.1.</span> <span class="nav-text">设置远程访问帐号</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E5%85%81%E8%AE%B8-guest-%E8%B4%A6%E5%8F%B7%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE"><span class="nav-number">4.4.1.1.</span> <span class="nav-text">1. 允许 guest 账号远程访问</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E6%96%B0%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%8F%AF%E4%BB%A5%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E7%9A%84%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E5%8F%B7"><span class="nav-number">4.4.1.2.</span> <span class="nav-text">2. 新创建一个可以远程访问的管理员账号</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E6%89%80%E6%9C%89%E7%A8%B3%E5%AE%9A%E7%9A%84-Feature-Flags"><span class="nav-number">4.5.</span> <span class="nav-text">启用所有稳定的 Feature Flags</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">RabbitMQ 配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">RabbitMQ 环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">7.</span> <span class="nav-text">RabbitMQ 相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4-rabbitmqctl"><span class="nav-number">7.1.</span> <span class="nav-text">最常用的命令 rabbitmqctl</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8"><span class="nav-number">7.1.1.</span> <span class="nav-text">命令自动补全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0"><span class="nav-number">7.1.2.</span> <span class="nav-text">常用命令参数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E8%8A%82%E7%82%B9%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.2.1.</span> <span class="nav-text">1.节点管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E7%94%A8%E6%88%B7%E5%92%8C%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.2.2.</span> <span class="nav-text">2. 用户和权限管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%EF%BC%88vhost%EF%BC%89%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.2.3.</span> <span class="nav-text">3. 虚拟主机（vhost）管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-%E9%98%9F%E5%88%97%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.2.4.</span> <span class="nav-text">4. 队列管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%92%8C%E7%BB%91%E5%AE%9A"><span class="nav-number">7.1.2.5.</span> <span class="nav-text">5. 交换机和绑定</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-%E9%9B%86%E7%BE%A4%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.2.6.</span> <span class="nav-text">6. 集群管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-%E6%97%A5%E5%BF%97%E5%92%8C%E8%B0%83%E8%AF%95"><span class="nav-number">7.1.2.7.</span> <span class="nav-text">7. 日志和调试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-%E5%85%B6%E4%BB%96%E5%91%BD%E4%BB%A4"><span class="nav-number">7.1.2.8.</span> <span class="nav-text">8. 其他命令</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-HTTP-API"><span class="nav-number">8.</span> <span class="nav-text">RabbitMQ HTTP API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabbitmqadmin"><span class="nav-number">9.</span> <span class="nav-text">rabbitmqadmin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-%E9%9C%80%E8%A6%81%E5%BC%80%E6%94%BE%E5%93%AA%E4%BA%9B%E7%AB%AF%E5%8F%A3"><span class="nav-number">10.</span> <span class="nav-text">RabbitMQ 需要开放哪些端口</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">246</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">58</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/09/25/rabbitmq-cluster/" rel="bookmark">
+        <time class="popular-posts-time">2025-09-25</time>
+        <br>
+      RabbitMQ 之 Cluster
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/09/21/rabbitmq-exchange/" rel="bookmark">
+        <time class="popular-posts-time">2025-09-21</time>
+        <br>
+      RabbitMQ 之 Exchange
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/09/21/rabbitmq-message/" rel="bookmark">
+        <time class="popular-posts-time">2025-09-21</time>
+        <br>
+      RabbitMQ 之 Message
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/09/20/rabbitmq-queue/" rel="bookmark">
+        <time class="popular-posts-time">2025-09-20</time>
+        <br>
+      RabbitMQ 之 Queue
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/27/elk-01/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-27</time>
+        <br>
+      一文搞懂ELK
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/09/18/rabbitmq-install-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RabbitMQ 的安装及使用 | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RabbitMQ 的安装及使用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-09-18 21:30:05" itemprop="dateCreated datePublished" datetime="2025-09-18T21:30:05+08:00">2025-09-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-28 10:30:21" itemprop="dateModified" datetime="2025-09-28T10:30:21+08:00">2025-09-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/rabbitmq/" itemprop="url" rel="index"><span itemprop="name">rabbitmq</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/rabbitmq/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2025/09/18/rabbitmq-install-01/" class="leancloud_visitors" data-flag-title="RabbitMQ 的安装及使用" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>24 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍 CentOS9 中 RabbitMQ 的安装与使用。</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://www.rabbitmq.com">Zookeeper官网</a></p>
+</li>
+<li class="lvl-2">
+<p>本文使用的 RabbitMQ 版本为 4.1.4。</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/springbootchapter/tree/master/springboot3-demo/rabbitmq-demo">Java Client 示例</a></p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="RabbitMQ-简介">RabbitMQ 简介</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RabbitMQ 是一个开源的 消息队列中间件，基于 AMQP（Advanced Message Queuing Protocol，高级消息队列协议） 实现，用于在分布式系统中 解耦、缓冲和异步处理消息。</p>
+</li>
+<li class="lvl-2">
+<p>它的主要作用是让 <code>不同系统</code> 或 <code>应用</code> 之间可靠地传递消息，即使发送方或接收方暂时不可用，也能保证消息不丢失。</p>
+</li>
+<li class="lvl-2">
+<p>RabbitMQ 的核心特点</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>核心特点</th>
+<th>具体说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>可靠性</strong></td>
+<td>- 支持消息确认（ACK）机制<br>- 消息持久化到磁盘<br>- 支持事务或确认模式，保证消息不会丢失</td>
+</tr>
+<tr>
+<td><strong>灵活的路由</strong></td>
+<td>- 通过 <strong>交换机（Exchange）</strong> 将消息路由到不同的 <strong>队列（Queue）</strong><br>- 支持多种路由策略：<br>  • direct：直连，按队列名路由<br>  • fanout：广播，所有队列都收到<br>  • topic：主题匹配，类似订阅模式<br>  • headers：按消息头匹配</td>
+</tr>
+<tr>
+<td><strong>高性能</strong></td>
+<td>- 内存队列快速处理消息<br>- 支持异步 IO 和 Erlang 的并发模型</td>
+</tr>
+<tr>
+<td><strong>多语言支持</strong></td>
+<td>- 客户端库丰富：Java、Python、Go、C#、Node.js 等<br>- 可在多种平台和框架中使用</td>
+</tr>
+<tr>
+<td><strong>集群与高可用</strong></td>
+<td>- 支持集群模式<br>- 队列可以镜像到多个节点，保证高可用</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RabbitMQ 的核心概念</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+<th>作用范围</th>
+<th>类比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Broker</strong></td>
+<td>一个 <strong>RabbitMQ 服务实例</strong>，包含整个 AMQP 服务、管理插件、队列、交换机等资源</td>
+<td>运行在一台服务器上，或集群中的一个节点</td>
+<td>类似于数据库的 <strong>实例</strong></td>
+</tr>
+<tr>
+<td><strong>Vhost</strong></td>
+<td>Broker 内部的 <strong>逻辑分区</strong>，用于隔离不同的队列、交换机、绑定等资源</td>
+<td>一个 Broker 可以有多个 vhost，每个 vhost 彼此隔离</td>
+<td>类似于数据库实例里的 <strong>schema</strong>，实际使用中建议为每个业务配置一个独立的 vhost，并为每个vhost单独配置一个管理用户</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Producer</strong></td>
+<td>消息生产者，发送消息到 RabbitMQ</td>
+</tr>
+<tr>
+<td><strong>Queue</strong></td>
+<td>队列，存储消息的地方</td>
+</tr>
+<tr>
+<td><strong>Consumer</strong></td>
+<td>消息消费者，从队列获取消息</td>
+</tr>
+<tr>
+<td><strong>Exchange</strong></td>
+<td>交换机，接收 Producer 的消息并根据规则路由到队列</td>
+</tr>
+<tr>
+<td><strong>Binding</strong></td>
+<td>绑定，定义 Exchange 与 Queue 的路由规则</td>
+</tr>
+<tr>
+<td><strong>Message</strong></td>
+<td>消息，RabbitMQ 传递的数据单元</td>
+</tr>
+<tr>
+<td><strong>Connection</strong></td>
+<td>连接，客户端与 RabbitMQ Broker 之间的 <strong>TCP 连接</strong>，是通信的物理通道</td>
+</tr>
+<tr>
+<td><strong>Channel</strong></td>
+<td>通道，Connection 内部的 <strong>逻辑连接</strong>，轻量级且多路复用，一个连接可开多个通道</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">                        ┌─ Broker (RabbitMQ 实例)──────────┐</span><br><span class="line">                        │                                 │</span><br><span class="line">                        │    ┌───── Virtual Host ─────┐   │</span><br><span class="line">        Producer ─── TCP ──────&gt; Exchange ──&gt; Queue ────────&gt; TCP ── Consumer</span><br><span class="line">(Connection ──&gt; Channel)│    └────────────────────────┘   │</span><br><span class="line">                        │                                 │</span><br><span class="line">                        └─────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/qgdFHL.png" alt=""></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RabbitMQ 的典型应用场景</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>应用场景</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>异步处理</strong></td>
+<td>用户请求不直接处理，消息入队后由后台异步消费，例如邮件发送、图片处理</td>
+</tr>
+<tr>
+<td><strong>削峰填谷</strong></td>
+<td>缓冲高峰流量，平滑系统压力</td>
+</tr>
+<tr>
+<td><strong>系统解耦</strong></td>
+<td>不同服务之间不直接调用，降低耦合</td>
+</tr>
+<tr>
+<td><strong>广播/通知</strong></td>
+<td>发布/订阅模式，实现多服务同时收到消息</td>
+</tr>
+<tr>
+<td><strong>日志收集</strong></td>
+<td>统一接收、分发日志到不同处理系统</td>
+</tr>
+</tbody>
+</table>
+<h2 id="RabbitMQ-4-0-有哪些升级">RabbitMQ 4.0+ 有哪些升级</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>特性标志（Feature Flags）的优化与强制性要求</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-3">
+<p>在升级到 4.0 之前，用户必须先升级到 3.13.x 版本并手动启用所有稳定的特性标志。</p>
+</li>
+<li class="lvl-3">
+<p>从 4.0+ 开始，如果集群中的所有节点都支持某个必需的特性标志，系统会在节点启动时自动启用该标志，无需人工干预。</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>AMQP 协议的增强</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-3">
+<p>新增了对 AMQP 过滤表达式（AMQP Filter Expressions）Version 1.0 Working Draft 09 的支持。</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>MQTT 协议的改进</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-3">
+<p>默认的 MQTT 最大包大小从之前的 256 MiB 降低到 16 MiB，同时仍允许用户通过配置项 mqtt.max_packet_size_authenticated 自定义该值</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Classic队列的变化</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-3">
+<p>删除了对 Classic队列 <code>version1</code> 的支持，默认就是 <code>version2</code></p>
+</li>
+<li class="lvl-3">
+<p>不再支持 Classic队列 的镜像功能，官方推荐使用 Quorum 队列 ，未来会将 Quorum 队列 作为默认队列。</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>集群状态下创建 Quorum 队列 和 Stream 队列 会自动升级为 复制队列（镜像）</p>
+</li>
+</ul>
+<h2 id="RabbitMQ-单机安装">RabbitMQ 单机安装</h2>
+<h3 id="安装Erlang">安装Erlang</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RabbitMQ是基于Erlang语言开发的，所以安装RabbitMQ之前需要安装Erlang语言环境。需要注意的是RabbitMQ与Erlang语言之间是有版本对应关系的。参考官方文档<a target="_blank" rel="noopener" href="https://www.rabbitmq.com/docs/which-erlang">Erlang Version Requirements</a></p>
+</li>
+<li class="lvl-2">
+<p>目前RabbitMQ最新版本是<code>4.1.4</code>，Erlang版本可以选择 <code>27.x</code>，<a target="_blank" rel="noopener" href="https://github.com/rabbitmq/erlang-rpm/releases">GitHub下载地址</a></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载 el9 的版本，对应 CentOS 9</span></span><br><span class="line">wget https://github.com/rabbitmq/erlang-rpm/releases/download/v27.3.4.3/erlang-27.3.4.3-1.el9.x86_64.rpm</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line"><span class="built_in">sudo</span> rpm -ivh erlang-27.3.4.3-1.el9.x86_64.rpm</span><br><span class="line"><span class="comment"># 查看安装的版本</span></span><br><span class="line">erl</span><br><span class="line"><span class="comment"># 输出类似于，这里 Erlang/OTP 27 就表示安装的是 27.x 版本</span></span><br><span class="line">Erlang/OTP 27 [erts-15.2.7.2] [<span class="built_in">source</span>] [64-bit] [smp:2:2] [ds:2:2:10] [async-threads:1] [jit:ns]</span><br><span class="line"></span><br><span class="line">Eshell V15.2.7.2 (press Ctrl+G to abort, <span class="built_in">type</span> <span class="built_in">help</span>(). <span class="keyword">for</span> <span class="built_in">help</span>)</span><br><span class="line">1&gt; q().  <span class="comment"># 退出命令，注意是括号后面还有一个点。输入 help(). 显示帮助信息</span></span><br><span class="line">ok</span><br></pre></td></tr></table></figure>
+<h3 id="安装-RabbitMQ">安装 RabbitMQ</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>目前RabbitMQ最新版本是<code>4.1.4</code>，<a target="_blank" rel="noopener" href="https://github.com/rabbitmq/rabbitmq-server/releases">GitHub下载地址</a>]</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载，noarch 表示架构无关，即 X86_64 和 ARM64 都可以</span></span><br><span class="line"><span class="comment"># 因为没有对应的 el9 的包，所以只能用 el8 的包了，实际使用中没有问题。</span></span><br><span class="line">wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v4.1.4/rabbitmq-server-4.1.4-1.el8.noarch.rpm</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line"><span class="built_in">sudo</span> rpm -ivh rabbitmq-server-4.1.4-1.el8.noarch.rpm</span><br><span class="line"><span class="comment"># 查看版本信息</span></span><br><span class="line">rabbitmq-diagnostics version <span class="comment"># 无需启动服务</span></span><br><span class="line"><span class="comment"># RabbitMQ 服务启动后方可正确输出</span></span><br><span class="line">rabbitmqctl version</span><br></pre></td></tr></table></figure>
+<h3 id="RabbitMQ-启动与停止命令">RabbitMQ 启动与停止命令</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Erlang VM 是 Erlang 语言运行环境，RabbitMQ 应用运行在 Erlang VM 下。</p>
+</li>
+<li class="lvl-2">
+<p>启动 RabbitMQ 服务(Erlang VM) + 应用</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 RabbitMQ 服务(Erlang VM) + 应用</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start rabbitmq-server</span><br><span class="line"><span class="comment"># 或者，--detached 后台运行，不加就是前台运行</span></span><br><span class="line"><span class="built_in">sudo</span> rabbitmq-server -detached</span><br><span class="line"></span><br><span class="line"><span class="comment"># 单独启动 应用，此时需要保证 RabbitMQ 服务(Erlang VM) 正在运行，一般重启 应用 时使用该命令</span></span><br><span class="line"><span class="built_in">sudo</span> rabbitmqctl start_app</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>停止 RabbitMQ 服务(Erlang VM) + 应用</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停止 RabbitMQ 服务(Erlang VM) + 应用</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl stop rabbitmq-server</span><br><span class="line"><span class="comment"># 或者，单机模式 stop，集群模式 shutdown</span></span><br><span class="line"><span class="built_in">sudo</span> rabbitmqctl stop / shutdown</span><br><span class="line"></span><br><span class="line"><span class="comment"># 单独停止 RabbitMQ 应用，此时需要保证 RabbitMQ 服务(Erlang VM) 正在运行，一般重启 应用 时使用该命令</span></span><br><span class="line"><span class="built_in">sudo</span> rabbitmqctl stop_app</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看RabbitMQ 服务状态</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status rabbitmq-server</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="built_in">sudo</span> rabbitmqctl status</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RabbitMQ 在 CentOS 9 (RPM 安装) 的目录结构</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>目录路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>配置文件</td>
+<td><code>/etc/rabbitmq</code></td>
+<td><code>rabbitmq.conf</code>、<code>advanced.config</code> 等配置</td>
+</tr>
+<tr>
+<td>日志文件</td>
+<td><code>/var/log/rabbitmq</code></td>
+<td>RabbitMQ 运行日志，默认存放在这里</td>
+</tr>
+<tr>
+<td>数据目录</td>
+<td><code>/var/lib/rabbitmq/mnesia</code></td>
+<td>消息队列、元数据存储目录</td>
+</tr>
+<tr>
+<td>Erlang Cookie</td>
+<td><code>/var/lib/rabbitmq/.erlang.cookie</code></td>
+<td>Erlang 节点间通信的 cookie 文件</td>
+</tr>
+<tr>
+<td>可执行文件</td>
+<td><code>/usr/lib/rabbitmq/bin</code></td>
+<td><code>rabbitmq-server</code>、<code>rabbitmqctl</code> 等命令</td>
+</tr>
+<tr>
+<td>启动脚本</td>
+<td><code>/usr/lib/systemd/system/rabbitmq-server.service</code></td>
+<td>systemd 管理 RabbitMQ 的启动脚本</td>
+</tr>
+<tr>
+<td>插件目录</td>
+<td><code>/usr/lib/rabbitmq/lib/rabbitmq_server-&lt;version&gt;/plugins</code></td>
+<td>所有插件文件存放路径</td>
+</tr>
+</tbody>
+</table>
+<h3 id="激活Web管理控制台插件">激活Web管理控制台插件</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>对于 RabbitMQ 所有的操作基本都可以通过命令行完成，但是使用起来并不方便，这时我们可以激活 <code>rabbitmq_management</code> 插件，该插件提供了 Web 管理控制台，我们可以通过 Web 管理控制台来管理 RabbitMQ</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/docs/management">rabbitmq_management</a> 插件为 官方插件，默认已经安装，不需要下载，直接激活即可</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 激活插件</span></span><br><span class="line"><span class="built_in">sudo</span> rabbitmq-plugins <span class="built_in">enable</span> rabbitmq_management</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>该插件除了提供了 <code>Web 管理控制台</code> ，还提供 <code>基于 HTTP 的 API</code> 用于管理和监控 RabbitMQ 节点和集群，以及 <code>命令行工具 rabbitmqadmin</code>，这个后面会介绍。</p>
+</li>
+</ul>
+<h4 id="设置远程访问帐号">设置远程访问帐号</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>插件激活后可以通过浏览器访问 <code>http://&lt;ip&gt;:15672</code>，rabbitmq_management 插件默认用户名和密码都是 <code>guest</code>，但是默认情况下其只能通过 <code>127.0.0.1</code> 访问，此时我们有两种方法可以解决</p>
+</li>
+</ul>
+<h5 id="1-允许-guest-账号远程访问">1. 允许 <code>guest</code> 账号远程访问</h5>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改 /etc/rabbitmq/rabbitmq.conf 文件</span></span><br><span class="line"><span class="comment"># 允许guest用户远程访问，`官方不推荐` 一直开启，建议开启后在 web 控制台中创建一个管理员账号，然后立刻关闭该配置</span></span><br><span class="line">loopback_users.guest = <span class="literal">false</span></span><br><span class="line"><span class="comment"># 默认的用户名和密码，注意这里 user 如果改成 admin，则上面的开启远程访问中的 guest 也要改成 admin</span></span><br><span class="line">default_user = guest</span><br><span class="line">default_pass = guest</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>修改完成后，重启 RabbitMQ 服务</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart rabbitmq-server</span><br></pre></td></tr></table></figure>
+<h5 id="2-新创建一个可以远程访问的管理员账号">2. 新创建一个可以远程访问的管理员账号</h5>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建管理员账号，比如这里 用户名为 <code>admin</code>，密码为 <code>rabbitmq</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> rabbitmqctl add_user admin rabbitmq</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>给管理员账号添加资源管理权限</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> rabbitmqctl set_permissions -p / admin <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rabbitmqctl</code></td>
+<td>RabbitMQ 的命令行管理工具，用于管理用户、权限、队列、交换机等。</td>
+</tr>
+<tr>
+<td><code>set_permissions</code></td>
+<td>设置指定用户在某个虚拟主机（vhost）下的权限。</td>
+</tr>
+<tr>
+<td><code>-p /</code></td>
+<td>指定虚拟主机（vhost）。这里的 <code>/</code> 是默认虚拟主机。</td>
+</tr>
+<tr>
+<td><code>admin</code></td>
+<td>用户名，这里是为 <code>admin</code> 用户设置权限。</td>
+</tr>
+<tr>
+<td><code>&quot;.*&quot;</code>（配置权限）</td>
+<td>第一个正则表达式，控制用户对资源配置的权限，比如创建交换机、队列、绑定等。<code>&quot;.*&quot;</code> 表示全部允许。</td>
+</tr>
+<tr>
+<td><code>&quot;.*&quot;</code>（写权限）</td>
+<td>第二个正则表达式，控制用户向哪些资源发送消息。<code>&quot;.*&quot;</code> 表示全部允许。</td>
+</tr>
+<tr>
+<td><code>&quot;.*&quot;</code>（读权限）</td>
+<td>第三个正则表达式，控制用户从哪些资源消费消息。<code>&quot;.*&quot;</code> 表示全部允许。</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>设置admin账号为控制台管理员</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> rabbitmqctl set_user_tags admin administrator</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rabbitmqctl</code></td>
+<td>RabbitMQ 的命令行管理工具。</td>
+</tr>
+<tr>
+<td><code>set_user_tags</code></td>
+<td>用来为用户设置标签（tag），标签决定了用户在管理界面或 API 中的权限级别。</td>
+</tr>
+<tr>
+<td><code>admin</code></td>
+<td>用户名，这里是为 <code>admin</code> 用户设置标签。</td>
+</tr>
+<tr>
+<td><code>administrator</code></td>
+<td>标签名，表示给该用户赋予管理员权限。</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>常见的用户标签</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>标签</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>administrator</code></td>
+<td>管理员，拥有最高权限，可通过 Web 管理界面、CLI、API 管理 RabbitMQ 所有内容</td>
+</tr>
+<tr>
+<td><code>monitoring</code></td>
+<td>监控用户，可查看所有监控信息，但不能修改配置</td>
+</tr>
+<tr>
+<td><code>management</code></td>
+<td>普通管理用户，可以登录管理界面，但权限受限</td>
+</tr>
+<tr>
+<td><code>policymaker</code></td>
+<td>策略管理用户，可以管理策略和参数，但不能管理其他用户</td>
+</tr>
+<tr>
+<td>无标签</td>
+<td>普通用户，只能收发消息，不能登录管理界面</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>set_permissions</code> 与 <code>set_user_tags</code> 总结对比</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>控制范围</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>set_permissions</code></td>
+<td>vhost 内的资源</td>
+<td>发消息、收消息、创建队列、交换机</td>
+</tr>
+<tr>
+<td><code>set_user_tags</code></td>
+<td>管理界面、管理 API</td>
+<td>用户管理、策略管理、集群管理</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/4lP2cD.png" alt=""></p>
+<h3 id="启用所有稳定的-Feature-Flags">启用所有稳定的 Feature Flags</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>登录控制台后我们会看到一条告警信息，参考：<a target="_blank" rel="noopener" href="https://www.rabbitmq.com/docs/feature-flags">Feature Flags</a></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">⚠ All stable feature flags must be enabled after completing an upgrade.</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>它的意思是：RabbitMQ 在新版本中引入了一些 Feature Flags（特性标志），这些特性标志用于控制一些新的功能或行为是否启用。升级 RabbitMQ 后，有些功能会处于 <code>未启用状态</code>，需要你手动开启，确保集群完全运行在最新的功能模式下。</p>
+</li>
+<li class="lvl-2">
+<p>背景：为什么有 Feature Flags？</p>
+<ul class="lvl-2">
+<li class="lvl-4">向后兼容：RabbitMQ 升级时，可能引入了新的数据格式或内部机制，如果立即启用，旧版本节点可能无法理解。</li>
+<li class="lvl-4">滚动升级支持：升级集群时，可以先升级节点，再统一启用功能，避免中途出问题。</li>
+<li class="lvl-4">可控性：你可以选择在确认集群稳定后再启用新功能。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>查看当前 Feature Flags 状态</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl -q --formatter pretty_table list_feature_flags</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出会类似这样：</span></span><br><span class="line">┌──────────────────────────────────────┬──────────┐</span><br><span class="line">│ name                                 │ state    │</span><br><span class="line">├──────────────────────────────────────┼──────────┤</span><br><span class="line">│ classic_mirrored_queue_version       │ enabled  │</span><br><span class="line">├──────────────────────────────────────┼──────────┤</span><br><span class="line">│ classic_queue_type_delivery_support  │ enabled  │</span><br><span class="line">├──────────────────────────────────────┼──────────┤</span><br><span class="line">│ detailed_queues_endpoint             │ disabled │</span><br><span class="line">├──────────────────────────────────────┼──────────┤</span><br><span class="line">│ direct_exchange_routing_v2           │ enabled  │</span><br><span class="line">├──────────────────────────────────────┼──────────┤</span><br><span class="line"></span><br><span class="line">&gt; enabled：特性已启用</span><br><span class="line">&gt; disabled：特性未启用</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>可以输出 其它 格式，显示更详细的信息</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># json</span></span><br><span class="line">rabbitmqctl -q --formatter json list_feature_flags name state provided_by desc doc_url | jq</span><br><span class="line"><span class="comment"># table</span></span><br><span class="line">rabbitmqctl -q --formatter pretty_table list_feature_flags name state provided_by desc doc_url</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>启用所有已标记为 stable 的特性，建议升级下一个 RabbitMQ 版本 前一定要确保当前版本的 Feature Flags 都是启用的，避免升级后无法顺利启动服务。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl enable_feature_flag all</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在控制台中也可以查看和开启这些 Feature Flags 的状态<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/VqNm1y.png" alt=""></p>
+</li>
+<li class="lvl-2">
+<p>这里要注意，<strong>Feature Flags 一旦开启就无法关闭。</strong></p>
+</li>
+</ul>
+<h2 id="RabbitMQ-配置文件">RabbitMQ 配置文件</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>对于 RPM/YUM/DNF 安装的 RabbitMQ，配置文件默认路径是</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>文件类型</th>
+<th>默认位置</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主配置文件（推荐）</td>
+<td><code>/etc/rabbitmq/rabbitmq.conf</code></td>
+<td>使用 <strong>INI 格式</strong>，主要配置都在这里</td>
+</tr>
+<tr>
+<td>环境变量配置</td>
+<td><code>/etc/rabbitmq/rabbitmq-env.conf</code></td>
+<td>定义节点名、Cookie 位置、数据/日志目录等</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>安装后 <code>/etc/rabbitmq/</code> 目录可能是空的，你需要手动创建 <code>rabbitmq.conf</code>，详细的参数说明可以参看<a target="_blank" rel="noopener" href="https://rabbitmq.com/configure.html">官网指南</a>，<a target="_blank" rel="noopener" href="https://github.com/rabbitmq/rabbitmq-server/blob/main/deps/rabbit/docs/rabbitmq.conf.example">rabbitmq.conf 示例</a></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/rabbitmq/rabbitmq.conf</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 监听端口</span></span><br><span class="line">listeners.tcp.default = 5672</span><br><span class="line"><span class="comment"># 管理界面端口</span></span><br><span class="line">management.tcp.port = 15672</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>rabbitmq-env.conf</code> 用来 定义节点名、Cookie 、数据/日志目录等的环境变量，RabbitMQ 启动时会自动读取该文件，以下是通过 RPM 安装的 RabbitMQ 的默认值</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/rabbitmq/rabbitmq-env.conf</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 节点名称，默认使用主机短名(hostname -s)，例如 rabbit@myhost</span></span><br><span class="line">NODENAME=rabbit@&lt;hostname&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绑定的 IP 地址，留空表示监听所有地址，等价于 0.0.0.0</span></span><br><span class="line">NODE_IP_ADDRESS=</span><br><span class="line"></span><br><span class="line"><span class="comment"># AMQP 协议端口，默认 5672</span></span><br><span class="line">NODE_PORT=5672</span><br><span class="line"></span><br><span class="line"><span class="comment"># RabbitMQ 数据库存储目录</span></span><br><span class="line">MNESIA_BASE=/var/lib/rabbitmq/mnesia</span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志存放目录</span></span><br><span class="line">LOG_BASE=/var/log/rabbitmq</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置文件路径，不带 .conf 后缀</span></span><br><span class="line">CONFIG_FILE=/etc/rabbitmq/rabbitmq</span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否使用长主机名，true/false (长主机名 hostname -f)</span></span><br><span class="line">USE_LONGNAME=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>两个文件的作用</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>作用范围</th>
+<th>典型参数</th>
+<th>何时加载</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>rabbitmq-env.conf</strong></td>
+<td>设置 RabbitMQ 启动时的 <strong>环境变量</strong></td>
+<td>NODENAME, NODE_IP_ADDRESS, NODE_PORT, LOG_BASE, MNESIA_BASE</td>
+<td>在启动 RabbitMQ 服务前由 <code>rabbitmq-env</code> 脚本读取</td>
+</tr>
+<tr>
+<td><strong>rabbitmq.conf</strong></td>
+<td>RabbitMQ <strong>运行时配置</strong>（内部参数、插件配置等）</td>
+<td>listeners.tcp.default, log, cluster_formation 等</td>
+<td>RabbitMQ 启动后由 Erlang VM 内部读取</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p><code>rabbitmq-env.conf</code> 决定 RabbitMQ 启动时的基本环境，比如节点名、数据目录、监听 IP 等，必须在启动前就确定。</p>
+</li>
+<li class="lvl-4">
+<p><code>rabbitmq.conf</code> 决定运行时的功能，比如端口监听、日志等级、集群配置等，可以动态修改，重启应用后生效。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><code>rabbitmq-env.conf</code> 变量</th>
+<th><code>rabbitmq.conf</code> 对应配置</th>
+<th>优先级</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NODE_IP_ADDRESS</td>
+<td><code>listeners.tcp.default = &lt;IP&gt;</code></td>
+<td><code>rabbitmq.conf</code></td>
+<td>只要在 <code>rabbitmq.conf</code> 里配置，就覆盖环境变量</td>
+</tr>
+<tr>
+<td>NODE_PORT</td>
+<td><code>listeners.tcp.default = &lt;Port&gt;</code></td>
+<td><code>rabbitmq.conf</code></td>
+<td>同上，IP 和端口可以一起配置</td>
+</tr>
+<tr>
+<td>NODENAME</td>
+<td><strong>无直接对应</strong></td>
+<td><code>rabbitmq-env.conf</code></td>
+<td>节点名只能通过 <code>rabbitmq-env.conf</code> 或环境变量设定</td>
+</tr>
+<tr>
+<td>MNESIA_BASE</td>
+<td><strong>无直接对应</strong></td>
+<td><code>rabbitmq-env.conf</code></td>
+<td>数据目录只能在启动前设定</td>
+</tr>
+<tr>
+<td>LOG_BASE</td>
+<td><code>log.dir = &lt;path&gt;</code></td>
+<td><code>rabbitmq.conf</code></td>
+<td>运行时配置覆盖环境变量</td>
+</tr>
+<tr>
+<td>CONFIG_FILE</td>
+<td><strong>无直接对应</strong></td>
+<td><code>rabbitmq-env.conf</code></td>
+<td>这个只决定加载哪个 <code>rabbitmq.conf</code> 文件</td>
+</tr>
+<tr>
+<td>USE_LONGNAME</td>
+<td><strong>无直接对应</strong></td>
+<td><code>rabbitmq-env.conf</code></td>
+<td>节点名是否使用长主机名只能启动前决定</td>
+</tr>
+</tbody>
+</table>
+<h2 id="RabbitMQ-环境变量">RabbitMQ 环境变量</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>rabbitmq-env.conf</code> 文件就是用来定义环境变量的，但要注意，<code>rabbitmq-env.conf</code> 文件中定义的变量 去掉了 <code>RABBITMQ_</code> 前缀，例如在环境中设置的变量名通常是 <code>RABBITMQ_NODENAME</code>，但在 <code>rabbitmq-env.conf</code> 中，设置变量时会去掉 <code>RABBITMQ_</code> 前缀，直接使用 <code>NODENAME</code>。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 rabbitmq-env.conf 中配置</span></span><br><span class="line">NODENAME=rabbit@localhost</span><br><span class="line">NODE_PORT=5672</span><br><span class="line">LOG_BASE=/var/log/rabbitmq</span><br><span class="line"></span><br><span class="line"><span class="comment"># 而在环境中，你实际设置的变量是</span></span><br><span class="line"><span class="built_in">export</span> RABBITMQ_NODENAME=rabbit@localhost</span><br><span class="line"><span class="built_in">export</span> RABBITMQ_NODE_PORT=5672</span><br><span class="line"><span class="built_in">export</span> RABBITMQ_LOG_BASE=/var/log/rabbitmq</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>环境变量名称</th>
+<th>描述</th>
+<th>Linux RPM 安装的默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RABBITMQ_BASE</strong></td>
+<td>只针对 Windows 系统。该基目录包含 RabbitMQ 服务器的数据库和日志文件的子目录。</td>
+<td>无（仅适用于 Windows）</td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_CONFIG_FILE</strong></td>
+<td>配置文件的路径，没有 <code>.config</code> 扩展名。RabbitMQ 服务器使用该配置文件来配置组件。</td>
+<td>默认配置文件路径：<code>/etc/rabbitmq/rabbitmq.conf</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_GENERATED_CONFIG_DIR</strong></td>
+<td>RabbitMQ 写入其生成的配置文件的目录。</td>
+<td>默认生成路径：<code>/var/lib/rabbitmq/mnesia</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_MNESIA_BASE</strong></td>
+<td>RabbitMQ 服务器节点数据库、消息存储和集群状态文件的基目录，每个节点一个。通常会覆盖 <code>RABBITMQ_MNESIA_DIR</code>。</td>
+<td>默认值：<code>/var/lib/rabbitmq/mnesia</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_MNESIA_DIR</strong></td>
+<td>存储 RabbitMQ 节点数据的目录，包含模式数据库、消息存储、集群成员信息和其他持久节点状态。</td>
+<td>默认值：<code>/var/lib/rabbitmq/mnesia/rabbit@&lt;hostname&gt;</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_SCHEMA_DIR</strong></td>
+<td>RabbitMQ 保存新格式配置文件使用的配置模式的目录。</td>
+<td>默认值：<code>/etc/rabbitmq</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_LOG_BASE</strong></td>
+<td>该基目录包含 RabbitMQ 服务器的日志文件。</td>
+<td>默认值：<code>/var/log/rabbitmq</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_LOGS</strong></td>
+<td>RabbitMQ 服务器的 Erlang 日志文件的路径。</td>
+<td>默认值：<code>/var/log/rabbitmq/rabbitmq.log</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_PLUGINS_DIR</strong></td>
+<td>RabbitMQ 的插件目录。路径由特定操作系统的分隔符定义（Unix 使用 <code>:</code>，Windows 使用 <code>;</code>）。</td>
+<td>默认值：<code>/usr/lib/rabbitmq/plugins</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_PLUGINS_EXPAND_DIR</strong></td>
+<td>用于展开启用的插件的工作目录。确保有效的 RabbitMQ 用户有足够权限读取和创建该目录中的文件。</td>
+<td>默认值：<code>/var/lib/rabbitmq/mnesia</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_ENABLED_PLUGINS_FILE</strong></td>
+<td>显式记录启用的插件的文件，启用或禁用插件时会重新创建该文件。确保有效的 RabbitMQ 用户有足够权限随时读取、写入和创建该文件。</td>
+<td>默认值：<code>/var/lib/rabbitmq/.enabled_plugins</code></td>
+</tr>
+<tr>
+<td><strong>RABBITMQ_PID_FILE</strong></td>
+<td>用于 <code>rabbitmqctl</code> 的进程 ID 文件。</td>
+<td>默认值：<code>/var/run/rabbitmq/rabbitmq.pid</code></td>
+</tr>
+</tbody>
+</table>
+<div class="warning">
+<p><em><strong>小贴士</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2">安装好 RabbitMQ 后，不要随便修改 <code>hostname</code>，因为默认情况下，RabbitMQ 的数据目录是基于 <code>hostname</code> 创建的，如果修改了 <code>hostname</code>，RabbitMQ 就会指向新的数据目录</li>
+<li class="lvl-2">数据目录默认是 <code>/var/lib/rabbitmq/mnesia/rabbit@&lt;hostname&gt;</code></li>
+<li class="lvl-2">如果修改了 <code>hostname</code>，但仍要使用原来的数据目录，可以设置 <code>RABBITMQ_MNESIA_DIR</code> 环境变量，指向原来的数据目录</li>
+</ul>
+</div>
+<h2 id="RabbitMQ-相关命令">RabbitMQ 相关命令</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>日常使用中，基本都是通过 Web 管理界面操作，这里仅对命令进行简要介绍。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用（简要）</th>
+<th>常用示例（典型用法 + 中文说明）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rabbitmq-defaults</code></td>
+<td>定义/显示 RabbitMQ 安装默认目录和运行时前缀</td>
+<td><code>编辑 sbin/rabbitmq-defaults 中 PREFIX/SYS_PREFIX</code>（修改默认目录到系统目录）</td>
+</tr>
+<tr>
+<td><code>rabbitmq-diagnostics</code></td>
+<td>健康检查 / 诊断工具，可用于监控</td>
+<td><code>rabbitmq-diagnostics -q ping</code>（检查节点是否可达）<br><code>rabbitmq-diagnostics -q status</code>（查看节点状态）<br><code>rabbitmq-diagnostics -q check_running</code>（确认节点运行中）</td>
+</tr>
+<tr>
+<td><code>rabbitmq-env</code></td>
+<td><code>rabbitmq-env</code> 其实不是一个直接在命令行里单独使用的工具，而是 RabbitMQ 服务启动脚本 中用来加载 RabbitMQ 环境变量的脚本。</td>
+<td>在 <code>/etc/rabbitmq/rabbitmq-env.conf</code> 中设置：<br><code>RABBITMQ_NODENAME=myrabbit</code>（设置节点名）<br>或用 <code>rabbitmq-env</code> 输出查看实际环境</td>
+</tr>
+<tr>
+<td><code>rabbitmq-plugins</code></td>
+<td>插件管理：列出/启用/禁用插件</td>
+<td><code>rabbitmq-plugins list</code>（列出所有插件）<br><code>rabbitmq-plugins enable rabbitmq_management</code>（启用 Web 管理插件）<br><code>rabbitmq-plugins disable --offline plugin</code>（离线禁用插件）</td>
+</tr>
+<tr>
+<td><code>rabbitmq-queues</code></td>
+<td>队列副本管理：rebalance/grow/shrink</td>
+<td><code>rabbitmq-queues rebalance all --vhost-pattern &quot;.*&quot; --queue-pattern &quot;.*&quot;</code>（重平衡所有队列副本）<br><code>rabbitmq-queues add_member --vhost / qname rabbit@node</code>（为队列增加节点副本）</td>
+</tr>
+<tr>
+<td><code>rabbitmq-server</code></td>
+<td>启动 RabbitMQ 节点（前台/后台）</td>
+<td><code>rabbitmq-server</code>（前台启动）<br><code>rabbitmq-server -detached</code>（后台启动）</td>
+</tr>
+<tr>
+<td><code>rabbitmq-upgrade</code></td>
+<td>升级相关操作：drain/恢复等</td>
+<td><code>rabbitmq-upgrade drain</code>（让节点进入维护模式，停止接收新连接）<br><code>rabbitmq-upgrade post_upgrade</code>（执行升级后收尾操作）<br><code>rabbitmq-upgrade revive</code>（恢复维护模式中的节点）</td>
+</tr>
+<tr>
+<td><code>rabbitmqctl</code></td>
+<td>最常用管理命令：用户、队列、集群管理</td>
+<td><code>rabbitmqctl status</code>（查看节点状态）<br><code>rabbitmqctl list_queues</code>（列出所有队列）<br><code>rabbitmqctl add_user bob s3cr3t</code>（添加用户 bob，密码 s3cr3t）</td>
+</tr>
+<tr>
+<td><code>rabbitmq-streams</code></td>
+<td>管理 Streams（流式队列）</td>
+<td><code>rabbitmq-streams stream_status --vhost / my-stream</code>（查看 my-stream 状态）<br><code>rabbitmq-streams add_replica --vhost / my-stream rabbit@node</code>（为 my-stream 增加副本节点）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="最常用的命令-rabbitmqctl">最常用的命令 <code>rabbitmqctl</code></h3>
+<h4 id="命令自动补全">命令自动补全</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>rabbitmqctl</code> 有一个 <code>autocomplete</code> 参数，可以自动完成命令参数，我们可以利用这个命令来实现命令自动补全</p>
+</li>
+<li class="lvl-2">
+<p><code>vim ~/.bashrc</code> 添加如下内容：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">_rabbitmqctl_completion</span></span>() &#123;</span><br><span class="line">    <span class="built_in">local</span> cur opts</span><br><span class="line">    cur=<span class="string">&quot;<span class="variable">$&#123;COMP_WORDS[COMP_CWORD]&#125;</span>&quot;</span>           <span class="comment"># 当前光标所在单词</span></span><br><span class="line">    opts=$(rabbitmqctl autocomplete <span class="string">&quot;<span class="variable">$cur</span>&quot;</span>)   <span class="comment"># 只传当前单词作为前缀</span></span><br><span class="line">    COMPREPLY=( $(compgen -W <span class="string">&quot;<span class="variable">$&#123;opts&#125;</span>&quot;</span> -- <span class="string">&quot;<span class="variable">$cur</span>&quot;</span>) )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">complete -F _rabbitmqctl_completion rabbitmqctl</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>实际上 RabbitMQ 的大部分命令都有 <code>autocomplete</code> 参数，都可以自动完成命令参数</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义通用补全函数</span></span><br><span class="line"><span class="function"><span class="title">_rabbitmq_completion</span></span>() &#123;</span><br><span class="line">    <span class="built_in">local</span> cur opts</span><br><span class="line">    cur=<span class="string">&quot;<span class="variable">$&#123;COMP_WORDS[COMP_CWORD]&#125;</span>&quot;</span></span><br><span class="line">    <span class="comment"># 当前命令名，自动判断</span></span><br><span class="line">    <span class="built_in">local</span> cmd=<span class="string">&quot;<span class="variable">$&#123;COMP_WORDS[0]&#125;</span>&quot;</span></span><br><span class="line">    <span class="comment"># 给对应命令传当前前缀</span></span><br><span class="line">    opts=$(<span class="variable">$cmd</span> autocomplete <span class="string">&quot;<span class="variable">$cur</span>&quot;</span> 2&gt;/dev/null)</span><br><span class="line">    COMPREPLY=( $(compgen -W <span class="string">&quot;<span class="variable">$&#123;opts&#125;</span>&quot;</span> -- <span class="string">&quot;<span class="variable">$cur</span>&quot;</span>) )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一次性绑定多个命令</span></span><br><span class="line">complete -F _rabbitmq_completion rabbitmqctl rabbitmq-plugins rabbitmq-diagnostics rabbitmq-queues rabbitmq-upgrade</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>测试</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使补全生效</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"><span class="comment"># tab 补全</span></span><br><span class="line">rabbitmqctl st&lt;TAB&gt;</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">start_app  status     stop       stop_app</span><br></pre></td></tr></table></figure>
+<h4 id="常用命令参数">常用命令参数</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>rabbitmqctl help</code> 获取所有命令参数的简介</p>
+</li>
+<li class="lvl-2">
+<p><code>rabbitmqctl help &lt;command&gt;</code> 获取指定命令的帮助</p>
+</li>
+<li class="lvl-2">
+<p>日常使用中基本都是通过 <code>web 控制台</code> 完成，这里只做了解。</p>
+</li>
+</ul>
+<h5 id="1-节点管理">1.节点管理</h5>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>status</code></td>
+<td>查看节点状态，包括运行状态、版本、内存、队列数量等</td>
+<td><code>rabbitmqctl status</code></td>
+</tr>
+<tr>
+<td><code>stop</code></td>
+<td>停止 RabbitMQ 节点</td>
+<td><code>rabbitmqctl stop</code></td>
+</tr>
+<tr>
+<td><code>stop_app</code></td>
+<td>停止 RabbitMQ 应用（保留节点运行）</td>
+<td><code>rabbitmqctl stop_app</code></td>
+</tr>
+<tr>
+<td><code>start_app</code></td>
+<td>启动 RabbitMQ 应用</td>
+<td><code>rabbitmqctl start_app</code></td>
+</tr>
+<tr>
+<td><code>reset</code></td>
+<td>重置 RabbitMQ 节点，删除所有队列和数据（慎用）</td>
+<td><code>rabbitmqctl reset</code></td>
+</tr>
+<tr>
+<td><code>force_reset</code></td>
+<td>强制重置节点（即使在集群中也会重置）</td>
+<td><code>rabbitmqctl force_reset</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="2-用户和权限管理">2. 用户和权限管理</h5>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_users</code></td>
+<td>列出所有用户</td>
+<td><code>rabbitmqctl list_users</code></td>
+</tr>
+<tr>
+<td><code>add_user &lt;user&gt; &lt;password&gt;</code></td>
+<td>添加新用户</td>
+<td><code>rabbitmqctl add_user alice mypassword</code></td>
+</tr>
+<tr>
+<td><code>delete_user &lt;user&gt;</code></td>
+<td>删除用户</td>
+<td><code>rabbitmqctl delete_user alice</code></td>
+</tr>
+<tr>
+<td><code>change_password &lt;user&gt; &lt;password&gt;</code></td>
+<td>修改用户密码</td>
+<td><code>rabbitmqctl change_password alice newpass</code></td>
+</tr>
+<tr>
+<td><code>list_permissions &lt;user&gt;</code></td>
+<td>查看某用户的权限</td>
+<td><code>rabbitmqctl list_permissions alice</code></td>
+</tr>
+<tr>
+<td><code>set_permissions -p &lt;vhost&gt; &lt;user&gt; &quot;&lt;conf&gt;&quot; &quot;&lt;write&gt;&quot; &quot;&lt;read&gt;&quot;</code></td>
+<td>设置用户在虚拟主机的权限</td>
+<td><code>rabbitmqctl set_permissions -p / alice &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="3-虚拟主机（vhost）管理">3. 虚拟主机（vhost）管理</h5>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_vhosts</code></td>
+<td>列出所有虚拟主机</td>
+<td><code>rabbitmqctl list_vhosts</code></td>
+</tr>
+<tr>
+<td><code>add_vhost &lt;vhost&gt;</code></td>
+<td>添加虚拟主机</td>
+<td><code>rabbitmqctl add_vhost my_vhost</code></td>
+</tr>
+<tr>
+<td><code>delete_vhost &lt;vhost&gt;</code></td>
+<td>删除虚拟主机</td>
+<td><code>rabbitmqctl delete_vhost my_vhost</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="4-队列管理">4. 队列管理</h5>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>队列可以通过 <code>web 控制台</code> 创建， 也可以通过 <code>客户端(比如Java)</code> 创建，<code>rabbitmqctl</code> 只能查看和删除队列</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_queues</code></td>
+<td>列出队列</td>
+<td><code>rabbitmqctl list_queues</code></td>
+</tr>
+<tr>
+<td><code>list_queues name messages consumers</code></td>
+<td>列出队列及消息数、消费者数</td>
+<td><code>rabbitmqctl list_queues name messages consumers</code></td>
+</tr>
+<tr>
+<td><code>purge_queue &lt;queue&gt;</code></td>
+<td>清空队列消息</td>
+<td><code>rabbitmqctl purge_queue my_queue</code></td>
+</tr>
+<tr>
+<td><code>delete_queue &lt;queue&gt;</code></td>
+<td>删除队列</td>
+<td><code>rabbitmqctl delete_queue my_queue</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="5-交换机和绑定">5. 交换机和绑定</h5>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>交换机可以通过 <code>web 控制台</code> 创建， 也可以通过 <code>客户端(比如Java)</code> 创建，<code>rabbitmqctl</code> 只能查看</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_exchanges</code></td>
+<td>列出交换机</td>
+<td><code>rabbitmqctl list_exchanges</code></td>
+</tr>
+<tr>
+<td><code>list_bindings</code></td>
+<td>列出绑定关系</td>
+<td><code>rabbitmqctl list_bindings</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="6-集群管理">6. 集群管理</h5>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cluster_status</code></td>
+<td>查看集群状态</td>
+<td><code>rabbitmqctl cluster_status</code></td>
+</tr>
+<tr>
+<td><code>join_cluster &lt;node&gt;</code></td>
+<td>节点加入集群</td>
+<td><code>rabbitmqctl join_cluster rabbit@node1</code></td>
+</tr>
+<tr>
+<td><code>forget_cluster_node &lt;node&gt;</code></td>
+<td>将节点从集群中移除</td>
+<td><code>rabbitmqctl forget_cluster_node rabbit@node2</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="7-日志和调试">7. 日志和调试</h5>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>report</code></td>
+<td>输出节点诊断报告</td>
+<td><code>rabbitmqctl report</code></td>
+</tr>
+<tr>
+<td><code>eval &lt;expression&gt;</code></td>
+<td>执行 Erlang 表达式</td>
+<td><code>rabbitmqctl eval 'rabbit_mnesia:info().'</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="8-其他命令">8. 其他命令</h5>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>help</code></td>
+<td>查看帮助命令</td>
+<td><code>rabbitmqctl help</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>查看 RabbitMQ 版本</td>
+<td><code>rabbitmqctl version</code></td>
+</tr>
+<tr>
+<td><code>authenticate_user &lt;user&gt; &lt;password&gt;</code></td>
+<td>验证用户密码</td>
+<td><code>rabbitmqctl authenticate_user alice mypassword</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="RabbitMQ-HTTP-API">RabbitMQ HTTP API</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RabbitMQ 的 HTTP API 是一个 基于 REST 的管理接口，主要用于对 RabbitMQ 的 资源管理和监控，它是 管理插件 <code>rabbitmq_management</code> 提供的功能。通过 HTTP API，你可以不用 <code>rabbitmqctl</code> 就能操作 RabbitMQ。</p>
+</li>
+<li class="lvl-2">
+<p>要使用 HTTP API，你需要在 RabbitMQ 节点上确保 <code>rabbitmq_management</code> 插件已经启动。前面我们介绍<code>web 管理控制台</code>时已经启动了该插件，所以你可以直接使用。</p>
+</li>
+<li class="lvl-2">
+<p>实际上 <code>Web管理控制台</code> 就是通过发送 AJAX 请求到 <code>/api/…</code> 接口来获取数据和执行操作。<br>
+<img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/980Wwu.png" alt=""></p>
+</li>
+<li class="lvl-2">
+<p>这里有 HTTP API 的详细说明，本文不再赘述。</p>
+</li>
+</ul>
+<h2 id="rabbitmqadmin">rabbitmqadmin</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>rabbitmqadmin</code> 是 管理插件 <code>rabbitmq_management</code> 提供的命令行工具，用于管理 RabbitMQ 的资源，如创建队列、交换机、绑定关系、查看队列、交换机、绑定关系等。</p>
+</li>
+<li class="lvl-2">
+<p><code>rabbitmqadmin</code> 是一个使用 <code>HTTP API</code> 的命令行工具，所以底层实际上是调用了 <code>HTTP API</code> 。</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/rabbitmq/rabbitmqadmin-ng/releases">下载地址</a></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载</span></span><br><span class="line"><span class="built_in">sudo</span> wget -O /usr/local/bin/rabbitmqadmin https://github.com/rabbitmq/rabbitmqadmin-ng/releases/download/v2.10.0/rabbitmqadmin-2.10.0-x86_64-unknown-linux-gnu</span><br><span class="line"><span class="comment"># 设置权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> +x /usr/local/bin/rabbitmqadmin</span><br><span class="line"><span class="comment"># 查看帮助</span></span><br><span class="line">rabbitmqadmin <span class="built_in">help</span></span><br><span class="line"><span class="comment"># 查看子命令帮助</span></span><br><span class="line">rabbitmqadmin <span class="built_in">help</span> &lt;<span class="built_in">command</span>&gt;</span><br><span class="line"><span class="comment">## 示例</span></span><br><span class="line"><span class="comment"># 查看 队列 帮助</span></span><br><span class="line">rabbitmqadmin <span class="built_in">help</span> queues</span><br><span class="line"><span class="comment"># 查看 队列声明 帮助，子子命令</span></span><br><span class="line">rabbitmqadmin <span class="built_in">help</span> queues <span class="built_in">declare</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>rabbitmqadmin</code> 的功能非常强大，但是因为<code>HTTP API</code>故意没有公开某些操作，所以其不能替代 <code>rabbitmqctl</code> 或 <code>rabbitmq-plugins</code>等命令。</p>
+</li>
+<li class="lvl-2">
+<p>因为实际使用中很少直接通过命令行，所以这里只做简单介绍。上文提到了 <code>rabbitmqctl</code> 不支持声明(创建) 交换机和队列，这个通过 <code>rabbitmqadmin</code> 实现</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建虚拟主机</span></span><br><span class="line">rabbitmqadmin vhosts <span class="built_in">declare</span> --name <span class="string">&quot;my-vhost&quot;</span> --default-queue-type <span class="string">&quot;quorum&quot;</span> --description <span class="string">&quot;Used to test&quot;</span></span><br><span class="line"><span class="comment"># 声明队列</span></span><br><span class="line">rabbitmqadmin queues <span class="built_in">declare</span> --vhost <span class="string">&quot;my-vhost&quot;</span> --name <span class="string">&quot;target.classic.queue.name&quot;</span> --<span class="built_in">type</span> <span class="string">&quot;classic&quot;</span> --durable <span class="literal">true</span> --auto-delete <span class="literal">false</span></span><br><span class="line"><span class="comment"># 声明交换机</span></span><br><span class="line">rabbitmqadmin exchanges <span class="built_in">declare</span> --vhost <span class="string">&quot;my-vhost&quot;</span> --name <span class="string">&quot;target.direct.exchange.name&quot;</span> --<span class="built_in">type</span> <span class="string">&quot;direct&quot;</span> --durable <span class="literal">true</span> --auto-delete <span class="literal">false</span></span><br><span class="line"><span class="comment"># 绑定队列和交换机</span></span><br><span class="line">rabbitmqadmin bindings <span class="built_in">declare</span> --vhost <span class="string">&quot;my-vhost&quot;</span> --<span class="built_in">source</span> <span class="string">&quot;target.direct.exchange.name&quot;</span> --destination <span class="string">&quot;target.classic.queue.name&quot;</span> --destination-type <span class="string">&quot;queue&quot;</span> --routing-key <span class="string">&quot;target.routing.key&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>还有就是定期备份 RabbitMQ 的结构数据(不包括消息)</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导出</span></span><br><span class="line">abbitmqadmin definitions <span class="built_in">export</span> --file backup.json</span><br><span class="line"><span class="comment"># 导入</span></span><br><span class="line">rabbitmqadmin definitions import --file backup.json</span><br></pre></td></tr></table></figure>
+<h2 id="RabbitMQ-需要开放哪些端口">RabbitMQ 需要开放哪些端口</h2>
+<table>
+<thead>
+<tr>
+<th>端口号</th>
+<th>协议</th>
+<th>用途说明</th>
+<th>默认状态</th>
+<th>安全建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5672</td>
+<td>AMQP</td>
+<td>主客户端连接端口</td>
+<td>开放</td>
+<td>必须开放，限制IP</td>
+</tr>
+<tr>
+<td>5671</td>
+<td>AMQP/SSL</td>
+<td>TLS加密连接端口</td>
+<td>关闭</td>
+<td>如使用TLS则开放</td>
+</tr>
+<tr>
+<td>15672</td>
+<td>HTTP</td>
+<td>管理界面端口</td>
+<td>关闭</td>
+<td>建议内网访问</td>
+</tr>
+<tr>
+<td>15671</td>
+<td>HTTPS</td>
+<td>TLS管理界面端口</td>
+<td>关闭</td>
+<td>如使用HTTPS则开放</td>
+</tr>
+<tr>
+<td>25672</td>
+<td>Erlang Distribution</td>
+<td>集群节点通信</td>
+<td>开放</td>
+<td>集群内部使用</td>
+</tr>
+<tr>
+<td>35672-35682</td>
+<td>Erlang Distribution</td>
+<td>集群节点发现</td>
+<td>开放</td>
+<td>集群内部使用</td>
+</tr>
+<tr>
+<td>5552</td>
+<td>Stream Protocol</td>
+<td>流协议端口,RabbitMQ 3.9+</td>
+<td>关闭</td>
+<td>使用流功能时开放</td>
+</tr>
+<tr>
+<td>5551</td>
+<td>Stream Protocol/SSL</td>
+<td>流协议TLS端口,RabbitMQ 3.9+</td>
+<td>关闭</td>
+<td>如使用TLS则开放</td>
+</tr>
+<tr>
+<td>61613</td>
+<td>STOMP</td>
+<td>STOMP协议支持端口</td>
+<td>关闭</td>
+<td>如使用STOMP协议则开放</td>
+</tr>
+<tr>
+<td>61614</td>
+<td>STOMP/SSL</td>
+<td>STOMP TLS加密端口</td>
+<td>关闭</td>
+<td>如使用STOMP over TLS则开放</td>
+</tr>
+<tr>
+<td>1883</td>
+<td>MQTT</td>
+<td>MQTT协议支持端口</td>
+<td>关闭</td>
+<td>如使用MQTT协议则开放</td>
+</tr>
+<tr>
+<td>8883</td>
+<td>MQTT/SSL</td>
+<td>MQTT TLS加密端口</td>
+<td>关闭</td>
+<td>如使用MQTT over TLS则开放</td>
+</tr>
+<tr>
+<td>15674</td>
+<td>Web STOMP</td>
+<td>WebSocket STOMP支持端口</td>
+<td>关闭</td>
+<td>如使用Web STOMP则开放</td>
+</tr>
+<tr>
+<td>15675</td>
+<td>Web MQTT</td>
+<td>WebSocket MQTT支持端口</td>
+<td>关闭</td>
+<td>如使用Web MQTT则开放</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2025/09/18/rabbitmq-install-01/" title="RabbitMQ 的安装及使用">https://blog.hanqunfeng.com/2025/09/18/rabbitmq-install-01/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/rabbitmq/" rel="tag"><i class="fa fa-tag"></i> rabbitmq</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/09/15/zookeeper-study/" rel="prev" title="Zookeeper 的安装及使用">
+                  <i class="fa fa-angle-left"></i> Zookeeper 的安装及使用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/09/20/rabbitmq-queue/" rel="next" title="RabbitMQ 之 Queue">
+                  RabbitMQ 之 Queue <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">695k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">42:07</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.min.js","integrity":"sha256-G8ouPAnw4zzMbnAenHnVz6h9XpKbNdOkrqTh7AadyHs="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>

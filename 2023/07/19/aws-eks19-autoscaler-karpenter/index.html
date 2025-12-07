@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要   本文介绍EKS集群Autoscaling 之 Karpenter   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWS-EKS-19--Autoscaling 之 Karpenter">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2023/07/19/aws-eks19-autoscaler-karpenter/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要   本文介绍EKS集群Autoscaling 之 Karpenter   参考资料：  Amazon EKS用户指南 Kubernetes 文档">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/Rx3wJO.png">
+<meta property="article:published_time" content="2023-07-19T12:30:05.000Z">
+<meta property="article:modified_time" content="2024-04-03T03:45:37.003Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="eks">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/Rx3wJO.png">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2023/07/19/aws-eks19-autoscaler-karpenter/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2023/07/19/aws-eks19-autoscaler-karpenter/","path":"2023/07/19/aws-eks19-autoscaler-karpenter/","title":"AWS-EKS-19--Autoscaling 之 Karpenter"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AWS-EKS-19--Autoscaling 之 Karpenter | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="aws,eks,hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+<img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
+<img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
+
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示9月3日抗战胜利纪念日图片
+    if(month==9 && day==3){
+        $("#img_93").show();
+    }
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_93").hide();
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    // 将“初一”“初二”…“十五”映射成数字 1~15
+    const dayMap = {
+        "初一": 1, "初二": 2, "初三": 3, "初四": 4, "初五": 5,
+        "初六": 6, "初七": 7, "初八": 8, "初九": 9, "初十": 10,
+        "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15
+    };
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 农历新年
+            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+                $("#img_new_year").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+                $("#img_new_year").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Karperter%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">Karperter是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Karpenter-%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">3.</span> <span class="nav-text">Karpenter 运行环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">3.1.</span> <span class="nav-text">设置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-Karpenter-%E7%9A%84-node-%E9%9C%80%E8%A6%81%E7%9A%84-role"><span class="nav-number">3.2.</span> <span class="nav-text">创建 Karpenter 的 node 需要的 role</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-Karpenter-controller-%E9%9C%80%E8%A6%81%E7%9A%84-role"><span class="nav-number">3.3.</span> <span class="nav-text">创建 Karpenter controller 需要的 role</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E6%89%80%E6%9C%89%E5%AD%90%E7%BD%91%E5%92%8C%E5%AE%89%E5%85%A8%E7%BB%84%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE"><span class="nav-number">3.4.</span> <span class="nav-text">为所有子网和安全组添加标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0-aws-auth-ConfigMap"><span class="nav-number">3.5.</span> <span class="nav-text">更新 aws-auth ConfigMap</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2-Karpenter"><span class="nav-number">4.</span> <span class="nav-text">部署 Karpenter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">246</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">58</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/07/18/aws-eks18-autoscaler-cas/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-18</time>
+        <br>
+      AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/22/k8s-storageclass/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-22</time>
+        <br>
+      K8S 之 StorageClass
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/07/17/aws-eks17-hpa/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-17</time>
+        <br>
+      AWS-EKS-17--Horizontal Pod Autoscaler（HPA）
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/07/07/aws-eks07-loadbalancer/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-07</time>
+        <br>
+      AWS-EKS-07--安装 AWS Load Balancer Controller 附加组件
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/07/07/aws-eks05-ebs-csi/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-07</time>
+        <br>
+      AWS-EKS-05--安装 Amazon EBS CSI 驱动程序
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2023/07/19/aws-eks19-autoscaler-karpenter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AWS-EKS-19--Autoscaling 之 Karpenter | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AWS-EKS-19--Autoscaling 之 Karpenter
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-07-19 20:30:05" itemprop="dateCreated datePublished" datetime="2023-07-19T20:30:05+08:00">2023-07-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/aws/" itemprop="url" rel="index"><span itemprop="name">aws</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/aws/eks/" itemprop="url" rel="index"><span itemprop="name">eks</span></a>
+        </span>
+    </span>
+
+  
+  
+<!-- 置顶，精品 -->
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+      <i class="fa-solid fa-thumbtack zhidingtop">置顶</i>
+    </span>
+    <span class="post-meta-item">
+    <span>
+    <span class="post-meta-item-icon">
+            <i class="fa-regular fa-newspaper jingping">精品</i>
+    </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2023/07/19/aws-eks19-autoscaler-karpenter/" class="leancloud_visitors" data-flag-title="AWS-EKS-19--Autoscaling 之 Karpenter" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍EKS集群Autoscaling 之 Karpenter</p>
+</li>
+<li class="lvl-2">
+<p>参考资料：</p>
+<ul class="lvl-2">
+<li class="lvl-6"><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/zh_cn/eks/latest/userguide">Amazon EKS用户指南</a></li>
+<li class="lvl-6"><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/home/">Kubernetes 文档</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="Karperter是什么？">Karperter是什么？</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://karpenter.sh/docs/">Karpenter</a> 是一个开源集群自动缩放器，可以自动为不可安排的pod提供新节点。Karpenter评估了挂起的pod的聚合资源需求，并选择运行它们的最佳实例类型。它将自动扩展或终止没有任何非daemonset pod的实例，以减少浪费。它还支持整合功能，该功能将积极移动pod，并用更便宜的版本删除或替换节点，以降低集群成本。</p>
+</li>
+<li class="lvl-2">
+<p>Karpenter 是aws为 k8s 构建的能用于生产环境的开源的工作节点动态调度控制器。</p>
+</li>
+<li class="lvl-2">
+<p>在Karpenter推出之前，Kubernetes用户主要依靠Amazon EC2 Auto Scaling组和Kubernetes Cluster Autoscaler（CAS）来动态调整其集群的计算容量。</p>
+</li>
+<li class="lvl-2">
+<p>相较于传统的 Cluster Autoscaler 工具，Karpenter 具有调度速度快、更灵活、资源利用率高等众多优势，另外，Karpenter与Kubernetes版本没有那么紧密耦合（像CAS那样），所以其是 EKS 自动扩缩容的首选方案，两者的比较可以参考下图。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>特 性</th>
+<th>Cluster Autoscaler</th>
+<th>Karpenter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资源管理</td>
+<td>Cluster Autoscaler基于现有节点的资源利用率采用反应性方法来扩展节点。</td>
+<td>Karpenter基于未调度的Pod的当前资源需求采取主动方法来进行节点预配。</td>
+</tr>
+<tr>
+<td>节点管理</td>
+<td>Cluster Autoscaler根据当前工作负载的资源需求来管理节点，使用预定义的自动缩放组。</td>
+<td>Karpenter根据自定义预配程序的配置来扩展、预配和管理节点。</td>
+</tr>
+<tr>
+<td>扩展</td>
+<td>Cluster Autoscaler更专注于节点级别的扩展，这意味着它可以有效地添加更多的节点以满足需求的增加。 但这也意味着它在缩减资源方面可能不太有效。</td>
+<td>Karpenter根据特定的工作负载需求提供更有效和精细的扩展功能。换句话说，它根据实际使用情况进行扩展。它还允许用户指定特定的扩展策略或规则以满足其需求。</td>
+</tr>
+<tr>
+<td>调度</td>
+<td>使用Cluster Autoscaler进行调度更简单，因为它是根据工作负载的当前需求设计的进行扩展或缩减。</td>
+<td>Karpenter可以根据可用区和资源需求有效地调度工作负载。它可以尝试通过Spot实例来优化成本，但它不会知道你已经在aws帐号中做的任何承诺，如RI（预留实例）或Savings Plans（储蓄计划）。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Karpenter-运行环境准备">Karpenter 运行环境准备</h2>
+<h3 id="设置环境变量">设置环境变量</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># aws认证profile</span></span><br><span class="line">$ AWS_PROFILE=eks-us-west-2</span><br><span class="line"><span class="comment"># EKS集群名称</span></span><br><span class="line">$ CLUSTER_NAME=eks-lexing</span><br><span class="line"><span class="comment"># AWS分区</span></span><br><span class="line"><span class="comment"># if you are not using standard partitions, you may need to configure to aws-cn / aws-us-gov</span></span><br><span class="line">$ AWS_PARTITION=<span class="string">&quot;aws&quot;</span></span><br><span class="line"><span class="comment"># EKS所在的Region</span></span><br><span class="line">$ AWS_REGION=<span class="string">&quot;<span class="subst">$(aws configure list | grep region | tr -s <span class="string">&quot; &quot;</span> | cut -d<span class="string">&quot; &quot;</span> -f3)</span>&quot;</span></span><br><span class="line"><span class="comment"># EKS配置OIDC的Endpoint</span></span><br><span class="line">$ OIDC_ENDPOINT=<span class="string">&quot;<span class="subst">$(aws eks describe-cluster --name $&#123;CLUSTER_NAME&#125; --query <span class="string">&quot;cluster.identity.oidc.issuer&quot;</span> --output text)</span>&quot;</span></span><br><span class="line"><span class="comment"># aws帐号ID</span></span><br><span class="line">$ AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query <span class="string">&#x27;Account&#x27;</span> --output text)</span><br></pre></td></tr></table></figure>
+<h3 id="创建-Karpenter-的-node-需要的-role">创建 Karpenter 的 node 需要的 role</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.创建role</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">    &quot;Version&quot;: &quot;2012-10-17&quot;,</span></span><br><span class="line"><span class="string">    &quot;Statement&quot;: [</span></span><br><span class="line"><span class="string">        &#123;</span></span><br><span class="line"><span class="string">            &quot;Effect&quot;: &quot;Allow&quot;,</span></span><br><span class="line"><span class="string">            &quot;Principal&quot;: &#123;</span></span><br><span class="line"><span class="string">                &quot;Service&quot;: &quot;ec2.amazonaws.com&quot;</span></span><br><span class="line"><span class="string">            &#125;,</span></span><br><span class="line"><span class="string">            &quot;Action&quot;: &quot;sts:AssumeRole&quot;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    ]</span></span><br><span class="line"><span class="string">&#125;&#x27;</span> &gt; node-trust-policy.json</span><br><span class="line"></span><br><span class="line">$ aws iam create-role --role-name <span class="string">&quot;KarpenterNodeRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">    --assume-role-policy-document file://node-trust-policy.json</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;Role&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;Path&quot;</span>: <span class="string">&quot;/&quot;</span>,</span><br><span class="line">        <span class="string">&quot;RoleName&quot;</span>: <span class="string">&quot;KarpenterNodeRole-eks-lexing&quot;</span>,</span><br><span class="line">        <span class="string">&quot;RoleId&quot;</span>: <span class="string">&quot;AROA22DP3G4GH4RZQFGR7&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Arn&quot;</span>: <span class="string">&quot;arn:aws:iam::743263909644:role/KarpenterNodeRole-eks-lexing&quot;</span>,</span><br><span class="line">        <span class="string">&quot;CreateDate&quot;</span>: <span class="string">&quot;2023-07-19T07:20:17+00:00&quot;</span>,</span><br><span class="line">        <span class="string">&quot;AssumeRolePolicyDocument&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;Version&quot;</span>: <span class="string">&quot;2012-10-17&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Statement&quot;</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="string">&quot;Effect&quot;</span>: <span class="string">&quot;Allow&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Principal&quot;</span>: &#123;</span><br><span class="line">                        <span class="string">&quot;Service&quot;</span>: <span class="string">&quot;ec2.amazonaws.com&quot;</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="string">&quot;Action&quot;</span>: <span class="string">&quot;sts:AssumeRole&quot;</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.给这个 role 添加 policy</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ aws iam attach-role-policy --role-name <span class="string">&quot;KarpenterNodeRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">    --policy-arn arn:<span class="variable">$&#123;AWS_PARTITION&#125;</span>:iam::aws:policy/AmazonEKSWorkerNodePolicy</span><br><span class="line"></span><br><span class="line">$ aws iam attach-role-policy --role-name <span class="string">&quot;KarpenterNodeRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">    --policy-arn arn:<span class="variable">$&#123;AWS_PARTITION&#125;</span>:iam::aws:policy/AmazonEKS_CNI_Policy</span><br><span class="line"></span><br><span class="line">$ aws iam attach-role-policy --role-name <span class="string">&quot;KarpenterNodeRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">    --policy-arn arn:<span class="variable">$&#123;AWS_PARTITION&#125;</span>:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly</span><br><span class="line"></span><br><span class="line">$ aws iam attach-role-policy --role-name <span class="string">&quot;KarpenterNodeRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">    --policy-arn arn:<span class="variable">$&#123;AWS_PARTITION&#125;</span>:iam::aws:policy/AmazonSSMManagedInstanceCore</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>3.把 role 授予 EC2 的 instance profile</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ aws iam create-instance-profile \</span><br><span class="line">    --instance-profile-name <span class="string">&quot;KarpenterNodeInstanceProfile-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;InstanceProfile&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;Path&quot;</span>: <span class="string">&quot;/&quot;</span>,</span><br><span class="line">        <span class="string">&quot;InstanceProfileName&quot;</span>: <span class="string">&quot;KarpenterNodeInstanceProfile-eks-lexing&quot;</span>,</span><br><span class="line">        <span class="string">&quot;InstanceProfileId&quot;</span>: <span class="string">&quot;AIPA22DP3G4GBMSNSBEQF&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Arn&quot;</span>: <span class="string">&quot;arn:aws:iam::743263909644:instance-profile/KarpenterNodeInstanceProfile-eks-lexing&quot;</span>,</span><br><span class="line">        <span class="string">&quot;CreateDate&quot;</span>: <span class="string">&quot;2023-07-19T07:24:19+00:00&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Roles&quot;</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ aws iam add-role-to-instance-profile \</span><br><span class="line">    --instance-profile-name <span class="string">&quot;KarpenterNodeInstanceProfile-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">    --role-name <span class="string">&quot;KarpenterNodeRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="创建-Karpenter-controller-需要的-role">创建 Karpenter controller 需要的 role</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.创建role</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> &lt;&lt; <span class="string">EOF &gt; controller-trust-policy.json</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">    &quot;Version&quot;: &quot;2012-10-17&quot;,</span></span><br><span class="line"><span class="string">    &quot;Statement&quot;: [</span></span><br><span class="line"><span class="string">        &#123;</span></span><br><span class="line"><span class="string">            &quot;Effect&quot;: &quot;Allow&quot;,</span></span><br><span class="line"><span class="string">            &quot;Principal&quot;: &#123;</span></span><br><span class="line"><span class="string">                &quot;Federated&quot;: &quot;arn:$&#123;AWS_PARTITION&#125;:iam::$&#123;AWS_ACCOUNT_ID&#125;:oidc-provider/$&#123;OIDC_ENDPOINT#*//&#125;&quot;</span></span><br><span class="line"><span class="string">            &#125;,</span></span><br><span class="line"><span class="string">            &quot;Action&quot;: &quot;sts:AssumeRoleWithWebIdentity&quot;,</span></span><br><span class="line"><span class="string">            &quot;Condition&quot;: &#123;</span></span><br><span class="line"><span class="string">                &quot;StringEquals&quot;: &#123;</span></span><br><span class="line"><span class="string">                    &quot;$&#123;OIDC_ENDPOINT#*//&#125;:aud&quot;: &quot;sts.amazonaws.com&quot;,</span></span><br><span class="line"><span class="string">                    &quot;$&#123;OIDC_ENDPOINT#*//&#125;:sub&quot;: &quot;system:serviceaccount:karpenter:karpenter&quot;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    ]</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line">$ aws iam create-role --role-name KarpenterControllerRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">    --assume-role-policy-document file://controller-trust-policy.json</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;Role&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;Path&quot;</span>: <span class="string">&quot;/&quot;</span>,</span><br><span class="line">        <span class="string">&quot;RoleName&quot;</span>: <span class="string">&quot;KarpenterControllerRole-eks-lexing&quot;</span>,</span><br><span class="line">        <span class="string">&quot;RoleId&quot;</span>: <span class="string">&quot;AROA22DP3G4GLRLLAPW6T&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Arn&quot;</span>: <span class="string">&quot;arn:aws:iam::743263909644:role/KarpenterControllerRole-eks-lexing&quot;</span>,</span><br><span class="line">        <span class="string">&quot;CreateDate&quot;</span>: <span class="string">&quot;2023-07-19T07:28:09+00:00&quot;</span>,</span><br><span class="line">        <span class="string">&quot;AssumeRolePolicyDocument&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;Version&quot;</span>: <span class="string">&quot;2012-10-17&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Statement&quot;</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="string">&quot;Effect&quot;</span>: <span class="string">&quot;Allow&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Principal&quot;</span>: &#123;</span><br><span class="line">                        <span class="string">&quot;Federated&quot;</span>: <span class="string">&quot;arn:aws:iam::743263909644:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB872B6B7A1CC65D44191A56&quot;</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="string">&quot;Action&quot;</span>: <span class="string">&quot;sts:AssumeRoleWithWebIdentity&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Condition&quot;</span>: &#123;</span><br><span class="line">                        <span class="string">&quot;StringEquals&quot;</span>: &#123;</span><br><span class="line">                            <span class="string">&quot;oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB872B6B7A1CC65D44191A56:aud&quot;</span>: <span class="string">&quot;sts.amazonaws.com&quot;</span>,</span><br><span class="line">                            <span class="string">&quot;oidc.eks.us-west-2.amazonaws.com/id/1029FF88CB872B6B7A1CC65D44191A56:sub&quot;</span>: <span class="string">&quot;system:serviceaccount:karpenter:karpenter&quot;</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.为role配置policy</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> &lt;&lt; <span class="string">EOF &gt; controller-policy.json</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">    &quot;Statement&quot;: [</span></span><br><span class="line"><span class="string">        &#123;</span></span><br><span class="line"><span class="string">            &quot;Action&quot;: [</span></span><br><span class="line"><span class="string">                &quot;ssm:GetParameter&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeImages&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:RunInstances&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeSubnets&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeSecurityGroups&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeLaunchTemplates&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeInstances&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeInstanceTypes&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeInstanceTypeOfferings&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeAvailabilityZones&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DeleteLaunchTemplate&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:CreateTags&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:CreateLaunchTemplate&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:CreateFleet&quot;,</span></span><br><span class="line"><span class="string">                &quot;ec2:DescribeSpotPriceHistory&quot;,</span></span><br><span class="line"><span class="string">                &quot;pricing:GetProducts&quot;</span></span><br><span class="line"><span class="string">            ],</span></span><br><span class="line"><span class="string">            &quot;Effect&quot;: &quot;Allow&quot;,</span></span><br><span class="line"><span class="string">            &quot;Resource&quot;: &quot;*&quot;,</span></span><br><span class="line"><span class="string">            &quot;Sid&quot;: &quot;Karpenter&quot;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        &#123;</span></span><br><span class="line"><span class="string">            &quot;Action&quot;: &quot;ec2:TerminateInstances&quot;,</span></span><br><span class="line"><span class="string">            &quot;Condition&quot;: &#123;</span></span><br><span class="line"><span class="string">                &quot;StringLike&quot;: &#123;</span></span><br><span class="line"><span class="string">                    &quot;ec2:ResourceTag/karpenter.sh/provisioner-name&quot;: &quot;*&quot;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;,</span></span><br><span class="line"><span class="string">            &quot;Effect&quot;: &quot;Allow&quot;,</span></span><br><span class="line"><span class="string">            &quot;Resource&quot;: &quot;*&quot;,</span></span><br><span class="line"><span class="string">            &quot;Sid&quot;: &quot;ConditionalEC2Termination&quot;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        &#123;</span></span><br><span class="line"><span class="string">            &quot;Effect&quot;: &quot;Allow&quot;,</span></span><br><span class="line"><span class="string">            &quot;Action&quot;: &quot;iam:PassRole&quot;,</span></span><br><span class="line"><span class="string">            &quot;Resource&quot;: &quot;arn:$&#123;AWS_PARTITION&#125;:iam::$&#123;AWS_ACCOUNT_ID&#125;:role/KarpenterNodeRole-$&#123;CLUSTER_NAME&#125;&quot;,</span></span><br><span class="line"><span class="string">            &quot;Sid&quot;: &quot;PassNodeIAMRole&quot;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        &#123;</span></span><br><span class="line"><span class="string">            &quot;Effect&quot;: &quot;Allow&quot;,</span></span><br><span class="line"><span class="string">            &quot;Action&quot;: &quot;eks:DescribeCluster&quot;,</span></span><br><span class="line"><span class="string">            &quot;Resource&quot;: &quot;arn:$&#123;AWS_PARTITION&#125;:eks:$&#123;AWS_REGION&#125;:$&#123;AWS_ACCOUNT_ID&#125;:cluster/$&#123;CLUSTER_NAME&#125;&quot;,</span></span><br><span class="line"><span class="string">            &quot;Sid&quot;: &quot;EKSClusterEndpointLookup&quot;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    ],</span></span><br><span class="line"><span class="string">    &quot;Version&quot;: &quot;2012-10-17&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line">$ aws iam put-role-policy --role-name KarpenterControllerRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">    --policy-name KarpenterControllerPolicy-<span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">    --policy-document file://controller-policy.json</span><br></pre></td></tr></table></figure>
+<h3 id="为所有子网和安全组添加标签">为所有子网和安全组添加标签</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.为节点组内的子网打标签</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">for</span> NODEGROUP <span class="keyword">in</span> $(aws eks list-nodegroups --cluster-name <span class="variable">$&#123;CLUSTER_NAME&#125;</span> --query <span class="string">&#x27;nodegroups&#x27;</span> --output text)</span><br><span class="line">  <span class="keyword">do</span> aws ec2 create-tags \</span><br><span class="line">        --tags <span class="string">&quot;Key=karpenter.sh/discovery,Value=<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">        --resources $(aws eks describe-nodegroup --cluster-name <span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">        --nodegroup-name <span class="variable">$NODEGROUP</span> --query <span class="string">&#x27;nodegroup.subnets&#x27;</span> --output text )</span><br><span class="line">  <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.给托管节点组的运行模版的安全组打标签</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取节点组</span></span><br><span class="line">$ NODEGROUP=$(aws eks list-nodegroups --cluster-name <span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">    --query <span class="string">&#x27;nodegroups[0]&#x27;</span> --output text)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取节点组的启动模板及其版本号</span></span><br><span class="line">$ LAUNCH_TEMPLATE=$(aws eks describe-nodegroup --cluster-name <span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">    --nodegroup-name <span class="variable">$&#123;NODEGROUP&#125;</span> --query <span class="string">&#x27;nodegroup.launchTemplate.&#123;id:id,version:version&#125;&#x27;</span> \</span><br><span class="line">    --output text | <span class="built_in">tr</span> -s <span class="string">&quot;\t&quot;</span> <span class="string">&quot;,&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取启动模板的安全组</span></span><br><span class="line">$ SECURITY_GROUPS=$(aws ec2 describe-launch-template-versions \</span><br><span class="line">    --launch-template-id <span class="variable">$&#123;LAUNCH_TEMPLATE%,*&#125;</span> --versions <span class="variable">$&#123;LAUNCH_TEMPLATE#*,&#125;</span> \</span><br><span class="line">    --query <span class="string">&#x27;LaunchTemplateVersions[0].LaunchTemplateData.[NetworkInterfaces[0].Groups||SecurityGroupIds]&#x27;</span> \</span><br><span class="line">    --output text)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为安全组打标签</span></span><br><span class="line">$ aws ec2 create-tags \</span><br><span class="line">    --tags <span class="string">&quot;Key=karpenter.sh/discovery,Value=<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">    --resources <span class="variable">$&#123;SECURITY_GROUPS&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="更新-aws-auth-ConfigMap">更新 aws-auth ConfigMap</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将上面为node创建的role加入到集群权限</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl edit configmap aws-auth -n kube-system</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 mapRoles 下添加如下内容</span></span><br><span class="line">- <span class="built_in">groups</span>:</span><br><span class="line">  - system:bootstrappers</span><br><span class="line">  - system:nodes</span><br><span class="line">  rolearn: arn:aws:iam::743263909644:role/KarpenterNodeRole-eks-lexing</span><br><span class="line">  username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者通过命令行直接添加</span></span><br><span class="line">$ eksctl create iamidentitymapping --cluster eks-lexing \</span><br><span class="line">  --arn arn:aws:iam::743263909644:role/KarpenterNodeRole-eks-lexing \</span><br><span class="line">  --username system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125; \</span><br><span class="line">  --group system:bootstrappers \</span><br><span class="line">  --group system:nodes \</span><br><span class="line">  --no-duplicate-arns</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>编辑后完整的内容如下:</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">mapRoles:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    - groups:</span></span><br><span class="line"><span class="string">      - system:bootstrappers</span></span><br><span class="line"><span class="string">      - system:nodes</span></span><br><span class="line"><span class="string">      rolearn: arn:aws:iam::743263909644:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y28EPJO9XYDG</span></span><br><span class="line"><span class="string">      username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span></span><br><span class="line"><span class="string">    - groups:</span></span><br><span class="line"><span class="string">      - system:bootstrappers</span></span><br><span class="line"><span class="string">      - system:nodes</span></span><br><span class="line"><span class="string">      rolearn: arn:aws:iam::743263909644:role/KarpenterNodeRole-eks-lexing</span></span><br><span class="line"><span class="string">      username: system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;</span></span><br><span class="line"><span class="string"></span>  <span class="attr">mapUsers:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    - groups:</span></span><br><span class="line"><span class="string">      - eks-console-dashboard-full-access-group</span></span><br><span class="line"><span class="string">      userarn: arn:aws:iam::743263909644:user/ekstest</span></span><br><span class="line"><span class="string"></span><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">creationTimestamp:</span> <span class="string">&quot;2023-06-28T06:30:56Z&quot;</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">aws-auth</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kube-system</span></span><br><span class="line">  <span class="attr">resourceVersion:</span> <span class="string">&quot;7544319&quot;</span></span><br><span class="line">  <span class="attr">uid:</span> <span class="string">5e488d60-6ce0-4657-9a08-bbd17d048f0c</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看授权信息</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ eksctl get iamidentitymapping --cluster eks-lexing</span><br><span class="line">ARN												USERNAME				GROUPS					ACCOUNT</span><br><span class="line">arn:aws:iam::743263909644:role/KarpenterNodeRole-eks-lexing					system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;	system:bootstrappers,system:nodes</span><br><span class="line">arn:aws:iam::743263909644:role/eksctl-eks-lexing-nodegroup-ng-4d-NodeInstanceRole-Y28EPJO9XYDG	system:node:&#123;&#123;EC2PrivateDNSName&#125;&#125;	system:bootstrappers,system:nodes</span><br><span class="line">arn:aws:iam::743263909644:user/ekstest													eks-console-dashboard-full-access-group</span><br></pre></td></tr></table></figure>
+<h2 id="部署-Karpenter">部署 Karpenter</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.设置环境变量</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前最新版是 v0.29.1 , https://github.com/aws/karpenter/releases</span></span><br><span class="line"><span class="built_in">export</span> KARPENTER_VERSION=v0.29.1</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2.创建 karpenter.yaml 模版</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version <span class="variable">$&#123;KARPENTER_VERSION&#125;</span> \</span><br><span class="line">    --namespace karpenter \</span><br><span class="line">    --<span class="built_in">set</span> settings.aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-<span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">    --<span class="built_in">set</span> settings.aws.clusterName=<span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">    --<span class="built_in">set</span> serviceAccount.annotations.<span class="string">&quot;eks\.amazonaws\.com/role-arn&quot;</span>=<span class="string">&quot;arn:<span class="variable">$&#123;AWS_PARTITION&#125;</span>:iam::<span class="variable">$&#123;AWS_ACCOUNT_ID&#125;</span>:role/KarpenterControllerRole-<span class="variable">$&#123;CLUSTER_NAME&#125;</span>&quot;</span> \</span><br><span class="line">    --<span class="built_in">set</span> controller.resources.requests.cpu=1 \</span><br><span class="line">    --<span class="built_in">set</span> controller.resources.requests.memory=1Gi \</span><br><span class="line">    --<span class="built_in">set</span> controller.resources.limits.cpu=1 \</span><br><span class="line">    --<span class="built_in">set</span> controller.resources.limits.memory=1Gi &gt; karpenter.yaml</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>3.设置节点亲和性，编辑<code>karpenter.yaml</code>，找到karpenter deployment的亲和性配置，修改为如下内容，注意这里<code>ng-4d9024eb</code>要替换为你的<code>$&#123;NODEGROUP&#125;</code>。关节K8s<code>节点亲和性</code>的介绍可以参考官方文档<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity">亲和性与反亲和性</a></p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">affinity:</span></span><br><span class="line">  <span class="attr">nodeAffinity:</span></span><br><span class="line">    <span class="attr">requiredDuringSchedulingIgnoredDuringExecution:</span></span><br><span class="line">        <span class="attr">nodeSelectorTerms:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">matchExpressions:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">karpenter.sh/provisioner-name</span></span><br><span class="line">            <span class="attr">operator:</span> <span class="string">DoesNotExist</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">matchExpressions:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">eks.amazonaws.com/nodegroup</span></span><br><span class="line">            <span class="attr">operator:</span> <span class="string">In</span></span><br><span class="line">            <span class="attr">values:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">ng-4d9024eb</span></span><br><span class="line">  <span class="attr">podAntiAffinity:</span></span><br><span class="line">    <span class="attr">requiredDuringSchedulingIgnoredDuringExecution:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">topologyKey:</span> <span class="string">&quot;kubernetes.io/hostname&quot;</span></span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>为其他关键集群工作负载设置nodeAffinity</strong></em></p>
+<ul class="lvl-1">
+<li class="lvl-2">例如 CoreDNS，Controller，CNI，CSI 和 Operator 等，这些 workload 对弹性要求不高但是稳定性要求比较高，建议部署在创建EKS时的节点组运行。</li>
+<li class="lvl-2">为这些关键负载设置nodeAffinity</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">affinity:</span></span><br><span class="line">  <span class="attr">nodeAffinity:</span></span><br><span class="line">    <span class="attr">requiredDuringSchedulingIgnoredDuringExecution:</span></span><br><span class="line">        <span class="attr">nodeSelectorTerms:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">matchExpressions:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">eks.amazonaws.com/nodegroup</span></span><br><span class="line">            <span class="attr">operator:</span> <span class="string">In</span></span><br><span class="line">            <span class="attr">values:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">$&#123;NODEGROUP&#125;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-1">
+<li class="lvl-2">比如设置<code>k edit deploy ebs-csi-controller -n kube-system</code>，添加好<code>nodeAffinity</code>后保存，然后查看对应的pod是否重启成功，如果一只处于<code>pending</code>状态，可以试着重启</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ k scale deploy ebs-csi-controller --replicas 0 -n kube-system</span><br><span class="line">$ k scale deploy ebs-csi-controller --replicas 2 -n kube-system</span><br></pre></td></tr></table></figure>
+<ul class="lvl-1">
+<li class="lvl-2">设置好所有关键负载后，可以重启一下 karpenter</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ k scale deploy karpenter --replicas 0 -n karpenter</span><br><span class="line">$ k scale deploy karpenter --replicas 2 -n karpenter</span><br></pre></td></tr></table></figure>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>查看 karpenter 日志是否正常</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ k logs deployments/karpenter -f -n karpenter</span><br></pre></td></tr></table></figure>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>4.部署 karpenter 及其 相关资源</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建Namespace</span></span><br><span class="line">$ kubectl create namespace karpenter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载karpenter 相关资源</span></span><br><span class="line"><span class="comment"># karpenter的版本分支，正常karpenter发布时都会打branch，比如：release-v0.28.1，不过我在github上没有找到v0.29.1的branch，所以这里就指定 main 了</span></span><br><span class="line">$ KARPENTER_BRANCH=main</span><br><span class="line">$ curl -O <span class="string">&quot;https://raw.githubusercontent.com/aws/karpenter/<span class="variable">$&#123;KARPENTER_BRANCH&#125;</span>/pkg/apis/crds/karpenter.sh_provisioners.yaml&quot;</span></span><br><span class="line">$ curl -O <span class="string">&quot;https://raw.githubusercontent.com/aws/karpenter/<span class="variable">$&#123;KARPENTER_BRANCH&#125;</span>/pkg/apis/crds/karpenter.k8s.aws_awsnodetemplates.yaml&quot;</span></span><br><span class="line">$ curl -O <span class="string">&quot;https://raw.githubusercontent.com/aws/karpenter/<span class="variable">$&#123;KARPENTER_BRANCH&#125;</span>/pkg/apis/crds/karpenter.sh_machines.yaml &quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 部署karpenter 相关资源</span></span><br><span class="line">$ kubectl apply -f karpenter.sh_provisioners.yaml</span><br><span class="line">$ kubectl apply -f karpenter.k8s.aws_awsnodetemplates.yaml</span><br><span class="line">$ kubectl apply -f karpenter.sh_machines.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 部署karpenter</span></span><br><span class="line">$ k apply -f karpenter.yaml</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>5.创建默认的供应者(provisioner)</p>
+<ul class="lvl-2">
+<li class="lvl-6"><a target="_blank" rel="noopener" href="https://karpenter.sh/docs/concepts/provisioners/">Provisioner</a>与<a target="_blank" rel="noopener" href="https://karpenter.sh/docs/concepts/node-templates/">AWSNodeTemplate</a>是karpenter在K8s中的自定义资源。</li>
+<li class="lvl-6"><code>Provisioner</code> 对 Karpenter 可创建的节点以及可在这些节点上运行的 Pod 设置约束。如果没有配置至少一个<code>Provisioner</code>，Karpenter 将不会执行任何操作。</li>
+<li class="lvl-6">关于<code>Provisioner</code>支持的配置项可以参考<a target="_blank" rel="noopener" href="https://karpenter.sh/docs/concepts/provisioners/">官方文档</a>，比如下面就限制了被管控的节点必须符合两个条件：</li>
+</ul>
+<blockquote>
+<p>1.实例类别必须在[c, m, r]中<br>
+2.实例的生成代次必须大于2。比如 实例类型为 <code>c1.xxx，m1.xxx，m2.xxx</code>就不符合要求</p>
+</blockquote>
+<ul class="lvl-2">
+<li class="lvl-6"><code>AWSNodeTemplate</code>节点模板启用AWS特定设置的配置。关于<code>AWSNodeTemplate</code>支持的配置项可以参考<a target="_blank" rel="noopener" href="https://karpenter.sh/docs/concepts/node-templates/">官方文档</a>，比如默认节点关联的存储为20G gp3，如果要修改为40G可以在spec下指定如下内容，先创建后编辑也可以，但只有修改后新创建的节点才会使用新的配置。</li>
+</ul>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">blockDeviceMappings:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">deviceName:</span> <span class="string">/dev/xvda</span></span><br><span class="line">  <span class="attr">ebs:</span></span><br><span class="line">    <span class="attr">volumeType:</span> <span class="string">gp3</span></span><br><span class="line">    <span class="attr">volumeSize:</span> <span class="string">40Gi</span></span><br><span class="line">    <span class="attr">deleteOnTermination:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-2">
+<li class="lvl-6">
+<p><code>Provisioner</code>需要与<code>AWSNodeTemplate</code>关联使用，通过在<code>Provisioner</code>的<code>providerRef</code>中指定<code>AWSNodeTemplate</code>的<code>name</code>进行关联，一个<code>AWSNodeTemplate</code>可以被多个<code>Provisioner</code>关联。</p>
+</li>
+<li class="lvl-6">
+<p>配置的每个 <code>Provisioner</code> 均由 Karpenter 循环遍历。在 <code>Provisioner</code> 中定义污点以限制可以在 Karpenter 创建的节点上运行的 Pod。建议创建互斥的 <code>Provisioner</code>。因此任何 Pod 都不应该匹配多个 <code>Provisioner</code>。如果匹配多个<code>Provisioner</code>，Karpenter将使用权重最高的<code>Provisioner</code> 。关于K8s中<code>污点</code>的介绍可以参考官方文档<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/taint-and-toleration/">污点和容忍度</a></p>
+</li>
+<li class="lvl-6">
+<p>下面是一个最基本的<code>Provisioner</code>定义，你可以根据需要创建自己的<code>Provisioner</code>，可以参考<a target="_blank" rel="noopener" href="https://karpenter.sh/docs/concepts/provisioners/">官方文档</a>或者查看<a target="_blank" rel="noopener" href="https://github.com/aws/karpenter/tree/v0.29.1/examples/provisioner">provisioner examples</a>中的示例。</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 default Provisioner</span></span><br><span class="line">$ <span class="built_in">cat</span> &lt;&lt;<span class="string">EOF | kubectl apply -f -</span></span><br><span class="line"><span class="string">apiVersion: karpenter.sh/v1alpha5</span></span><br><span class="line"><span class="string">kind: Provisioner</span></span><br><span class="line"><span class="string">metadata:</span></span><br><span class="line"><span class="string">  name: default</span></span><br><span class="line"><span class="string">spec:</span></span><br><span class="line"><span class="string">  requirements:</span></span><br><span class="line"><span class="string">    - key: karpenter.k8s.aws/instance-category</span></span><br><span class="line"><span class="string">      operator: In</span></span><br><span class="line"><span class="string">      values: [c, m, r]</span></span><br><span class="line"><span class="string">    - key: karpenter.k8s.aws/instance-generation</span></span><br><span class="line"><span class="string">      operator: Gt</span></span><br><span class="line"><span class="string">      values: [&quot;2&quot;]</span></span><br><span class="line"><span class="string">  providerRef:</span></span><br><span class="line"><span class="string">    name: default</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string">apiVersion: karpenter.k8s.aws/v1alpha1</span></span><br><span class="line"><span class="string">kind: AWSNodeTemplate</span></span><br><span class="line"><span class="string">metadata:</span></span><br><span class="line"><span class="string">  name: default</span></span><br><span class="line"><span class="string">spec:</span></span><br><span class="line"><span class="string">  subnetSelector:</span></span><br><span class="line"><span class="string">    karpenter.sh/discovery: &quot;$&#123;CLUSTER_NAME&#125;&quot;</span></span><br><span class="line"><span class="string">  securityGroupSelector:</span></span><br><span class="line"><span class="string">    karpenter.sh/discovery: &quot;$&#123;CLUSTER_NAME&#125;&quot;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看 karpenter 状态</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ k get pod -n karpenter</span><br><span class="line">NAME                         READY   STATUS    RESTARTS   AGE</span><br><span class="line">karpenter-789bbcbfd7-htj6z   1/1     Running   0          101s</span><br><span class="line">karpenter-789bbcbfd7-rlxfp   1/1     Running   0          101s</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看 karpenter 日志是否正常</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ k logs deployments/karpenter -f -n karpenter</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>karpenter创建新的节点时不会在原有的节点组中进行，所以为了摆脱从节点组添加的实例，我们可以将节点组缩小到最小大小</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果您有一个多AZ节点组，我们建议至少2个实例。</span></span><br><span class="line">$ aws eks update-nodegroup-config --cluster-name <span class="variable">$&#123;CLUSTER_NAME&#125;</span> \</span><br><span class="line">    --nodegroup-name <span class="variable">$&#123;NODEGROUP&#125;</span> \</span><br><span class="line">    --scaling-config <span class="string">&quot;minSize=2,maxSize=2,desiredSize=2&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>关停Cluster Autoscaler(CAS)<br>
+如果EKS中已经开启了CAS，则安装Karpenter后需要关闭CAS</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl scale deploy/cluster-autoscaler -n kube-system --replicas=0</span><br></pre></td></tr></table></figure>
+<h2 id="测试">测试</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看当前node信息</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ k get node</span><br><span class="line">NAME                                           STATUS   ROLES    AGE   VERSION</span><br><span class="line">ip-192-168-16-155.us-west-2.compute.internal   Ready    &lt;none&gt;   19d   v1.26.4-eks-0a21954</span><br><span class="line">ip-192-168-48-14.us-west-2.compute.internal    Ready    &lt;none&gt;   19d   v1.26.4-eks-0a21954</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>采用 <a href="/2023/07/18/aws-eks18-autoscaler-cas/" title="AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)">AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)</a> 中的测试方法，将deploy的副本数设置为50，过一会查看node情况</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以看到node数量已经变为3了，说明扩容成功</span></span><br><span class="line">$ k get node</span><br><span class="line">NAME                                           STATUS   ROLES    AGE   VERSION</span><br><span class="line">ip-192-168-16-155.us-west-2.compute.internal   Ready    &lt;none&gt;   19d   v1.26.4-eks-0a21954</span><br><span class="line">ip-192-168-34-126.us-west-2.compute.internal   Ready    &lt;none&gt;   47s   v1.26.6-eks-a5565ad</span><br><span class="line">ip-192-168-48-14.us-west-2.compute.internal    Ready    &lt;none&gt;   19d   v1.26.4-eks-0a21954</span><br></pre></td></tr></table></figure>
+<p><img src="https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/Rx3wJO.png" alt="" width="1000" height="800"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>缩容测试用的deploy，副本数设置为1，过一会发现node节点并没有被终止，这是为什么呢？</p>
+</li>
+</ul>
+<blockquote>
+<p>默认情况下，Karpenter不会主动终止节点，需要为其设置终止节点的方式，参考<a target="_blank" rel="noopener" href="https://karpenter.sh/docs/concepts/deprovisioning/">Karpenter官方文档Deprovisioning部分</a></p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在<code>Provisioner</code>中设置节点终止的方式</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>spec.ttlSecondsAfterEmpty</code>: 当最后一个工作负载（非守护程序集）pod停止在节点上运行时，Karpenter会注意到。从那时起，Karpenter在提供程序中等待<code>ttlSecondsAfterEmpty</code>设置的秒数，然后Karpenter请求删除节点。此功能可以通过删除不再用于工作负载的节点来降低成本。</li>
+<li class="lvl-6"><code>spec.ttlSecondsUntilExpired</code>: Karpenter 将根据<code>Provisioner</code>的<code>ttlSecondsUntilExpired</code>值将节点注释为过期，并在节点生存了设定秒数后取消配置节点。节点过期的一种用例是定期回收节点。</li>
+<li class="lvl-6"><code>spec.consolidation.enabled</code>: 实现整合，通过删除不需要的节点和缩减无法删除的节点的规模来降低集群成本。与<code>ttlSecondsAfterEmpty</code>参数互斥。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编辑 default provisioner，并为其指定 spec.ttlSecondsAfterEmpty: 30，表示空闲超过30秒则终止节点。</span></span><br><span class="line">$ k edit provisioners.karpenter.sh default</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">karpenter.sh/v1alpha5</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Provisioner</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">kubectl.kubernetes.io/last-applied-configuration:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      &#123;&quot;apiVersion&quot;:&quot;karpenter.sh/v1alpha5&quot;,&quot;kind&quot;:&quot;Provisioner&quot;,&quot;metadata&quot;:&#123;&quot;annotations&quot;:&#123;</span></span><br><span class="line"><span class="string"></span>  <span class="attr">creationTimestamp:</span> <span class="string">&quot;2023-07-19T09:49:43Z&quot;</span></span><br><span class="line">  <span class="attr">generation:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">default</span></span><br><span class="line">  <span class="attr">resourceVersion:</span> <span class="string">&quot;7987578&quot;</span></span><br><span class="line">  <span class="attr">uid:</span> <span class="string">5716142b-2b9f-493c-a049-e4304cdf82d4</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">providerRef:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">default</span></span><br><span class="line">  <span class="attr">requirements:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">karpenter.k8s.aws/instance-category</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">In</span></span><br><span class="line">    <span class="attr">values:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">c</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">m</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">r</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">karpenter.k8s.aws/instance-generation</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">Gt</span></span><br><span class="line">    <span class="attr">values:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;2&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">kubernetes.io/os</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">In</span></span><br><span class="line">    <span class="attr">values:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">linux</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">kubernetes.io/arch</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">In</span></span><br><span class="line">    <span class="attr">values:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">amd64</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">karpenter.sh/capacity-type</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">In</span></span><br><span class="line">    <span class="attr">values:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">on-demand</span></span><br><span class="line">  <span class="attr">ttlSecondsAfterEmpty:</span> <span class="number">30</span></span><br><span class="line"><span class="attr">status:</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">    <span class="attr">cpu:</span> <span class="string">&quot;2&quot;</span></span><br><span class="line">    <span class="attr">ephemeral-storage:</span> <span class="string">20959212Ki</span></span><br><span class="line">    <span class="attr">memory:</span> <span class="string">3900360Ki</span></span><br><span class="line">    <span class="attr">pods:</span> <span class="string">&quot;29&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>等待30秒后查看node情况，新创建的node已经成功终止</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ k get node</span><br><span class="line">NAME                                           STATUS   ROLES    AGE   VERSION</span><br><span class="line">ip-192-168-16-155.us-west-2.compute.internal   Ready    &lt;none&gt;   19d   v1.26.4-eks-0a21954</span><br><span class="line">ip-192-168-48-14.us-west-2.compute.internal    Ready    &lt;none&gt;   19d   v1.26.4-eks-0a21954</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建和终止节点的过程可以通过日志进行观察</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ k logs deployments/karpenter -f -n karpenter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下创建节点的日志</span></span><br><span class="line">2023-07-20T09:03:54.763Z	INFO	controller.provisioner	found provisionable pod(s)	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;pods&quot;</span>: 17&#125;</span><br><span class="line">2023-07-20T09:03:54.763Z	INFO	controller.provisioner	computed new machine(s) to fit pod(s)	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;machines&quot;</span>: 1, <span class="string">&quot;pods&quot;</span>: 17&#125;</span><br><span class="line">2023-07-20T09:03:54.788Z	INFO	controller.provisioner	created machine	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;provisioner&quot;</span>: <span class="string">&quot;default&quot;</span>, <span class="string">&quot;requests&quot;</span>: &#123;<span class="string">&quot;cpu&quot;</span>:<span class="string">&quot;155m&quot;</span>,<span class="string">&quot;memory&quot;</span>:<span class="string">&quot;120Mi&quot;</span>,<span class="string">&quot;pods&quot;</span>:<span class="string">&quot;21&quot;</span>&#125;, <span class="string">&quot;instance-types&quot;</span>: <span class="string">&quot;c3.2xlarge, c3.large, c3.xlarge, c4.2xlarge, c4.large and 95 other(s)&quot;</span>&#125;</span><br><span class="line">2023-07-20T09:03:54.978Z	DEBUG	controller.machine.lifecycle	created launch template	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;machine&quot;</span>: <span class="string">&quot;default-c6jkx&quot;</span>, <span class="string">&quot;provisioner&quot;</span>: <span class="string">&quot;default&quot;</span>, <span class="string">&quot;launch-template-name&quot;</span>: <span class="string">&quot;karpenter.k8s.aws/2892028901667059566&quot;</span>, <span class="string">&quot;id&quot;</span>: <span class="string">&quot;lt-0ef53ab2c4909f493&quot;</span>&#125;</span><br><span class="line">2023-07-20T09:03:55.108Z	DEBUG	controller.machine.lifecycle	created launch template	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;machine&quot;</span>: <span class="string">&quot;default-c6jkx&quot;</span>, <span class="string">&quot;provisioner&quot;</span>: <span class="string">&quot;default&quot;</span>, <span class="string">&quot;launch-template-name&quot;</span>: <span class="string">&quot;karpenter.k8s.aws/1810058814439854165&quot;</span>, <span class="string">&quot;id&quot;</span>: <span class="string">&quot;lt-02cda7252a2d29e16&quot;</span>&#125;</span><br><span class="line">2023-07-20T09:03:57.095Z	INFO	controller.machine.lifecycle	launched machine	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;machine&quot;</span>: <span class="string">&quot;default-c6jkx&quot;</span>, <span class="string">&quot;provisioner&quot;</span>: <span class="string">&quot;default&quot;</span>, <span class="string">&quot;provider-id&quot;</span>: <span class="string">&quot;aws:///us-west-2d/i-0bb92e04b7192cafd&quot;</span>, <span class="string">&quot;instance-type&quot;</span>: <span class="string">&quot;c6a.large&quot;</span>, <span class="string">&quot;zone&quot;</span>: <span class="string">&quot;us-west-2d&quot;</span>, <span class="string">&quot;capacity-type&quot;</span>: <span class="string">&quot;on-demand&quot;</span>, <span class="string">&quot;allocatable&quot;</span>: &#123;<span class="string">&quot;cpu&quot;</span>:<span class="string">&quot;1930m&quot;</span>,<span class="string">&quot;ephemeral-storage&quot;</span>:<span class="string">&quot;17Gi&quot;</span>,<span class="string">&quot;memory&quot;</span>:<span class="string">&quot;3114Mi&quot;</span>,<span class="string">&quot;pods&quot;</span>:<span class="string">&quot;29&quot;</span>&#125;&#125;</span><br><span class="line">2023-07-20T09:04:14.473Z	DEBUG	controller.machine.lifecycle	registered machine	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;machine&quot;</span>: <span class="string">&quot;default-c6jkx&quot;</span>, <span class="string">&quot;provisioner&quot;</span>: <span class="string">&quot;default&quot;</span>, <span class="string">&quot;provider-id&quot;</span>: <span class="string">&quot;aws:///us-west-2d/i-0bb92e04b7192cafd&quot;</span>, <span class="string">&quot;node&quot;</span>: <span class="string">&quot;ip-192-168-79-236.us-west-2.compute.internal&quot;</span>&#125;</span><br><span class="line">2023-07-20T09:04:28.620Z	DEBUG	controller.machine.lifecycle	initialized machine&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;machine&quot;</span>: <span class="string">&quot;default-c6jkx&quot;</span>, <span class="string">&quot;provisioner&quot;</span>: <span class="string">&quot;default&quot;</span>, <span class="string">&quot;provider-id&quot;</span>: <span class="string">&quot;aws:///us-west-2d/i-0bb92e04b7192cafd&quot;</span>, <span class="string">&quot;node&quot;</span>: <span class="string">&quot;ip-192-168-79-236.us-west-2.compute.internal&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下是终止节点的日志</span></span><br><span class="line">2023-07-20T09:05:46.420Z	DEBUG	controller.machine.disruption	marking machine as empty	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;machine&quot;</span>: <span class="string">&quot;default-c6jkx&quot;</span>&#125;</span><br><span class="line">2023-07-20T09:06:20.642Z	INFO	controller.deprovisioning	deprovisioning via emptiness delete, terminating 1 machines ip-192-168-79-236.us-west-2.compute.internal/c6a.large/on-demand	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>&#125;</span><br><span class="line">2023-07-20T09:06:20.699Z	INFO	controller.termination	cordoned node	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;node&quot;</span>: <span class="string">&quot;ip-192-168-79-236.us-west-2.compute.internal&quot;</span>&#125;</span><br><span class="line">2023-07-20T09:06:21.026Z	INFO	controller.termination	deleted node	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;node&quot;</span>: <span class="string">&quot;ip-192-168-79-236.us-west-2.compute.internal&quot;</span>&#125;</span><br><span class="line">2023-07-20T09:06:21.288Z	INFO	controller.machine.termination	deleted machine	&#123;<span class="string">&quot;commit&quot;</span>: <span class="string">&quot;5b469b8-dirty&quot;</span>, <span class="string">&quot;machine&quot;</span>: <span class="string">&quot;default-c6jkx&quot;</span>, <span class="string">&quot;node&quot;</span>: <span class="string">&quot;ip-192-168-79-236.us-west-2.compute.internal&quot;</span>, <span class="string">&quot;provisioner&quot;</span>: <span class="string">&quot;default&quot;</span>, <span class="string">&quot;provider-id&quot;</span>: <span class="string">&quot;aws:///us-west-2d/i-0bb92e04b7192cafd&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+<div class="tips">
+<p><em><strong>小贴士</strong></em><br>
+当Karpenter管理的Node节点由于某种原因不可用时(比如我们在AWS控制台终止了EC2或通过命令行删除节点<code>k delete node nodeName</code>)，Karpenter会立刻为我们创建一个新的Node节点，并在其上重启Pod。</p>
+</div>
+<h2 id="参考资料">参考资料</h2>
+<p><a target="_blank" rel="noopener" href="https://karpenter.sh/docs/getting-started/migrating-from-cas/">从Cluster Autoscaler迁移</a><br>
+<a target="_blank" rel="noopener" href="https://aws.amazon.com/cn/blogs/china/migration-of-cluster-autoscaler-to-karpenter-on-eks/">EKS Cluster Autoscaler 迁移 Karpenter 实践</a><br>
+<a target="_blank" rel="noopener" href="https://aws.github.io/aws-eks-best-practices/karpenter/">Karpenter Best Practices</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2023/07/19/aws-eks19-autoscaler-karpenter/" title="AWS-EKS-19--Autoscaling 之 Karpenter">https://blog.hanqunfeng.com/2023/07/19/aws-eks19-autoscaler-karpenter/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/eks/" rel="tag"><i class="fa fa-tag"></i> eks</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/07/18/aws-eks18-autoscaler-cas/" rel="prev" title="AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)">
+                  <i class="fa fa-angle-left"></i> AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/08/spring-boot-security-session-rememberme/" rel="next" title="SpringBoot Security--Session管理与RememberMe">
+                  SpringBoot Security--Session管理与RememberMe <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">695k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">42:07</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.min.js","integrity":"sha256-G8ouPAnw4zzMbnAenHnVz6h9XpKbNdOkrqTh7AadyHs="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>
