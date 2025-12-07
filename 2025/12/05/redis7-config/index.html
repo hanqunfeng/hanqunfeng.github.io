@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要  Redis 7 + ACL 单节点、主从、哨兵、集群构建方法 本文基于redis-7.4.7">
+    <meta name="description" content="摘要  Redis 7 + ACL 单节点、主从、哨兵、集群构建方法 本文基于redis-7.4.7 传统的非ACL版本，可以参考 Redis单节点、主从、哨兵、集群构建方法 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis 7 + ACL 单节点、主从、哨兵、集群构建方法">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/12/05/redis7-config/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  Redis 7 + ACL 单节点、主从、哨兵、集群构建方法 本文基于redis-7.4.7">
+<meta property="og:description" content="摘要  Redis 7 + ACL 单节点、主从、哨兵、集群构建方法 本文基于redis-7.4.7 传统的非ACL版本，可以参考 Redis单节点、主从、哨兵、集群构建方法 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-05T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-12-06T15:21:02.829Z">
+<meta property="article:modified_time" content="2025-12-07T07:09:39.309Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta property="article:tag" content="redis cluster">
@@ -904,7 +904,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">244</span>
+          <span class="site-state-item-count">245</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -995,6 +995,13 @@ i.ban {
       Redis集群
       </a>
     </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/07/redis7-acl/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-07</time>
+        <br>
+      Redis 7 + ACL 简介
+      </a>
+    </li>
   </ul>
 
           </div>
@@ -1051,7 +1058,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-12-06 23:21:02" itemprop="dateModified" datetime="2025-12-06T23:21:02+08:00">2025-12-06</time>
+      <time title="修改时间：2025-12-07 15:09:39" itemprop="dateModified" datetime="2025-12-07T15:09:39+08:00">2025-12-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1099,7 +1106,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>6.1k</span>
+      <span>6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1119,6 +1126,8 @@ i.ban {
 <ul class="lvl-0">
 <li class="lvl-2">Redis 7 + ACL 单节点、主从、哨兵、集群构建方法</li>
 <li class="lvl-2">本文基于<code>redis-7.4.7</code></li>
+<li class="lvl-2">传统的非ACL版本，可以参考 <a href="/2022/09/09/redis5-config/" title="Redis单节点、主从、哨兵、集群构建方法">Redis单节点、主从、哨兵、集群构建方法</a></li>
+<li class="lvl-2">Redis官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a></li>
 </ul>
 <span id="more"></span>
 <h2 id="redis安装">redis安装</h2>
@@ -1197,10 +1206,10 @@ i.ban {
 </table>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>users.acl 文件: 该文件不支持添加注释，所以使用时需要去掉如下注释行</p>
+<p>users.acl 文件: 该文件不支持添加注释，所以使用时需要去掉如下注释行，关于ACL的详细说明，可以参考 <a href="/2025/12/07/redis7-acl/" title="Redis 7 + ACL 简介">Redis 7 + ACL 简介</a></p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭默认用户，禁止匿名访问</span></span><br><span class="line">user default off</span><br><span class="line"><span class="comment"># 超级管理员</span></span><br><span class="line">user admin on allkeys &amp;* +@all &gt;123456</span><br><span class="line"><span class="comment"># 只读账号（用于监控 / BI）</span></span><br><span class="line">user <span class="built_in">readonly</span> on allkeys +@<span class="built_in">read</span> +ping +info +config|get &gt;Readonly_Password</span><br><span class="line"><span class="comment"># 业务账号（仅允许访问 app: 开头的key），不能使用 flushall flushdb shutdown 等危险命令</span></span><br><span class="line">user appuser on ~app:* +@all -flushall -flushdb -shutdown -config -keys -<span class="built_in">eval</span> -script -debug -monitor -slowlog -cluster -client -<span class="built_in">sync</span> -psync &gt;AppUser_Password</span><br><span class="line"><span class="comment"># 通过权限类别来限制权限，+@all 表示所有命令, -@dangerous 表示排除危险命令</span></span><br><span class="line"><span class="comment"># 权限是从左到右分配的，所以一定要先授权再削权</span></span><br><span class="line">user orderuser on ~order:* +@all -@dangerous &gt;OrderUser_Password</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭默认用户，禁止匿名访问</span></span><br><span class="line">user default off</span><br><span class="line"><span class="comment"># 超级管理员</span></span><br><span class="line">user admin on ~* &amp;* +@all &gt;123456</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>redis 服务启动与关闭</p>
@@ -1661,6 +1670,9 @@ i.ban {
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2025/12/07/redis7-acl/" rel="next" title="Redis 7 + ACL 简介">
+                  Redis 7 + ACL 简介 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -1695,14 +1707,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">690k</span>
+    <span title="站点总字数">693k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">41:50</span>
+    <span title="站点阅读时长">42:01</span>
   </span>
 </div>
 <div class="busuanzi-count">
