@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  redis单节点、主从、哨兵、集群的构建过程，及其配置文件的说明 本文虽基于redis-5.0.14，但同样适用于 redis6 和 redis7。 Redis + ACL 的配置方式请参考 Redis 7 + ACL 单节点、主从、哨兵、集群构建方法">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-09T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-12-07T12:11:25.535Z">
+<meta property="article:modified_time" content="2025-12-09T02:46:04.335Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta property="article:tag" content="redis cluster">
@@ -1058,7 +1058,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-12-07 20:11:25" itemprop="dateModified" datetime="2025-12-07T20:11:25+08:00">2025-12-07</time>
+      <time title="修改时间：2025-12-09 10:46:04" itemprop="dateModified" datetime="2025-12-09T10:46:04+08:00">2025-12-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1106,14 +1106,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.3k</span>
+      <span>4.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>15 分钟</span>
+      <span>16 分钟</span>
     </span>
 
         </div>
@@ -1342,10 +1342,18 @@ i.ban {
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">src/redis-server redis.conf</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>mset/mget要求key都落在同一个slot上，每个key都加上前缀<code>&#123;prefix&#125;</code></p>
+<p>mset/mget要求key都落在同一个slot上，每个key都加上哈希标签（Hash Tag）-- <code>&#123;xxx&#125;</code>，其必须用<code>&#123;&#125;</code>括起来，<code>xxx</code>可以是任意字符串，计算slot时，只会根据<code>xxx</code>来计算hash值，这样就保证了所有key中包含<code>&#123;xxx&#125;</code>的key都会落到同一个slot，<code>&#123;xxx&#125;</code>可以放在key的任意位置</p>
 </li>
 </ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">10.250.0.170:6379&gt; mset name1 lisi name2 wangwu</span><br><span class="line">(error) CROSSSLOT Keys <span class="keyword">in</span> request don<span class="string">&#x27;t hash to the same slot</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">10.250.0.170:6379&gt; mset &#123;user&#125;:name1 lisi &#123;user&#125;:name2 wangwu</span></span><br><span class="line"><span class="string">OK</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">10.250.0.206:6379&gt; mget &#123;user&#125;:name1 &#123;user&#125;:name2</span></span><br><span class="line"><span class="string">-&gt; Redirected to slot [5474] located at 10.250.0.170:6379</span></span><br><span class="line"><span class="string">1) &quot;lisi&quot;</span></span><br><span class="line"><span class="string">2) &quot;wangwu&quot;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意:<br>
+{…} 让多个 key 落在同一个 slot，支持跨 key 原子操作<br>
+只有 第一个匹配的 {…} 会被当做 tag<br>
+{} 不能嵌套<br>
+空标签 {} 是非法的<br>
+{abc} 和 {def} 就落不同 slot</p>
+</blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>集群推举新的master时要求至少一半的master同意，所以一个集群至少需要3个master，官方推荐master节点数为奇数，比如3个和4个master节点，都至多允许一个master节点挂掉时进行选主，但是3个master可以节省资源</p>
@@ -1533,14 +1541,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">695k</span>
+    <span title="站点总字数">696k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">42:07</span>
+    <span title="站点阅读时长">42:12</span>
   </span>
 </div>
 <div class="busuanzi-count">

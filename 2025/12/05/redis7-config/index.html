@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  Redis 7 + ACL 单节点、主从、哨兵、集群构建方法 本文基于redis-7.4.7 传统的非ACL版本，可以参考 Redis单节点、主从、哨兵、集群构建方法 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-05T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-12-07T12:11:17.161Z">
+<meta property="article:modified_time" content="2025-12-09T03:33:30.140Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta property="article:tag" content="redis cluster">
@@ -889,7 +889,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">redis安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">单节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9%E4%BC%98%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">单节点优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9%E7%BC%BA%E7%82%B9"><span class="nav-number">3.2.</span> <span class="nav-text">单节点缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E"><span class="nav-number">4.</span> <span class="nav-text">主从</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E4%BC%98%E7%82%B9"><span class="nav-number">4.1.</span> <span class="nav-text">主从优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E7%BC%BA%E7%82%B9"><span class="nav-number">4.2.</span> <span class="nav-text">主从缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5"><span class="nav-number">5.</span> <span class="nav-text">哨兵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E4%BC%98%E7%82%B9"><span class="nav-number">5.1.</span> <span class="nav-text">哨兵优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E7%BC%BA%E7%82%B9"><span class="nav-number">5.2.</span> <span class="nav-text">哨兵缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">6.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E4%BC%98%E7%82%B9"><span class="nav-number">6.1.</span> <span class="nav-text">集群优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%BC%BA%E7%82%B9"><span class="nav-number">6.2.</span> <span class="nav-text">集群缺点</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">redis安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">单节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9%E4%BC%98%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">单节点优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9%E7%BC%BA%E7%82%B9"><span class="nav-number">3.2.</span> <span class="nav-text">单节点缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E"><span class="nav-number">4.</span> <span class="nav-text">主从</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E4%BC%98%E7%82%B9"><span class="nav-number">4.1.</span> <span class="nav-text">主从优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E7%BC%BA%E7%82%B9"><span class="nav-number">4.2.</span> <span class="nav-text">主从缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5"><span class="nav-number">5.</span> <span class="nav-text">哨兵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E4%BC%98%E7%82%B9"><span class="nav-number">5.1.</span> <span class="nav-text">哨兵优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E7%BC%BA%E7%82%B9"><span class="nav-number">5.2.</span> <span class="nav-text">哨兵缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">6.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E4%BC%98%E7%82%B9"><span class="nav-number">6.1.</span> <span class="nav-text">集群优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%BC%BA%E7%82%B9"><span class="nav-number">6.2.</span> <span class="nav-text">集群缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-cli-%E7%9A%84-Cluster-%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4%EF%BC%88%E7%94%A8%E4%BA%8E%E7%AE%A1%E7%90%86-%E5%88%9B%E5%BB%BA-%E8%B0%83%E6%95%B4%E9%9B%86%E7%BE%A4%EF%BC%89"><span class="nav-number">6.3.</span> <span class="nav-text">redis-cli 的 Cluster 管理命令（用于管理&#x2F;创建&#x2F;调整集群）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-%E5%86%85%E7%BD%AE%E7%9A%84-Cluster-%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="nav-number">6.4.</span> <span class="nav-text">Redis 内置的 Cluster 操作命令</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -982,13 +982,6 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/09/redis5-config/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-09</time>
-        <br>
-      Redis单节点、主从、哨兵、集群构建方法
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2018/12/27/redis-cluster/" rel="bookmark">
         <time class="popular-posts-time">2018-12-27</time>
         <br>
@@ -996,10 +989,31 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/07/18/aws-eks18-autoscaler-cas/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-18</time>
+        <br>
+      AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/09/09/redis5-config/" rel="bookmark">
+        <time class="popular-posts-time">2022-09-09</time>
+        <br>
+      Redis单节点、主从、哨兵、集群构建方法
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/07/redis7-acl/" rel="bookmark">
         <time class="popular-posts-time">2025-12-07</time>
         <br>
       Redis 7 + ACL 简介
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/20/k8s-statefulset/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-20</time>
+        <br>
+      K8S 之 Statefulset
       </a>
     </li>
   </ul>
@@ -1058,7 +1072,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-12-07 20:11:17" itemprop="dateModified" datetime="2025-12-07T20:11:17+08:00">2025-12-07</time>
+      <time title="修改时间：2025-12-09 11:33:30" itemprop="dateModified" datetime="2025-12-09T11:33:30+08:00">2025-12-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1106,14 +1120,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>6.1k</span>
+      <span>7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>22 分钟</span>
+      <span>26 分钟</span>
     </span>
 
         </div>
@@ -1456,7 +1470,7 @@ i.ban {
 <p>创建集群，3主3从，注意创建集群前所有redis不能有数据，如果有需要先清空(<em><strong>删除dir配置的目录中的所有文件即可</strong></em>)，然后在任意一个redis执行</p>
 </li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --user admin --pass 123456 --cluster create --cluster-replicas 1 10.250.0.235:6379 10.250.0.58:6379 10.250.0.36:6379 10.250.0.71:6379 10.250.0.131:6379 10.250.0.63:6379</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --user admin --pass 123456 --cluster create --cluster-replicas 1 10.250.0.235:6379 10.250.0.58:6379 10.250.0.36:6379 10.250.0.71:6379 10.250.0.131:6379 10.250.0.63:6379</span><br><span class="line"><span class="comment"># 参数说明：</span></span><br><span class="line"><span class="comment"># --cluster create：创建集群</span></span><br><span class="line"><span class="comment"># --cluster-replicas 1：设置从节点数量，这里设置为1，表示每个主节点都对应一个从节点</span></span><br><span class="line"><span class="comment"># 这里配置了6个节点组建集群，要保证每个master节点都有一个从节点，所以刚好是3主3从</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>此时会列出集群内主从和槽位的分配方案，输入<code>yes</code>即可</p>
@@ -1498,6 +1512,12 @@ i.ban {
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">10.250.0.235:6379&gt; cluster nodes</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">afcb754ce8cc79122fe9bcd8c1567bbf13258fce 10.250.0.235:6379@16379 myself,master - 0 0 1 connected 0-5460</span><br><span class="line">547fbd934293ddb5eb770e111b65910f4e604023 10.250.0.71:6379@16379 master - 0 1765033859000 7 connected 10923-16383</span><br><span class="line">119e5823cccafef506b9b256aad206678eab7d41 10.250.0.63:6379@16379 slave 2527142b7cffaf6bb92608550c919a0db0607c39 0 1765033860493 2 connected</span><br><span class="line">17b33861e6b086b86902fe75f79e5b878bd26f94 10.250.0.131:6379@16379 slave afcb754ce8cc79122fe9bcd8c1567bbf13258fce 0 1765033858000 1 connected</span><br><span class="line">88762f7d0bbb99bbaf68556ef5fd113cba46d295 10.250.0.36:6379@16379 slave 547fbd934293ddb5eb770e111b65910f4e604023 0 1765033859488 7 connected</span><br><span class="line">2527142b7cffaf6bb92608550c919a0db0607c39 10.250.0.58:6379@16379 master - 0 1765033859000 2 connected 5461-10922</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
+<p>若此时还是希望 <code>10.250.0.36</code> 做为主节点，则需要先登录<code>10.250.0.36</code>，再执行如下命令</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意要加 -c</span></span><br><span class="line">redis-cli -c --user admin --pass 123456 -h 10.250.0.36</span><br><span class="line">10.250.0.36:6379&gt; cluster failover <span class="comment"># 安全版（等待复制同步）</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">10.250.0.36:6379&gt; CLUSTER FAILOVER TAKEOVER <span class="comment"># TAKEOVER 会立即切主，不会等待复制数据，非常强制(生产环境不推荐)</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>redis集群会将2的14次幂(16384)的slot平均分配到所有master上，然后对key进行hash后计算应该存储到那个slot</p>
 </li>
 </ul>
@@ -1516,10 +1536,30 @@ i.ban {
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis-6379.conf</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>mset/mget要求key都落在同一个slot上，每个key都加上前缀<code>&#123;prefix&#125;</code></p>
+<p>mset/mget要求key都落在同一个slot上，每个key都加上哈希标签（Hash Tag）-- <code>&#123;xxx&#125;</code>，其必须用<code>&#123;&#125;</code>括起来，<code>xxx</code>可以是任意字符串，计算slot时，只会根据<code>xxx</code>来计算hash值，这样就保证了所有key中包含<code>&#123;xxx&#125;</code>的key都会落到同一个slot，<code>&#123;xxx&#125;</code>可以放在key的任意位置</p>
 </li>
 </ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">10.250.0.235:6379&gt; mset name1 lisi name2 wangwu</span><br><span class="line">(error) CROSSSLOT Keys <span class="keyword">in</span> request don<span class="string">&#x27;t hash to the same slot</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">10.250.0.235:6379&gt; mset &#123;user&#125;:name1 lisi &#123;user&#125;:name2 wangwu</span></span><br><span class="line"><span class="string">OK</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">10.250.0.235:6379&gt; mget &#123;user&#125;:name1 &#123;user&#125;:name2</span></span><br><span class="line"><span class="string">-&gt; Redirected to slot [5474] located at 10.250.0.58:6379</span></span><br><span class="line"><span class="string">1) &quot;lisi&quot;</span></span><br><span class="line"><span class="string">2) &quot;wangwu&quot;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意:<br>
+{…} 让多个 key 落在同一个 slot，支持跨 key 原子操作<br>
+只有 第一个匹配的 {…} 会被当做 tag<br>
+{} 不能嵌套<br>
+空标签 {} 是非法的<br>
+{abc} 和 {def} 就落不同 slot</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如何判断 key 落在哪个节点?</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10.250.0.235:6379&gt; cluster keyslot name1</span><br><span class="line"><span class="comment"># 输出的数值就表示 slot</span></span><br><span class="line">(<span class="built_in">integer</span>) 5461 <span class="comment"># slot值</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如何查看指定的slot中有多少个key?</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10.250.0.235:6379&gt; cluster countkeysinslot 5461</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">(<span class="built_in">integer</span>) 1 <span class="comment"># 表示slot中key的个数，这里显示只有1个key</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>集群推举新的master时要求至少一半的master同意，所以一个集群至少需要3个master，官方推荐master节点数为奇数，比如3个和4个master节点，都至多允许一个master节点挂掉时进行选主，但是3个master可以节省资源</p>
@@ -1567,6 +1607,160 @@ i.ban {
 <p>不建议使用pipeline和multi-keys操作</p>
 </li>
 </ul>
+<h3 id="redis-cli-的-Cluster-管理命令（用于管理-创建-调整集群）">redis-cli 的 Cluster 管理命令（用于管理/创建/调整集群）</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>redis-cli --cluster create host1:port host2:port ...</code></td>
+<td>创建 Redis Cluster 集群（自动分配 slots）</td>
+<td><code>redis-cli --cluster create 10.0.0.1:7000 10.0.0.2:7000 --cluster-replicas 1</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster check host:port</code></td>
+<td>检查集群状态、健壮性</td>
+<td><code>redis-cli --cluster check 10.0.0.1:7000</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster info host:port</code></td>
+<td>显示集群结构、节点、slots 分布</td>
+<td><code>redis-cli --cluster info 10.0.0.1:7000</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster fix host:port</code></td>
+<td>修复 slots 移动、节点中断等异常状态</td>
+<td><code>redis-cli --cluster fix 10.0.0.1:7000</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster rebalance host:port</code></td>
+<td>重新分布 slots（自动均衡负载）</td>
+<td><code>redis-cli --cluster rebalance 10.0.0.1:7000</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster rebalance --cluster-threshold &lt;percent&gt; host:port</code></td>
+<td>手动设置 rebalance 阈值；低于此阈值才会调整（百分比）</td>
+<td><code>redis-cli --cluster rebalance --cluster-threshold 1 10.0.0.1:7000</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster add-node newHost:newPort existingHost:existingPort</code></td>
+<td>将新节点加入集群</td>
+<td><code>redis-cli --cluster add-node 10.0.0.3:7000 10.0.0.1:7000</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster add-node --cluster-slave newHost:newPort existingMaster:port</code></td>
+<td>将新节点作为某主节点的 slave 加入</td>
+<td><code>redis-cli --cluster add-node --cluster-slave 10.0.0.4:7000 10.0.0.1:7000</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster del-node host:port node_id</code></td>
+<td>从集群删除某节点（必须无 slots）</td>
+<td><code>redis-cli --cluster del-node 10.0.0.1:7000 &lt;node-id&gt;</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster call host:port command ...</code></td>
+<td>在所有节点上批量执行命令</td>
+<td><code>redis-cli --cluster call 10.0.0.1:7000 PING</code></td>
+</tr>
+<tr>
+<td><code>redis-cli --cluster help</code></td>
+<td>显示 cluster 子命令帮助</td>
+<td><code>redis-cli --cluster help</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="Redis-内置的-Cluster-操作命令">Redis 内置的 Cluster 操作命令</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLUSTER INFO</code></td>
+<td>查看集群状态、failover 状态、slot 分布统计</td>
+<td><code>CLUSTER INFO</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER NODES</code></td>
+<td>显示所有节点和角色（master/slave）</td>
+<td><code>CLUSTER NODES</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER MYID</code></td>
+<td>输出本节点 ID</td>
+<td><code>CLUSTER MYID</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER REPLICATE &lt;node-id&gt;</code></td>
+<td>将当前节点设置为某个 master 的 slave</td>
+<td><code>CLUSTER REPLICATE &lt;node-id&gt;</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER FAILOVER</code></td>
+<td>主动 failover（slave 升级为 master）</td>
+<td>从节点执行：<code>CLUSTER FAILOVER</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER FAILOVER FORCE</code></td>
+<td>不等待复制同步，立刻切主</td>
+<td><code>CLUSTER FAILOVER FORCE</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER FAILOVER TAKEOVER</code></td>
+<td>强制接管 slot（完全覆盖 master）（危险）</td>
+<td><code>CLUSTER FAILOVER TAKEOVER</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER ADDSLOTS &lt;slot...&gt;</code></td>
+<td>将 slots 分配给当前 master</td>
+<td><code>CLUSTER ADDSLOTS 0 1 2</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER DELSLOTS &lt;slot...&gt;</code></td>
+<td>从当前节点移除 slots</td>
+<td><code>CLUSTER DELSLOTS 0 1 2</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER SETSLOT &lt;slot&gt; NODE &lt;node-id&gt;</code></td>
+<td>直接指定某个 slot 属于某个节点</td>
+<td><code>CLUSTER SETSLOT 0 NODE &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER SETSLOT &lt;slot&gt; IMPORTING &lt;node-id&gt;</code></td>
+<td>设定迁移 key 的源节点（用于 slot 迁移）</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>CLUSTER SETSLOT &lt;slot&gt; MIGRATING &lt;node-id&gt;</code></td>
+<td>设定迁移 key 的目标节点（用于 slot 迁移）</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>CLUSTER KEYSLOT key</code></td>
+<td>返回 key 所属 slot</td>
+<td><code>CLUSTER KEYSLOT mykey</code></td>
+</tr>
+<tr>
+<td><code>CLUSTER COUNT-FAILURE-REPORTS &lt;node-id&gt;</code></td>
+<td>查看某节点的 fail 票数</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>CLUSTER RESET</code></td>
+<td>删除节点全部集群信息（用来重置为 standalone）</td>
+<td><code>CLUSTER RESET HARD</code></td>
+</tr>
+</tbody>
+</table>
 
     </div>
 
@@ -1707,14 +1901,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">695k</span>
+    <span title="站点总字数">696k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">42:07</span>
+    <span title="站点阅读时长">42:12</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="一、摘要 看完本文你将掌握如下知识点：  redis集群的构建方法【redis-5.0.2】 redis早期的版本中使用基于ruby的redis-trib.rb命令进行集群创建，新版本推荐使用 redis-cli --cluster，本文就是通过redis-cli --cluster命令实现集群构建。">
+    <meta name="description" content="一、摘要  看完本文你将掌握如下知识点：  redis集群的构建方法【redis-5.0.2】 redis早期的版本中使用基于ruby的redis-trib.rb命令进行集群创建，新版本推荐使用 redis-cli --cluster，本文就是通过redis-cli --cluster命令实现集群构建。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis集群">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2018/12/27/redis-cluster/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="一、摘要 看完本文你将掌握如下知识点：  redis集群的构建方法【redis-5.0.2】 redis早期的版本中使用基于ruby的redis-trib.rb命令进行集群创建，新版本推荐使用 redis-cli --cluster，本文就是通过redis-cli --cluster命令实现集群构建。">
+<meta property="og:description" content="一、摘要  看完本文你将掌握如下知识点：  redis集群的构建方法【redis-5.0.2】 redis早期的版本中使用基于ruby的redis-trib.rb命令进行集群创建，新版本推荐使用 redis-cli --cluster，本文就是通过redis-cli --cluster命令实现集群构建。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2018-12-27T10:24:04.000Z">
-<meta property="article:modified_time" content="2024-04-03T03:45:37.371Z">
+<meta property="article:modified_time" content="2025-12-09T02:59:57.788Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">一、摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">2.</span> <span class="nav-text">二、快速创建集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">三、源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">四、实际应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8IP"><span class="nav-number">4.1.</span> <span class="nav-text">1.服务器IP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%AB%AF%E5%8F%A3%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">2.端口设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-redis-port-conf"><span class="nav-number">4.3.</span> <span class="nav-text">3.redis-{port}.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.4.</span> <span class="nav-text">4.启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%9E%84%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">4.5.</span> <span class="nav-text">5.构建集群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%9B%86%E7%BE%A4%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">五、集群相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5"><span class="nav-number">5.1.</span> <span class="nav-text">1.健康检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%EF%BC%8C%E5%8D%B3%E4%B8%BA%E9%9B%86%E7%BE%A4%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E4%B8%BB%E6%9C%BA%E5%92%8C%E4%BB%8E%E6%9C%BA"><span class="nav-number">5.2.</span> <span class="nav-text">2.集群扩容，即为集群添加新的主机和从机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1%E9%80%9A%E8%BF%87%E5%A6%82%E4%B8%8B%E5%91%BD%E4%BB%A4%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84node"><span class="nav-number">5.2.1.</span> <span class="nav-text">2.1通过如下命令添加新的node</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2%E5%88%86%E9%85%8D%E6%A7%BD"><span class="nav-number">5.2.2.</span> <span class="nav-text">2.2分配槽</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3%E5%B9%B3%E8%A1%A1%E6%A7%BD%EF%BC%8C%E5%B0%B1%E6%98%AF%E5%9D%87%E5%8C%80%E5%88%86%E9%85%8D%E9%9B%86%E7%BE%A4%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E6%A7%BD%E5%88%B0%E6%89%80%E6%9C%89%E7%9A%84%E8%8A%82%E7%82%B9%EF%BC%8C%E8%AF%A5%E6%AD%A5%E9%9D%9E%E5%BF%85%E9%A1%BB%EF%BC%8C%E5%8F%AA%E6%98%AF%E7%9C%8B%E7%9D%80%E5%A5%BD%E7%9C%8B%E7%82%B9"><span class="nav-number">5.2.3.</span> <span class="nav-text">2.3平衡槽，就是均匀分配集群中的所有槽到所有的节点，该步非必须，只是看着好看点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4%E4%B8%BA%E6%96%B0%E5%8A%A0%E5%85%A5%E7%9A%84master%E6%B7%BB%E5%8A%A0slave"><span class="nav-number">5.2.4.</span> <span class="nav-text">2.4为新加入的master添加slave</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9"><span class="nav-number">5.3.</span> <span class="nav-text">3.删除节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1%E5%88%A0%E9%99%A4%E4%B8%BB%E8%8A%82%E7%82%B9"><span class="nav-number">5.3.1.</span> <span class="nav-text">3.1删除主节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2%E5%88%A0%E9%99%A4%E4%BB%8E%E8%8A%82%E7%82%B9"><span class="nav-number">5.3.2.</span> <span class="nav-text">3.2删除从节点</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">一、摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">2.</span> <span class="nav-text">二、快速创建集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">三、源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">四、实际应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8IP"><span class="nav-number">4.1.</span> <span class="nav-text">1.服务器IP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%AB%AF%E5%8F%A3%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">2.端口设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-redis-port-conf"><span class="nav-number">4.3.</span> <span class="nav-text">3.redis-{port}.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.4.</span> <span class="nav-text">4.启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%9E%84%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">4.5.</span> <span class="nav-text">5.构建集群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%9B%86%E7%BE%A4%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">五、集群相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5"><span class="nav-number">5.1.</span> <span class="nav-text">1.健康检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%EF%BC%8C%E5%8D%B3%E4%B8%BA%E9%9B%86%E7%BE%A4%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E4%B8%BB%E6%9C%BA%E5%92%8C%E4%BB%8E%E6%9C%BA"><span class="nav-number">5.2.</span> <span class="nav-text">2.集群扩容，即为集群添加新的主机和从机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1%E9%80%9A%E8%BF%87%E5%A6%82%E4%B8%8B%E5%91%BD%E4%BB%A4%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84node"><span class="nav-number">5.2.1.</span> <span class="nav-text">2.1通过如下命令添加新的node</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2%E5%88%86%E9%85%8D%E6%A7%BD"><span class="nav-number">5.2.2.</span> <span class="nav-text">2.2分配槽</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3%E5%B9%B3%E8%A1%A1%E6%A7%BD%EF%BC%8C%E5%B0%B1%E6%98%AF%E5%9D%87%E5%8C%80%E5%88%86%E9%85%8D%E9%9B%86%E7%BE%A4%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E6%A7%BD%E5%88%B0%E6%89%80%E6%9C%89%E7%9A%84%E8%8A%82%E7%82%B9%EF%BC%8C%E8%AF%A5%E6%AD%A5%E9%9D%9E%E5%BF%85%E9%A1%BB%EF%BC%8C%E5%8F%AA%E6%98%AF%E7%9C%8B%E7%9D%80%E5%A5%BD%E7%9C%8B%E7%82%B9"><span class="nav-number">5.2.3.</span> <span class="nav-text">2.3平衡槽，就是均匀分配集群中的所有槽到所有的节点，该步非必须，只是看着好看点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4%E4%B8%BA%E6%96%B0%E5%8A%A0%E5%85%A5%E7%9A%84master%E6%B7%BB%E5%8A%A0slave"><span class="nav-number">5.2.4.</span> <span class="nav-text">2.4为新加入的master添加slave</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9"><span class="nav-number">5.3.</span> <span class="nav-text">3.删除节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1%E5%85%88%E5%88%A0%E9%99%A4%E4%BB%8E%E8%8A%82%E7%82%B9"><span class="nav-number">5.3.1.</span> <span class="nav-text">3.1先删除从节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2%E5%86%8D%E5%88%A0%E9%99%A4%E4%B8%BB%E8%8A%82%E7%82%B9"><span class="nav-number">5.3.2.</span> <span class="nav-text">3.2再删除主节点</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -981,17 +981,17 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/07/18/aws-eks18-autoscaler-cas/" rel="bookmark">
-        <time class="popular-posts-time">2023-07-18</time>
-        <br>
-      AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/05/redis7-config/" rel="bookmark">
         <time class="popular-posts-time">2025-12-05</time>
         <br>
       Redis 7 + ACL 单节点、主从、哨兵、集群构建方法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/07/18/aws-eks18-autoscaler-cas/" rel="bookmark">
+        <time class="popular-posts-time">2023-07-18</time>
+        <br>
+      AWS-EKS-18--Autoscaling 之 Cluster Autoscaler(CAS)
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1071,7 +1071,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
+      <time title="修改时间：2025-12-09 10:59:57" itemprop="dateModified" datetime="2025-12-09T10:59:57+08:00">2025-12-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1110,14 +1110,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.1k</span>
+      <span>2.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>8 分钟</span>
+      <span>9 分钟</span>
     </span>
 
         </div>
@@ -1127,31 +1127,72 @@ i.ban {
     
     
     <div class="post-body" itemprop="articleBody"><h2 id="一、摘要">一、摘要</h2>
-<p>看完本文你将掌握如下知识点：</p>
 <ul class="lvl-0">
-<li class="lvl-2">redis集群的构建方法【redis-5.0.2】</li>
-<li class="lvl-2">redis早期的版本中使用基于ruby的<code>redis-trib.rb</code>命令进行集群创建，新版本推荐使用 <code>redis-cli --cluster</code>，本文就是通过<code>redis-cli --cluster</code>命令实现集群构建。</li>
+<li class="lvl-2">看完本文你将掌握如下知识点：
+<ul class="lvl-2">
+<li class="lvl-4">redis集群的构建方法【redis-5.0.2】</li>
+<li class="lvl-4">redis早期的版本中使用基于ruby的<code>redis-trib.rb</code>命令进行集群创建，新版本推荐使用 <code>redis-cli --cluster</code>，本文就是通过<code>redis-cli --cluster</code>命令实现集群构建。</li>
+</ul>
+</li>
 </ul>
 <span id="more"></span>
 <h2 id="二、快速创建集群">二、快速创建集群</h2>
-<p>redis为我们提供了快速创建集群的工具，安装好redis后，在其<code>/redis-5.0.2/utils/create-cluster/</code>目录下存在一个<code>create-cluster</code>命令，通过该命令可以快速创建一个基于本机端口30001~30006的三主三从的redis集群，可以通过修改端口号及服务数量来改变集群的配置。<br>
-1.启动6个redis服务，<code>./create-cluster start</code><br>
-2.创建集群，<code>./create-cluster create</code><br>
-3.关闭集群服务，<code>./create-cluster stop</code><br>
-4.清除数据及日志文件，<code>./create-cluster clean</code></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>redis为我们提供了快速创建集群的工具，安装好redis后，在其<code>/redis-5.0.2/utils/create-cluster/</code>目录下存在一个<code>create-cluster</code>命令，通过该命令可以快速创建一个基于本机端口30001~30006的三主三从的redis集群，可以通过修改端口号及服务数量来改变集群的配置。</p>
+</li>
+<li class="lvl-2">
+<p>1.启动6个redis服务，<code>./create-cluster start</code></p>
+</li>
+<li class="lvl-2">
+<p>2.创建集群，<code>./create-cluster create</code></p>
+</li>
+<li class="lvl-2">
+<p>3.关闭集群服务，<code>./create-cluster stop</code></p>
+</li>
+<li class="lvl-2">
+<p>4.清除数据及日志文件，<code>./create-cluster clean</code></p>
+</li>
+</ul>
 <h2 id="三、源码分析">三、源码分析</h2>
-<p>通过看源码可以很清楚其创建过程<br>
-1.启动6个reids服务，通过参数的方式进行启动，在生产环境中建议通过配置文件启动</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>通过看源码可以很清楚其创建过程</p>
+</li>
+<li class="lvl-2">
+<p>1.启动6个reids服务，通过参数的方式进行启动，在生产环境中建议通过配置文件启动</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> == <span class="string">&quot;start&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="keyword">while</span> [ $((PORT &lt; ENDPORT)) != <span class="string">&quot;0&quot;</span> ]; <span class="keyword">do</span></span><br><span class="line">        PORT=$((PORT+<span class="number">1</span>))</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;Starting <span class="variable">$PORT</span>&quot;</span></span><br><span class="line">        ../../src/redis-server --port <span class="variable">$PORT</span> --cluster-enabled <span class="built_in">yes</span> --cluster-config-file nodes-<span class="variable">$&#123;PORT&#125;</span>.conf --cluster-node-timeout <span class="variable">$TIMEOUT</span> --appendonly <span class="built_in">yes</span> --appendfilename appendonly-<span class="variable">$&#123;PORT&#125;</span>.aof --dbfilename dump</span><br><span class="line">-<span class="variable">$&#123;PORT&#125;</span>.rdb --logfile <span class="variable">$&#123;PORT&#125;</span>.<span class="built_in">log</span> --daemonize <span class="built_in">yes</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line">    <span class="built_in">exit</span> 0</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>参数说明：</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#端口：</span></span><br><span class="line">port <span class="variable">$PORT</span></span><br><span class="line"><span class="comment">#是否启用集群：</span></span><br><span class="line">cluster-enabled <span class="built_in">yes</span></span><br><span class="line"><span class="comment">#集群关联文件路径，创建redis集群时自动创建</span></span><br><span class="line">cluster-config-file nodes-<span class="variable">$&#123;PORT&#125;</span>.conf</span><br><span class="line"><span class="comment">#集群节点间通信的超时时间，毫秒，建议2000，默认15000</span></span><br><span class="line">cluster-node-timeout <span class="variable">$TIMEOUT</span></span><br><span class="line"><span class="comment">#开启aof</span></span><br><span class="line">appendonly <span class="built_in">yes</span></span><br><span class="line"><span class="comment">#aof文件名称，注意这里只能是文件名称，若要修改路径需要设置dir属性 ，如dir /home/hanqf/redis-dir/redis-5.0.2/cluster-conf/files/</span></span><br><span class="line">appendfilename appendonly-<span class="variable">$&#123;PORT&#125;</span>.aof</span><br><span class="line"><span class="comment">#rdb文件名称，同样只能是文件名称，同上路径共用dir属性</span></span><br><span class="line">dbfilename dump-<span class="variable">$&#123;PORT&#125;</span>.rdb</span><br><span class="line"><span class="comment">#日志文件路径</span></span><br><span class="line">logfile <span class="variable">$&#123;PORT&#125;</span>.<span class="built_in">log</span></span><br><span class="line"><span class="comment">#后台运行模式启动</span></span><br><span class="line">daemonize <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>2.构建集群，这里使用的就是<code>redis-cli --cluster</code>命令，可以看出与<code>redis-trib.rb</code>命令类似</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> == <span class="string">&quot;create&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    HOSTS=<span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> [ $((PORT &lt; ENDPORT)) != <span class="string">&quot;0&quot;</span> ]; <span class="keyword">do</span></span><br><span class="line">        PORT=$((PORT+<span class="number">1</span>))</span><br><span class="line">        HOSTS=<span class="string">&quot;<span class="variable">$HOSTS</span> 127.0.0.1:<span class="variable">$PORT</span>&quot;</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line">    ../../src/redis-cli --cluster create <span class="variable">$HOSTS</span> --cluster-replicas <span class="variable">$REPLICAS</span></span><br><span class="line">    <span class="built_in">exit</span> 0</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p><code>create</code>后根的<code>$HOSTS</code>就是redis服务列表</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:30001 127.0.0.1:30002 127.0.0.1:30003 127.0.0.1:30004 127.0.0.1:30005 127.0.0.1:30006</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p><code>--cluster-replicas $REPLICAS</code>，这里$REPLICAS值为1，表示为每一个master节点分配一个slave节点</p>
+</li>
+</ul>
 <h2 id="四、实际应用">四、实际应用</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>这里我们使用2台服务器，分别启动3个redis服务，来构建一个三主三从的redis集群。</p>
+</li>
+</ul>
 <h3 id="1-服务器IP">1.服务器IP</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1162,61 +1203,120 @@ i.ban {
 </li>
 </ul>
 <h3 id="2-端口设置">2.端口设置</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>分别开启俩台服务器的如下端口，前面是redis服务端口，后面是集群通信端口（默认服务端口+10000）</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">6379，16379</span><br><span class="line">6380，16380</span><br><span class="line">6381，16381</span><br></pre></td></tr></table></figure>
 <h3 id="3-redis-port-conf">3.redis-{port}.conf</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>这里需要按照上面的参数说明进行配置，如我们配置号redis-6379.conf后，可以通过如下命令进行复制</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more redis-6379.conf | sed <span class="string">&#x27;s/6379/6380/g&#x27;</span> &gt; redis-6380.conf</span><br><span class="line">more redis-6379.conf | sed <span class="string">&#x27;s/6379/6381/g&#x27;</span> &gt; redis-6381.conf</span><br></pre></td></tr></table></figure>
 <h3 id="4-启动服务">4.启动服务</h3>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#10.211.55.15</span></span><br><span class="line">./redis-server redis-6379.conf</span><br><span class="line">./redis-server redis-6380.conf</span><br><span class="line">./redis-server redis-6381.conf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#10.211.55.16</span></span><br><span class="line">./redis-server redis-6379.conf</span><br><span class="line">./redis-server redis-6380.conf</span><br><span class="line">./redis-server redis-6381.conf</span><br></pre></td></tr></table></figure>
 <h3 id="5-构建集群">5.构建集群</h3>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster create 10.211.55.15:6379 10.211.55.15:6380 10.211.55.15:6381 10.211.55.16:6379 10.211.55.16:6380 10.211.55.16:6381  --cluster-replicas 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># create &lt;所有要加入集群的节点IP:端口 空格分隔&gt;</span></span><br><span class="line"><span class="comment"># --cluster-replicas 1: 为每个主节点都分配一个从节点，这里是6个节点，要保证每个master都有一个slave，所以刚好是3主3从的集群</span></span><br><span class="line">./redis-cli --cluster create 10.211.55.15:6379 10.211.55.15:6380 10.211.55.15:6381 10.211.55.16:6379 10.211.55.16:6380 10.211.55.16:6381  --cluster-replicas 1</span><br></pre></td></tr></table></figure>
 <h2 id="五、集群相关命令">五、集群相关命令</h2>
 <h3 id="1-健康检查">1.健康检查</h3>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 后面可以是集群中任意节点</span></span><br><span class="line">./redis-cli --cluster check 10.211.55.15:6380</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis-cli --cluster check &lt;任意已存在集群节点IP:端口&gt;</span></span><br><span class="line">./redis-cli --cluster check 10.211.55.15:6380</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>输出如下，可以看到集群中的主从关系，以及每个master中含有key的数量：</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">10.211.55.15:6380 (c39c1e8a...) -&gt; 2 keys | 5461 slots | 1 slaves.</span><br><span class="line">10.211.55.16:6380 (3edc1dae...) -&gt; 5 keys | 5461 slots | 1 slaves.</span><br><span class="line">10.211.55.16:6379 (4dd31f17...) -&gt; 2 keys | 5462 slots | 1 slaves.</span><br><span class="line">[OK] 9 keys <span class="keyword">in</span> 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 10.211.55.15:6380)</span><br><span class="line">M: c39c1e8aa6e07e337aaab03eab3727f739201cd2 10.211.55.15:6380</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: a83903f50621d7627f3ce59f1210af4938b8acc4 10.211.55.15:6381</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 4dd31f17e83ef7aa6c7a36474f7f54d842e0ed64</span><br><span class="line">M: 3edc1daeaf3a848156ad8cc601b1374dd0459d9c 10.211.55.16:6380</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 4dd31f17e83ef7aa6c7a36474f7f54d842e0ed64 10.211.55.16:6379</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: cb6a94201d6f5a4e016b1549afc8c976a1a3dda4 10.211.55.15:6379</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 3edc1daeaf3a848156ad8cc601b1374dd0459d9c</span><br><span class="line">S: 3f41a95296cb2681ea599f47aaff9c662b3338ad 10.211.55.16:6381</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates c39c1e8aa6e07e337aaab03eab3727f739201cd2</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>说明：此时如果关闭其中一个master节点，那么其对应的从节点就会升级为主节点，当重新启动原master节点后，则该节点会自动加入集群，并作为从节点。</p>
+</li>
+</ul>
 <h3 id="2-集群扩容，即为集群添加新的主机和从机">2.集群扩容，即为集群添加新的主机和从机</h3>
 <h4 id="2-1通过如下命令添加新的node">2.1通过如下命令添加新的node</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>说明：10.211.55.15:6382 是新的服务地址，10.211.55.16:6380 是集群中任意一个的服务地址,添加后的服务类型为master。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster add-node 10.211.55.15:6382 10.211.55.16:6380</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis-cli --cluster add-node &lt;新服务IP:端口&gt; &lt;任意已存在集群节点IP:端口&gt;</span></span><br><span class="line">./redis-cli --cluster add-node 10.211.55.15:6382 10.211.55.16:6380</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>此时我们通过健康检查可以看到新加入的服务没有分配槽点：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster check 10.211.55.15:6380</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">Could not connect to Redis at 10.211.55.15:6379: Connection refused</span><br><span class="line">10.211.55.15:6380 (a5f63b8e...) -&gt; 2 keys | 5461 slots | 1 slaves.</span><br><span class="line">10.211.55.16:6379 (15506850...) -&gt; 2 keys | 5462 slots | 1 slaves.</span><br><span class="line">10.211.55.15:6382 (316e068f...) -&gt; 0 keys | 0 slots | 0 slaves.   <span class="comment">#注意，这里新添加的主机没有分配槽（slot），需要先进行分配才能使用</span></span><br><span class="line">10.211.55.16:6380 (d944c0b1...) -&gt; 5 keys | 5461 slots | 0 slaves.</span><br><span class="line">[OK] 9 keys <span class="keyword">in</span> 4 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 10.211.55.15:6380)</span><br><span class="line">M: a5f63b8e4f24a73d36da9e0bbf84988d7c5558d3 10.211.55.15:6380</span><br><span class="line">  slots:[10923-16383] (5461 slots) master</span><br><span class="line">  1 additional replica(s)</span><br><span class="line">M: 15506850b235f4277306368533cacf4a5ec1bbd1 10.211.55.16:6379</span><br><span class="line">  slots:[5461-10922] (5462 slots) master</span><br><span class="line">  1 additional replica(s)</span><br><span class="line">M: 316e068fd71ee228299198a271efd839d3493835 10.211.55.15:6382</span><br><span class="line">  slots: (0 slots) master</span><br><span class="line">S: b3c0e06da5b5d694c3a68408fb4c8f7607d7e9e0 10.211.55.16:6381</span><br><span class="line">  slots: (0 slots) slave</span><br><span class="line">  replicates a5f63b8e4f24a73d36da9e0bbf84988d7c5558d3</span><br><span class="line">M: d944c0b19e92af325b882e3a86ff09c2b6b53f47 10.211.55.16:6380</span><br><span class="line">  slots:[0-5460] (5461 slots) master</span><br><span class="line">S: 4bce4c24959bda55d087296e86f58ec03186d3ae 10.211.55.15:6381</span><br><span class="line">  slots: (0 slots) slave</span><br><span class="line">  replicates 15506850b235f4277306368533cacf4a5ec1bbd1</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis-cli --cluster check &lt;任意已存在集群节点IP:端口&gt;</span></span><br><span class="line">./redis-cli --cluster check 10.211.55.15:6380</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">Could not connect to Redis at 10.211.55.15:6379: Connection refused</span><br><span class="line">10.211.55.15:6380 (a5f63b8e...) -&gt; 2 keys | 5461 slots | 1 slaves.</span><br><span class="line">10.211.55.16:6379 (15506850...) -&gt; 2 keys | 5462 slots | 1 slaves.</span><br><span class="line">10.211.55.15:6382 (316e068f...) -&gt; 0 keys | 0 slots | 0 slaves.   <span class="comment">#注意，这里新添加的主机没有分配槽（slot），需要先进行分配才能使用</span></span><br><span class="line">10.211.55.16:6380 (d944c0b1...) -&gt; 5 keys | 5461 slots | 0 slaves.</span><br><span class="line">[OK] 9 keys <span class="keyword">in</span> 4 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 10.211.55.15:6380)</span><br><span class="line">M: a5f63b8e4f24a73d36da9e0bbf84988d7c5558d3 10.211.55.15:6380</span><br><span class="line">  slots:[10923-16383] (5461 slots) master</span><br><span class="line">  1 additional replica(s)</span><br><span class="line">M: 15506850b235f4277306368533cacf4a5ec1bbd1 10.211.55.16:6379</span><br><span class="line">  slots:[5461-10922] (5462 slots) master</span><br><span class="line">  1 additional replica(s)</span><br><span class="line">M: 316e068fd71ee228299198a271efd839d3493835 10.211.55.15:6382</span><br><span class="line">  slots: (0 slots) master</span><br><span class="line">S: b3c0e06da5b5d694c3a68408fb4c8f7607d7e9e0 10.211.55.16:6381</span><br><span class="line">  slots: (0 slots) slave</span><br><span class="line">  replicates a5f63b8e4f24a73d36da9e0bbf84988d7c5558d3</span><br><span class="line">M: d944c0b19e92af325b882e3a86ff09c2b6b53f47 10.211.55.16:6380</span><br><span class="line">  slots:[0-5460] (5461 slots) master</span><br><span class="line">S: 4bce4c24959bda55d087296e86f58ec03186d3ae 10.211.55.15:6381</span><br><span class="line">  slots: (0 slots) slave</span><br><span class="line">  replicates 15506850b235f4277306368533cacf4a5ec1bbd1</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
 <h4 id="2-2分配槽">2.2分配槽</h4>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster reshard 10.211.55.15:6382</span><br></pre></td></tr></table></figure>
-<p>执行命令后会有如下设置：<br>
-1.问你是否从原有的1-16384个槽中分配多少到新的主节点，我们这里分配4000为例，回车<br>
-2：然后紧接着会询问你给id为谁的主节点分配，这里就是新加的节点10.211.55.15:6382，其对应的Id为:316e068fd71ee228299198a271efd839d3493835<br>
-3：询问你是从所有的空间去给这个节点分配空间还是从某一个节点分配，我这里输入all  回车继续<br>
-4：然后会给你分配出一个分配计划，输入yes开始分配。完成ok</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis-cli --cluster reshard &lt;任意已存在集群节点IP:端口&gt;</span></span><br><span class="line">./redis-cli --cluster reshard 10.211.55.15:6382</span><br><span class="line"></span><br><span class="line">执行命令后会有如下设置：</span><br><span class="line">  1.问你是否从原有的1-16384个槽中分配多少到新的主节点，我们这里分配4000为例，回车</span><br><span class="line">	2：然后紧接着会询问你给<span class="built_in">id</span>为谁的主节点分配，这里就是新加的节点10.211.55.15:6382，其对应的Id为:316e068fd71ee228299198a271efd839d3493835</span><br><span class="line">	3：询问你是从所有的空间去给这个节点分配空间还是从某一个节点分配，我这里输入all  回车继续</span><br><span class="line">	4：然后会给你分配出一个分配计划，输入<span class="built_in">yes</span>开始分配。完成ok</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>此时再次运行健康检查可以看到槽点已经分配成功</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster check 10.211.55.15:6380</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">localhost:6380 (a5f63b8e...) -&gt; 1 keys | 4128 slots | 1 slaves.</span><br><span class="line">10.211.55.16:6379 (15506850...) -&gt; 2 keys | 4128 slots | 1 slaves.</span><br><span class="line">10.211.55.15:6382 (316e068f...) -&gt; 2 keys | 4000 slots | 0 slaves.</span><br><span class="line">10.211.55.16:6380 (d944c0b1...) -&gt; 4 keys | 4128 slots | 1 slaves.</span><br><span class="line">[OK] 9 keys <span class="keyword">in</span> 4 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">………………………………</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis-cli --cluster check &lt;任意已存在集群节点IP:端口&gt;</span></span><br><span class="line">./redis-cli --cluster check 10.211.55.15:6380</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">localhost:6380 (a5f63b8e...) -&gt; 1 keys | 4128 slots | 1 slaves.</span><br><span class="line">10.211.55.16:6379 (15506850...) -&gt; 2 keys | 4128 slots | 1 slaves.</span><br><span class="line">10.211.55.15:6382 (316e068f...) -&gt; 2 keys | 4000 slots | 0 slaves.</span><br><span class="line">10.211.55.16:6380 (d944c0b1...) -&gt; 4 keys | 4128 slots | 1 slaves.</span><br><span class="line">[OK] 9 keys <span class="keyword">in</span> 4 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">………………………………</span><br></pre></td></tr></table></figure>
 <h4 id="2-3平衡槽，就是均匀分配集群中的所有槽到所有的节点，该步非必须，只是看着好看点">2.3平衡槽，就是均匀分配集群中的所有槽到所有的节点，该步非必须，只是看着好看点</h4>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster rebalance --cluster-threshold 1 10.211.55.15:6382</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>执行 rebalance 命令</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis-cli --cluster rebalance --cluster-threshold 1 &lt;任意已存在集群节点IP:端口&gt;</span></span><br><span class="line"><span class="comment"># --cluster-threshold &lt;百分比&gt; : 用于控制 “不均衡程度阈值”，这里设置为1，表示只要偏差超过 1%，就会被视为不均衡，需要调整</span></span><br><span class="line"><span class="comment"># 这里有4个master节点，16384/4=4096，4096*1%≈40，所以只要各个master中的槽位偏差超过40个，则认为不均衡，需要调整</span></span><br><span class="line">./redis-cli --cluster rebalance --cluster-threshold 1 10.211.55.15:6382</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>查看集群信息</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster info 10.211.55.15:6380</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">localhost:6380 (a5f63b8e...) -&gt; 1 keys | 4096 slots | 1 slaves.</span><br><span class="line">10.211.55.16:6379 (15506850...) -&gt; 2 keys | 4096 slots | 1 slaves.</span><br><span class="line">10.211.55.15:6382 (316e068f...) -&gt; 2 keys | 4096 slots | 0 slaves.</span><br><span class="line">10.211.55.16:6380 (d944c0b1...) -&gt; 4 keys | 4096 slots | 1 slaves.</span><br><span class="line">[OK] 9 keys <span class="keyword">in</span> 4 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br></pre></td></tr></table></figure>
 <h4 id="2-4为新加入的master添加slave">2.4为新加入的master添加slave</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>同样需要先加入集群</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster add-node 10.211.55.16:6382 10.211.55.16:6380</span><br></pre></td></tr></table></figure>
-<p>之后不需要做分配和平衡槽的操作<br>
-登录这个redis， <code>./redis-cli -h 10.211.55.16 -p 6382</code></p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis-cli --cluster add-node &lt;slave节点IP:端口&gt; &lt;任意已存在集群节点IP:端口&gt;</span></span><br><span class="line"> ./redis-cli --cluster add-node 10.211.55.16:6382 10.211.55.16:6380</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>之后不需要做分配和平衡槽的操作</p>
+</li>
+<li class="lvl-2">
+<p>登录这个redis， <code>./redis-cli -h 10.211.55.16 -p 6382</code></p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6382&gt; cluster replicate 316e068fd71ee228299198a271efd839d3493835 <span class="comment">#主节点的id</span></span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>也可以一行命令就完成</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster add-node &lt;slave节点IP:端口&gt; &lt;任意已存在集群节点IP:端口&gt; --cluster-slave --cluster-master-id &lt;目标Master节点的ID&gt;</span><br></pre></td></tr></table></figure>
 <h3 id="3-删除节点">3.删除节点</h3>
-<h4 id="3-1删除主节点">3.1删除主节点</h4>
-<p>删除节点前，节点上的槽要被清空</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster reshard 10.211.55.15:6382 <span class="comment">#集群中任意ip即可</span></span><br></pre></td></tr></table></figure>
-<p>1.问你是否从原有的1-16384个槽中分配多少到新的主节点我们这里分配4096，即该节点上的槽数<br>
-2：然后紧接着会询问你给id为谁的主节点分配，这里我们分配给10.211.55.16:6379，即15506850b235f4277306368533cacf4a5ec1bbd1<br>
-3：询问你是从所有的空间去给这个节点分配空间还是从某一个节点分配<br>
-我这里输入要移出的节点ID ,即316e068fd71ee228299198a271efd839d3493835 回车继续 输入 done<br>
-4：然后会给你分配出一个分配计划，输入yes开始分配。完成ok</p>
-<p>执行删除节点命令</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster del-node 10.211.55.16:6379 316e068fd71ee228299198a271efd839d3493835</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">&gt;&gt;&gt; Removing node 316e068fd71ee228299198a271efd839d3493835 from cluster 10.211.55.16:6379</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...</span><br><span class="line">&gt;&gt;&gt; SHUTDOWN the node.</span><br></pre></td></tr></table></figure>
-<p>说明：<br>
-删除节点会自动关闭被移出的redis服务，此时，该主节点的从节点会自动转为其它主节点的从节点，而不会升级为主节点</p>
-<h4 id="3-2删除从节点">3.2删除从节点</h4>
+<h4 id="3-1先删除从节点">3.1先删除从节点</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>直接执行节点删除命令</p>
+</li>
+</ul>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster del-node 10.211.55.16:6379 从节点ID</span><br></pre></td></tr></table></figure>
+<h4 id="3-2再删除主节点">3.2再删除主节点</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>删除master节点前，master节点上的槽需要被清空</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster reshard 10.211.55.15:6382 <span class="comment">#集群中任意ip即可</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 说明：</span></span><br><span class="line">  1.问你是否从原有的1-16384个槽中分配多少到新的主节点我们这里分配4096，即该节点上的槽数</span><br><span class="line">	2：然后紧接着会询问你给<span class="built_in">id</span>为谁的主节点分配，这里我们分配给10.211.55.16:6379，即15506850b235f4277306368533cacf4a5ec1bbd1</span><br><span class="line">	3：询问你是从所有的空间去给这个节点分配空间还是从某一个节点分配</span><br><span class="line">    我这里输入要移出的节点ID ,即316e068fd71ee228299198a271efd839d3493835 回车继续 输入 <span class="keyword">done</span></span><br><span class="line">	4：然后会给你分配出一个分配计划，输入<span class="built_in">yes</span>开始分配。完成ok</span><br><span class="line">  5：成功后 316e068fd71ee228299198a271efd839d3493835 节点会自动变成 15506850b235f4277306368533cacf4a5ec1bbd1 的从节点</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>执行删除节点命令，删除 316e068fd71ee228299198a271efd839d3493835 节点</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster del-node 10.211.55.16:6379 316e068fd71ee228299198a271efd839d3493835</span><br><span class="line">Warning: Using a password with <span class="string">&#x27;-a&#x27;</span> or <span class="string">&#x27;-u&#x27;</span> option on the <span class="built_in">command</span> line interface may not be safe.</span><br><span class="line">&gt;&gt;&gt; Removing node 316e068fd71ee228299198a271efd839d3493835 from cluster 10.211.55.16:6379</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...</span><br><span class="line">&gt;&gt;&gt; SHUTDOWN the node.</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>说明：若先删除主节点，再删除从节点，则删除主节点后，该主节点的从节点会自动转为其它主节点(slot迁移到的主节点)的从节点，而不会升级为主节点</p>
+</li>
+</ul>
 
     </div>
 
@@ -1356,14 +1456,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">695k</span>
+    <span title="站点总字数">696k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">42:07</span>
+    <span title="站点阅读时长">42:12</span>
   </span>
 </div>
 <div class="busuanzi-count">
