@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  本文介绍 Redis 的 通用命令，即所有数据类型均可使用的命令 本文基于redis-7.4.7 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-15T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-12-16T08:47:06.424Z">
+<meta property="article:modified_time" content="2025-12-17T02:40:19.312Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">通用命令</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">通用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%BF%E5%85%8DBigKey"><span class="nav-number">3.</span> <span class="nav-text">避免BigKey</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BigKey-%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">BigKey 的处理方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E6%89%A7%E8%A1%8C%E5%8D%A0%E7%94%A8CPU%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">3.1.1.</span> <span class="nav-text">避免执行占用CPU的操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E4%B8%8A%E9%81%BF%E5%85%8DBigKey"><span class="nav-number">3.1.2.</span> <span class="nav-text">设计上避免BigKey</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -903,7 +903,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-count">254</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -981,6 +981,13 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/17/redis7-ReentrantLock/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-17</time>
+        <br>
+      一个基于 Redis 的可重入分布式锁的实现
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/16/redis7-datatype-05-set/" rel="bookmark">
         <time class="popular-posts-time">2025-12-16</time>
         <br>
@@ -988,10 +995,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/16/redis7-datatype-06-zset/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-16</time>
+      <a class="popular-posts-link" href="/2025/12/10/redis7-scan/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-10</time>
         <br>
-      Redis 命令及数据类型 -- ZSet
+      Redis SCAN 命令详解：作用、用法与最佳实践
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1002,17 +1009,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/15/redis7-datatype-03-hash/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-15</time>
+      <a class="popular-posts-link" href="/2025/12/16/redis7-datatype-04-list/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-16</time>
         <br>
-      Redis 命令及数据类型 -- Hash
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/10/redis7-scan/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-10</time>
-        <br>
-      Redis SCAN 命令详解：作用、用法与最佳实践
+      Redis 命令及数据类型 -- List
       </a>
     </li>
   </ul>
@@ -1071,7 +1071,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-12-16 16:47:06" itemprop="dateModified" datetime="2025-12-16T16:47:06+08:00">2025-12-16</time>
+      <time title="修改时间：2025-12-17 10:40:19" itemprop="dateModified" datetime="2025-12-17T10:40:19+08:00">2025-12-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1119,14 +1119,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>705</span>
+      <span>1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
+      <span>4 分钟</span>
     </span>
 
         </div>
@@ -1354,6 +1354,90 @@ i.ban {
 </tr>
 </tbody>
 </table>
+<h2 id="避免BigKey">避免BigKey</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>BigKey 的危害并不在“占内存”，而在操作成本是 O(N)。</p>
+</li>
+<li class="lvl-2">
+<p>Redis 是单线程执行命令，比如 <code>HGETALL</code>、<code>DEL</code>等，运行期间会占用CPU，阻塞 Redis 主线程，直接表现为 RT 飙升 / QPS 下降。</p>
+</li>
+<li class="lvl-2">
+<p>另外BigKey还会导致如下问题：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">大 Key 返回值过大 → 网络 IO 抖动</span><br><span class="line">主从复制同步 BigKey → 从库延迟</span><br><span class="line">RDB / AOF 重写 → Fork 时间变长</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>BigKey 的阈值</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>元素数量阈值（经验值）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>String</td>
+<td>≥ 10,000 byte</td>
+</tr>
+<tr>
+<td>Hash</td>
+<td>≥ 10,000 field</td>
+</tr>
+<tr>
+<td>List</td>
+<td>≥ 10,000 item</td>
+</tr>
+<tr>
+<td>Set</td>
+<td>≥ 10,000 member</td>
+</tr>
+<tr>
+<td>ZSet</td>
+<td>≥ 10,000 member</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>在生产环境中，5,000 就已经需要警惕。<br>
+建议在数据量达到一定阈值时，考虑拆分。</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Reids官方给出了判断BigKey的命令</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="BigKey-的处理方式">BigKey 的处理方式</h3>
+<h4 id="避免执行占用CPU的操作">避免执行占用CPU的操作</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>比如 <code>HGETALL</code>、<code>DEL</code>、<code>Keys *</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只读取一部分字段</span></span><br><span class="line">HGETALL user:1001 --&gt; HMGET user:1001 name age email</span><br><span class="line"><span class="comment"># 异步清除</span></span><br><span class="line">DEL key --&gt; UNLINK key</span><br><span class="line"><span class="comment"># 避免 KEYS 改用 SCAN</span></span><br><span class="line">keys pattern --&gt; scan cursor match pattern count 1000</span><br><span class="line"><span class="comment"># 避免读取全部数据，而是应该指定读取范围</span></span><br><span class="line">LRANGE key 0 -1 --&gt; LRANGE key 0 999</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>业务侧排序，避免使用<code>SORT</code></p>
+</li>
+</ul>
+<h4 id="设计上避免BigKey">设计上避免BigKey</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>拆分数据</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 错误设计：</span></span><br><span class="line">user:all_profiles -&gt; 超大 JSON</span><br><span class="line"><span class="comment"># 正确设计：</span></span><br><span class="line">user:1001:profile</span><br><span class="line">user:1002:profile</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Hash 分桶（Shard）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 hash(id) % N 分散</span></span><br><span class="line">order:2025:0</span><br><span class="line">order:2025:1</span><br><span class="line">order:2025:2</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -1493,14 +1577,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">707k</span>
+    <span title="站点总字数">710k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">42:52</span>
+    <span title="站点阅读时长">43:03</span>
   </span>
 </div>
 <div class="busuanzi-count">

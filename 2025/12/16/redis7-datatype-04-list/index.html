@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要  本文介绍 Redis List 数据类型 本文基于redis-7.4.7 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F;">
+    <meta name="description" content="摘要  本文介绍 Redis List 数据类型 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis 命令及数据类型 -- List">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/12/16/redis7-datatype-04-list/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  本文介绍 Redis List 数据类型 本文基于redis-7.4.7 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F;">
+<meta property="og:description" content="摘要  本文介绍 Redis List 数据类型 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-16T13:35:05.000Z">
-<meta property="article:modified_time" content="2025-12-16T08:58:15.208Z">
+<meta property="article:modified_time" content="2025-12-17T07:54:57.145Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">List 数据类型</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">List 数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">List 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E9%97%B4%E8%AE%BF%E9%97%AE%E4%B8%8E%E6%95%B4%E4%BD%93%E6%8E%A7%E5%88%B6"><span class="nav-number">3.1.</span> <span class="nav-text">区间访问与整体控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A6%E4%BE%A7%E5%85%A5%E9%98%9F%EF%BC%88Head%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">左侧入队（Head）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%B3%E4%BE%A7%E5%85%A5%E9%98%9F%EF%BC%88Tail%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">右侧入队（Tail）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%B9%E5%87%BA"><span class="nav-number">3.4.</span> <span class="nav-text">非阻塞弹出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E5%BC%B9%E5%87%BA%EF%BC%88Blocking-Queue%EF%BC%89"><span class="nav-number">3.5.</span> <span class="nav-text">阻塞弹出（Blocking Queue）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E7%A7%BB%E5%8A%A8"><span class="nav-number">3.6.</span> <span class="nav-text">原子移动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AE%E4%B8%8E%E5%AE%9A%E4%BD%8D%EF%BC%88O-N-%EF%BC%89"><span class="nav-number">3.7.</span> <span class="nav-text">随机访问与定位（O(N)）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E4%B8%8E%E5%88%A0%E9%99%A4"><span class="nav-number">3.8.</span> <span class="nav-text">搜索与删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#List-%E7%9A%84%E5%85%B8%E5%9E%8B%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="nav-number">3.9.</span> <span class="nav-text">List 的典型使用模式总结</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -903,7 +903,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-count">254</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -988,10 +988,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/15/redis7-datatype-03-hash/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-15</time>
+      <a class="popular-posts-link" href="/2025/12/17/redis7-ReentrantLock/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-17</time>
         <br>
-      Redis 命令及数据类型 -- Hash
+      一个基于 Redis 的可重入分布式锁的实现
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1002,17 +1002,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/15/redis7-datatype-03-hash/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-15</time>
+        <br>
+      Redis 命令及数据类型 -- Hash
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/16/redis7-datatype-06-zset/" rel="bookmark">
         <time class="popular-posts-time">2025-12-16</time>
         <br>
       Redis 命令及数据类型 -- ZSet
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/10/redis7-scan/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-10</time>
-        <br>
-      Redis SCAN 命令详解：作用、用法与最佳实践
       </a>
     </li>
   </ul>
@@ -1063,9 +1063,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-12-16 21:35:05 / 修改时间：16:58:15" itemprop="dateCreated datePublished" datetime="2025-12-16T21:35:05+08:00">2025-12-16</time>
+      <time title="创建时间：2025-12-16 21:35:05" itemprop="dateCreated datePublished" datetime="2025-12-16T21:35:05+08:00">2025-12-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-12-17 15:54:57" itemprop="dateModified" datetime="2025-12-17T15:54:57+08:00">2025-12-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1113,14 +1119,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1k</span>
+      <span>1.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
+      <span>5 分钟</span>
     </span>
 
         </div>
@@ -1132,7 +1138,7 @@ i.ban {
     <div class="post-body" itemprop="articleBody"><h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">本文介绍 Redis List 数据类型</li>
-<li class="lvl-2">本文基于<code>redis-7.4.7</code></li>
+<li class="lvl-2">本文基于<code>redis-7.4.7</code>，<code>springboot-3.5.8</code></li>
 <li class="lvl-2">Redis官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a></li>
 <li class="lvl-2">Redis 命令文档：<a target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/">https://redis.io/docs/latest/commands/</a></li>
 </ul>
@@ -1155,204 +1161,401 @@ i.ban {
 <p>Redis List 的理论最大长度为 2^32 - 1 = 4294967295，但实际业务中，元素数量 ≥ 10,000 就算 BigKey 了。</p>
 </li>
 <li class="lvl-2">
+<p>List的底层是一个双向链表，对双端的操作性能很高，但是通过索引下标直接操作某一个中间节点时性能很差</p>
+</li>
+<li class="lvl-2">
+<p>常用数据结构</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Stack(栈) = LPUSH + LPOP</span><br><span class="line">Queue(队列）= LPUSH + RPOP</span><br><span class="line">Blocking MQ(阻塞队列）= LPUSH + BRPOP</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>List 的使用场景</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">视频列表、签到列表</span><br><span class="line">排队机</span><br><span class="line">简化版的MQ</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p>生产环境建议</p>
 </li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List 只用于 顺序消费</span><br><span class="line">始终限制 List 长度（LTRIM）</span><br><span class="line">避免中间插入、删除</span><br><span class="line">大 List 删除使用 UNLINK</span><br><span class="line">高可靠消息不要用 List</span><br></pre></td></tr></table></figure>
+<h2 id="List-命令">List 命令</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>SpringBoot 的 <code>RedisTemplate&lt;K,V&gt;</code> 中 List 数据类型 的操作方法与 Redis 原生命令的对应关系如下：</p>
+<p>SpringBoot 的 <code>RedisTemplate&lt;K,V&gt;.opsForList()</code> 中 List 数据类型 的操作方法与 Redis 原生命令的对应关系如下：</p>
 </li>
 </ul>
+<h3 id="区间访问与整体控制">区间访问与整体控制</h3>
 <table>
 <thead>
 <tr>
 <th>方法功能</th>
-<th>方法 <code>redisTemplate.opsForList().xxx()</code></th>
+<th>方法</th>
 <th>Redis 原始命令</th>
-<th>命令备注 / 推荐替代</th>
+<th>备注</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>获取指定区间元素</td>
-<td><code>List&lt;V&gt; range(K key, long start, long end)</code></td>
+<td><code>range(K key, long start, long end)</code></td>
 <td><code>LRANGE key start end</code></td>
-<td>end = -1 表示到末尾</td>
+<td><code>end = -1</code> 表示到末尾</td>
 </tr>
 <tr>
 <td>裁剪 list，仅保留指定区间</td>
-<td><code>void trim(K key, long start, long end)</code></td>
+<td><code>trim(K key, long start, long end)</code></td>
 <td><code>LTRIM key start end</code></td>
-<td>原地修改</td>
+<td><strong>原地修改</strong></td>
 </tr>
 <tr>
 <td>获取 list 长度</td>
-<td><code>Long size(K key)</code></td>
+<td><code>size(K key)</code></td>
 <td><code>LLEN key</code></td>
 <td>—</td>
 </tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>📌 使用建议</p>
+<ul class="lvl-2">
+<li class="lvl-6"><code>LRANGE 0 -1</code> 等价全量读取，小 list 可用</li>
+<li class="lvl-6">大 list 建议分页 + LRANGE</li>
+</ul>
+</li>
+</ul>
+<h3 id="左侧入队（Head）">左侧入队（Head）</h3>
+<table>
+<thead>
+<tr>
+<th>方法功能</th>
+<th>方法</th>
+<th>Redis 原始命令</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>左侧插入一个元素</td>
-<td><code>Long leftPush(K key, V value)</code></td>
+<td><code>leftPush(K key, V value)</code></td>
 <td><code>LPUSH key value</code></td>
 <td>返回插入后长度</td>
 </tr>
 <tr>
 <td>左侧批量插入</td>
-<td><code>Long leftPushAll(K key, V... values)</code></td>
+<td><code>leftPushAll(K key, V... values)</code></td>
 <td><code>LPUSH key value [value ...]</code></td>
 <td>依次从左插入</td>
 </tr>
 <tr>
 <td>左侧批量插入</td>
-<td><code>Long leftPushAll(K key, Collection&lt;V&gt; values)</code></td>
+<td><code>leftPushAll(K key, Collection&lt;V&gt; values)</code></td>
 <td><code>LPUSH key value [value ...]</code></td>
 <td>—</td>
 </tr>
 <tr>
 <td>key 存在时左侧插入</td>
-<td><code>Long leftPushIfPresent(K key, V value)</code></td>
+<td><code>leftPushIfPresent(K key, V value)</code></td>
 <td><code>LPUSHX key value</code></td>
 <td>key 不存在不执行</td>
 </tr>
 <tr>
 <td>在 pivot 左侧插入</td>
-<td><code>Long leftPush(K key, V pivot, V value)</code></td>
+<td><code>leftPush(K key, V pivot, V value)</code></td>
 <td><code>LINSERT key BEFORE pivot value</code></td>
-<td>pivot：List 中某一个已存在的元素值 <br>pivot 不存在返回 -1</td>
+<td>pivot 不存在返回 <code>-1</code></td>
 </tr>
+</tbody>
+</table>
+<h3 id="右侧入队（Tail）">右侧入队（Tail）</h3>
+<table>
+<thead>
+<tr>
+<th>方法功能</th>
+<th>方法</th>
+<th>Redis 原始命令</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>右侧插入一个元素</td>
-<td><code>Long rightPush(K key, V value)</code></td>
+<td><code>rightPush(K key, V value)</code></td>
 <td><code>RPUSH key value</code></td>
 <td>—</td>
 </tr>
 <tr>
 <td>右侧批量插入</td>
-<td><code>Long rightPushAll(K key, V... values)</code></td>
+<td><code>rightPushAll(K key, V... values)</code></td>
 <td><code>RPUSH key value [value ...]</code></td>
 <td>—</td>
 </tr>
 <tr>
 <td>右侧批量插入</td>
-<td><code>Long rightPushAll(K key, Collection&lt;V&gt; values)</code></td>
+<td><code>rightPushAll(K key, Collection&lt;V&gt; values)</code></td>
 <td><code>RPUSH key value [value ...]</code></td>
 <td>—</td>
 </tr>
 <tr>
 <td>key 存在时右侧插入</td>
-<td><code>Long rightPushIfPresent(K key, V value)</code></td>
+<td><code>rightPushIfPresent(K key, V value)</code></td>
 <td><code>RPUSHX key value</code></td>
 <td>—</td>
 </tr>
 <tr>
 <td>在 pivot 右侧插入</td>
-<td><code>Long rightPush(K key, V pivot, V value)</code></td>
+<td><code>rightPush(K key, V pivot, V value)</code></td>
 <td><code>LINSERT key AFTER pivot value</code></td>
-<td>pivot 不存在返回 -1</td>
+<td>pivot 不存在返回 <code>-1</code></td>
 </tr>
+</tbody>
+</table>
+<h3 id="非阻塞弹出">非阻塞弹出</h3>
+<table>
+<thead>
 <tr>
-<td>原子移动元素（非阻塞）</td>
-<td><code>V move(sourceKey, from, destinationKey, to)</code></td>
-<td><code>LMOVE sourceKey destKey LEFT|RIGHT LEFT|RIGHT</code></td>
-<td>Redis ≥ 6.2<br>LMOVE 本质等价于以下两个操作的原子组合:<br>1. 从 source 的一端 POP 一个元素<br>2. 将该元素 PUSH 到 destination 的一端<br>参数说明：  <br> sourceKey:源 List（从这里取一个元素）<br>destinationKey:目标 List（往这里放一个元素）<br>第一个 LEFT/RIGHT:从 sourceKey 的哪一端弹出元素<br>第二个 LEFT/RIGHT:从 destinationKey 的哪一端插入元素</td>
+<th>方法功能</th>
+<th>方法</th>
+<th>Redis 原始命令</th>
+<th>备注</th>
 </tr>
-<tr>
-<td>原子移动元素（阻塞）</td>
-<td><code>V move(sourceKey, from, destinationKey, to, timeout)</code></td>
-<td><code>BLMOVE sourceKey destKey LEFT|RIGHT LEFT|RIGHT timeout</code></td>
-<td>Redis ≥ 6.2<br>timeout: 当 sourceKey 为空（或不存在）时，客户端最多阻塞等待 timeout 秒，直到有元素可被移动，或等待超时。<br>timeout = 0：无限期阻塞，直到有数据可用或连接断开</td>
-</tr>
-<tr>
-<td>设置指定索引的值</td>
-<td><code>void set(K key, long index, V value)</code></td>
-<td><code>LSET key index value</code></td>
-<td>index 越界报错</td>
-</tr>
-<tr>
-<td>删除指定值</td>
-<td><code>Long remove(K key, long count, Object value)</code></td>
-<td><code>LREM key count value</code></td>
-<td>count &gt;0 从左，&lt;0 从右</td>
-</tr>
-<tr>
-<td>获取第一个元素</td>
-<td><code>V getFirst(K key)</code></td>
-<td><code>LINDEX key 0</code></td>
-<td>O(N)</td>
-</tr>
-<tr>
-<td>获取最后一个元素</td>
-<td><code>V getLast(K key)</code></td>
-<td><code>LINDEX key -1</code></td>
-<td>O(N)</td>
-</tr>
-<tr>
-<td>获取指定索引元素</td>
-<td><code>V index(K key, long index)</code></td>
-<td><code>LINDEX key index</code></td>
-<td>O(N)</td>
-</tr>
-<tr>
-<td>获取首次出现位置</td>
-<td><code>Long indexOf(K key, V value)</code></td>
-<td><code>LPOS key value</code></td>
-<td>Redis ≥ 6.0</td>
-</tr>
-<tr>
-<td>获取最后出现位置</td>
-<td><code>Long lastIndexOf(K key, V value)</code></td>
-<td><code>LPOS key value RANK -1</code></td>
-<td>Redis ≥ 6.0</td>
-</tr>
+</thead>
+<tbody>
 <tr>
 <td>左侧弹出</td>
-<td><code>V leftPop(K key)</code></td>
+<td><code>leftPop(K key)</code></td>
 <td><code>LPOP key</code></td>
 <td>—</td>
 </tr>
 <tr>
 <td>左侧批量弹出</td>
-<td><code>List&lt;V&gt; leftPop(K key, long count)</code></td>
+<td><code>leftPop(K key, long count)</code></td>
 <td><code>LPOP key count</code></td>
 <td>Redis ≥ 6.2</td>
 </tr>
 <tr>
-<td>左侧阻塞弹出</td>
-<td><code>V leftPop(K key, timeout)</code></td>
-<td><code>BLPOP key timeout</code></td>
-<td>阻塞操作</td>
-</tr>
-<tr>
 <td>右侧弹出</td>
-<td><code>V rightPop(K key)</code></td>
+<td><code>rightPop(K key)</code></td>
 <td><code>RPOP key</code></td>
 <td>—</td>
 </tr>
 <tr>
 <td>右侧批量弹出</td>
-<td><code>List&lt;V&gt; rightPop(K key, long count)</code></td>
+<td><code>rightPop(K key, long count)</code></td>
 <td><code>RPOP key count</code></td>
 <td>Redis ≥ 6.2</td>
 </tr>
+</tbody>
+</table>
+<h3 id="阻塞弹出（Blocking-Queue）">阻塞弹出（Blocking Queue）</h3>
+<table>
+<thead>
+<tr>
+<th>方法功能</th>
+<th>方法</th>
+<th>Redis 原始命令</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>左侧阻塞弹出</td>
+<td><code>leftPop(K key, timeout)</code></td>
+<td><code>BLPOP key timeout</code></td>
+<td>队列为空时阻塞</td>
+</tr>
 <tr>
 <td>右侧阻塞弹出</td>
-<td><code>V rightPop(K key, timeout)</code></td>
+<td><code>rightPop(K key, timeout)</code></td>
 <td><code>BRPOP key timeout</code></td>
-<td>阻塞操作</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>📌 典型场景：</p>
+<ul class="lvl-2">
+<li class="lvl-6">消息队列 / 任务队列</li>
+<li class="lvl-6">简单生产者-消费者模型</li>
+</ul>
+</li>
+</ul>
+<h3 id="原子移动">原子移动</h3>
+<blockquote>
+<p>Redis 6.2+ 新模型（统一、可读性更强）</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>方法功能</th>
+<th>方法</th>
+<th>Redis 原始命令</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原子移动（非阻塞）</td>
+<td><code>move(sourceKey, from, destinationKey, to)</code></td>
+<td><code>LMOVE source dest LEFT|RIGHT LEFT|RIGHT</code></td>
+<td>Redis ≥ 6.2</td>
 </tr>
 <tr>
-<td>右侧弹出并左侧插入</td>
-<td><code>V rightPopAndLeftPush(sourceKey, destinationKey)</code></td>
-<td><code>RPOPLPUSH source dest</code> <strong>已废弃</strong></td>
-<td><strong>推荐</strong> <code>LMOVE sourceKey destKey LEFT|RIGHT LEFT|RIGHT</code></td>
+<td>原子移动（阻塞）</td>
+<td><code>move(sourceKey, from, destinationKey, to, timeout)</code></td>
+<td><code>BLMOVE source dest LEFT|RIGHT LEFT|RIGHT timeout</code></td>
+<td>Redis ≥ 6.2</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>语义说明</p>
+<ul class="lvl-2">
+<li class="lvl-6">从 sourceKey 的一端 POP</li>
+<li class="lvl-6">向 destinationKey 的一端 PUSH</li>
+<li class="lvl-6">整个过程 原子性保证</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>命令参数说明：</p>
+<ul class="lvl-2">
+<li class="lvl-6">source:源 List（从这里取一个元素）</li>
+<li class="lvl-6">dest:目标 List（往这里放一个元素）</li>
+<li class="lvl-6">第一个 LEFT/RIGHT:从 source 的哪一端弹出元素</li>
+<li class="lvl-6">第二个 LEFT/RIGHT:从 dest 的哪一端插入元素</li>
+<li class="lvl-6">timeout: 阻塞时间
+<ul class="lvl-4">
+<li class="lvl-10">当 source 为空（或不存在）时，客户端最多阻塞等待 timeout 秒，直到有元素可被移动，或等待超时。</li>
+<li class="lvl-10">timeout = 0：无限期阻塞，直到有数据可用或连接断开</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>旧命令（即将废弃）</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>方法功能</th>
+<th>方法</th>
+<th>Redis 原始命令</th>
+<th>推荐替代</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>右弹左插</td>
+<td><code>rightPopAndLeftPush(...)</code></td>
+<td><code>RPOPLPUSH</code></td>
+<td><code>LMOVE</code></td>
 </tr>
 <tr>
-<td>阻塞式右弹左插</td>
-<td><code>V rightPopAndLeftPush(sourceKey, destinationKey, timeout)</code></td>
-<td><code>BRPOPLPUSH source dest timeout</code><strong>已废弃</strong></td>
-<td><strong>推荐</strong> <code>BLMOVE sourceKey destKey LEFT|RIGHT LEFT|RIGHT timeout</code></td>
+<td>阻塞右弹左插</td>
+<td><code>rightPopAndLeftPush(..., timeout)</code></td>
+<td><code>BRPOPLPUSH</code></td>
+<td><code>BLMOVE</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="随机访问与定位（O-N-）">随机访问与定位（O(N)）</h3>
+<table>
+<thead>
+<tr>
+<th>方法功能</th>
+<th>方法</th>
+<th>Redis 原始命令</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>获取第一个元素</td>
+<td><code>getFirst(K key)</code></td>
+<td><code>LINDEX key 0</code></td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>获取最后一个元素</td>
+<td><code>getLast(K key)</code></td>
+<td><code>LINDEX key -1</code></td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>获取指定索引元素</td>
+<td><code>index(K key, long index)</code></td>
+<td><code>LINDEX key index</code></td>
+<td>O(N)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ 注意: List 不是数组，随机访问是线性扫描，不适合频繁随机读取</p>
+</blockquote>
+<h3 id="搜索与删除">搜索与删除</h3>
+<table>
+<thead>
+<tr>
+<th>方法功能</th>
+<th>方法</th>
+<th>Redis 原始命令</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>删除指定值</td>
+<td><code>remove(K key, long count, Object value)</code></td>
+<td><code>LREM key count value</code></td>
+<td>count &gt;0 从左，&lt;0 从右</td>
+</tr>
+<tr>
+<td>获取首次出现位置</td>
+<td><code>indexOf(K key, V value)</code></td>
+<td><code>LPOS key value</code></td>
+<td>Redis ≥ 6.0</td>
+</tr>
+<tr>
+<td>获取最后出现位置</td>
+<td><code>lastIndexOf(K key, V value)</code></td>
+<td><code>LPOS key value RANK -1</code></td>
+<td>Redis ≥ 6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="List-的典型使用模式总结">List 的典型使用模式总结</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>队列（FIFO）</td>
+<td><code>RPUSH + LPOP</code></td>
+</tr>
+<tr>
+<td>栈（LIFO）</td>
+<td><code>LPUSH + LPOP</code></td>
+</tr>
+<tr>
+<td>阻塞队列</td>
+<td><code>BLPOP / BRPOP</code></td>
+</tr>
+<tr>
+<td>可靠队列</td>
+<td><code>LMOVE / BLMOVE</code></td>
+</tr>
+<tr>
+<td>消息转移</td>
+<td><code>LMOVE source dest</code></td>
 </tr>
 </tbody>
 </table>
@@ -1495,14 +1698,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">707k</span>
+    <span title="站点总字数">710k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">42:52</span>
+    <span title="站点阅读时长">43:03</span>
   </span>
 </div>
 <div class="busuanzi-count">
