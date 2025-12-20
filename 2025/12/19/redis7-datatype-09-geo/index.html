@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  本文介绍 Redis Geo 数据类型 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-19T13:40:05.000Z">
-<meta property="article:modified_time" content="2025-12-19T08:48:54.061Z">
+<meta property="article:modified_time" content="2025-12-20T05:57:13.739Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geo-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">Geo 数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geohash-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">Geohash 是什么?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Geohash-%E8%AE%A1%E7%AE%97%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">Geohash 计算过程示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geo-%E6%A0%B8%E5%BF%83%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C%EF%BC%88%E5%BF%85%E7%94%A8%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">Geo 核心基础操作（必用）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-GEOADD%EF%BC%9A%E6%B7%BB%E5%8A%A0%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%9D%90%E6%A0%87%EF%BC%88%E6%A0%B8%E5%BF%83%E5%86%99%E5%85%A5%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">1. GEOADD：添加地理位置坐标（核心写入操作）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-GEOPOS%EF%BC%9A%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E6%88%90%E5%91%98%E7%9A%84%E7%BB%8F%E7%BA%AC%E5%BA%A6%EF%BC%88%E7%B2%BE%E5%87%86%E6%9F%A5%E8%AF%A2%E5%9D%90%E6%A0%87%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">2. GEOPOS：获取指定成员的经纬度（精准查询坐标）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-GEODIST%EF%BC%9A%E8%AE%A1%E7%AE%97%E4%B8%A4%E4%B8%AA%E6%88%90%E5%91%98%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%9D%E7%A6%BB%EF%BC%88%E6%A0%B8%E5%BF%83%E8%AE%A1%E7%AE%97%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">3. GEODIST：计算两个成员之间的距离（核心计算操作）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-GEOHASH%EF%BC%9A%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E6%88%90%E5%91%98%E7%9A%84geohash%E7%BC%96%E7%A0%81%EF%BC%88%E5%BA%95%E5%B1%82%E7%BC%96%E7%A0%81%E6%9F%A5%E8%AF%A2%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">4. GEOHASH：获取指定成员的geohash编码（底层编码查询）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-GEORADIUS%EF%BC%9A%E6%8C%89%E6%8C%87%E5%AE%9A%E7%BB%8F%E7%BA%AC%E5%BA%A6%E4%B8%BA%E4%B8%AD%E5%BF%83%EF%BC%8C%E7%AD%9B%E9%80%89%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E7%9A%84%E6%88%90%E5%91%98%EF%BC%88%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A21%EF%BC%8C%E6%8C%89%E4%B8%AD%E5%BF%83%E7%82%B9%E5%9D%90%E6%A0%87%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">5. GEORADIUS：按指定经纬度为中心，筛选指定范围的成员（范围查询1，按中心点坐标）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-GEORADIUSBYMEMBER%EF%BC%9A%E6%8C%89%E5%B7%B2%E6%9C%89%E6%88%90%E5%91%98%E4%B8%BA%E4%B8%AD%E5%BF%83%EF%BC%8C%E7%AD%9B%E9%80%89%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E7%9A%84%E6%88%90%E5%91%98%EF%BC%88%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A22%EF%BC%8C%E6%8C%89%E5%B7%B2%E6%9C%89%E8%8A%82%E7%82%B9%EF%BC%8C%E6%9B%B4%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="nav-number">4.6.</span> <span class="nav-text">6. GEORADIUSBYMEMBER：按已有成员为中心，筛选指定范围的成员（范围查询2，按已有节点，更常用）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geo-%E6%89%A9%E5%B1%95%E6%93%8D%E4%BD%9C%EF%BC%88%E5%AE%9E%E6%88%98%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">Geo 扩展操作（实战常用）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-GEOSEARCH%EF%BC%88Redis-6-2-%E6%96%B0%E5%A2%9E%EF%BC%8C%E6%9B%BF%E4%BB%A3-GEORADIUS-GEORADIUSBYMEMBER%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">1. GEOSEARCH（Redis 6.2+ 新增，替代 GEORADIUS&#x2F;GEORADIUSBYMEMBER）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-GEOSEARCHSTORE%EF%BC%88Redis-6-2-%E6%96%B0%E5%A2%9E%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">2. GEOSEARCHSTORE（Redis 6.2+ 新增）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E6%A0%B8%E5%BF%83%E4%B8%8E%E5%AE%9E%E6%88%98%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">6.</span> <span class="nav-text">底层核心与实战注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E5%AE%9E%E6%88%98%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.</span> <span class="nav-text">典型实战场景示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geo-%E5%91%BD%E4%BB%A4"><span class="nav-number">8.</span> <span class="nav-text">Geo 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%85%A5-%E5%88%A0%E9%99%A4%E7%B1%BB%E6%93%8D%E4%BD%9C"><span class="nav-number">8.1.</span> <span class="nav-text">写入 &#x2F; 删除类操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9D%E7%A6%BB-%E5%9D%90%E6%A0%87-%E5%93%88%E5%B8%8C%E6%9F%A5%E8%AF%A2"><span class="nav-number">8.2.</span> <span class="nav-text">距离 &#x2F; 坐标 &#x2F; 哈希查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8A%E5%BE%84%E6%9F%A5%E8%AF%A2%EF%BC%88%E6%97%A7%E6%8E%A5%E5%8F%A3%EF%BC%8C%E5%B7%B2%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">8.3.</span> <span class="nav-text">半径查询（旧接口，已不推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E6%9F%A5%E8%AF%A2%EF%BC%88%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8-GEOSEARCH%EF%BC%89"><span class="nav-number">8.4.</span> <span class="nav-text">搜索查询（推荐使用 GEOSEARCH）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%B9%B6%E5%AD%98%E5%82%A8%EF%BC%88GEOSEARCHSTORE%EF%BC%89"><span class="nav-number">8.5.</span> <span class="nav-text">搜索并存储（GEOSEARCHSTORE）</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geo-%E6%A0%B8%E5%BF%83%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">Geo 核心详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geohash-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">Geohash 是什么?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Geohash-%E8%AE%A1%E7%AE%97%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">Geohash 计算过程示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geo-%E6%A0%B8%E5%BF%83%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C%EF%BC%88%E5%BF%85%E7%94%A8%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">Geo 核心基础操作（必用）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-GEOADD%EF%BC%9A%E6%B7%BB%E5%8A%A0%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%9D%90%E6%A0%87%EF%BC%88%E6%A0%B8%E5%BF%83%E5%86%99%E5%85%A5%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">1. GEOADD：添加地理位置坐标（核心写入操作）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-GEOPOS%EF%BC%9A%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E6%88%90%E5%91%98%E7%9A%84%E7%BB%8F%E7%BA%AC%E5%BA%A6%EF%BC%88%E7%B2%BE%E5%87%86%E6%9F%A5%E8%AF%A2%E5%9D%90%E6%A0%87%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">2. GEOPOS：获取指定成员的经纬度（精准查询坐标）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-GEODIST%EF%BC%9A%E8%AE%A1%E7%AE%97%E4%B8%A4%E4%B8%AA%E6%88%90%E5%91%98%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%9D%E7%A6%BB%EF%BC%88%E6%A0%B8%E5%BF%83%E8%AE%A1%E7%AE%97%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">3. GEODIST：计算两个成员之间的距离（核心计算操作）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-GEOHASH%EF%BC%9A%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E6%88%90%E5%91%98%E7%9A%84geohash%E7%BC%96%E7%A0%81%EF%BC%88%E5%BA%95%E5%B1%82%E7%BC%96%E7%A0%81%E6%9F%A5%E8%AF%A2%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">4. GEOHASH：获取指定成员的geohash编码（底层编码查询）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-GEORADIUS%EF%BC%9A%E6%8C%89%E6%8C%87%E5%AE%9A%E7%BB%8F%E7%BA%AC%E5%BA%A6%E4%B8%BA%E4%B8%AD%E5%BF%83%EF%BC%8C%E7%AD%9B%E9%80%89%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E7%9A%84%E6%88%90%E5%91%98%EF%BC%88%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A21%EF%BC%8C%E6%8C%89%E4%B8%AD%E5%BF%83%E7%82%B9%E5%9D%90%E6%A0%87%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">5. GEORADIUS：按指定经纬度为中心，筛选指定范围的成员（范围查询1，按中心点坐标）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-GEORADIUSBYMEMBER%EF%BC%9A%E6%8C%89%E5%B7%B2%E6%9C%89%E6%88%90%E5%91%98%E4%B8%BA%E4%B8%AD%E5%BF%83%EF%BC%8C%E7%AD%9B%E9%80%89%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E7%9A%84%E6%88%90%E5%91%98%EF%BC%88%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A22%EF%BC%8C%E6%8C%89%E5%B7%B2%E6%9C%89%E8%8A%82%E7%82%B9%EF%BC%8C%E6%9B%B4%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="nav-number">4.6.</span> <span class="nav-text">6. GEORADIUSBYMEMBER：按已有成员为中心，筛选指定范围的成员（范围查询2，按已有节点，更常用）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geo-%E6%89%A9%E5%B1%95%E6%93%8D%E4%BD%9C%EF%BC%88%E5%AE%9E%E6%88%98%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">Geo 扩展操作（实战常用）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-GEOSEARCH%EF%BC%88Redis-6-2-%E6%96%B0%E5%A2%9E%EF%BC%8C%E6%9B%BF%E4%BB%A3-GEORADIUS-GEORADIUSBYMEMBER%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">1. GEOSEARCH（Redis 6.2+ 新增，替代 GEORADIUS&#x2F;GEORADIUSBYMEMBER）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-GEOSEARCHSTORE%EF%BC%88Redis-6-2-%E6%96%B0%E5%A2%9E%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">2. GEOSEARCHSTORE（Redis 6.2+ 新增）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E6%A0%B8%E5%BF%83%E4%B8%8E%E5%AE%9E%E6%88%98%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">6.</span> <span class="nav-text">底层核心与实战注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E5%AE%9E%E6%88%98%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.</span> <span class="nav-text">典型实战场景示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Geo-%E5%91%BD%E4%BB%A4"><span class="nav-number">8.</span> <span class="nav-text">Geo 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%85%A5-%E5%88%A0%E9%99%A4%E7%B1%BB%E6%93%8D%E4%BD%9C"><span class="nav-number">8.1.</span> <span class="nav-text">写入 &#x2F; 删除类操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9D%E7%A6%BB-%E5%9D%90%E6%A0%87-%E5%93%88%E5%B8%8C%E6%9F%A5%E8%AF%A2"><span class="nav-number">8.2.</span> <span class="nav-text">距离 &#x2F; 坐标 &#x2F; 哈希查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8A%E5%BE%84%E6%9F%A5%E8%AF%A2%EF%BC%88%E6%97%A7%E6%8E%A5%E5%8F%A3%EF%BC%8C%E5%B7%B2%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">8.3.</span> <span class="nav-text">半径查询（旧接口，已不推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E6%9F%A5%E8%AF%A2%EF%BC%88%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8-GEOSEARCH%EF%BC%89"><span class="nav-number">8.4.</span> <span class="nav-text">搜索查询（推荐使用 GEOSEARCH）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%B9%B6%E5%AD%98%E5%82%A8%EF%BC%88GEOSEARCHSTORE%EF%BC%89"><span class="nav-number">8.5.</span> <span class="nav-text">搜索并存储（GEOSEARCHSTORE）</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -903,7 +903,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">257</span>
+          <span class="site-state-item-count">258</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1063,9 +1063,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-12-19 21:40:05 / 修改时间：16:48:54" itemprop="dateCreated datePublished" datetime="2025-12-19T21:40:05+08:00">2025-12-19</time>
+      <time title="创建时间：2025-12-19 21:40:05" itemprop="dateCreated datePublished" datetime="2025-12-19T21:40:05+08:00">2025-12-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-12-20 13:57:13" itemprop="dateModified" datetime="2025-12-20T13:57:13+08:00">2025-12-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1137,7 +1143,7 @@ i.ban {
 <li class="lvl-2">Redis 命令文档：<a target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/">https://redis.io/docs/latest/commands/</a></li>
 </ul>
 <span id="more"></span>
-<h2 id="Geo-数据类型">Geo 数据类型</h2>
+<h2 id="Geo-核心详解">Geo 核心详解</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>Redis Geo 是基于有序集合（<code>zset</code>） 实现的地理空间操作功能，底层用<code>geohash编码</code>存储<code>经纬度</code>，核心支持 6 个基础操作 + 2 个扩展操作，兼顾<code>精准存储</code>、<code>距离计算</code>、<code>范围筛选</code>等核心需求，直接对接实际场景（如附近门店、同城好友）。</p>
@@ -1932,6 +1938,9 @@ i.ban {
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2025/12/20/redis7-datatype-10-stream/" rel="next" title="Redis 命令及数据类型 -- Stream">
+                  Redis 命令及数据类型 -- Stream <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -1966,14 +1975,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">719k</span>
+    <span title="站点总字数">725k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">43:36</span>
+    <span title="站点阅读时长">43:57</span>
   </span>
 </div>
 <div class="busuanzi-count">
