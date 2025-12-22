@@ -22,24 +22,24 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要  本文介绍 Redis 扩展模块 – RedisBloom 的使用方法 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F; 本文仅为学习原理，生产环境推荐使用 Redisson的布隆过滤器 吧。">
+    <meta name="description" content="摘要  本文介绍 Redis 扩展模块 – RedisBloom 的使用方法 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis 扩展模块 -- RedisBloom">
-<meta property="og:url" content="https://blog.hanqunfeng.com/2025/12/21/redis7-BloomFilter/index.html">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2025/12/21/redis7-module-RedisBloom/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  本文介绍 Redis 扩展模块 – RedisBloom 的使用方法 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F; 本文仅为学习原理，生产环境推荐使用 Redisson的布隆过滤器 吧。">
+<meta property="og:description" content="摘要  本文介绍 Redis 扩展模块 – RedisBloom 的使用方法 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-21T13:30:05.000Z">
-<meta property="article:modified_time" content="2025-12-21T09:34:40.943Z">
+<meta property="article:modified_time" content="2025-12-22T09:50:14.693Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://blog.hanqunfeng.com/2025/12/21/redis7-BloomFilter/">
+<link rel="canonical" href="https://blog.hanqunfeng.com/2025/12/21/redis7-module-RedisBloom/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/12/21/redis7-BloomFilter/","path":"2025/12/21/redis7-BloomFilter/","title":"Redis 扩展模块 -- RedisBloom"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2025/12/21/redis7-module-RedisBloom/","path":"2025/12/21/redis7-module-RedisBloom/","title":"Redis 扩展模块 -- RedisBloom"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Redis 扩展模块 -- RedisBloom | 飘逸峰的博客</title>
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RedisBloom-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">RedisBloom 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RedisBloom-%E6%8F%90%E4%BE%9B%E7%9A%84%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">RedisBloom 提供的核心数据结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-RedisBloom"><span class="nav-number">3.</span> <span class="nav-text">安装 RedisBloom</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-%E5%90%AF%E7%94%A8%E6%A8%A1%E5%9D%97"><span class="nav-number">4.</span> <span class="nav-text">Redis 启用模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95BF%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">测试BF命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-%E9%9B%86%E6%88%90"><span class="nav-number">6.</span> <span class="nav-text">SpringBoot 集成</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RedisBloom-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">RedisBloom 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RedisBloom-%E6%8F%90%E4%BE%9B%E7%9A%84%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">RedisBloom 提供的核心数据结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-RedisBloom"><span class="nav-number">3.</span> <span class="nav-text">安装 RedisBloom</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-%E5%90%AF%E7%94%A8%E6%A8%A1%E5%9D%97"><span class="nav-number">4.</span> <span class="nav-text">Redis 启用模块</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -903,7 +903,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">259</span>
+          <span class="site-state-item-count">261</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -981,6 +981,20 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/22/redis7-datatype-12-CF/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-22</time>
+        <br>
+      Redis 命令及数据类型 -- CF(Cuckoo Filter)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/22/redis7-datatype-11-BF/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-22</time>
+        <br>
+      Redis 命令及数据类型 -- BF(Bloom Filter)
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/17/redis7-ReentrantLock/" rel="bookmark">
         <time class="popular-posts-time">2025-12-17</time>
         <br>
@@ -999,20 +1013,6 @@ i.ban {
         <time class="popular-posts-time">2025-12-16</time>
         <br>
       Redis 命令及数据类型 -- Set
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/16/redis7-datatype-04-list/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-16</time>
-        <br>
-      Redis 命令及数据类型 -- List
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/05/redis7-config/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-05</time>
-        <br>
-      Redis 7 + ACL 单节点、主从、哨兵、集群构建方法
       </a>
     </li>
   </ul>
@@ -1035,7 +1035,7 @@ i.ban {
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/12/21/redis7-BloomFilter/">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2025/12/21/redis7-module-RedisBloom/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/me.png">
@@ -1063,9 +1063,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-12-21 21:30:05 / 修改时间：17:34:40" itemprop="dateCreated datePublished" datetime="2025-12-21T21:30:05+08:00">2025-12-21</time>
+      <time title="创建时间：2025-12-21 21:30:05" itemprop="dateCreated datePublished" datetime="2025-12-21T21:30:05+08:00">2025-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-12-22 17:50:14" itemprop="dateModified" datetime="2025-12-22T17:50:14+08:00">2025-12-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1101,7 +1107,7 @@ i.ban {
 </div>
 
 
-    <span id="/2025/12/21/redis7-BloomFilter/" class="leancloud_visitors" data-flag-title="Redis 扩展模块 -- RedisBloom" title="阅读次数">
+    <span id="/2025/12/21/redis7-module-RedisBloom/" class="leancloud_visitors" data-flag-title="Redis 扩展模块 -- RedisBloom" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -1113,14 +1119,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.2k</span>
+      <span>1.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>8 分钟</span>
+      <span>6 分钟</span>
     </span>
 
         </div>
@@ -1135,7 +1141,6 @@ i.ban {
 <li class="lvl-2">本文基于<code>redis-7.4.7</code>，<code>springboot-3.5.8</code></li>
 <li class="lvl-2">Redis官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a></li>
 <li class="lvl-2">Redis 命令文档：<a target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/">https://redis.io/docs/latest/commands/</a></li>
-<li class="lvl-2">本文仅为学习原理，生产环境推荐使用 <a target="_blank" rel="noopener" href="https://redisson.pro/docs/data-and-services/objects/#bloom-filter">Redisson的布隆过滤器</a> 吧。</li>
 </ul>
 <span id="more"></span>
 <h2 id="RedisBloom-简介">RedisBloom 简介</h2>
@@ -1160,14 +1165,18 @@ i.ban {
 <ul class="lvl-2">
 <li class="lvl-6">判断某个元素“可能存在 / 一定不存在”，但不存储元素本身，也不支持删除</li>
 <li class="lvl-6"><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bloom_filter">维基百科对 Bloom Filter 的描述</a></li>
-<li class="lvl-6">对应Redis命令： <code>BF.xxx</code></li>
+<li class="lvl-6">生产环境推荐使用 <a target="_blank" rel="noopener" href="https://redisson.pro/docs/data-and-services/objects/#bloom-filter">Redisson的布隆过滤器</a></li>
+<li class="lvl-6">对应Redis命令： <code>BF.xxx</code>，详细的使用方法参见 <a href="/2025/12/22/redis7-datatype-11-BF/" title="Redis 命令及数据类型 -- BF(Bloom Filter)">Redis 命令及数据类型 -- BF(Bloom Filter)</a></li>
 </ul>
 </li>
 <li class="lvl-2">
 <p>2️⃣ Cuckoo Filter（布谷鸟过滤器）</p>
 <ul class="lvl-2">
 <li class="lvl-6">Bloom Filter 的增强版，支持 删除元素</li>
-<li class="lvl-6">对应Redis命令： <code>CF.xxx</code></li>
+<li class="lvl-6"><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cuckoo_filter">维基百科对 Cuckoo Filter 的描述</a></li>
+<li class="lvl-6">在高 QPS 查询场景下，Cuckoo Filter 通常优于 Bloom Filter。</li>
+<li class="lvl-6">低误判率 + 高负载率场景，Cuckoo Filter 更省内存。</li>
+<li class="lvl-6">对应Redis命令： <code>CF.xxx</code>，详细的使用方法参见 <a href="/2025/12/22/redis7-datatype-12-CF/" title="Redis 命令及数据类型 -- CF(Cuckoo Filter)">Redis 命令及数据类型 -- CF(Cuckoo Filter)</a></li>
 </ul>
 </li>
 <li class="lvl-2">
@@ -1239,15 +1248,6 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 redisbloom.so 添加到 redis.conf 中，需要重启 redis</span></span><br><span class="line">loadmodule /usr/local/soft/redis-7.4.7/modules/redisbloom.so</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动redis</span></span><br><span class="line">redis-server redis.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 登录测试</span></span><br><span class="line">redis-cli --user admin --pass 123456</span><br><span class="line"><span class="comment"># 查看模块</span></span><br><span class="line">127.0.0.1:6379&gt; info Modules</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line"><span class="comment"># Modules</span></span><br><span class="line">module:name=bf,ver=20817,api=1,filters=0,usedby=[],using=[],options=[handle-io-errors]</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; MODULE LIST</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">1) 1) <span class="string">&quot;name&quot;</span></span><br><span class="line">   2) <span class="string">&quot;bf&quot;</span></span><br><span class="line">   3) <span class="string">&quot;ver&quot;</span></span><br><span class="line">   4) (<span class="built_in">integer</span>) 20817</span><br><span class="line">   5) <span class="string">&quot;path&quot;</span></span><br><span class="line">   6) <span class="string">&quot;/usr/local/soft/redis-7.4.7/modules/redisbloom.so&quot;</span></span><br><span class="line">   7) <span class="string">&quot;args&quot;</span></span><br><span class="line">   8) (empty array)</span><br></pre></td></tr></table></figure>
-<h2 id="测试BF命令">测试BF命令</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化一个BloomFilter，错误率0.01，元素数量1000</span></span><br><span class="line">127.0.0.1:6379&gt; BF.RESERVE <span class="built_in">test</span> 0.01 1000</span><br><span class="line">OK</span><br><span class="line"><span class="comment"># 查看类型</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">type</span> <span class="built_in">test</span></span><br><span class="line">MBbloom--</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加元素</span></span><br><span class="line">127.0.0.1:6379&gt; BF.ADD <span class="built_in">test</span> user1</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; BF.ADD <span class="built_in">test</span> user2</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line"><span class="comment"># 批量添加元素</span></span><br><span class="line">127.0.0.1:6379&gt; BF.MADD <span class="built_in">test</span> user3 user4 user5</span><br><span class="line">1) (<span class="built_in">integer</span>) 1</span><br><span class="line">2) (<span class="built_in">integer</span>) 1</span><br><span class="line">3) (<span class="built_in">integer</span>) 1</span><br><span class="line"><span class="comment"># 返回Bloom过滤器的基数，即添加的元素数量(存在误差)</span></span><br><span class="line">127.0.0.1:6379&gt; BF.CARD <span class="built_in">test</span></span><br><span class="line">(<span class="built_in">integer</span>) 5</span><br><span class="line"><span class="comment"># 查询元素是否存在</span></span><br><span class="line">127.0.0.1:6379&gt; BF.EXISTS <span class="built_in">test</span> user2</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; BF.EXISTS <span class="built_in">test</span> user6</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br><span class="line"><span class="comment"># 批量查询元素是否存在</span></span><br><span class="line">127.0.0.1:6379&gt; BF.MEXISTS <span class="built_in">test</span> user1 user2 user6</span><br><span class="line">1) (<span class="built_in">integer</span>) 1</span><br><span class="line">2) (<span class="built_in">integer</span>) 1</span><br><span class="line">3) (<span class="built_in">integer</span>) 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取信息</span></span><br><span class="line">127.0.0.1:6379&gt; BF.INFO <span class="built_in">test</span></span><br><span class="line"> 1) Capacity       <span class="comment"># 初始化时的容量，超过该值后，会触发 扩容（新建一个子 Bloom Filter）</span></span><br><span class="line"> 2) (<span class="built_in">integer</span>) 1000</span><br><span class="line"> 3) Size           <span class="comment"># 当前 Bloom Filter 实际使用的 bit array 大小（字节)，由 capacity + error_rate 计算得出，值一旦创建 不会随元素减少</span></span><br><span class="line"> 4) (<span class="built_in">integer</span>) 1480</span><br><span class="line"> 5) Number of filters <span class="comment"># 当前 key 内部包含的 Bloom Filter 数量</span></span><br><span class="line"> 6) (<span class="built_in">integer</span>) 1</span><br><span class="line"> 7) Number of items inserted  <span class="comment"># 已调用 BF.ADD / BF.MADD 插入的元素总数</span></span><br><span class="line"> 8) (<span class="built_in">integer</span>) 5</span><br><span class="line"> 9) Expansion rate     <span class="comment"># Bloom Filter 扩容时，新建子过滤器的容量增长倍率</span></span><br><span class="line">10) (<span class="built_in">integer</span>) 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="SpringBoot-集成">SpringBoot 集成</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>SpringBoot 的 RedisTemplate 中没有提供对<code>RedisBloom</code>的封装，需要自己封装，我这里封装了一个简易的<code>RedisBloomService</code></p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.bloomfilter;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于Redis Bloom插件的BloomFilter实现</span></span><br><span class="line"><span class="comment"> * https://github.com/RedisBloom/RedisBloom/releases</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 不想安装插件也可以使用 Redission 的 BloomFilter</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.connection.ReturnType;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisCallback;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.StringRedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisBloomService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> StringRedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RedisBloomService</span><span class="params">(StringRedisTemplate redisTemplate)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.redisTemplate = redisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 初始化 BloomFilter，不能重复执行</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> filterName BloomFilter 名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> errorRate  错误率，比如为0.01，即 1%</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> capacity   容量，比如为1000</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * errorRate 说明</span></span><br><span class="line"><span class="comment">     *  1% error rate requires 7 hash functions and 9.585 bits per item.</span></span><br><span class="line"><span class="comment">     *  0.1% error rate requires 10 hash functions and 14.378 bits per item.</span></span><br><span class="line"><span class="comment">     *  0.01% error rate requires 14 hash functions and 19.170 bits per item.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">reserve</span><span class="params">(String filterName, <span class="type">double</span> errorRate, <span class="type">long</span> capacity)</span> &#123;</span><br><span class="line">        redisTemplate.execute((RedisCallback&lt;String&gt;) connection -&gt;</span><br><span class="line">                connection.scriptingCommands().eval(</span><br><span class="line">                        (<span class="string">&quot;return redis.call(&#x27;BF.RESERVE&#x27;, KEYS[1], &quot;</span> + errorRate + <span class="string">&quot;, &quot;</span> + capacity + <span class="string">&quot;)&quot;</span>).getBytes(),</span><br><span class="line">                        ReturnType.STATUS,</span><br><span class="line">                        <span class="number">1</span>,</span><br><span class="line">                        filterName.getBytes()</span><br><span class="line">                )</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加元素到 BloomFilter，BloomFilter 不存在会自动创建</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">add</span><span class="params">(String filterName, String value)</span> &#123;</span><br><span class="line">        <span class="comment">// 使用 RedisModule 提供的 BF.ADD 命令</span></span><br><span class="line">        <span class="keyword">return</span> Boolean.TRUE.equals(redisTemplate.execute((RedisCallback&lt;Boolean&gt;) connection -&gt;</span><br><span class="line">                connection.scriptingCommands().eval(</span><br><span class="line">                        (<span class="string">&quot;return redis.call(&#x27;BF.ADD&#x27;, KEYS[1], ARGV[1])&quot;</span>).getBytes(),</span><br><span class="line">                        ReturnType.BOOLEAN,</span><br><span class="line">                        <span class="number">1</span>,</span><br><span class="line">                        filterName.getBytes(),</span><br><span class="line">                        value.getBytes()</span><br><span class="line">                )</span><br><span class="line">        ));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 判断元素是否存在</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">exists</span><span class="params">(String filterName, String value)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Boolean.TRUE.equals(redisTemplate.execute((RedisCallback&lt;Boolean&gt;) connection -&gt;</span><br><span class="line">                connection.scriptingCommands().eval(</span><br><span class="line">                        (<span class="string">&quot;return redis.call(&#x27;BF.EXISTS&#x27;, KEYS[1], ARGV[1])&quot;</span>).getBytes(),</span><br><span class="line">                        ReturnType.BOOLEAN,</span><br><span class="line">                        <span class="number">1</span>,</span><br><span class="line">                        filterName.getBytes(),</span><br><span class="line">                        value.getBytes()</span><br><span class="line">                )</span><br><span class="line">        ));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 批量添加</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Boolean&gt; <span class="title function_">addBatch</span><span class="params">(String filterName, String... values)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (values == <span class="literal">null</span> || values.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Collections.emptyList();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 构建 keys + args 数组</span></span><br><span class="line">        <span class="type">byte</span>[][] keysAndArgs = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1</span> + values.length][];</span><br><span class="line">        keysAndArgs[<span class="number">0</span>] = filterName.getBytes();  <span class="comment">// KEYS[1]</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; values.length; i++) &#123;</span><br><span class="line">            keysAndArgs[i + <span class="number">1</span>] = values[i].getBytes(); <span class="comment">// ARGV[1..n]</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调用 BF.MADD 命令</span></span><br><span class="line">        <span class="keyword">return</span> redisTemplate.execute((RedisCallback&lt;List&lt;Boolean&gt;&gt;) connection -&gt;</span><br><span class="line">                connection.scriptingCommands().eval(</span><br><span class="line">                        (<span class="string">&quot;return redis.call(&#x27;BF.MADD&#x27;, KEYS[1], unpack(ARGV))&quot;</span>).getBytes(),</span><br><span class="line">                        ReturnType.MULTI,</span><br><span class="line">                        <span class="number">1</span>,                <span class="comment">// numKeys</span></span><br><span class="line">                        keysAndArgs       <span class="comment">// KEYS + ARGV</span></span><br><span class="line">                )</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -1292,7 +1292,7 @@ i.ban {
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2025/12/21/redis7-BloomFilter/" title="Redis 扩展模块 -- RedisBloom">https://blog.hanqunfeng.com/2025/12/21/redis7-BloomFilter/</a>
+      <a href="https://blog.hanqunfeng.com/2025/12/21/redis7-module-RedisBloom/" title="Redis 扩展模块 -- RedisBloom">https://blog.hanqunfeng.com/2025/12/21/redis7-module-RedisBloom/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1350,6 +1350,9 @@ i.ban {
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2025/12/22/redis7-datatype-11-BF/" rel="next" title="Redis 命令及数据类型 -- BF(Bloom Filter)">
+                  Redis 命令及数据类型 -- BF(Bloom Filter) <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -1384,14 +1387,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">727k</span>
+    <span title="站点总字数">731k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">44:05</span>
+    <span title="站点阅读时长">44:17</span>
   </span>
 </div>
 <div class="busuanzi-count">
