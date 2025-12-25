@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  本文介绍 Redis 扩展模型 RedisJSON 中的 JSON 数据类型 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F; RedisJSON 的安装参见 Redis 扩展模块 -- RedisJSON">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-24T13:40:05.000Z">
-<meta property="article:modified_time" content="2025-12-24T10:31:39.900Z">
+<meta property="article:modified_time" content="2025-12-25T09:51:24.526Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-vs-String"><span class="nav-number">2.</span> <span class="nav-text">JSON vs String</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONPath"><span class="nav-number">3.</span> <span class="nav-text">JSONPath</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">JSON 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E8%AF%BB%E5%86%99%E7%B1%BB%EF%BC%88CRUD%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">一、基础读写类（CRUD）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E7%B1%BB%EF%BC%88Array%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">二、数组操作类（Array）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AF%B9%E8%B1%A1%E6%93%8D%E4%BD%9C%E7%B1%BB%EF%BC%88Object%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">三、对象操作类（Object）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%95%B0%E5%80%BC%E8%BF%90%E7%AE%97%E7%B1%BB%EF%BC%88Numeric%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">四、数值运算类（Numeric）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E7%B1%BB%EF%BC%88String%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">五、字符串操作类（String）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%88%A0%E9%99%A4-%E6%B8%85%E7%A9%BA%E7%B1%BB"><span class="nav-number">4.6.</span> <span class="nav-text">六、删除 &#x2F; 清空类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%90%88%E5%B9%B6%E4%B8%8E%E9%AB%98%E7%BA%A7%E6%93%8D%E4%BD%9C"><span class="nav-number">4.7.</span> <span class="nav-text">七、合并与高级操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E8%B0%83%E8%AF%95%E4%B8%8E%E8%AF%8A%E6%96%AD%E7%B1%BB%EF%BC%88Debug%EF%BC%89"><span class="nav-number">4.8.</span> <span class="nav-text">八、调试与诊断类（Debug）</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-vs-String"><span class="nav-number">2.</span> <span class="nav-text">JSON vs String</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONPath"><span class="nav-number">3.</span> <span class="nav-text">JSONPath</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">JSON 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E8%AF%BB%E5%86%99%E7%B1%BB%EF%BC%88CRUD%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">一、基础读写类（CRUD）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E7%B1%BB%EF%BC%88Array%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">二、数组操作类（Array）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AF%B9%E8%B1%A1%E6%93%8D%E4%BD%9C%E7%B1%BB%EF%BC%88Object%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">三、对象操作类（Object）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%95%B0%E5%80%BC%E8%BF%90%E7%AE%97%E7%B1%BB%EF%BC%88Numeric%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">四、数值运算类（Numeric）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E7%B1%BB%EF%BC%88String%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">五、字符串操作类（String）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%88%A0%E9%99%A4-%E6%B8%85%E7%A9%BA%E7%B1%BB"><span class="nav-number">4.6.</span> <span class="nav-text">六、删除 &#x2F; 清空类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%90%88%E5%B9%B6%E4%B8%8E%E9%AB%98%E7%BA%A7%E6%93%8D%E4%BD%9C"><span class="nav-number">4.7.</span> <span class="nav-text">七、合并与高级操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E8%B0%83%E8%AF%95%E4%B8%8E%E8%AF%8A%E6%96%AD%E7%B1%BB%EF%BC%88Debug%EF%BC%89"><span class="nav-number">4.8.</span> <span class="nav-text">八、调试与诊断类（Debug）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">应用示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JSONPath-%E6%9F%A5%E8%AF%A2%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.1.</span> <span class="nav-text">JSONPath 查询示例</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -988,17 +988,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/15/redis7-datatype-02-string/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-15</time>
-        <br>
-      Redis 命令及数据类型 -- String
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/24/redis7-module-RedisJSON/" rel="bookmark">
         <time class="popular-posts-time">2025-12-24</time>
         <br>
       Redis 扩展模块 -- RedisJSON
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/15/redis7-datatype-02-string/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-15</time>
+        <br>
+      Redis 命令及数据类型 -- String
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1063,9 +1063,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-12-24 21:40:05 / 修改时间：18:31:39" itemprop="dateCreated datePublished" datetime="2025-12-24T21:40:05+08:00">2025-12-24</time>
+      <time title="创建时间：2025-12-24 21:40:05" itemprop="dateCreated datePublished" datetime="2025-12-24T21:40:05+08:00">2025-12-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-12-25 17:51:24" itemprop="dateModified" datetime="2025-12-25T17:51:24+08:00">2025-12-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1113,14 +1119,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
+      <span>3.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
+      <span>11 分钟</span>
     </span>
 
         </div>
@@ -1234,20 +1240,145 @@ i.ban {
 <tr>
 <td><code>?()</code></td>
 <td>过滤表达式，用于数组或对象的条件筛选</td>
-<td><code>$.users[?(@.age &gt;= 18)]</code></td>
+<td><code>$.users[?(@.age&gt;=18)]</code></td>
 </tr>
 <tr>
 <td><code>()</code></td>
 <td>脚本表达式，用于计算或复杂逻辑判断</td>
-<td><code>$.items[?((@.a + @.b) &gt; 10)]</code></td>
+<td><code>$.items[?((@.a+@.b)&gt;10)]</code></td>
 </tr>
 <tr>
 <td><code>@</code></td>
 <td>当前元素引用，常用于过滤或脚本表达式中</td>
-<td><code>@.price &lt; 100</code></td>
+<td><code>@.price&lt;100</code></td>
 </tr>
 </tbody>
 </table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>数组切片 <code>[start:end:step]</code> 详解</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>写法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[3:]</code></td>
+<td>从索引 3 到末尾</td>
+</tr>
+<tr>
+<td><code>[:8]</code></td>
+<td>从头到索引 7</td>
+</tr>
+<tr>
+<td><code>[:8:2]</code></td>
+<td>从头到 7，每隔 2 个取一个</td>
+</tr>
+<tr>
+<td><code>[::]</code></td>
+<td>等价于 <code>[:]</code>，取全部</td>
+</tr>
+<tr>
+<td><code>[*]</code></td>
+<td>推荐写法，取全部</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>默认值规则：<br>
+start 默认 0<br>
+end 默认数组末尾<br>
+step 默认 1</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>过滤表达式 <code>?()</code> 支持的运算符</p>
+</li>
+</ul>
+<blockquote>
+<p>比较运算符，实测中仅支持数字比较，且注意两边不能有空格</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>==</code></td>
+<td>等于</td>
+</tr>
+<tr>
+<td><code>!=</code></td>
+<td>不等于</td>
+</tr>
+<tr>
+<td><code>&lt;</code></td>
+<td>小于</td>
+</tr>
+<tr>
+<td><code>&lt;=</code></td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td><code>&gt;</code></td>
+<td>大于</td>
+</tr>
+<tr>
+<td><code>&gt;=</code></td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td><code>=~</code></td>
+<td>正则匹配</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>逻辑运算符</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&amp;&amp;</code></td>
+<td>与</td>
+</tr>
+<tr>
+<td><code>||</code></td>
+<td>或</td>
+</tr>
+<tr>
+<td><code>()</code></td>
+<td>分组优先级</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Redis 的 RedisJSON 模块（提供 JSON 操作功能）支持的 JSONPath 语法是受限的子集，尤其是：</p>
+<ul class="lvl-2">
+<li class="lvl-6">❌ 不支持复杂表达式</li>
+<li class="lvl-6">❌ 不支持嵌套数组条件（@.items[*].xxx）</li>
+<li class="lvl-6">⚠️ 对 ?() 的支持非常有限</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>如果需要复杂的查询推荐使用 <code>RediSearch</code> 模块，这个我们后面的章节会介绍。</p>
+</li>
+</ul>
 <h2 id="JSON-命令">JSON 命令</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1601,7 +1732,106 @@ i.ban {
 </tr>
 </tbody>
 </table>
-
+<h2 id="应用示例">应用示例</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>场景选用：电商用户画像 + 订单系统（结构复杂、字段多、非常适合 JSONPath）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">我们要存储一个用户的完整画像：</span><br><span class="line">    基本信息</span><br><span class="line">    地址列表</span><br><span class="line">    订单列表（包含商品、价格、数量）</span><br><span class="line">    标签(偏好)</span><br><span class="line">    账户状态</span><br><span class="line">    统计信息</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>SpringBoot暂时没有支持RedisJSON，你可以编写Lua脚本来实现相应的功能，另外 <a target="_blank" rel="noopener" href="https://redisson.pro/docs/data-and-services/objects/#json-object-holder">Redissson</a>已经提供了对JSON的支持，但是实际使用中发现还有一些Bug，下面结合命令给出代码示例。</p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 引入 Redisson ，这里要注意，现在最新版是 4.0.0，需要 springboot 4.x --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.redisson<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>redisson-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.52.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建完整 JSON 文档（JSON.SET）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 JSON 文档，实际执行中不支持多行，这里只是为了看着清楚些，实际运行时要将其改成一行</span></span><br><span class="line">JSON.SET user:10001 $ <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">  &quot;profile&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;name&quot;: &quot;Alice&quot;,</span></span><br><span class="line"><span class="string">    &quot;age&quot;: 28,</span></span><br><span class="line"><span class="string">    &quot;vip&quot;: true</span></span><br><span class="line"><span class="string">  &#125;,</span></span><br><span class="line"><span class="string">  &quot;tags&quot;: [&quot;vip&quot;, &quot;electronics&quot;, &quot;promotion&quot;],</span></span><br><span class="line"><span class="string">  &quot;addresses&quot;: [</span></span><br><span class="line"><span class="string">    &#123; &quot;city&quot;: &quot;Beijing&quot;, &quot;zip&quot;: &quot;100000&quot; &#125;,</span></span><br><span class="line"><span class="string">    &#123; &quot;city&quot;: &quot;Shanghai&quot;, &quot;zip&quot;: &quot;200000&quot; &#125;</span></span><br><span class="line"><span class="string">  ],</span></span><br><span class="line"><span class="string">  &quot;orders&quot;: [</span></span><br><span class="line"><span class="string">    &#123;</span></span><br><span class="line"><span class="string">      &quot;orderId&quot;: &quot;O1001&quot;,</span></span><br><span class="line"><span class="string">      &quot;amount&quot;: 199.99,</span></span><br><span class="line"><span class="string">      &quot;status&quot;: &quot;PAID&quot;,</span></span><br><span class="line"><span class="string">      &quot;items&quot;: [</span></span><br><span class="line"><span class="string">        &#123; &quot;sku&quot;: &quot;SKU-1&quot;, &quot;price&quot;: 99.99, &quot;qty&quot;: 1 &#125;,</span></span><br><span class="line"><span class="string">        &#123; &quot;sku&quot;: &quot;SKU-2&quot;, &quot;price&quot;: 100.00, &quot;qty&quot;: 1 &#125;</span></span><br><span class="line"><span class="string">      ]</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">    &#123;</span></span><br><span class="line"><span class="string">      &quot;orderId&quot;: &quot;O1002&quot;,</span></span><br><span class="line"><span class="string">      &quot;amount&quot;: 59.90,</span></span><br><span class="line"><span class="string">      &quot;status&quot;: &quot;CREATED&quot;,</span></span><br><span class="line"><span class="string">      &quot;items&quot;: [</span></span><br><span class="line"><span class="string">        &#123; &quot;sku&quot;: &quot;SKU-3&quot;, &quot;price&quot;: 59.90, &quot;qty&quot;: 1 &#125;</span></span><br><span class="line"><span class="string">      ]</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  ],</span></span><br><span class="line"><span class="string">  &quot;stats&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;loginCount&quot;: 10,</span></span><br><span class="line"><span class="string">    &quot;balance&quot;: 300.5</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以使用单行模式一点点组装</span></span><br><span class="line">JSON.SET user:10001 $ <span class="string">&#x27;&#123;&#125;&#x27;</span></span><br><span class="line">JSON.SET user:10001 $.profile <span class="string">&#x27;&#123;&quot;name&quot;:&quot;Alice&quot;,&quot;age&quot;:28,&quot;vip&quot;:true&#125;&#x27;</span></span><br><span class="line">JSON.SET user:10001 $.tags <span class="string">&#x27;[&quot;vip&quot;,&quot;electronics&quot;,&quot;promotion&quot;]&#x27;</span></span><br><span class="line">JSON.SET user:10001 $.addresses <span class="string">&#x27;[&#123;&quot;city&quot;:&quot;Beijing&quot;,&quot;zip&quot;:&quot;100000&quot;&#125;,&#123;&quot;city&quot;:&quot;Shanghai&quot;,&quot;zip&quot;:&quot;200000&quot;&#125;]&#x27;</span></span><br><span class="line">JSON.SET user:10001 $.orders <span class="string">&#x27;[&#123;&quot;orderId&quot;:&quot;O1001&quot;,&quot;amount&quot;:199.99,&quot;status&quot;:&quot;PAID&quot;,&quot;items&quot;:[&#123;&quot;sku&quot;:&quot;SKU-1&quot;,&quot;price&quot;:99.99,&quot;qty&quot;:1&#125;,&#123;&quot;sku&quot;:&quot;SKU-2&quot;,&quot;price&quot;:100,&quot;qty&quot;:1&#125;]&#125;,&#123;&quot;orderId&quot;:&quot;O1002&quot;,&quot;amount&quot;:59.90,&quot;status&quot;:&quot;CREATED&quot;,&quot;items&quot;:[&#123;&quot;sku&quot;:&quot;SKU-3&quot;,&quot;price&quot;:59.90,&quot;qty&quot;:1&#125;]&#125;]&#x27;</span></span><br><span class="line">JSON.SET user:10001 $.stats <span class="string">&#x27;&#123;&quot;loginCount&quot;:10,&quot;balance&quot;:300.5&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看类型</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">type</span> user:10001</span><br><span class="line">ReJSON-RL</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>通用代码</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> RedissonClient redissonClient;</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">userStr</span> <span class="operator">=</span> <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            &#123;</span></span><br><span class="line"><span class="string">              &quot;profile&quot;: &#123;</span></span><br><span class="line"><span class="string">                &quot;name&quot;: &quot;Alice&quot;,</span></span><br><span class="line"><span class="string">                &quot;age&quot;: 28,</span></span><br><span class="line"><span class="string">                &quot;vip&quot;: true</span></span><br><span class="line"><span class="string">              &#125;,</span></span><br><span class="line"><span class="string">              &quot;tags&quot;: [&quot;vip&quot;, &quot;electronics&quot;, &quot;promotion&quot;],</span></span><br><span class="line"><span class="string">              &quot;addresses&quot;: [</span></span><br><span class="line"><span class="string">                &#123; &quot;city&quot;: &quot;Beijing&quot;, &quot;zip&quot;: &quot;100000&quot; &#125;,</span></span><br><span class="line"><span class="string">                &#123; &quot;city&quot;: &quot;Shanghai&quot;, &quot;zip&quot;: &quot;200000&quot; &#125;</span></span><br><span class="line"><span class="string">              ],</span></span><br><span class="line"><span class="string">              &quot;orders&quot;: [</span></span><br><span class="line"><span class="string">                &#123;</span></span><br><span class="line"><span class="string">                  &quot;orderId&quot;: &quot;O1001&quot;,</span></span><br><span class="line"><span class="string">                  &quot;amount&quot;: 199.99,</span></span><br><span class="line"><span class="string">                  &quot;status&quot;: &quot;PAID&quot;,</span></span><br><span class="line"><span class="string">                  &quot;items&quot;: [</span></span><br><span class="line"><span class="string">                    &#123; &quot;sku&quot;: &quot;SKU-1&quot;, &quot;price&quot;: 99.99, &quot;qty&quot;: 1 &#125;,</span></span><br><span class="line"><span class="string">                    &#123; &quot;sku&quot;: &quot;SKU-2&quot;, &quot;price&quot;: 100.00, &quot;qty&quot;: 1 &#125;</span></span><br><span class="line"><span class="string">                  ]</span></span><br><span class="line"><span class="string">                &#125;,</span></span><br><span class="line"><span class="string">                &#123;</span></span><br><span class="line"><span class="string">                  &quot;orderId&quot;: &quot;O1002&quot;,</span></span><br><span class="line"><span class="string">                  &quot;amount&quot;: 59.90,</span></span><br><span class="line"><span class="string">                  &quot;status&quot;: &quot;CREATED&quot;,</span></span><br><span class="line"><span class="string">                  &quot;items&quot;: [</span></span><br><span class="line"><span class="string">                    &#123; &quot;sku&quot;: &quot;SKU-3&quot;, &quot;price&quot;: 59.90, &quot;qty&quot;: 1 &#125;</span></span><br><span class="line"><span class="string">                  ]</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">              ],</span></span><br><span class="line"><span class="string">              &quot;stats&quot;: &#123;</span></span><br><span class="line"><span class="string">                &quot;loginCount&quot;: 10,</span></span><br><span class="line"><span class="string">                &quot;balance&quot;: 300.5</span></span><br><span class="line"><span class="string">              &#125;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">            &quot;&quot;&quot;</span>;</span><br><span class="line"><span class="type">ObjectMapper</span> <span class="variable">objectMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">RJsonBucket&lt;User&gt; bucket = redissonClient.getJsonBucket(<span class="string">&quot;user:10001&quot;</span>, <span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(User.class));</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> objectMapper.readValue(userStr, User.class);</span><br><span class="line">bucket.set(user);</span><br></pre></td></tr></table></figure>
+<h3 id="JSONPath-查询示例">JSONPath 查询示例</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1️⃣ 基础路径访问</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取全部数据</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取用户信息</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.profile</span><br><span class="line"><span class="string">&quot;[&#123;\&quot;name\&quot;:\&quot;Alice\&quot;,\&quot;age\&quot;:28,\&quot;vip\&quot;:true&#125;]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取用户名</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.profile.name</span><br><span class="line"><span class="string">&quot;[\&quot;Alice\&quot;]&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;User&gt;() &#123;&#125;));</span><br><span class="line"></span><br><span class="line">User.<span class="type">ProfileBean</span> <span class="variable">profile</span> <span class="operator">=</span> bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;User.ProfileBean&gt;() &#123;&#125;),<span class="string">&quot;profile&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;String&gt;() &#123;&#125;),<span class="string">&quot;profile.name&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加上 $. 前缀，返回值必须是 List&lt;T&gt;</span></span><br><span class="line">List&lt;String&gt; names = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;String&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.profile.name&quot;</span>);</span><br><span class="line">System.out.println(names.get(<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2️⃣ 数组访问 &amp; 通配符</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取所有订单ID</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.orders[*].orderId</span><br><span class="line"><span class="string">&quot;[\&quot;O1001\&quot;,\&quot;O1002\&quot;]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取所有地址的城市</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.addresses[*].city</span><br><span class="line"><span class="string">&quot;[\&quot;Beijing\&quot;,\&quot;Shanghai\&quot;]&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; orderIds = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;String&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.orders[*].orderId&quot;</span>);</span><br><span class="line"></span><br><span class="line">List&lt;String&gt; citys = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;String&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.addresses[*].city&quot;</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>3️⃣ 数组下标与切片</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取第一个订单</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.orders[0]</span><br><span class="line"><span class="string">&quot;[&#123;\&quot;orderId\&quot;:\&quot;O1001\&quot;,\&quot;amount\&quot;:199.99,\&quot;status\&quot;:\&quot;PAID\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-1\&quot;,\&quot;price\&quot;:99.99,\&quot;qty\&quot;:1&#125;,&#123;\&quot;sku\&quot;:\&quot;SKU-2\&quot;,\&quot;price\&quot;:100,\&quot;qty\&quot;:1&#125;]&#125;]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取第一个和第二个订单，切片逻辑是 [start:end]， start &lt;= x &lt; end ，end不写默认为数组末尾</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.orders[0:2]</span><br><span class="line"><span class="string">&quot;[&#123;\&quot;orderId\&quot;:\&quot;O1001\&quot;,\&quot;amount\&quot;:199.99,\&quot;status\&quot;:\&quot;PAID\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-1\&quot;,\&quot;price\&quot;:99.99,\&quot;qty\&quot;:1&#125;,&#123;\&quot;sku\&quot;:\&quot;SKU-2\&quot;,\&quot;price\&quot;:100,\&quot;qty\&quot;:1&#125;]&#125;,&#123;\&quot;orderId\&quot;:\&quot;O1002\&quot;,\&quot;amount\&quot;:59.9,\&quot;status\&quot;:\&quot;CREATED\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-3\&quot;,\&quot;price\&quot;:59.9,\&quot;qty\&quot;:1&#125;]&#125;]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取所有订单，这里等同于 $.orders[*]</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.orders[:]</span><br><span class="line"><span class="string">&quot;[&#123;\&quot;orderId\&quot;:\&quot;O1001\&quot;,\&quot;amount\&quot;:199.99,\&quot;status\&quot;:\&quot;PAID\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-1\&quot;,\&quot;price\&quot;:99.99,\&quot;qty\&quot;:1&#125;,&#123;\&quot;sku\&quot;:\&quot;SKU-2\&quot;,\&quot;price\&quot;:100,\&quot;qty\&quot;:1&#125;]&#125;,&#123;\&quot;orderId\&quot;:\&quot;O1002\&quot;,\&quot;amount\&quot;:59.9,\&quot;status\&quot;:\&quot;CREATED\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-3\&quot;,\&quot;price\&quot;:59.9,\&quot;qty\&quot;:1&#125;]&#125;]&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;OrdersBean&gt; orders = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;OrdersBean&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.orders[0]&quot;</span>);</span><br><span class="line"></span><br><span class="line">orders = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;OrdersBean&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.orders[0:2]&quot;</span>);</span><br><span class="line"></span><br><span class="line">orders = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;OrdersBean&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.orders[:]&quot;</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>4️⃣ 递归查询（…）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 👉 找出所有商品价格（不管在哪一层）</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $..price</span><br><span class="line"><span class="string">&quot;[99.99,100,59.9]&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Double&gt; prices = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;Double&gt;&gt;() &#123;&#125;),<span class="string">&quot;$..price&quot;</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>5️⃣ 条件过滤（JSONPath 核心能力）</p>
+</li>
+</ul>
+<blockquote>
+<p>✅ 支持的查询</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 👉 找出所有订单金额大于100的订单，✅ 数字比较</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.orders[?(@.amount&gt;100)]</span><br><span class="line"><span class="string">&quot;[&#123;\&quot;orderId\&quot;:\&quot;O1001\&quot;,\&quot;amount\&quot;:199.99,\&quot;status\&quot;:\&quot;PAID\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-1\&quot;,\&quot;price\&quot;:99.99,\&quot;qty\&quot;:1&#125;,&#123;\&quot;sku\&quot;:\&quot;SKU-2\&quot;,\&quot;price\&quot;:100,\&quot;qty\&quot;:1&#125;]&#125;]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 👉 找出所有订单中第一个商品价格大于50的订单，✅ 数组条件</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.orders[?(@.items[0].price&gt;50)]</span><br><span class="line"><span class="string">&quot;[&#123;\&quot;orderId\&quot;:\&quot;O1001\&quot;,\&quot;amount\&quot;:199.99,\&quot;status\&quot;:\&quot;PAID\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-1\&quot;,\&quot;price\&quot;:99.99,\&quot;qty\&quot;:1&#125;,&#123;\&quot;sku\&quot;:\&quot;SKU-2\&quot;,\&quot;price\&quot;:100,\&quot;qty\&quot;:1&#125;]&#125;,&#123;\&quot;orderId\&quot;:\&quot;O1002\&quot;,\&quot;amount\&quot;:59.9,\&quot;status\&quot;:\&quot;CREATED\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-3\&quot;,\&quot;price\&quot;:59.9,\&quot;qty\&quot;:1&#125;]&#125;]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 👉 找出所有订单金额大于100并且订单中第一个商品价格大于50的订单，✅ 逻辑运算符</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.orders[?(@.amount&gt;100)&amp;&amp;(@.items[0].price&gt;50)]</span><br><span class="line"><span class="string">&quot;[&#123;\&quot;orderId\&quot;:\&quot;O1001\&quot;,\&quot;amount\&quot;:199.99,\&quot;status\&quot;:\&quot;PAID\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-1\&quot;,\&quot;price\&quot;:99.99,\&quot;qty\&quot;:1&#125;,&#123;\&quot;sku\&quot;:\&quot;SKU-2\&quot;,\&quot;price\&quot;:100,\&quot;qty\&quot;:1&#125;]&#125;]&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;OrdersBean&gt; orders = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;OrdersBean&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.orders[?(@.amount&gt;100)]&quot;</span>);</span><br><span class="line"></span><br><span class="line">orders = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;OrdersBean&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.orders[?(@.items[0].price&gt;50)]&quot;</span>);</span><br><span class="line"></span><br><span class="line">orders = bucket.get(<span class="keyword">new</span> <span class="title class_">JacksonCodec</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;OrdersBean&gt;&gt;() &#123;&#125;),<span class="string">&quot;$.orders[?(@.amount&gt;100)&amp;&amp;(@.items[0].price&gt;50)]&quot;</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>❌ 不支持的查询</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 👉 找出所有已支付订单，❌ 不支持字符串的比较</span><br><span class="line">JSON.GET user:10001 $.orders[?(@.status==&quot;PAID&quot;)]</span><br><span class="line"># 👉 找出所有已支付订单，❌ 不支持正则匹配</span><br><span class="line">JSON.GET user:10001 $.orders[?(@.status=~&quot;PAID&quot;)]</span><br><span class="line"></span><br><span class="line"># 👉 找出所有订单中商品价格大于50的订单，这个就不准，❌ 不支持嵌套数组条件（@.items[*].xxx）</span><br><span class="line">127.0.0.1:6379&gt; JSON.GET user:10001 $.orders[?(@.items[*].price&gt;50)]</span><br><span class="line">&quot;[&#123;\&quot;orderId\&quot;:\&quot;O1002\&quot;,\&quot;amount\&quot;:59.9,\&quot;status\&quot;:\&quot;CREATED\&quot;,\&quot;items\&quot;:[&#123;\&quot;sku\&quot;:\&quot;SKU-3\&quot;,\&quot;price\&quot;:59.9,\&quot;qty\&quot;:1&#125;]&#125;]&quot;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>6️⃣ 修改数据（JSON.SET / JSON.NUMINCRBY）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 👉 修改用户名</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.SET user:10001 $.profile.name <span class="string">&#x27;&quot;Alice Zhang&quot;&#x27;</span></span><br><span class="line">OK</span><br><span class="line"><span class="comment"># 👉 用户登录次数 +1</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.NUMINCRBY user:10001 $.stats.loginCount 1</span><br><span class="line"><span class="string">&quot;[11]&quot;</span> <span class="comment"># 返回修改后的值</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bucket.set(<span class="string">&quot;$.profile.name&quot;</span>, <span class="string">&quot;Alice Zhang&quot;</span>);</span><br><span class="line"><span class="comment">// 注意如下方法会增加成功，但是会抛异常，应该是Redisson的bug</span></span><br><span class="line"><span class="comment">// Caused by: java.lang.NumberFormatException: For input string: &quot;[11]&quot;</span></span><br><span class="line">bucket.incrementAndGet(<span class="string">&quot;$.stats.loginCount&quot;</span>, <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>7️⃣ 数组操作（ARRAPPEND / ARRINSERT）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 👉 添加一个订单</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.ARRAPPEND user:10001 $.orders <span class="string">&#x27;&#123;&quot;orderId&quot;: &quot;O1003&quot;,&quot;amount&quot;: 399,&quot;status&quot;: &quot;PAID&quot;,&quot;items&quot;: [&#123; &quot;sku&quot;: &quot;SKU-9&quot;, &quot;price&quot;: 399, &quot;qty&quot;: 1 &#125;]&#125;&#x27;</span></span><br><span class="line">1) (<span class="built_in">integer</span>) 3 <span class="comment"># 返回添加后的长度</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 👉 在 tags 的最后添加一个标签</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.ARRAPPEND user:10001 $.tags <span class="string">&#x27;&quot;newTag&quot;&#x27;</span></span><br><span class="line">1) (<span class="built_in">integer</span>) 4 <span class="comment"># 添加后的长度</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 👉 在 tags 中的指定位置插入一个标签</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.ARRINSERT user:10001 $.tags 1 <span class="string">&#x27;&quot;newTag2&quot;&#x27;</span></span><br><span class="line">1) (<span class="built_in">integer</span>) 5 <span class="comment"># 插入后的长度</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">OrdersBean</span> <span class="variable">ordersBean</span> <span class="operator">=</span> OrdersBean.builder()</span><br><span class="line">                .orderId(<span class="string">&quot;O1003&quot;</span>)</span><br><span class="line">                .amount(<span class="number">399</span>)</span><br><span class="line">                .status(<span class="string">&quot;CREATED&quot;</span>)</span><br><span class="line">                .items(List.of(</span><br><span class="line">                        OrdersBean.ItemsBean.builder()</span><br><span class="line">                                .sku(<span class="string">&quot;SKU-9&quot;</span>)</span><br><span class="line">                                .qty(<span class="number">1</span>)</span><br><span class="line">                                .price(<span class="number">399</span>).build()</span><br><span class="line">                )).build();</span><br><span class="line"><span class="comment">// 添加一个订单，返回添加后的长度</span></span><br><span class="line"><span class="type">long</span> <span class="variable">num</span> <span class="operator">=</span> bucket.arrayAppend(<span class="string">&quot;$.orders&quot;</span>, ordersBean);</span><br><span class="line"></span><br><span class="line">num = bucket.arrayAppend(<span class="string">&quot;$.tags&quot;</span>, <span class="string">&quot;newTag&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入成功，但是会抛异常，应该是Redisson的bug</span></span><br><span class="line">num = bucket.arrayInsert(<span class="string">&quot;$.tags&quot;</span>, <span class="number">1</span>, <span class="string">&quot;newTag2&quot;</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>8️⃣ 删除 &amp; 清理操作（JSON.DEL &amp; JSON.CLEAR）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 👉 删除用户年龄，$.profile.age 不存在了</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.DEL user:10001 $.profile.age</span><br><span class="line">(<span class="built_in">integer</span>) 1 <span class="comment"># 删除成功，返回0，表示路径不存在</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 👉 清空用户所有标签，$.tags 保留，只是变成了 [] 空数组</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.CLEAR user:10001 $.tags</span><br><span class="line">(<span class="built_in">integer</span>) 1 <span class="comment"># 清空成功，返回0，表示路径不存在或已经清空</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="variable">delete</span> <span class="operator">=</span> bucket.delete(<span class="string">&quot;$.profile.age&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> <span class="variable">clear</span> <span class="operator">=</span> bucket.clear(<span class="string">&quot;$.tags&quot;</span>);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>9️⃣ 统计数组长度</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 👉 统计用户订单的长度</span></span><br><span class="line">127.0.0.1:6379&gt; JSON.ARRLEN user:10001 $.orders</span><br><span class="line">1) (<span class="built_in">integer</span>) 3</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 会抛异常，应该是Redisson的bug</span></span><br><span class="line"><span class="type">long</span> <span class="variable">length</span> <span class="operator">=</span> bucket.arraySize(<span class="string">&quot;$.orders&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>🔟 查看 JSON 占用内存</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; JSON.DEBUG MEMORY user:10001</span><br><span class="line">(<span class="built_in">integer</span>) 1896 <span class="comment"># 占用内存大小，单位字节</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="variable">sizeInMemory</span> <span class="operator">=</span> bucket.sizeInMemory();</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -1740,14 +1970,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">741k</span>
+    <span title="站点总字数">743k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">44:53</span>
+    <span title="站点阅读时长">45:01</span>
   </span>
 </div>
 <div class="busuanzi-count">
