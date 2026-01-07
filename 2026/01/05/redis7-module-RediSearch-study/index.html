@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  本文介绍 Redis 扩展模块 – RediSearch 的使用方法 本文基于redis-7.4.7，springboot-3.5.8 操作系统：Amazon Linux 2023(内核 6.1) Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis 命令文档：https:&#x2F;&#x2F;redis.io&#x2F;docs&#x2F;latest&#x2F;commands&#x2F; RediSearch 的安装参见 Redi">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-01-05T13:30:05.000Z">
-<meta property="article:modified_time" content="2026-01-07T03:18:14.861Z">
+<meta property="article:modified_time" content="2026-01-07T07:30:53.062Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RediSearch-%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">RediSearch 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%B4%A2%E5%BC%95%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%AE%A1%E7%90%86%E7%B1%BB"><span class="nav-number">2.1.</span> <span class="nav-text">一、索引生命周期管理类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%EF%B8%8F%E2%83%A3-FT-CREATE"><span class="nav-number">2.1.1.</span> <span class="nav-text">1️⃣ FT.CREATE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%EF%B8%8F%E2%83%A3-FT-ALTER"><span class="nav-number">2.1.2.</span> <span class="nav-text">2️⃣ FT.ALTER</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%EF%B8%8F%E2%83%A3-FT-DROPINDEX"><span class="nav-number">2.1.3.</span> <span class="nav-text">3️⃣ FT.DROPINDEX</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%EF%B8%8F%E2%83%A3-FT-INFO"><span class="nav-number">2.1.4.</span> <span class="nav-text">4️⃣ FT.INFO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5%EF%B8%8F%E2%83%A3-FT-LIST"><span class="nav-number">2.1.5.</span> <span class="nav-text">5️⃣ FT._LIST</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%9F%A5%E8%AF%A2%E7%B1%BB%EF%BC%88%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">二、查询类（核心）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%EF%B8%8F%E2%83%A3-FT-SEARCH"><span class="nav-number">2.2.1.</span> <span class="nav-text">1️⃣ FT.SEARCH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SQL-WHERE-%E4%B8%8E-RediSearch-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E6%B3%95%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">SQL WHERE 与 RediSearch 查询语法对照表</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%EF%B8%8F%E2%83%A3-FT-AGGREGATE"><span class="nav-number">2.2.2.</span> <span class="nav-text">2️⃣ FT.AGGREGATE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%EF%B8%8F%E2%83%A3-FT-EXPLAIN-FT-EXPLAINCLI"><span class="nav-number">2.2.3.</span> <span class="nav-text">3️⃣ FT.EXPLAIN&#x2F;FT.EXPLAINCLI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%EF%B8%8F%E2%83%A3-FT-PROFILE"><span class="nav-number">2.2.4.</span> <span class="nav-text">4️⃣ FT.PROFILE</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E6%B3%A8%E6%8C%87%E6%A0%87"><span class="nav-number">2.2.4.1.</span> <span class="nav-text">关注指标</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%88%AB%E5%90%8D%E7%AE%A1%E7%90%86%EF%BC%88%E7%94%9F%E4%BA%A7%E5%BF%85%E5%A4%87%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">三、别名管理（生产必备）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%AB%E5%90%8D%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC"><span class="nav-number">2.3.1.</span> <span class="nav-text">索引别名的核心价值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%B8%B8%E6%A0%87%EF%BC%88%E5%A4%A7%E7%BB%93%E6%9E%9C%E9%9B%86%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">四、游标（大结果集）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%AF%8D%E5%85%B8-%E5%90%8C%E4%B9%89%E8%AF%8D%EF%BC%88%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">五、词典 &amp; 同义词（搜索增强）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%8D%E5%85%B8"><span class="nav-number">2.5.1.</span> <span class="nav-text">词典</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E4%B9%89%E8%AF%8D"><span class="nav-number">2.5.2.</span> <span class="nav-text">同义词</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E5%BA%9F%E5%BC%83%E5%91%BD%E4%BB%A4%EF%BC%88%E4%B8%8D%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8%EF%BC%89"><span class="nav-number">2.6.</span> <span class="nav-text">已废弃命令（不建议使用）</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RediSearch-%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">RediSearch 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%B4%A2%E5%BC%95%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%AE%A1%E7%90%86%E7%B1%BB"><span class="nav-number">2.1.</span> <span class="nav-text">一、索引生命周期管理类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%EF%B8%8F%E2%83%A3-FT-CREATE"><span class="nav-number">2.1.1.</span> <span class="nav-text">1️⃣ FT.CREATE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%EF%B8%8F%E2%83%A3-FT-ALTER"><span class="nav-number">2.1.2.</span> <span class="nav-text">2️⃣ FT.ALTER</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%EF%B8%8F%E2%83%A3-FT-DROPINDEX"><span class="nav-number">2.1.3.</span> <span class="nav-text">3️⃣ FT.DROPINDEX</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%EF%B8%8F%E2%83%A3-FT-INFO"><span class="nav-number">2.1.4.</span> <span class="nav-text">4️⃣ FT.INFO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5%EF%B8%8F%E2%83%A3-FT-LIST"><span class="nav-number">2.1.5.</span> <span class="nav-text">5️⃣ FT._LIST</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%9F%A5%E8%AF%A2%E7%B1%BB%EF%BC%88%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">二、查询类（核心）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%EF%B8%8F%E2%83%A3-FT-SEARCH"><span class="nav-number">2.2.1.</span> <span class="nav-text">1️⃣ FT.SEARCH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SQL-WHERE-%E4%B8%8E-RediSearch-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E6%B3%95%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">SQL WHERE 与 RediSearch 查询语法对照表</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%EF%B8%8F%E2%83%A3-FT-AGGREGATE"><span class="nav-number">2.2.2.</span> <span class="nav-text">2️⃣ FT.AGGREGATE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%EF%B8%8F%E2%83%A3-FT-EXPLAIN-FT-EXPLAINCLI"><span class="nav-number">2.2.3.</span> <span class="nav-text">3️⃣ FT.EXPLAIN&#x2F;FT.EXPLAINCLI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%EF%B8%8F%E2%83%A3-FT-PROFILE"><span class="nav-number">2.2.4.</span> <span class="nav-text">4️⃣ FT.PROFILE</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E6%B3%A8%E6%8C%87%E6%A0%87"><span class="nav-number">2.2.4.1.</span> <span class="nav-text">关注指标</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%88%AB%E5%90%8D%E7%AE%A1%E7%90%86%EF%BC%88%E7%94%9F%E4%BA%A7%E5%BF%85%E5%A4%87%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">三、别名管理（生产必备）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%AB%E5%90%8D%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC"><span class="nav-number">2.3.1.</span> <span class="nav-text">索引别名的核心价值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%B8%B8%E6%A0%87%EF%BC%88%E5%A4%A7%E7%BB%93%E6%9E%9C%E9%9B%86%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">四、游标（大结果集）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%AF%8D%E5%85%B8-%E5%90%8C%E4%B9%89%E8%AF%8D%EF%BC%88%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">五、词典 &amp; 同义词（搜索增强）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%8D%E5%85%B8"><span class="nav-number">2.5.1.</span> <span class="nav-text">词典</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E4%B9%89%E8%AF%8D"><span class="nav-number">2.5.2.</span> <span class="nav-text">同义词</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD%E3%80%81FT-SPELLCHECK%EF%BC%88%E6%8B%BC%E5%86%99%E7%BA%A0%E9%94%99%EF%BC%89"><span class="nav-number">2.6.</span> <span class="nav-text">六、FT.SPELLCHECK（拼写纠错）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E5%BA%9F%E5%BC%83%E5%91%BD%E4%BB%A4%EF%BC%88%E4%B8%8D%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8%EF%BC%89"><span class="nav-number">2.7.</span> <span class="nav-text">已废弃命令（不建议使用）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FT-CONFIG-GET-%E5%92%8C-CONFIG-GET-search-%E5%AF%B9%E5%BA%94%E5%8F%82%E6%95%B0%E6%95%B4%E7%90%86"><span class="nav-number">2.7.1.</span> <span class="nav-text">FT.CONFIG GET * 和 CONFIG GET search-* 对应参数整理</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -903,7 +903,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-count">274</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -995,17 +995,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/15/redis7-datatype-03-hash/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-15</time>
-        <br>
-      Redis 命令及数据类型 -- Hash
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/16/redis7-datatype-06-zset/" rel="bookmark">
         <time class="popular-posts-time">2025-12-16</time>
         <br>
       Redis 命令及数据类型 -- ZSet
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/15/redis7-datatype-03-hash/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-15</time>
+        <br>
+      Redis 命令及数据类型 -- Hash
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1071,7 +1071,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-01-07 11:18:14" itemprop="dateModified" datetime="2026-01-07T11:18:14+08:00">2026-01-07</time>
+      <time title="修改时间：2026-01-07 15:30:53" itemprop="dateModified" datetime="2026-01-07T15:30:53+08:00">2026-01-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1119,14 +1119,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.2k</span>
+      <span>8.8k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>26 分钟</span>
+      <span>32 分钟</span>
     </span>
 
         </div>
@@ -2575,6 +2575,230 @@ i.ban {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 用户输入: 手机</span><br><span class="line">2. 前端 / 服务端 → 从 product_dict 给提示</span><br><span class="line">3. 搜索请求 → FT.SEARCH</span><br><span class="line">4. RediSearch → 同义词扩展</span><br><span class="line">5. 返回统一结果</span><br></pre></td></tr></table></figure>
+<h3 id="六、FT-SPELLCHECK（拼写纠错）">六、FT.SPELLCHECK（拼写纠错）</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>FT.SPELLCHECK 用于对用户输入的搜索词进行拼写纠错与相似词推荐</p>
+</li>
+<li class="lvl-2">
+<p>它并不会真正执行搜索，而是：<br>
+✅ 分析输入词是否存在于索引词典<br>
+✅ 如果不存在，基于编辑距离（Levenshtein）给出候选纠错词<br>
+✅ 支持自定义词典（Dictionary）增强效果</p>
+</li>
+<li class="lvl-2">
+<p>🎯 核心目标</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>拼写纠错</td>
+<td>iphone → ipohne</td>
+</tr>
+<tr>
+<td>模糊推荐</td>
+<td>用户拼错关键词</td>
+</tr>
+<tr>
+<td>搜索前置纠错</td>
+<td>提升召回率</td>
+</tr>
+<tr>
+<td>自动学习索引词</td>
+<td>自动从索引词库构建词典</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>基本语法</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FT.SPELLCHECK index query</span><br><span class="line">  [DISTANCE maxDistance]</span><br><span class="line">  [TERMS &#123;INCLUDE | EXCLUDE&#125; dictionary ...]</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>参数说明表</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>index</td>
+<td>索引名称</td>
+<td>必填</td>
+</tr>
+<tr>
+<td>query</td>
+<td>用户输入词</td>
+<td>必填</td>
+</tr>
+<tr>
+<td>DISTANCE</td>
+<td>最大编辑距离（1~4）</td>
+<td>1</td>
+</tr>
+<tr>
+<td>TERMS INCLUDE</td>
+<td>仅使用指定词典</td>
+<td>全部</td>
+</tr>
+<tr>
+<td>TERMS EXCLUDE</td>
+<td>排除指定词典</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">FT.SPELLCHECK idx:user <span class="string">&#x27;iphnoe&#x27;</span> DISTANCE 2</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">1) 1) TERM         <span class="comment"># 固定标识，表示这是一个被分析的词</span></span><br><span class="line">   2) <span class="string">&quot;iphnoe&quot;</span>     <span class="comment"># 用户输入词</span></span><br><span class="line">   3) 1) 1) <span class="string">&quot;0.4&quot;</span>  <span class="comment"># 相似度评分，越小越相似</span></span><br><span class="line">         2) <span class="string">&quot;iphone&quot;</span> <span class="comment"># 推荐词，建议替换词</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索多个词</span></span><br><span class="line">FT.SPELLCHECK idx:user <span class="string">&#x27;iphnoe linu&#x27;</span> DISTANCE 2</span><br><span class="line">1) 1) TERM</span><br><span class="line">   2) <span class="string">&quot;iphnoe&quot;</span></span><br><span class="line">   3) 1) 1) <span class="string">&quot;0.4&quot;</span></span><br><span class="line">         2) <span class="string">&quot;iphone&quot;</span></span><br><span class="line">2) 1) TERM</span><br><span class="line">   2) <span class="string">&quot;linu&quot;</span></span><br><span class="line">   3) 1) 1) <span class="string">&quot;0.4&quot;</span></span><br><span class="line">         2) <span class="string">&quot;linux&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加编辑距离会显示更多的候选词</span></span><br><span class="line">FT.SPELLCHECK idx:user <span class="string">&#x27;phnoe&#x27;</span> DISTANCE 3</span><br><span class="line">1) 1) TERM</span><br><span class="line">   2) <span class="string">&quot;phnoe&quot;</span></span><br><span class="line">   3) 1) 1) <span class="string">&quot;4&quot;</span></span><br><span class="line">         2) <span class="string">&quot;have&quot;</span></span><br><span class="line">      2) 1) <span class="string">&quot;0.8&quot;</span></span><br><span class="line">         2) <span class="string">&quot;phone&quot;</span></span><br><span class="line">      3) 1) <span class="string">&quot;0.4&quot;</span></span><br><span class="line">         2) <span class="string">&quot;iphone&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Map&lt;String, Double&gt;&gt; spellcheck = rSearch.spellcheck(</span><br><span class="line">        <span class="string">&quot;idx:user&quot;</span>,</span><br><span class="line">        <span class="string">&quot;iphnoe linu&quot;</span>,</span><br><span class="line">        SpellcheckOptions.defaults().distance(<span class="number">2</span>));</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>score = 编辑距离 / max(len(用户输入词), len(候选词))，但并不是总是这样</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>输入</th>
+<th>候选</th>
+<th>编辑距离</th>
+<th>maxLen</th>
+<th>score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>phnoe</td>
+<td>iphone</td>
+<td>2</td>
+<td>6</td>
+<td>2/6 = 0.333 ≈ 0.4</td>
+</tr>
+<tr>
+<td>phnoe</td>
+<td>phone</td>
+<td>1</td>
+<td>5</td>
+<td>0.2 → ~0.8（内部权重可能反转或调整）</td>
+</tr>
+<tr>
+<td>phnoe</td>
+<td>have</td>
+<td></td>
+<td></td>
+<td>“4” → 表示 phnoe 与 have 的编辑距离是 4</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">phnoe → have</span><br><span class="line">p → h (1)</span><br><span class="line">h → a (2)</span><br><span class="line">n → v (3)</span><br><span class="line">o → e (4)</span><br><span class="line">e → (删除) (5)   （不同算法可能计为 4 或 5）</span><br><span class="line">该词明显是低质量候选，只是 DISTANCE=3/4 时被勉强收录。</span><br><span class="line"></span><br><span class="line">业务侧做合理过滤</span><br><span class="line">如果 score &gt;= 2     → 直接丢弃（明显噪声）</span><br><span class="line">如果 score &lt;= 1.0   → 可信候选</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>建议策略</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>搜索框实时提示</td>
+<td>1</td>
+</tr>
+<tr>
+<td>搜索提交后纠错</td>
+<td>2</td>
+</tr>
+<tr>
+<td>模糊容错系统</td>
+<td>2~3</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>词典增强（Dictionary Integration）</p>
+</li>
+</ul>
+<blockquote>
+<p>通过 FT.DICTADD / FT.DICTDEL 人工维护一个或多个词典，把“业务词汇”主动注入到 SpellCheck 的候选词空间中。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">默认情况下：</span><br><span class="line">SpellCheck 只能从 索引倒排词典（Inverted Index Terms） 中生成候选词。</span><br><span class="line"></span><br><span class="line">如果某些词：</span><br><span class="line">  不在索引里</span><br><span class="line">  出现频率极低</span><br><span class="line">  属于专有名词</span><br><span class="line">  新词、品牌词</span><br><span class="line">那么 SpellCheck 很可能无法正确纠错。</span><br><span class="line"></span><br><span class="line">词典增强解决的正是这个问题。</span><br><span class="line"></span><br><span class="line">用户输入 → Tokenizer → 拆词 →</span><br><span class="line">  ↓</span><br><span class="line">候选源合并：</span><br><span class="line">  - 倒排索引词典</span><br><span class="line">  - 自定义词典（FT.DICTADD）</span><br><span class="line">  ↓</span><br><span class="line">编辑距离计算</span><br><span class="line">  ↓</span><br><span class="line">候选排序</span><br><span class="line">  ↓</span><br><span class="line">返回纠错词</span><br><span class="line"></span><br><span class="line">✅ SpellCheck 的候选空间被人为扩大。</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FT.DICTADD dict:tech iphone ipad macbook airpods</span><br><span class="line"><span class="comment"># 使用指定词典纠错，白名单</span></span><br><span class="line">FT.SPELLCHECK idx:user <span class="string">&quot;macboo&quot;</span> TERMS INCLUDE dict:tech</span><br><span class="line">1) 1) TERM</span><br><span class="line">   2) <span class="string">&quot;macboo&quot;</span></span><br><span class="line">   3) 1) 1) <span class="string">&quot;0.4&quot;</span></span><br><span class="line">         2) <span class="string">&quot;macbook&quot;</span></span><br><span class="line"><span class="comment"># 排除词典，黑名单</span></span><br><span class="line">FT.SPELLCHECK idx:user <span class="string">&quot;iphnoe&quot;</span> TERMS EXCLUDE dict:noise</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Map&lt;String, Double&gt;&gt; spellcheck = rSearch.spellcheck(</span><br><span class="line">        <span class="string">&quot;idx:user&quot;</span>,</span><br><span class="line">        <span class="string">&quot;macboo&quot;</span>,</span><br><span class="line">        SpellcheckOptions.defaults()</span><br><span class="line">                .distance(<span class="number">2</span>)</span><br><span class="line">                .includedTerms(<span class="string">&quot;dict:tech&quot;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>FT.SPELLCHECK 与 Suggest 的差异对比（关键）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>FT.SPELLCHECK</th>
+<th>FT.SUGGET</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>目标</td>
+<td>拼写纠错</td>
+<td>前缀联想</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>完整词</td>
+<td>前缀</td>
+</tr>
+<tr>
+<td>返回</td>
+<td>相似词</td>
+<td>补全词</td>
+</tr>
+<tr>
+<td>数据来源</td>
+<td>索引词典</td>
+<td>独立 Trie</td>
+</tr>
+<tr>
+<td>是否排序</td>
+<td>否（距离优先）</td>
+<td>是（score）</td>
+</tr>
+<tr>
+<td>是否模糊</td>
+<td>编辑距离</td>
+<td>前缀 + FUZZY</td>
+</tr>
+<tr>
+<td>使用阶段</td>
+<td>搜索前修正</td>
+<td>输入过程中</td>
+</tr>
+</tbody>
+</table>
 <h3 id="已废弃命令（不建议使用）">已废弃命令（不建议使用）</h3>
 <table>
 <thead>
@@ -2587,18 +2811,415 @@ i.ban {
 <tbody>
 <tr>
 <td><code>FT.CONFIG GET</code></td>
-<td>Deprecated</td>
-<td>使用 <code>CONFIG GET</code></td>
+<td>Reids8 将其标记为 Deprecated</td>
+<td>使用 <code>CONFIG GET search-*</code></td>
 </tr>
 <tr>
 <td><code>FT.CONFIG SET</code></td>
-<td>Deprecated</td>
+<td>Reids8 将其标记为 Deprecated</td>
 <td>同上</td>
 </tr>
 <tr>
 <td><code>FT.TAGVALS</code></td>
-<td>Deprecated</td>
+<td>已经标记为 Deprecated</td>
 <td>改用 AGGREGATE</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>⚠️ 这里要注意，只有 <code>Redis 8.0.0</code> 以上版本支持 <code>CONFIG GET search-*</code>。</p>
+</li>
+</ul>
+<h4 id="FT-CONFIG-GET-和-CONFIG-GET-search-对应参数整理"><code>FT.CONFIG GET *</code> 和 <code>CONFIG GET search-*</code> 对应参数整理</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1️⃣ 索引基本 / 文档表配置</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>FT.CONFIG 参数</th>
+<th>FT.CONFIG 值</th>
+<th>CONFIG search-* 参数</th>
+<th>CONFIG 值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MINPREFIX</td>
+<td>2</td>
+<td>search-min-prefix</td>
+<td>2</td>
+<td>自动补全最小前缀长度</td>
+</tr>
+<tr>
+<td>MINSTEMLEN</td>
+<td>4</td>
+<td>search-min-stem-len</td>
+<td>4</td>
+<td>最小词干长度</td>
+</tr>
+<tr>
+<td>MAXDOCTABLESIZE</td>
+<td>1000000</td>
+<td>search-max-doctablesize</td>
+<td>1000000</td>
+<td>最大文档表大小</td>
+</tr>
+<tr>
+<td>MAXSEARCHRESULTS</td>
+<td>1000000</td>
+<td>search-max-search-results</td>
+<td>1000000</td>
+<td>搜索结果限制</td>
+</tr>
+<tr>
+<td>MAXAGGREGATERESULTS</td>
+<td>unlimited</td>
+<td>search-max-aggregate-results</td>
+<td>2147483648</td>
+<td>聚合结果限制</td>
+</tr>
+<tr>
+<td>MAXEXPANSIONS</td>
+<td>200</td>
+<td>search-max-prefix-expansions</td>
+<td>200</td>
+<td>前缀扩展限制</td>
+</tr>
+<tr>
+<td>MAXPREFIXEXPANSIONS</td>
+<td>200</td>
+<td>search-max-prefix-expansions</td>
+<td>200</td>
+<td>前缀扩展限制（兼容）</td>
+</tr>
+<tr>
+<td>RAW_DOCID_ENCODING</td>
+<td>false</td>
+<td>search-raw-docid-encoding</td>
+<td>no</td>
+<td>文档ID是否原始编码</td>
+</tr>
+<tr>
+<td>UPGRADE_INDEX</td>
+<td>Upgrade config for upgrading</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>升级索引配置提示</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2️⃣ 查询 / 评分相关配置</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>FT.CONFIG 参数</th>
+<th>FT.CONFIG 值</th>
+<th>CONFIG search-* 参数</th>
+<th>CONFIG 值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TIMEOUT</td>
+<td>500</td>
+<td>search-timeout</td>
+<td>500</td>
+<td>查询超时（ms）</td>
+</tr>
+<tr>
+<td>ON_TIMEOUT</td>
+<td>return</td>
+<td>search-on-timeout</td>
+<td>return</td>
+<td>超时策略</td>
+</tr>
+<tr>
+<td>DEFAULT_SCORER</td>
+<td>TFIDF</td>
+<td>search-default-scorer</td>
+<td>BM25STD</td>
+<td>默认评分算法</td>
+</tr>
+<tr>
+<td>BM25STD_TANH_FACTOR</td>
+<td>4</td>
+<td>search-bm25std-tanh-factor</td>
+<td>4</td>
+<td>BM25 调整因子</td>
+</tr>
+<tr>
+<td>MULTI_TEXT_SLOP</td>
+<td>100</td>
+<td>search-multi-text-slop</td>
+<td>100</td>
+<td>多字段查询 slop</td>
+</tr>
+<tr>
+<td>DEFAULT_DIALECT</td>
+<td>1</td>
+<td>search-default-dialect</td>
+<td>1</td>
+<td>查询方言</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>3️⃣ GC / 后台索引配置</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>FT.CONFIG 参数</th>
+<th>FT.CONFIG 值</th>
+<th>CONFIG search-* 参数</th>
+<th>CONFIG 值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NOGC</td>
+<td>false</td>
+<td>search-no-gc</td>
+<td>no</td>
+<td>禁用 GC</td>
+</tr>
+<tr>
+<td>GC_POLICY</td>
+<td>fork</td>
+<td>search-fork-gc-policy (implicit)</td>
+<td>fork</td>
+<td>GC 策略</td>
+</tr>
+<tr>
+<td>FORKGC_SLEEP_BEFORE_EXIT</td>
+<td>0</td>
+<td>search-fork-gc-sleep-before-exit</td>
+<td>0</td>
+<td>fork GC 退出前睡眠</td>
+</tr>
+<tr>
+<td>FORK_GC_RUN_INTERVAL</td>
+<td>30</td>
+<td>search-fork-gc-run-interval</td>
+<td>30</td>
+<td>fork GC 执行间隔（秒）</td>
+</tr>
+<tr>
+<td>FORK_GC_CLEAN_THRESHOLD</td>
+<td>100</td>
+<td>search-fork-gc-clean-threshold</td>
+<td>100</td>
+<td>fork GC 清理阈值</td>
+</tr>
+<tr>
+<td>FORK_GC_RETRY_INTERVAL</td>
+<td>5</td>
+<td>search-fork-gc-retry-interval</td>
+<td>5</td>
+<td>fork GC 重试间隔</td>
+</tr>
+<tr>
+<td>FORK_GC_CLEAN_NUMERIC_EMPTY_NODES</td>
+<td>true</td>
+<td>search-_numeric-compress</td>
+<td>no</td>
+<td>清理空数值节点</td>
+</tr>
+<tr>
+<td>GCSCANSIZE</td>
+<td>100</td>
+<td>search-gc-scan-size</td>
+<td>100</td>
+<td>GC 每次扫描大小</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>4️⃣ 游标 / 线程 / 并发配置</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>FT.CONFIG 参数</th>
+<th>FT.CONFIG 值</th>
+<th>CONFIG search-* 参数</th>
+<th>CONFIG 值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CURSOR_MAX_IDLE</td>
+<td>300000</td>
+<td>search-cursor-max-idle</td>
+<td>300000</td>
+<td>游标最大空闲时间</td>
+</tr>
+<tr>
+<td>INDEX_CURSOR_LIMIT</td>
+<td>128</td>
+<td>search-index-cursor-limit</td>
+<td>128</td>
+<td>单索引游标限制</td>
+</tr>
+<tr>
+<td>UNION_ITERATOR_HEAP</td>
+<td>20</td>
+<td>search-union-iterator-heap</td>
+<td>20</td>
+<td>UNION 查询堆大小</td>
+</tr>
+<tr>
+<td>NO_MEM_POOLS</td>
+<td>false</td>
+<td>search-no-mem-pools</td>
+<td>no</td>
+<td>禁用内存池</td>
+</tr>
+<tr>
+<td>_FREE_RESOURCE_ON_THREAD</td>
+<td>true</td>
+<td>search-_free-resource-on-thread</td>
+<td>yes</td>
+<td>线程释放资源</td>
+</tr>
+<tr>
+<td>search_min_operation_workers</td>
+<td>N/A</td>
+<td>search-min-operation-workers</td>
+<td>4</td>
+<td>最小操作线程数</td>
+</tr>
+<tr>
+<td>search-workers</td>
+<td>N/A</td>
+<td>search-workers</td>
+<td>0</td>
+<td>工作线程数</td>
+</tr>
+<tr>
+<td>search-workers-priority-bias-threshold</td>
+<td>N/A</td>
+<td>search-workers-priority-bias-threshold</td>
+<td>1</td>
+<td>线程优先级偏置</td>
+</tr>
+<tr>
+<td>INDEXER_YIELD_EVERY_OPS</td>
+<td>1000</td>
+<td>search-indexer-yield-every-ops</td>
+<td>1000</td>
+<td>索引器 yield 每操作数</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>5️⃣ 实验 / 内部 /其他</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>FT.CONFIG 参数</th>
+<th>FT.CONFIG 值</th>
+<th>CONFIG search-* 参数</th>
+<th>CONFIG 值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EXTLOAD</td>
+<td>nil</td>
+<td>search-ext-load</td>
+<td>“”</td>
+<td>外部加载模块</td>
+</tr>
+<tr>
+<td>FRISOINI</td>
+<td>nil</td>
+<td>search-friso-ini</td>
+<td>“”</td>
+<td>中文分词初始化</td>
+</tr>
+<tr>
+<td>ENABLE_UNSTABLE_FEATURES</td>
+<td>false</td>
+<td>search-enable-unstable-features</td>
+<td>no</td>
+<td>启用实验特性</td>
+</tr>
+<tr>
+<td>_PRINT_PROFILE_CLOCK</td>
+<td>true</td>
+<td>search-_print-profile-clock</td>
+<td>yes</td>
+<td>Profiling 开关</td>
+</tr>
+<tr>
+<td>_NUMERIC_RANGES_PARENTS</td>
+<td>0</td>
+<td>search-_numeric-ranges-parents</td>
+<td>0</td>
+<td>数值范围父节点数</td>
+</tr>
+<tr>
+<td>VSS_MAX_RESIZE</td>
+<td>0</td>
+<td>search-vss-max-resize</td>
+<td>1024</td>
+<td>向量索引最大重分配</td>
+</tr>
+<tr>
+<td>PARTIAL_INDEXED_DOCS</td>
+<td>false</td>
+<td>search-partial-indexed-docs</td>
+<td>no</td>
+<td>部分索引文档标记</td>
+</tr>
+<tr>
+<td>_PRIORITIZE_INTERSECT_UNION_CHILDREN</td>
+<td>false</td>
+<td>search-_prioritize-intersect-union-children</td>
+<td>no</td>
+<td>优先处理 INTERSECT/UNION 子节点</td>
+</tr>
+<tr>
+<td>_BG_INDEX_MEM_PCT_THR</td>
+<td>100</td>
+<td>search-_bg-index-mem-pct-thr</td>
+<td>100</td>
+<td>后台索引内存阈值</td>
+</tr>
+<tr>
+<td>_NUMERIC_COMPRESS</td>
+<td>false</td>
+<td>search-_numeric-compress</td>
+<td>no</td>
+<td>数值压缩</td>
+</tr>
+<tr>
+<td>_BG_INDEX_OOM_PAUSE_TIME</td>
+<td>0</td>
+<td>search-_bg-index-oom-pause-time</td>
+<td>0</td>
+<td>后台索引 OOM 暂停时间</td>
 </tr>
 </tbody>
 </table>
@@ -2741,14 +3362,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">753k</span>
+    <span title="站点总字数">761k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">45:38</span>
+    <span title="站点阅读时长">46:07</span>
   </span>
 </div>
 <div class="busuanzi-count">
