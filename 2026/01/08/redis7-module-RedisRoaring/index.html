@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upic-oss.oss-cn-beijing.aliyuncs.com/uPic/Vw540M.png">
 <meta property="article:published_time" content="2026-01-08T13:30:05.000Z">
-<meta property="article:modified_time" content="2026-01-08T09:27:55.249Z">
+<meta property="article:modified_time" content="2026-01-08T09:44:21.470Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -1067,7 +1067,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-01-08 21:30:05 / 修改时间：17:27:55" itemprop="dateCreated datePublished" datetime="2026-01-08T21:30:05+08:00">2026-01-08</time>
+      <time title="创建时间：2026-01-08 21:30:05 / 修改时间：17:44:21" itemprop="dateCreated datePublished" datetime="2026-01-08T21:30:05+08:00">2026-01-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1115,7 +1115,7 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.4k</span>
+      <span>2.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1204,7 +1204,7 @@ i.ban {
 </tr>
 <tr>
 <td>RunContainer</td>
-<td>连续区间，使用Run-Length Encoding方式压缩存储的元素，对连续数据的压缩效果特别好。<br>它的原理是，对于连续出现的数字，只记录初始数字和后续数量。即：<br>对于数据集：5，会压缩为5, 0<br>对于数据集：5, 6, 7, 8, 9, 10，会压缩为5, 5<br>对于数据集：5, 7, 9, 11, 12，会压缩为5, 0, 7, 0, 9, 0, 11, 1，还不如不压缩 <br>最好情况：全部是连续数字，只会存储 2 个 short ，占用 4 bytes<br>最坏情况：0~65535的范围内填充所有的奇数位或偶数位，需要 65536 个short，占用 128 KB</td>
+<td>连续区间，使用Run-Length Encoding方式压缩存储的元素，对连续数据的压缩效果特别好。<br>它的原理是，对于连续出现的数字，只记录初始数字和后续数量。即：<br>对于数据集：5，会压缩为5, 0<br>对于数据集：5, 6, 7, 8, 9, 10，会压缩为5, 5<br>对于数据集：5, 7, 9, 11, 12，会压缩为5, 0, 7, 0, 9, 0, 11, 1 <br>最好情况：全部是连续数字，只会存储 2 个 short ，占用 4 bytes<br>最坏情况：0~65535的范围内填充所有的奇数位或偶数位，需要 65536 个short，占用 128 KB</td>
 </tr>
 </tbody>
 </table>
@@ -1305,11 +1305,6 @@ i.ban {
 </li>
 </ul>
    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">memory_run: 如果用 RunContainer，需要多少内存， ≈ run_count × RUN_ENTRY_SIZE(4 bytes)</span><br><span class="line">memory_array: 如果用 ArrayContainer，需要多少内存， ≈ 元素数量 × 2 bytes</span><br><span class="line">memory_bitmap: 如果用 BitmapContainer，需要多少内存，固定内存 = 8192 bytes</span><br><span class="line"></span><br><span class="line">▶ 选择逻辑（简化）</span><br><span class="line"><span class="keyword">if</span> memory_run &lt; min(memory_array, memory_bitmap):</span><br><span class="line">   use RunContainer</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> memory_array &lt; memory_bitmap:</span><br><span class="line">   use ArrayContainer</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">   use BitmapContainer</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>✅ 在 Roaring 的自动选择机制下，正常情况下单个 container 的内存占用会被控制在 ≈ 8KB 左右或更小。</p>
-</li>
-</ul>
 <table>
 <thead>
 <tr>
@@ -1341,6 +1336,41 @@ i.ban {
 <tr>
 <td>optimize</td>
 <td>强制重新评估</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>✅ 在 Roaring 的自动选择机制下，正常情况下单个 container 的内存占用会被控制在 ≈ 8KB 左右或更小，在“理论极限完全填满65535个 container”情况下，大约占 520 MB 内存(除了数据本身还有一些元数据)</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>估算</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bitmap 数据</td>
+<td>~512 MB</td>
+</tr>
+<tr>
+<td>Container 元数据</td>
+<td>~4 MB</td>
+</tr>
+<tr>
+<td>索引结构</td>
+<td>~1 MB</td>
+</tr>
+<tr>
+<td>Redis Key 自身</td>
+<td>~0.1 MB</td>
+</tr>
+<tr>
+<td><strong>合计</strong></td>
+<td><strong>约 517 MB</strong></td>
 </tr>
 </tbody>
 </table>
