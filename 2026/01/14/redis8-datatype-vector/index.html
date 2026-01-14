@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要  本文介绍 Redis8 新增的数据类型 Vector Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis官网安装手册">
+    <meta name="description" content="摘要  本文介绍 Redis8 新增的数据类型 Vector Set Redis官网：https:&#x2F;&#x2F;redis.io&#x2F;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis8 新增的数据类型 -- Vector">
+<meta property="og:title" content="Redis8 新增的数据类型 -- Vector Set">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2026/01/14/redis8-datatype-vector/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  本文介绍 Redis8 新增的数据类型 Vector Redis官网：https:&#x2F;&#x2F;redis.io&#x2F; Redis官网安装手册">
+<meta property="og:description" content="摘要  本文介绍 Redis8 新增的数据类型 Vector Set Redis官网：https:&#x2F;&#x2F;redis.io&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-01-14T13:30:05.000Z">
-<meta property="article:modified_time" content="2026-01-14T07:59:51.498Z">
+<meta property="article:modified_time" content="2026-01-14T10:07:56.048Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -39,10 +39,10 @@
 <link rel="canonical" href="https://blog.hanqunfeng.com/2026/01/14/redis8-datatype-vector/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2026/01/14/redis8-datatype-vector/","path":"2026/01/14/redis8-datatype-vector/","title":"Redis8 新增的数据类型 -- Vector"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2026/01/14/redis8-datatype-vector/","path":"2026/01/14/redis8-datatype-vector/","title":"Redis8 新增的数据类型 -- Vector Set"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Redis8 新增的数据类型 -- Vector | 飘逸峰的博客</title><meta name="robots" content="noindex">
+<title>Redis8 新增的数据类型 -- Vector Set | 飘逸峰的博客</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text"></span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vector-Set-%E5%91%BD%E4%BB%A4%E8%AF%B4%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">Vector Set 命令说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%AE%A1%E7%90%86%E7%B1%BB"><span class="nav-number">2.1.</span> <span class="nav-text">一、基础管理类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VADD-%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.1.1.</span> <span class="nav-text">VADD 命令参数详解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%90%91%E9%87%8F%E5%85%83%E7%B4%A0%E8%AE%BF%E9%97%AE%E4%B8%8E%E5%88%A4%E6%96%AD"><span class="nav-number">2.2.</span> <span class="nav-text">二、向量元素访问与判断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VRANGE"><span class="nav-number">2.2.1.</span> <span class="nav-text">VRANGE</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%90%91%E9%87%8F%E5%B1%9E%E6%80%A7%EF%BC%88Metadata-Attributes%EF%BC%89%E7%AE%A1%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">三、向量属性（Metadata &#x2F; Attributes）管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%90%91%E9%87%8F%E7%9B%B8%E4%BC%BC%E5%BA%A6%E4%B8%8E%E6%A3%80%E7%B4%A2%E7%B1%BB%EF%BC%88%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">四、向量相似度与检索类（核心）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VSIM"><span class="nav-number">2.4.1.</span> <span class="nav-text">VSIM</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%90%91%E9%87%8F%E5%B5%8C%E5%85%A5%EF%BC%88Embedding%EF%BC%89%E7%9B%B8%E5%85%B3"><span class="nav-number">2.5.</span> <span class="nav-text">五、向量嵌入（Embedding）相关</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -903,7 +903,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">286</span>
+          <span class="site-state-item-count">287</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -981,20 +981,6 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/25/redis8-install-amazon-linux-2023/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-25</time>
-        <br>
-      Amazon Linux 2023(内核 6.1) 安装 Redis8
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/25/redis8-install-rocky9/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-25</time>
-        <br>
-      Rcoky9 安装 Redis8
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2026/01/13/redis7-module-RediSearch-vector/" rel="bookmark">
         <time class="popular-posts-time">2026-01-13</time>
         <br>
@@ -1002,17 +988,31 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2026/01/07/redis7-module-RedisTimeSeries/" rel="bookmark">
-        <time class="popular-posts-time">2026-01-07</time>
+      <a class="popular-posts-link" href="/2025/12/15/redis7-datatype-02-string/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-15</time>
         <br>
-      Redis 扩展模块 -- RedisTimeSeries 的安装方法
+      Redis 命令及数据类型 -- String
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/24/redis7-module-RedisJSON/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-24</time>
+      <a class="popular-posts-link" href="/2025/12/16/redis7-datatype-06-zset/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-16</time>
         <br>
-      Redis 扩展模块 -- RedisJSON 的安装方法
+      Redis 命令及数据类型 -- ZSet
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/16/redis7-datatype-04-list/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-16</time>
+        <br>
+      Redis 命令及数据类型 -- List
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/19/redis7-datatype-08-hyperloglog/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-19</time>
+        <br>
+      Redis 命令及数据类型 -- Hyperloglog
       </a>
     </li>
   </ul>
@@ -1048,12 +1048,12 @@ i.ban {
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Redis8 新增的数据类型 -- Vector | 飘逸峰的博客">
+      <meta itemprop="name" content="Redis8 新增的数据类型 -- Vector Set | 飘逸峰的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Redis8 新增的数据类型 -- Vector
+          Redis8 新增的数据类型 -- Vector Set
         </h1>
 
         <div class="post-meta-container">
@@ -1065,7 +1065,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-01-14 21:30:05 / 修改时间：15:59:51" itemprop="dateCreated datePublished" datetime="2026-01-14T21:30:05+08:00">2026-01-14</time>
+      <time title="创建时间：2026-01-14 21:30:05 / 修改时间：18:07:56" itemprop="dateCreated datePublished" datetime="2026-01-14T21:30:05+08:00">2026-01-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1101,7 +1101,7 @@ i.ban {
 </div>
 
 
-    <span id="/2026/01/14/redis8-datatype-vector/" class="leancloud_visitors" data-flag-title="Redis8 新增的数据类型 -- Vector" title="阅读次数">
+    <span id="/2026/01/14/redis8-datatype-vector/" class="leancloud_visitors" data-flag-title="Redis8 新增的数据类型 -- Vector Set" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -1113,14 +1113,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>28</span>
+      <span>3.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>12 分钟</span>
     </span>
 
         </div>
@@ -1131,13 +1131,666 @@ i.ban {
     
     <div class="post-body" itemprop="articleBody"><h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
-<li class="lvl-2">本文介绍 Redis8 新增的数据类型 Vector</li>
+<li class="lvl-2">本文介绍 Redis8 新增的数据类型 Vector Set</li>
 <li class="lvl-2">Redis官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a></li>
-<li class="lvl-2"><a target="_blank" rel="noopener" href="https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/rpm/">Redis官网安装手册</a></li>
 </ul>
 <span id="more"></span>
-<h2 id=""></h2>
-<!-- flag of hidden posts -->
+<h2 id="Vector-Set-命令说明">Vector Set 命令说明</h2>
+<h3 id="一、基础管理类">一、基础管理类</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>语法</th>
+<th>参数说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VADD</strong></td>
+<td>向向量集合中添加一个向量元素</td>
+<td><code>VADD key VALUES num vector element</code></td>
+<td><code>key</code>：向量集合名<br><code>vector</code>：向量数据（浮点数组）<br><code>element</code>：元素标识</td>
+<td><code>VADD user:embeddings VALUES 3 0.1 0.2 0.3 u1</code></td>
+</tr>
+<tr>
+<td><strong>VREM</strong></td>
+<td>从向量集合中删除一个或多个元素</td>
+<td><code>VREM key element</code></td>
+<td><code>key</code>：向量集合<br><code>element</code>：元素标识</td>
+<td><code>VREM user:embeddings u1</code></td>
+</tr>
+<tr>
+<td><strong>VCARD</strong></td>
+<td>返回向量集合中的元素数量</td>
+<td><code>VCARD key</code></td>
+<td><code>key</code>：向量集合</td>
+<td><code>VCARD user:embeddings</code></td>
+</tr>
+<tr>
+<td><strong>VDIM</strong></td>
+<td>获取向量集合的维度</td>
+<td><code>VDIM key</code></td>
+<td><code>key</code>：向量集合</td>
+<td><code>VDIM user:embeddings</code></td>
+</tr>
+<tr>
+<td><strong>VINFO</strong></td>
+<td>查看向量集合的元信息</td>
+<td><code>VINFO key</code></td>
+<td><code>key</code>：向量集合</td>
+<td><code>VINFO user:embeddings</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="VADD-命令参数详解">VADD 命令参数详解</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>语法</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">VADD key</span><br><span class="line">     [REDUCE dim]</span><br><span class="line">     (FP32 | VALUES num) vector</span><br><span class="line">     element</span><br><span class="line">     [CAS]</span><br><span class="line">     [NOQUANT | Q8 | BIN]</span><br><span class="line">     [EF build-exploration-factor]</span><br><span class="line">     [SETATTR attributes]</span><br><span class="line">     [M numlinks]</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>必需参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数类型</th>
+<th>作用</th>
+<th>语法 / 格式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td>String</td>
+<td>向量集合名称</td>
+<td><code>VADD key ...</code></td>
+<td>Redis 中用于存储向量集合的键名。如果不存在会自动创建集合。</td>
+</tr>
+<tr>
+<td><code>FP32 vector</code></td>
+<td>Binary</td>
+<td>直接传入二进制浮点向量</td>
+<td><code>FP32 &lt;binary&gt;</code></td>
+<td>以 <strong>小端序</strong>编码的 32 位浮点数组，适合客户端直接传二进制向量数据（高性能、低序列化开销）。</td>
+</tr>
+<tr>
+<td><code>VALUES num vector</code></td>
+<td>Numeric List</td>
+<td>以数值方式传入向量</td>
+<td><code>VALUES &lt;num&gt; &lt;v1&gt; &lt;v2&gt; ... &lt;vN&gt;</code></td>
+<td><code>num</code> 为向量维度，后面必须跟随 <code>num</code> 个浮点数。适合在 CLI 或调试场景使用。</td>
+</tr>
+<tr>
+<td><code>element</code></td>
+<td>String</td>
+<td>向量元素 ID</td>
+<td><code>&lt;element&gt;</code></td>
+<td>向量在集合中的唯一标识符，可理解为向量的主键或业务 ID。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>重点说明：客户端实现时推荐直接传 FP32 二进制向量，避免浮点字符串解析开销。</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>可选参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数类型</th>
+<th>作用</th>
+<th>语法约束</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>REDUCE dim</code></td>
+<td>Integer</td>
+<td>向量降维</td>
+<td><strong>必须紧跟在 key 后面</strong></td>
+<td>使用随机投影算法将原始向量降维到 <code>dim</code> 维，降低存储与计算成本。<br>如果原始向量维度 &gt; dim → 是“降维”<br>如果原始向量维度 &lt; dim → 是“升维 / 填充映射”</td>
+</tr>
+<tr>
+<td><code>CAS</code></td>
+<td>Flag</td>
+<td>异步构建索引</td>
+<td>可放在 element 后</td>
+<td>采用 Check-And-Set 风格：主线程快速返回，后台异步完成候选集构建，提高写入吞吐。</td>
+</tr>
+<tr>
+<td><code>NOQUANT</code></td>
+<td>Flag</td>
+<td>禁用量化</td>
+<td>仅首次创建集合时生效</td>
+<td>不使用默认 int8 量化，保留原始浮点精度，内存占用更高。</td>
+</tr>
+<tr>
+<td><code>Q8</code></td>
+<td>Flag</td>
+<td>启用 int8 量化（默认）</td>
+<td>仅首次创建集合时生效</td>
+<td>使用有符号 8 位量化，在精度、性能和内存之间取得平衡。</td>
+</tr>
+<tr>
+<td><code>BIN</code></td>
+<td>Flag</td>
+<td>二进制量化</td>
+<td>仅首次创建集合时生效</td>
+<td>内存占用最小、速度最快，但相似度召回率可能下降。</td>
+</tr>
+<tr>
+<td><code>EF build-exploration-factor</code></td>
+<td>Integer</td>
+<td>构图探索因子</td>
+<td>可放在 element 后</td>
+<td>HNSW 构图阶段的搜索宽度参数，默认约 200，值越大构图质量越高，但写入成本增加。</td>
+</tr>
+<tr>
+<td><code>SETATTR attributes</code></td>
+<td>JSON</td>
+<td>设置向量属性</td>
+<td>可放在 element 后</td>
+<td>给元素绑定 JSON 属性，等价于调用 <code>VSETATTR</code>。</td>
+</tr>
+<tr>
+<td><code>M numlinks</code></td>
+<td>Integer</td>
+<td>HNSW 最大连接数</td>
+<td>可放在 element 后</td>
+<td>每个节点允许的最大邻居数，默认 16。值越大索引更稠密，查询质量更高，但内存和写入成本上升。</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例：使用 VALUES</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VADD my_vectors VALUES 3 0.1 1.2 0.5 image123</span><br><span class="line"><span class="comment"># 解释：</span></span><br><span class="line"><span class="comment">#    将向量 [0.1, 1.2, 0.5] 添加到键 my_vectors 对应的向量结构中。</span></span><br><span class="line"><span class="comment">#    元素名为 image123。</span></span><br><span class="line"><span class="comment">#    如果该键不存在，则创建新向量集。</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例：使用降维和量化选项</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">VADD my_vectors REDUCE 50 VALUES 5 0.02 0.89 0.77 0.56 0.33 pic_001 Q8 EF 300 M 32</span><br><span class="line"><span class="comment"># 解释：</span></span><br><span class="line"><span class="comment">#    对向量 REDUCE 到 50 维，这里原始数据维度小，实际上是升维</span></span><br><span class="line"><span class="comment">#    向量为 5 维浮点数值。</span></span><br><span class="line"><span class="comment">#    使用默认的带符号 8 位量化（Q8）。</span></span><br><span class="line"><span class="comment">#    设置 HNSW 图探索因子为 300。</span></span><br><span class="line"><span class="comment">#    每节点连接数上限为 32。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取向量维度</span></span><br><span class="line">127.0.0.1:6379&gt; VDIM my_vectors</span><br><span class="line">(<span class="built_in">integer</span>) 50</span><br><span class="line"><span class="comment"># 获取向量信息，输出内容见下表中的说明</span></span><br><span class="line">127.0.0.1:6379&gt; VINFO my_vectors</span><br><span class="line"> 1) quant-type</span><br><span class="line"> 2) int8</span><br><span class="line"> 3) hnsw-m</span><br><span class="line"> 4) (<span class="built_in">integer</span>) 32</span><br><span class="line"> 5) vector-dim</span><br><span class="line"> 6) (<span class="built_in">integer</span>) 50</span><br><span class="line"> 7) projection-input-dim</span><br><span class="line"> 8) (<span class="built_in">integer</span>) 5</span><br><span class="line"> 9) size</span><br><span class="line">10) (<span class="built_in">integer</span>) 1</span><br><span class="line">11) max-level</span><br><span class="line">12) (<span class="built_in">integer</span>) 0</span><br><span class="line">13) attributes-count</span><br><span class="line">14) (<span class="built_in">integer</span>) 0</span><br><span class="line">15) vset-uid</span><br><span class="line">16) (<span class="built_in">integer</span>) 0</span><br><span class="line">17) hnsw-max-node-uid</span><br><span class="line">18) (<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>VINFO 输出字段说明表</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>当前值</th>
+<th>类型</th>
+<th>含义说明</th>
+<th>工程解读 / 使用价值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>quant-type</code></td>
+<td><code>int8</code></td>
+<td>String</td>
+<td>向量量化方式</td>
+<td>当前使用 <strong>Q8（8位有符号整数量化）</strong>，在精度、性能、内存之间平衡。</td>
+</tr>
+<tr>
+<td><code>hnsw-m</code></td>
+<td><code>32</code></td>
+<td>Integer</td>
+<td>HNSW 每节点最大连接数（M 参数）</td>
+<td>图结构较稠密，召回率高，但内存占用和写入成本上升。</td>
+</tr>
+<tr>
+<td><code>vector-dim</code></td>
+<td><code>50</code></td>
+<td>Integer</td>
+<td><strong>索引内部真实使用的向量维度</strong></td>
+<td>REDUCE 后的目标维度，VSIM / VRANGE 查询均基于此维度计算。</td>
+</tr>
+<tr>
+<td><code>projection-input-dim</code></td>
+<td><code>5</code></td>
+<td>Integer</td>
+<td>投影前输入向量的原始维度</td>
+<td>说明你输入的是 <strong>5维向量</strong>，然后被映射到 50 维。</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>1</code></td>
+<td>Integer</td>
+<td>当前向量元素数量</td>
+<td>集合中仅有 1 条向量数据（item42）。</td>
+</tr>
+<tr>
+<td><code>max-level</code></td>
+<td><code>0</code></td>
+<td>Integer</td>
+<td>HNSW 当前最大层级</td>
+<td>数据量太小，仅构建了 0 层（尚未形成多层索引结构）。</td>
+</tr>
+<tr>
+<td><code>attributes-count</code></td>
+<td><code>0</code></td>
+<td>Integer</td>
+<td>当前已存储的属性对象数量</td>
+<td>说明 SETATTR 没有成功写入或尚未设置属性。</td>
+</tr>
+<tr>
+<td><code>vset-uid</code></td>
+<td><code>0</code></td>
+<td>Integer</td>
+<td>向量集合内部唯一 ID</td>
+<td>内部调试字段，对业务无直接影响。</td>
+</tr>
+<tr>
+<td><code>hnsw-max-node-uid</code></td>
+<td><code>1</code></td>
+<td>Integer</td>
+<td>HNSW 当前最大节点 ID</td>
+<td>当前仅存在 1 个节点。</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例：添加带属性的向量</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VADD my_vectors VALUES 4 0.15 0.26 0.47 0.88 item42 SETATTR <span class="string">&quot;&#123;\&quot;type\&quot;:\&quot;product\&quot;,\&quot;price\&quot;:29.99&#125;&quot;</span></span><br><span class="line"><span class="comment"># 解释：</span></span><br><span class="line">   <span class="comment"># 插入 4 维向量并给 item42 设置 JSON 属性 type 和 price。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取向量属性</span></span><br><span class="line">127.0.0.1:6379&gt; VGETATTR my_vectors item42</span><br><span class="line"><span class="string">&quot;&#123;\&quot;type\&quot;:\&quot;product\&quot;,\&quot;price\&quot;:29.99&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例：插入多条数据</p>
+</li>
+</ul>
+<blockquote>
+<p>只有<code>维度</code>、<code>quant-type</code> 和 <code>hnsw-m</code>都相同的数据才会被加入同一个 VectorSet<br>
+VectorSet 在第一次创建时就固定了相关的属性</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; VADD my_vectors VALUES 4 0.15 0.26 0.47 0.88 item42 SETATTR <span class="string">&quot;&#123;\&quot;type\&quot;:\&quot;product\&quot;,\&quot;price\&quot;:29.99&#125;&quot;</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; VADD my_vectors VALUES 4 0.25 0.20 0.57 0.98 item43</span><br><span class="line">127.0.0.1:6379&gt; VADD my_vectors VALUES 4 0.25 0.20 0.57 0.98 item44 Q8 EF 300 M 16</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; VADD my_vectors VALUES 4 0.25 0.20 0.57 0.98 item44 Q8 EF 300 M 16</span><br><span class="line">(<span class="built_in">integer</span>) 0  <span class="comment"># 添加重复元素标识，返回 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取向量数量</span></span><br><span class="line">127.0.0.1:6379&gt; VCARD my_vectors</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br><span class="line"><span class="comment"># 获取向量信息</span></span><br><span class="line">127.0.0.1:6379&gt; VINFO my_vectors</span><br><span class="line"> 1) quant-type</span><br><span class="line"> 2) int8</span><br><span class="line"> 3) hnsw-m</span><br><span class="line"> 4) (<span class="built_in">integer</span>) 16</span><br><span class="line"> 5) vector-dim</span><br><span class="line"> 6) (<span class="built_in">integer</span>) 4</span><br><span class="line"> 7) projection-input-dim</span><br><span class="line"> 8) (<span class="built_in">integer</span>) 0</span><br><span class="line"> 9) size</span><br><span class="line">10) (<span class="built_in">integer</span>) 2</span><br><span class="line">11) max-level</span><br><span class="line">12) (<span class="built_in">integer</span>) 0</span><br><span class="line">13) attributes-count</span><br><span class="line">14) (<span class="built_in">integer</span>) 2</span><br><span class="line">15) vset-uid</span><br><span class="line">16) (<span class="built_in">integer</span>) 2</span><br><span class="line">17) hnsw-max-node-uid</span><br><span class="line">18) (<span class="built_in">integer</span>) 2</span><br></pre></td></tr></table></figure>
+<h3 id="二、向量元素访问与判断">二、向量元素访问与判断</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>语法</th>
+<th>参数说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VISMEMBER</strong></td>
+<td>判断元素是否存在于向量集合中</td>
+<td><code>VISMEMBER key element</code></td>
+<td><code>key</code>：向量集合<br><code>element</code>：元素标识</td>
+<td><code>VISMEMBER user:embeddings u1</code></td>
+</tr>
+<tr>
+<td><strong>VRANDMEMBER</strong></td>
+<td>随机返回一个或多个向量元素</td>
+<td><code>VRANDMEMBER key [count]</code></td>
+<td><code>count</code>：返回数量，默认为1（可选）</td>
+<td><code>VRANDMEMBER user:embeddings 2</code></td>
+</tr>
+<tr>
+<td><strong>VRANGE</strong></td>
+<td>返回向量集合中指定范围的元素（按内部顺序）</td>
+<td><code>VRANGE key start stop [count]</code></td>
+<td><code>start</code> / <code>stop</code>：说明见下表</td>
+<td><code>VRANGE user:embeddings - + -1</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="VRANGE">VRANGE</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>参数说明</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>是否必须</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td>key</td>
+<td>是</td>
+<td>向量集合的键名</td>
+</tr>
+<tr>
+<td><code>start</code></td>
+<td>string</td>
+<td>是</td>
+<td>范围起始元素（字典序）<br>可用：<code>[</code> 前缀表示包含，<code>(</code> 前缀表示排除，<code>-</code> 表示最小元素</td>
+</tr>
+<tr>
+<td><code>end</code></td>
+<td>string</td>
+<td>是</td>
+<td>范围结束元素（字典序）<br>可用：<code>[</code> 前缀表示包含，<code>(</code> 前缀表示排除，<code>+</code> 表示最大元素</td>
+</tr>
+<tr>
+<td><code>count</code></td>
+<td>integer</td>
+<td>否</td>
+<td>最多返回元素数量<br>若为负数，则返回范围内所有匹配元素（注意可能阻塞）</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>参数举例说明</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-</code></td>
+<td>最小元素（等同 open-ended 从头开始）</td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>最大元素（等同 open-ended 到尾结束）</td>
+</tr>
+<tr>
+<td><code>[Redis</code></td>
+<td>从字典序 ≥ <code>&quot;Redis&quot;</code> 的元素开始（包含 <code>&quot;Redis&quot;</code>）</td>
+</tr>
+<tr>
+<td><code>(a7</code></td>
+<td>从字典序 &gt; <code>&quot;a7&quot;</code> 的元素开始（不包含 <code>&quot;a7&quot;</code>）</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 1：返回从 “Redis”（包含）开始的前 10 个元素</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VRANGE mykey [Redis + 10</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 2：分段迭代所有元素</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VRANGE mykey - + 10</span><br><span class="line"><span class="comment"># 输出：从最小到最大按每次 10 个元素迭代遍历（客户端可用结果接续下一段）。</span></span><br><span class="line"><span class="comment"># 比如输出最后一个元素是 &quot;Redis&quot;，则下一次迭代从 &quot;Redis&quot; 后面开始。</span></span><br><span class="line">VRANGE mykey (Redis + 10</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 3：返回指定范围所有元素（无数量上限）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VRANGE mykey - + -1</span><br><span class="line"><span class="comment"># 输出：返回整个集合所有元素。注意：若集合很大可能阻塞 Redis。</span></span><br></pre></td></tr></table></figure>
+<h3 id="三、向量属性（Metadata-Attributes）管理">三、向量属性（Metadata / Attributes）管理</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>用于给向量元素绑定结构化元数据（如标签、业务字段）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>语法</th>
+<th>参数说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VSETATTR</strong></td>
+<td>为向量元素设置属性</td>
+<td><code>VSETATTR key element &quot;&#123; JSON obj &#125;&quot;</code></td>
+<td>JSON obj</td>
+<td>设置元数据：<code>VSETATTR key element &quot;&#123;\&quot;type\&quot;: \&quot;fruit\&quot;, \&quot;color\&quot;: \&quot;red\&quot;&#125;&quot;</code> <br> 清除元数据：<code>VSETATTR key element &quot;&quot;</code></td>
+</tr>
+<tr>
+<td><strong>VGETATTR</strong></td>
+<td>获取向量元素的属性</td>
+<td><code>VGETATTR key element</code></td>
+<td></td>
+<td><code>VGETATTR user:embeddings u1</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="四、向量相似度与检索类（核心）">四、向量相似度与检索类（核心）</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>语法</th>
+<th>参数说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VSIM</strong></td>
+<td>基于向量相似度进行近邻搜索（KNN）</td>
+<td>详见下面的说明</td>
+<td></td>
+<td><code>VSIM word_embeddings ELE apple</code></td>
+</tr>
+<tr>
+<td><strong>VLINKS</strong></td>
+<td>查看向量之间的近邻链接关系（图结构）</td>
+<td><code>VLINKS key element [WITHSCORES]</code></td>
+<td><code>element</code>：向量元素 ID</td>
+<td><code>VLINKS user:embeddings u1</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="VSIM">VSIM</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>VSIM 用于在 向量集合（vector set） 中执行 相似度搜索，返回与指定参考向量或已存在元素向量 最相似 的元素列表。可以进行近似（默认 HNSW 索引）或精确（TRUTH）查询。</p>
+</li>
+<li class="lvl-2">
+<p>语法</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VSIM key (ELE | FP32 | VALUES num) (vector | element)</span><br><span class="line">   [WITHSCORES] [WITHATTRIBS] [COUNT num]</span><br><span class="line">   [EPSILON delta] [EF search-exploration-factor] [FILTER expression] [FILTER-EF max-filtering-effort]</span><br><span class="line">   [TRUTH] [NOTHREAD]</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>参数说明</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数 / 选项</th>
+<th>类型</th>
+<th>是否必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td>key</td>
+<td>是</td>
+<td>向量集合的键名</td>
+</tr>
+<tr>
+<td><code>ELE</code></td>
+<td>literal with element name</td>
+<td>是（三者不能同时出现）</td>
+<td>使用集合中已有的元素名称作为查询向量</td>
+</tr>
+<tr>
+<td><code>FP32</code></td>
+<td>literal</td>
+<td>是（三者不能同时出现）</td>
+<td>使用二进制 float32 格式提供查询向量</td>
+</tr>
+<tr>
+<td><code>VALUES num</code></td>
+<td>literal with integer</td>
+<td>是（三者不能同时出现）</td>
+<td>使用后续 <code>num</code> 个字符串 float 值提供查询向量</td>
+</tr>
+<tr>
+<td><code>vector</code> / <code>element</code></td>
+<td>vector values or element name</td>
+<td>是</td>
+<td>查询向量本身（或元素名）</td>
+</tr>
+<tr>
+<td><code>WITHSCORES</code></td>
+<td>flag</td>
+<td>否</td>
+<td>返回每个匹配项的相似度分数</td>
+</tr>
+<tr>
+<td><code>WITHATTRIBS</code></td>
+<td>flag</td>
+<td>否</td>
+<td>返回每个匹配项关联的 JSON 属性（如有）</td>
+</tr>
+<tr>
+<td><code>COUNT num</code></td>
+<td>integer</td>
+<td>否</td>
+<td>限制返回的相似项数量</td>
+</tr>
+<tr>
+<td><code>EPSILON delta</code></td>
+<td>float</td>
+<td>否</td>
+<td>过滤出距离不大于 delta 的结果（score ≥ 1−delta）</td>
+</tr>
+<tr>
+<td><code>EF search-exploration-factor</code></td>
+<td>integer</td>
+<td>否</td>
+<td>调整 HNSW 搜索探索因子（值越高搜索更深、更准确但更慢）。</td>
+</tr>
+<tr>
+<td><code>FILTER expression</code></td>
+<td>string</td>
+<td>否</td>
+<td>对属性进行过滤表达式约束（仅返回满足的元素）</td>
+</tr>
+<tr>
+<td><code>FILTER-EF max-filtering-effort</code></td>
+<td>integer</td>
+<td>否</td>
+<td>限制 FILTER 表达式的评估尝试次数</td>
+</tr>
+<tr>
+<td><code>TRUTH</code></td>
+<td>flag</td>
+<td>否</td>
+<td>强制精确线性扫描（不使用图索引）</td>
+</tr>
+<tr>
+<td><code>NOTHREAD</code></td>
+<td>flag</td>
+<td>否</td>
+<td>在主线程执行搜索而非后台线程</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>参数/选项说明细节</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">输入向量方式</span><br><span class="line">   ELE elementName：以集合中已有元素的向量作为查询参考。</span><br><span class="line">   FP32：提供 little-endian 编码的二进制浮点向量。</span><br><span class="line">   VALUES num …：直接以 <span class="built_in">float</span> 字符串序列作为查询向量，其后跟 num 个浮点值。</span><br><span class="line"></span><br><span class="line">输出控制</span><br><span class="line">   WITHSCORES：输出时每个结果后附带 similarity 分数（1 = 完全相同, 0 = 完全不同）。</span><br><span class="line">   WITHATTRIBS：若集合元素有 JSON 属性，则返回对应属性值。</span><br><span class="line">   COUNT num：指定最多返回匹配数量。</span><br><span class="line"></span><br><span class="line">搜索行为控制</span><br><span class="line">   EPSILON delta：仅返回与查询向量 distance &lt;= delta 的元素。</span><br><span class="line">   EF search-exploration-factor：HNSW 图搜索的探索因子（值越高搜索更深、更准确但更慢）。</span><br><span class="line">   FILTER expression：基于元素属性进行过滤，例如按年份、分类等。</span><br><span class="line">   FILTER-EF max-filtering-effort：限制 FILTER 表达式的评估尝试次数。</span><br><span class="line">   TRUTH：执行精确线性扫描而非近似图索引。</span><br><span class="line">   NOTHREAD：禁用后台线程，在主线程执行搜索（可能阻塞）。</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 1 — 基于现有元素查询（取最相似前 10 个）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VSIM my_vectors ELE apple WITHSCORES COUNT 10</span><br><span class="line"><span class="comment"># 返回元素 &quot;apple&quot; 最相似的前 10 个元素及其相似度分数。&quot;apple&quot; 必须在集合中存在。</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 2 — 基于明确定义的向量查询</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VSIM my_vectors VALUES 3 0.12 0.34 0.56 WITHSCORES COUNT 5</span><br><span class="line"><span class="comment"># 使用向量 [0.12, 0.34, 0.56] 作为查询参考，返回 最相似 的前 5 个结果及分数。</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 3 — 精确线性扫描用于基准或严格匹配</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VSIM my_vectors ELE targetElement TRUTH WITHSCORES</span><br><span class="line"><span class="comment"># 绕过 HNSW 索引，执行全量扫描以获取精确的相似度结果。</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 4 — 使用属性过滤</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设集合元素有 JSON 属性如 &#123; &quot;price&quot;: 20.99 &#125;</span></span><br><span class="line">VSIM my_vectors VALUES 4 0.15 0.26 0.47 0.88 FILTER <span class="string">&#x27;.price &gt;= 20&#x27;</span> COUNT 10</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 5 — 使用 EPSILON 控制相似度范围</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VSIM my_vectors ELE queryElem EPSILON 0.2 COUNT 50</span><br><span class="line"><span class="comment"># 仅返回相似度 ≥ 0.8（即距离 ≤ 0.2）且最多 50 个的匹配项。</span></span><br></pre></td></tr></table></figure>
+<h3 id="五、向量嵌入（Embedding）相关">五、向量嵌入（Embedding）相关</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>语法</th>
+<th>参数说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VEMB</strong></td>
+<td>从 向量集合（vector set） 中检索给定元素的向量（embedding）</td>
+<td><code>VEMB key element [RAW]</code></td>
+<td><code>key</code>: 向量集合的键名（即 vector set 名称）。<br><code>element</code>：目标元素名称，其向量将被检索。<br> <code>RAW</code>: 如果指定，返回 原始内部表示（量化信息 + 载体数据），而不是简单的反归一化向量。</td>
+<td><code>VEMB my_vectors item42</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 1 — 获取向量（embedding）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加元素</span></span><br><span class="line">VADD my_vectors VALUES 4 0.15 0.26 0.47 0.88 item42</span><br><span class="line"><span class="comment"># 查询元素的向量</span></span><br><span class="line">VEMB my_vectors item42</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">1) <span class="string">&quot;0.15244093537330627&quot;</span></span><br><span class="line">2) <span class="string">&quot;0.2633070647716522&quot;</span></span><br><span class="line">3) <span class="string">&quot;0.47118112444877625&quot;</span></span><br><span class="line">4) <span class="string">&quot;0.8799999952316284&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>示例 2 — 使用 RAW 选项</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VEMB my_vectors item42 RAW</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">1) int8              <span class="comment"># quantization type，字符串：如 fp32、bin、q8</span></span><br><span class="line">2) <span class="string">&quot;\x16&amp;D\x7f&quot;</span>      <span class="comment"># raw data blob ，二进制向量原始数据</span></span><br><span class="line">3) <span class="string">&quot;1.041825294494629&quot;</span>  <span class="comment"># L2 norm，归一化前向量的 L2 范数</span></span><br><span class="line">4) <span class="string">&quot;0.844671368598938&quot;</span>  <span class="comment"># quantization range (仅 q8 时)，量化范围，用于恢复真实值</span></span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -1181,7 +1834,7 @@ i.ban {
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.hanqunfeng.com/2026/01/14/redis8-datatype-vector/" title="Redis8 新增的数据类型 -- Vector">https://blog.hanqunfeng.com/2026/01/14/redis8-datatype-vector/</a>
+      <a href="https://blog.hanqunfeng.com/2026/01/14/redis8-datatype-vector/" title="Redis8 新增的数据类型 -- Vector Set">https://blog.hanqunfeng.com/2026/01/14/redis8-datatype-vector/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1232,6 +1885,15 @@ i.ban {
 
         
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/01/13/redis7-module-RediSearch-vector/" rel="prev" title="RediSearch 开发实战 之 向量检索">
+                  <i class="fa fa-angle-left"></i> RediSearch 开发实战 之 向量检索
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
@@ -1264,14 +1926,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">780k</span>
+    <span title="站点总字数">784k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">47:17</span>
+    <span title="站点阅读时长">47:29</span>
   </span>
 </div>
 <div class="busuanzi-count">
