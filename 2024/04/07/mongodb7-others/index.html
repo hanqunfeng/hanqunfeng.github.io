@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   本文介绍MongoDB7.0的一些有用的功能，比如运行js，查看慢查询日志等等   MongoDB官方文档   本文基于CentOS8(x86_64)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-07T13:30:05.000Z">
-<meta property="article:modified_time" content="2024-04-07T07:10:44.125Z">
+<meta property="article:modified_time" content="2026-02-05T04:13:44.200Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mongodb">
 <meta name="twitter:card" content="summary">
@@ -888,7 +888,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Cjs"><span class="nav-number">2.</span> <span class="nav-text">运行js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Profiler%E6%A8%A1%E5%9D%97"><span class="nav-number">3.</span> <span class="nav-text">Profiler模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#db-currentOp"><span class="nav-number">4.</span> <span class="nav-text">db.currentOp()</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Cjs"><span class="nav-number">2.</span> <span class="nav-text">运行js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Profiler%E6%A8%A1%E5%9D%97"><span class="nav-number">3.</span> <span class="nav-text">Profiler模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#db-currentOp"><span class="nav-number">4.</span> <span class="nav-text">db.currentOp()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mongod-lock"><span class="nav-number">5.</span> <span class="nav-text">mongod.lock</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mongod-lock-%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="nav-number">5.1.</span> <span class="nav-text">mongod.lock 的核心作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mongod-lock-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E4%BA%A7%E7%94%9F%EF%BC%9F"><span class="nav-number">5.2.</span> <span class="nav-text">mongod.lock 什么时候会产生？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MongoDB-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%87%AA%E5%8A%A8%E5%A4%84%E7%90%86%E6%97%A7-lock%EF%BC%9F"><span class="nav-number">5.3.</span> <span class="nav-text">MongoDB 为什么不自动处理旧 lock？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mongod-lock-%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%88%A0%E9%99%A4%EF%BC%9F"><span class="nav-number">5.4.</span> <span class="nav-text">mongod.lock 是否可以直接删除？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E3%80%81%E5%AE%89%E5%85%A8%E7%9A%84%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">5.5.</span> <span class="nav-text">标准、安全的处理流程（推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-MongoDB-3-x-%E5%BE%88%E5%B0%91%E5%86%8D%E9%81%87%E5%88%B0%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">5.6.</span> <span class="nav-text">为什么 MongoDB 3.x+ 很少再遇到这个问题？</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -981,24 +981,17 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2021/12/02/maven-setting/" rel="bookmark">
-        <time class="popular-posts-time">2021-12-02</time>
-        <br>
-      Maven仓库及镜像配置
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2024/03/13/linux-command14-setting/" rel="bookmark">
-        <time class="popular-posts-time">2024-03-13</time>
-        <br>
-      Linux常用命令--常用设置
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2024/03/01/mongodb7/" rel="bookmark">
         <time class="popular-posts-time">2024-03-01</time>
         <br>
       MongoDB7.0的安装
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/03/mongodb7-tools/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-03</time>
+        <br>
+      MongoDB Command Line Database Tools
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1013,6 +1006,13 @@ i.ban {
         <time class="popular-posts-time">2024-04-08</time>
         <br>
       MongoDB7.0--SpringBoot配置mongodb连接池
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/22/docker-command-image/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-22</time>
+        <br>
+      Docker 命令 之 镜像(Image)
       </a>
     </li>
   </ul>
@@ -1063,9 +1063,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2024-04-07 21:30:05 / 修改时间：15:10:44" itemprop="dateCreated datePublished" datetime="2024-04-07T21:30:05+08:00">2024-04-07</time>
+      <time title="创建时间：2024-04-07 21:30:05" itemprop="dateCreated datePublished" datetime="2024-04-07T21:30:05+08:00">2024-04-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-02-05 12:13:44" itemprop="dateModified" datetime="2026-02-05T12:13:44+08:00">2026-02-05</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1117,14 +1123,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
+      <span>2.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
+      <span>9 分钟</span>
     </span>
 
         </div>
@@ -1235,6 +1241,159 @@ i.ban {
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">操作的运行时长，快速发现耗时漫长的低效扫描操作。</span><br><span class="line">执行计划信息，用于判断是否命中了索引，或者存在锁冲突的情况。</span><br><span class="line">操作ID、时间、客户端等信息，方便定位出产生慢操作的源头</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">&gt; db.<span class="function"><span class="title">currentOp</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">inprog: [ <span class="comment"># 当前正在执行的操作</span></span><br><span class="line">  &#123;</span><br><span class="line">      <span class="built_in">type</span>: <span class="string">&#x27;op&#x27;</span>, <span class="comment"># 操作类型，可以是op、idleSession、idleCursor的一种，一般的操作信息以op表示。其为MongoDB 4.2版本新增功能</span></span><br><span class="line">      host: <span class="string">&#x27;localhost:27041&#x27;</span>, <span class="comment"># 操作所在的主机</span></span><br><span class="line">      desc: <span class="string">&#x27;conn474&#x27;</span>, <span class="comment"># 操作的描述信息</span></span><br><span class="line">      connectionId: 474, <span class="comment"># 操作的连接ID</span></span><br><span class="line">      client: <span class="string">&#x27;127.0.0.1:58103&#x27;</span>, <span class="comment"># 操作的客户端信息</span></span><br><span class="line">      appName: <span class="string">&#x27;mongosh 2.1.5&#x27;</span>, <span class="comment"># 操作的客户端应用信息</span></span><br><span class="line">      clientMetadata: &#123; <span class="comment"># 关于客户端的附加信息，可以包含驱动的版本。</span></span><br><span class="line">        application: &#123; name: <span class="string">&#x27;mongosh 2.1.5&#x27;</span> &#125;,</span><br><span class="line">        driver: &#123; name: <span class="string">&#x27;nodejs|mongosh&#x27;</span>, version: <span class="string">&#x27;6.3.0|2.1.5&#x27;</span> &#125;,</span><br><span class="line">        platform: <span class="string">&#x27;Node.js v20.11.1, LE&#x27;</span>,</span><br><span class="line">        os: &#123;</span><br><span class="line">          name: <span class="string">&#x27;darwin&#x27;</span>,</span><br><span class="line">          architecture: <span class="string">&#x27;x64&#x27;</span>,</span><br><span class="line">          version: <span class="string">&#x27;22.6.0&#x27;</span>,</span><br><span class="line">          <span class="built_in">type</span>: <span class="string">&#x27;Darwin&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      active: <span class="literal">true</span>, <span class="comment"># 操作是否活跃。如果是空闲状态则为false</span></span><br><span class="line">      currentOpTime: <span class="string">&#x27;2024-04-07T14:54:02.994+08:00&#x27;</span>, <span class="comment"># 操作的开始时间。MongoDB 3.6版本新增功能</span></span><br><span class="line">      threaded: <span class="literal">true</span>,</span><br><span class="line">      opid: 236247, <span class="comment"># opid：当前操作在数据库进程中的唯一编号,如果已经发现该操作正在导致数据库系统响应缓慢，则可以考虑将其“杀”死 : db.killOp(236247)</span></span><br><span class="line">      secs_running: Long(<span class="string">&#x27;3&#x27;</span>), <span class="comment"># 操作持续时间,单位：秒</span></span><br><span class="line">      microsecs_running: Long(<span class="string">&#x27;3362378&#x27;</span>), <span class="comment"># 操作持续时间，单位：微秒</span></span><br><span class="line">      op: <span class="string">&#x27;command&#x27;</span>, <span class="comment"># 标识操作类型的字符串，如 command, insert, query, update, delete, getMore, killCursors</span></span><br><span class="line">      ns: <span class="string">&#x27;admin.$cmd&#x27;</span>, <span class="comment"># 操作的命名空间，格式为 db.collection</span></span><br><span class="line">      redacted: <span class="literal">false</span>, <span class="comment"># 是否已脱敏</span></span><br><span class="line">      <span class="built_in">command</span>: &#123; <span class="comment"># 操作命令参数</span></span><br><span class="line">        hello: 1,</span><br><span class="line">        maxAwaitTimeMS: 10000,</span><br><span class="line">        topologyVersion: &#123;</span><br><span class="line">          processId: ObjectId(<span class="string">&#x27;6611f8cd59f7cfaa5c8cd7e4&#x27;</span>),</span><br><span class="line">          counter: Long(<span class="string">&#x27;18&#x27;</span>)</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;$clusterTime&#x27;</span>: &#123;</span><br><span class="line">          clusterTime: Timestamp(&#123; t: 1712470998, i: 1 &#125;),</span><br><span class="line">          signature: &#123;</span><br><span class="line">            <span class="built_in">hash</span>: Binary.createFromBase64(<span class="string">&#x27;gvgo03Wqi1AuOVqnrlhzKIK2NAU=&#x27;</span>, 0),</span><br><span class="line">            keyId: Long(<span class="string">&#x27;7346062378896719877&#x27;</span>)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;$db&#x27;</span>: <span class="string">&#x27;admin&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      numYields: 0,</span><br><span class="line">      locks: &#123;&#125;, <span class="comment"># 当前操作持有锁的类型和模式。</span></span><br><span class="line">      waitingForLock: <span class="literal">false</span>, <span class="comment"># 是否在等待锁</span></span><br><span class="line">      lockStats: &#123;&#125;, <span class="comment"># 当前操作持有锁的统计。</span></span><br><span class="line">      waitingForFlowControl: <span class="literal">false</span>,</span><br><span class="line">      flowControlStats: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">………………………………</span><br><span class="line">]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看等待锁的增加、删除、修改、查询操作</span></span><br><span class="line">&gt; db.currentOp(&#123;</span><br><span class="line"> waitingForLock:<span class="literal">true</span>,</span><br><span class="line"> <span class="variable">$or</span>:[</span><br><span class="line">  &#123;op:&#123;<span class="variable">$in</span>:[<span class="string">&quot;insert&quot;</span>,<span class="string">&quot;update&quot;</span>,<span class="string">&quot;remove&quot;</span>]&#125;&#125;,</span><br><span class="line">  &#123;<span class="string">&quot;query.findandmodify&quot;</span>:&#123;<span class="variable">$exists</span>:<span class="literal">true</span>&#125;&#125;</span><br><span class="line">  ]</span><br><span class="line"> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看执行时间超过1s的操作</span></span><br><span class="line">&gt; db.currentOp(&#123;</span><br><span class="line">   secs_running:&#123;<span class="variable">$gt</span>:1&#125;</span><br><span class="line"> &#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看test数据库中的操作</span></span><br><span class="line">&gt; db.currentOp(&#123;</span><br><span class="line">   ns:/test/</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="mongod-lock">mongod.lock</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>mongod.lock 是 MongoDB 在数据目录（dbpath）中创建的进程锁文件。</p>
+</li>
+<li class="lvl-2">
+<p>默认位置</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;dbpath&gt;/mongod.lock</span><br></pre></td></tr></table></figure>
+<h3 id="mongod-lock-的核心作用">mongod.lock 的核心作用</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1️⃣ 防止多个 mongod 实例使用同一个 dbpath</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">MongoDB 启动时会：</span><br><span class="line">  打开 &lt;dbpath&gt;/mongod.lock</span><br><span class="line">  对文件加 排他锁</span><br><span class="line">  如果加锁失败 → 认为已有实例在运行 → 直接退出</span><br><span class="line"></span><br><span class="line">这可以防止：</span><br><span class="line">  数据文件被多个进程同时写</span><br><span class="line">  直接导致数据损坏</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>2️⃣ 记录异常退出状态（2.x 时代的“安全标记”）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在 MongoDB 2.x 中：</span><br><span class="line">  正常关闭</span><br><span class="line">    mongod 会释放锁</span><br><span class="line">    删除或清空 mongod.lock</span><br><span class="line"></span><br><span class="line">  异常关闭</span><br><span class="line">    <span class="built_in">kill</span> -9</span><br><span class="line">    机器断电</span><br><span class="line">    OOM <span class="built_in">kill</span></span><br><span class="line">    进程崩溃</span><br><span class="line"></span><br><span class="line">➡️ mongod.lock 会残留,下次启动时会认为有异常退出，并拒绝启动。日志中会看到： old lock file, terminating</span><br></pre></td></tr></table></figure>
+<h3 id="mongod-lock-什么时候会产生？">mongod.lock 什么时候会产生？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>✅ 正常启动时（一定会产生）</p>
+</li>
+<li class="lvl-2">
+<p>❌ 异常退出时（不会被清理）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>是否残留</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kill -9 mongod</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>服务器突然断电</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Docker 容器被强制 kill</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>启动过程中 crash</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h3 id="MongoDB-为什么不自动处理旧-lock？">MongoDB 为什么不自动处理旧 lock？</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">这是 MongoDB 2.x 的设计缺陷：</span><br><span class="line">  它 无法可靠判断：</span><br><span class="line">    是“进程仍在运行”</span><br><span class="line">    还是“上次异常退出”</span><br><span class="line"></span><br><span class="line">为了避免误判造成 数据破坏，MongoDB 选择：</span><br><span class="line">  宁可拒绝启动，也不自动修复</span><br><span class="line"></span><br><span class="line">于是就要求 人工介入</span><br></pre></td></tr></table></figure>
+<h3 id="mongod-lock-是否可以直接删除？">mongod.lock 是否可以直接删除？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>✅ 可以删除的前提（必须同时满足）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">✔ 当前 没有任何 mongod 进程</span><br><span class="line">✔ 明确知道这是 异常退出后的残留</span><br><span class="line">✔ 数据目录没有被其他实例使用</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>❌ 绝对不能删除的情况</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>情况</th>
+<th>后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mongod 仍在运行</td>
+<td><strong>数据立即损坏</strong></td>
+</tr>
+<tr>
+<td>同一 dbpath 多实例</td>
+<td><strong>不可逆破坏</strong></td>
+</tr>
+<tr>
+<td>NFS/共享存储</td>
+<td><strong>锁失效，极其危险</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="标准、安全的处理流程（推荐）">标准、安全的处理流程（推荐）</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>✅ Step 1：确认 mongod 未运行</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep mongod</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>✅ Step 2：删除 lock 文件</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f /data/db/mongod.lock</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>⚠️ Step 3（强烈推荐）：执行 repair</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod --dbpath /data/db --repair</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">尤其适用于：</span><br><span class="line">  MongoDB 2.6</span><br><span class="line">  副本集节点</span><br><span class="line">  非正常关机后</span><br><span class="line"></span><br><span class="line">repair 做的事情包括：</span><br><span class="line">  重建数据文件索引</span><br><span class="line">  修复不完整的写入</span><br><span class="line">  校验 MMAPv1 数据结构</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>✅ Step 4：正常启动 mongod</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod --config /var/config/mongod.conf</span><br></pre></td></tr></table></figure>
+<h3 id="为什么-MongoDB-3-x-很少再遇到这个问题？">为什么 MongoDB 3.x+ 很少再遇到这个问题？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>原因：存储引擎变化</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>引擎</th>
+<th>lock 行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.x</td>
+<td>MMAPv1</td>
+<td>强依赖 <code>mongod.lock</code></td>
+</tr>
+<tr>
+<td>3.2+</td>
+<td>WiredTiger</td>
+<td>基于 journal + metadata</td>
+</tr>
+<tr>
+<td>4.x+</td>
+<td>WiredTiger</td>
+<td>自动恢复为主</td>
+</tr>
+</tbody>
+</table>
+
     </div>
 
     
@@ -1373,14 +1532,14 @@ i.ban {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">788k</span>
+    <span title="站点总字数">789k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">47:46</span>
+    <span title="站点阅读时长">47:48</span>
   </span>
 </div>
 <div class="busuanzi-count">
