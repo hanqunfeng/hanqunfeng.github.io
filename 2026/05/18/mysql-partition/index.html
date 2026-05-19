@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   MySql知识点介绍:将大数据量的表进行拆分   本文基于mysql-5.7.44">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-05-18T13:35:05.000Z">
-<meta property="article:modified_time" content="2026-05-18T10:15:36.669Z">
+<meta property="article:modified_time" content="2026-05-19T03:37:06.950Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -923,7 +923,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%881%EF%BC%9A%E6%B0%B4%E5%B9%B3%E6%8B%86%E5%88%86"><span class="nav-number">3.1.</span> <span class="nav-text">方案1：水平拆分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%882%EF%BC%9A%E5%AF%B9%E5%8E%9F%E5%A7%8B%E8%A1%A8%E8%BF%9B%E8%A1%8C%E5%88%86%E5%8C%BA%E9%87%8D%E6%9E%84"><span class="nav-number">3.2.</span> <span class="nav-text">方案2：对原始表进行分区重构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%82%E5%90%88%E9%87%87%E7%94%A8%E5%88%86%E5%8C%BA%E8%A1%A8%E7%9A%84%E5%85%B8%E5%9E%8B%E5%9C%BA%E6%99%AF"><span class="nav-number">3.2.1.</span> <span class="nav-text">适合采用分区表的典型场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88%E5%88%86%E5%8C%BA%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">3.2.2.</span> <span class="nav-text">不适合分区的情况</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%881%EF%BC%9A%E6%B0%B4%E5%B9%B3%E6%8B%86%E5%88%86"><span class="nav-number">3.1.</span> <span class="nav-text">方案1：水平拆分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%882%EF%BC%9A%E5%AF%B9%E5%8E%9F%E5%A7%8B%E8%A1%A8%E8%BF%9B%E8%A1%8C%E5%88%86%E5%8C%BA%E9%87%8D%E6%9E%84"><span class="nav-number">3.2.</span> <span class="nav-text">方案2：对原始表进行分区重构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%82%E5%90%88%E9%87%87%E7%94%A8%E5%88%86%E5%8C%BA%E8%A1%A8%E7%9A%84%E5%85%B8%E5%9E%8B%E5%9C%BA%E6%99%AF"><span class="nav-number">3.2.1.</span> <span class="nav-text">适合采用分区表的典型场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88%E5%88%86%E5%8C%BA%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">3.2.2.</span> <span class="nav-text">不适合分区的情况</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1016,10 +1016,31 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/09/26/mysql8-forget-root-password/" rel="bookmark">
+        <time class="popular-posts-time">2022-09-26</time>
+        <br>
+      MySql--忘记root密码后如何重置
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/09/26/mysql8-process/" rel="bookmark">
+        <time class="popular-posts-time">2022-09-26</time>
+        <br>
+      MySql--线程管理
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2022/09/26/mysql8-table-info/" rel="bookmark">
         <time class="popular-posts-time">2022-09-26</time>
         <br>
       MySql--表信息相关
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/09/26/mysql8-user/" rel="bookmark">
+        <time class="popular-posts-time">2022-09-26</time>
+        <br>
+      MySql--用户管理
       </a>
     </li>
   </ul>
@@ -1070,9 +1091,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-05-18 21:35:05 / 修改时间：18:15:36" itemprop="dateCreated datePublished" datetime="2026-05-18T21:35:05+08:00">2026-05-18</time>
+      <time title="创建时间：2026-05-18 21:35:05" itemprop="dateCreated datePublished" datetime="2026-05-18T21:35:05+08:00">2026-05-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-05-19 11:37:06" itemprop="dateModified" datetime="2026-05-19T11:37:06+08:00">2026-05-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1119,14 +1146,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.6k</span>
+      <span>3.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
+      <span>11 分钟</span>
     </span>
 
         </div>
@@ -1290,8 +1317,8 @@ i.ban {
 </li>
 </ul>
 <blockquote>
-<p>分区表简单理解就是将一张大表拆分为多张小表，每张小表是一个物理表，大表是逻辑表<br>
-这里创建新表而不是在原始表上直接构建分区，是因为当前表已经存在超六千万条记录，数据量太大，构建分区太慢<br>
+<p>分区表简单理解就是将一张大表拆分为多张小表，每张小表是一个物理表，大表是逻辑表(MySql5.7)<br>
+这里创建新表而不是在原始表上直接构建分区，是因为当前表已经存在超六千万条记录，构建分区时会锁表，这个数据量预计会锁表30分钟<br>
 另外，分区表要求 PRIMARY KEY 和 UNIQUE KEY 中必须包含 分区字段，本利中就是按年份分区，即分区字段是 ad_date</p>
 </blockquote>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> `ad_admob_network_by_day_partition` (</span><br><span class="line">  `id` <span class="type">BIGINT</span> <span class="keyword">NOT NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键，自增&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `ad_date` <span class="type">DATE</span> <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;统计日期&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `app_value` <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">COLLATE</span> utf8mb4_bin <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;app_id&#x27;</span>,</span><br><span class="line">  `app_name` <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">COLLATE</span> utf8mb4_bin <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;app显示名称&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `ad_unit_value` <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">COLLATE</span> utf8mb4_bin <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;广告单元id&#x27;</span>,</span><br><span class="line">  `ad_unit_name` <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">COLLATE</span> utf8mb4_bin <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;广告单元名称&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `country_value` <span class="type">VARCHAR</span>(<span class="number">10</span>) <span class="keyword">COLLATE</span> utf8mb4_bin <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;国家码&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `estimated_earnings` <span class="type">BIGINT</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;预估收入，microsValue&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `impression_rpm` <span class="keyword">DOUBLE</span>(<span class="number">30</span>,<span class="number">18</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;千次展示预估收入&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `ad_requests` <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;请求数&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `match_rate` <span class="keyword">DOUBLE</span>(<span class="number">22</span>,<span class="number">18</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;匹配率&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `matched_requests` <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;匹配请求数&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `impressions` <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;展示次数&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `impression_ctr` <span class="keyword">DOUBLE</span>(<span class="number">22</span>,<span class="number">18</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;点击率&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `clicks` <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;点击次数&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  `source_account` <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">COLLATE</span> utf8mb4_bin <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;数据来源帐号&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- =========================</span></span><br><span class="line">  <span class="comment">-- 主键（必须包含分区键）</span></span><br><span class="line">  <span class="comment">-- =========================</span></span><br><span class="line">  <span class="keyword">PRIMARY KEY</span> (`id`, `ad_date`),</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- =========================</span></span><br><span class="line">  <span class="comment">-- 唯一约束（按你的业务维度）</span></span><br><span class="line">  <span class="comment">-- =========================</span></span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_admob`</span><br><span class="line">  (`ad_date`, `app_value`, `ad_unit_value`, `country_value`),</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- =========================</span></span><br><span class="line">  <span class="comment">-- 业务索引（去掉冗余 index_date）</span></span><br><span class="line">  <span class="comment">-- =========================</span></span><br><span class="line">  KEY `idx_app_value` (`app_value`),</span><br><span class="line">  KEY `idx_country` (`country_value`),</span><br><span class="line">  KEY `idx_source_account` (`source_account`)</span><br><span class="line"></span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB</span><br><span class="line"><span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4</span><br><span class="line"><span class="keyword">COLLATE</span><span class="operator">=</span>utf8mb4_bin</span><br><span class="line"></span><br><span class="line"><span class="comment">-- =========================</span></span><br><span class="line"><span class="comment">-- 分区：按年</span></span><br><span class="line"><span class="comment">-- =========================</span></span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (<span class="keyword">YEAR</span>(ad_date)) (</span><br><span class="line"></span><br><span class="line">  <span class="keyword">PARTITION</span> p2020 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2021</span>),</span><br><span class="line">  <span class="keyword">PARTITION</span> p2021 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2022</span>),</span><br><span class="line">  <span class="keyword">PARTITION</span> p2022 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2023</span>),</span><br><span class="line">  <span class="keyword">PARTITION</span> p2023 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2024</span>),</span><br><span class="line">  <span class="keyword">PARTITION</span> p2024 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2025</span>),</span><br><span class="line">  <span class="keyword">PARTITION</span> p2025 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2026</span>),</span><br><span class="line"></span><br><span class="line">  <span class="keyword">PARTITION</span> pmax <span class="keyword">VALUES</span> LESS THAN MAXVALUE</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
@@ -1440,6 +1467,56 @@ i.ban {
 <blockquote>
 <p>总之，当你遇到“大表、周期性、大区间清理/归档、基于字段分组查询”等需求时，可以优先考虑分区表方案。</p>
 </blockquote>
+<h2 id="后记">后记</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在MySQL 5.7中对一张大表进行首次创建分区的操作（例如执行ALTER TABLE … PARTITION BY …）会长时间锁住整张表，直到分区创建完成。</p>
+<ul class="lvl-2">
+<li class="lvl-5">逻辑分区导致的全表锁：在5.7版本中，分区是“逻辑”的，InnoDB存储引擎层无法感知分区边界。执行ALTER TABLE时，Server层会向InnoDB层发送“锁定整表”的信号，导致在执行期间无法对表进行任何修改或查询。并且这个操作会重建整个表，持有MDL_EXCLUSIVE锁，完全阻塞业务写入。</li>
+<li class="lvl-5">分区操作期间，所有涉及该表的操作都将被阻塞，表现为“Waiting for table metadata lock”。</li>
+<li class="lvl-5">一旦分区建好，后续的增删查改等DML操作并非都会锁全表。利用“分区裁剪(Partition Pruning)”特性，多数操作可以只锁定需要访问的特定分区。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>升级到MySQL 8.0后对表进行首次分区操作（ALTER TABLE … PARTITION BY …），并不是完全不锁表，但其影响会被降到最低，锁表时间将从分钟/小时级大幅缩短到秒/毫秒级。这背后的关键是MySQL 8.0的两项核心改进：分区级锁定和在线DDL（Online DDL）</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">对比项</th>
+<th style="text-align:left">MySQL 5.7</th>
+<th style="text-align:left">MySQL 8.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">锁粒度</td>
+<td style="text-align:left">逻辑分区，Server层与InnoDB层交互有限，对全表加MDL_EXCLUSIVE锁，无法分区级锁定</td>
+<td style="text-align:left">分区元数据集成InnoDB，锁管理可感知分区边界，支持分区级锁定与真正行级锁</td>
+</tr>
+<tr>
+<td style="text-align:left">首次建分区</td>
+<td style="text-align:left">复制全表数据并重建，锁表时间长</td>
+<td style="text-align:left">默认ALGORITHM=INPLACE, LOCK=NONE，支持并发读写，仅在切换瞬间锁表</td>
+</tr>
+<tr>
+<td style="text-align:left">增删分区</td>
+<td style="text-align:left">仅部分操作支持在线，部分情况仍需长时间锁表</td>
+<td style="text-align:left">仅元数据变更，锁表时间从分钟级降至毫秒级，无需重建表数据</td>
+</tr>
+<tr>
+<td style="text-align:left">重组/交换分区</td>
+<td style="text-align:left">长时间锁表</td>
+<td style="text-align:left">仍需短暂全表锁，作用范围仅限相关分区</td>
+</tr>
+<tr>
+<td style="text-align:left">总体影响</td>
+<td style="text-align:left">耗时操作需全表锁，业务阻塞明显</td>
+<td style="text-align:left">数据重建过程变为在线操作，仅元数据替换瞬间锁表，对业务影响极小</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
 
     </div>
 
@@ -1583,7 +1660,7 @@ i.ban {
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">47:58</span>
+    <span title="站点阅读时长">48:01</span>
   </span>
 </div>
 <div class="busuanzi-count">
