@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  本文档介绍 GitLab REST API 的 v3 与 v4 差异，并结合本仓库迁移工具的实际调用场景说明：如何判断版本、常见接口对比、v4 独有能力，以及排障要点。 官方背景：GitLab 自 9.0 起引入并推荐 API v4；9.5 起 v3 停止支持；11.0 起 v3 被完全移除。现代实例（11.0+）只能使用 v4。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-09T13:30:05.000Z">
-<meta property="article:modified_time" content="2026-07-09T06:52:38.836Z">
+<meta property="article:modified_time" content="2026-07-10T02:23:47.307Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="git">
 <meta property="article:tag" content="gitlab">
@@ -1099,9 +1099,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-07-09 21:30:05 / 修改时间：14:52:38" itemprop="dateCreated datePublished" datetime="2026-07-09T21:30:05+08:00">2026-07-09</time>
+      <time title="创建时间：2026-07-09 21:30:05" itemprop="dateCreated datePublished" datetime="2026-07-09T21:30:05+08:00">2026-07-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-07-10 10:23:47" itemprop="dateModified" datetime="2026-07-10T10:23:47+08:00">2026-07-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1144,14 +1150,14 @@ i.ban {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.5k</span>
+      <span>3.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>13 分钟</span>
+      <span>14 分钟</span>
     </span>
 
         </div>
@@ -1300,6 +1306,14 @@ i.ban {
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>v3 兼容提示（迁移场景常见）</strong>：部分旧版 GitLab 在 <code>GET /api/v3/projects</code> 下可能只返回“对当前 token 用户可见/有关联”的项目集合，即便该用户在 Web UI 中是管理员，也可能出现“拿不到未授权项目”的情况。<br>
+这时可改用 <code>GET /api/v3/projects/all</code> 拉取更完整的实例项目列表（脚本迁移步骤 1 即属于此类场景）。</p>
+<ul class="lvl-1">
+<li class="lvl-2"><strong>不带 <code>all</code></strong>：更偏向“当前用户可见/相关”的项目集合（不同旧版本行为可能不完全一致）。</li>
+<li class="lvl-2"><strong>带 <code>all</code>（<code>/projects/all</code>）</strong>：更偏向“实例范围的项目集合”（更适合迁移时生成全量 <code>repos.txt</code>）。</li>
+</ul>
+</blockquote>
 <p><strong>namespace 类型识别差异（重要）</strong>：</p>
 <table>
 <thead>
@@ -1324,7 +1338,7 @@ i.ban {
 </table>
 <p>本仓库步骤 1 的逻辑：</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 伪代码</span></span><br><span class="line"><span class="keyword">if</span> namespace.kind</span><br><span class="line">  kind = namespace.kind</span><br><span class="line"><span class="keyword">elsif</span> namespace.owner_id == null</span><br><span class="line">  kind = <span class="string">&quot;group&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  kind = <span class="string">&quot;user&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># v4：拉取项目列表（simple 减少字段体积）</span></span><br><span class="line">curl -s --header <span class="string">&quot;PRIVATE-TOKEN: <span class="variable">$TOKEN</span>&quot;</span> \</span><br><span class="line">  <span class="string">&quot;<span class="variable">$GITLAB</span>/api/v4/projects?per_page=100&amp;page=1&amp;simple=true&quot;</span> | jq .</span><br><span class="line"></span><br><span class="line"><span class="comment"># v3：拉取项目列表</span></span><br><span class="line">curl -s --header <span class="string">&quot;PRIVATE-TOKEN: <span class="variable">$TOKEN</span>&quot;</span> \</span><br><span class="line">  <span class="string">&quot;<span class="variable">$GITLAB</span>/api/v3/projects?per_page=100&amp;page=1&amp;simple=true&quot;</span> | jq .</span><br><span class="line"></span><br><span class="line"><span class="comment"># v4：只看 namespace.kind / owner_id（便于区分 group/user 项目）</span></span><br><span class="line">curl -s --header <span class="string">&quot;PRIVATE-TOKEN: <span class="variable">$TOKEN</span>&quot;</span> \</span><br><span class="line">  <span class="string">&quot;<span class="variable">$GITLAB</span>/api/v4/projects?per_page=100&amp;page=1&amp;simple=true&quot;</span> \</span><br><span class="line">  | jq <span class="string">&#x27;.[] | &#123;path, namespace: &#123;path: .namespace.path, kind: .namespace.kind, owner_id: .namespace.owner_id&#125;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># v4：拉取项目列表（simple 减少字段体积）</span></span><br><span class="line">curl -s --header <span class="string">&quot;PRIVATE-TOKEN: <span class="variable">$TOKEN</span>&quot;</span> \</span><br><span class="line">  <span class="string">&quot;<span class="variable">$GITLAB</span>/api/v4/projects?per_page=100&amp;page=1&amp;simple=true&quot;</span> | jq .</span><br><span class="line"></span><br><span class="line"><span class="comment"># v3：拉取项目列表（部分旧版本可能会缺少未授权项目）</span></span><br><span class="line">curl -s --header <span class="string">&quot;PRIVATE-TOKEN: <span class="variable">$TOKEN</span>&quot;</span> \</span><br><span class="line">  <span class="string">&quot;<span class="variable">$GITLAB</span>/api/v3/projects?per_page=100&amp;page=1&amp;simple=true&quot;</span> | jq .</span><br><span class="line"></span><br><span class="line"><span class="comment"># v3：拉取“全量”项目列表（迁移场景更推荐，用于避免遗漏项目）</span></span><br><span class="line">curl -s --header <span class="string">&quot;PRIVATE-TOKEN: <span class="variable">$TOKEN</span>&quot;</span> \</span><br><span class="line">  <span class="string">&quot;<span class="variable">$GITLAB</span>/api/v3/projects/all?per_page=100&amp;page=1&amp;simple=true&quot;</span> | jq .</span><br><span class="line"></span><br><span class="line"><span class="comment"># v4：只看 namespace.kind / owner_id（便于区分 group/user 项目）</span></span><br><span class="line">curl -s --header <span class="string">&quot;PRIVATE-TOKEN: <span class="variable">$TOKEN</span>&quot;</span> \</span><br><span class="line">  <span class="string">&quot;<span class="variable">$GITLAB</span>/api/v4/projects?per_page=100&amp;page=1&amp;simple=true&quot;</span> \</span><br><span class="line">  | jq <span class="string">&#x27;.[] | &#123;path, namespace: &#123;path: .namespace.path, kind: .namespace.kind, owner_id: .namespace.owner_id&#125;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
 <h3 id="3）获取单个项目">3）获取单个项目</h3>
 <table>
 <thead>
@@ -1866,7 +1880,7 @@ i.ban {
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">48:44</span>
+    <span title="站点阅读时长">48:45</span>
   </span>
 </div>
 <div class="busuanzi-count">
