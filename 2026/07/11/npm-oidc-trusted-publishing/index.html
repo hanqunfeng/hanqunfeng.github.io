@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/atelier-seaside-light","dark":"tomorrow-night-bright"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="摘要 本文介绍如何使用 npm Trusted Publishing，在 GitHub Actions 中通过 OpenID Connect（OIDC）发布 npm 包。整个发布过程不需要创建或保存长期有效的 NPM_TOKEN，并可通过指定仓库、Workflow 和 GitHub Environment 限制发布来源。 本文将依次完成以下工作：   解释为什么 npm 自动发布应从长期 Toke">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 GitHub Actions 和 OIDC 安全发布 npm 包">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2026/07/11/npm-oidc-trusted-publishing/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要 本文介绍如何使用 npm Trusted Publishing，在 GitHub Actions 中通过 OpenID Connect（OIDC）发布 npm 包。整个发布过程不需要创建或保存长期有效的 NPM_TOKEN，并可通过指定仓库、Workflow 和 GitHub Environment 限制发布来源。 本文将依次完成以下工作：   解释为什么 npm 自动发布应从长期 Toke">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-11T14:51:00.000Z">
+<meta property="article:modified_time" content="2026-07-11T08:15:39.901Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="github">
+<meta property="article:tag" content="github-actions">
+<meta property="article:tag" content="npm">
+<meta property="article:tag" content="oidc">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2026/07/11/npm-oidc-trusted-publishing/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2026/07/11/npm-oidc-trusted-publishing/","path":"2026/07/11/npm-oidc-trusted-publishing/","title":"使用 GitHub Actions 和 OIDC 安全发布 npm 包"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用 GitHub Actions 和 OIDC 安全发布 npm 包 | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js" defer></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js" defer></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js" defer></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js" defer></script>
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li><li class="menu-item menu-item-lastmod"><a href="/lastmod/" rel="section"><i class="fa-solid fa-pen-to-square fa-fw"></i>最新更新列表</a></li><li class="menu-item menu-item-comments"><a href="https://github.com/hanqunfeng/blog_comments/issues" rel="section" target="_blank"><i class="fa-solid fa-comments fa-fw"></i>评论</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+<img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
+<img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
+
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示9月3日抗战胜利纪念日图片
+    if(month==9 && day==3){
+        $("#img_93").show();
+    }
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_93").hide();
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    // 将“初一”“初二”…“十五”映射成数字 1~15
+    const dayMap = {
+        "初一": 1, "初二": 2, "初三": 3, "初四": 4, "初五": 5,
+        "初六": 6, "初七": 7, "初八": 8, "初九": 9, "初十": 10,
+        "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15
+    };
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 农历新年
+            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+                $("#img_new_year").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+                $("#img_new_year").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8-OIDC-%E5%8F%91%E5%B8%83-npm-%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">一、为什么要使用 OIDC 发布 npm 包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-npm-%E6%AD%A3%E5%9C%A8%E9%99%90%E5%88%B6-2FA-bypass-Token"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 npm 正在限制 2FA-bypass Token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-OIDC-%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 OIDC 解决了什么问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">二、前置条件和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%96%B0%E5%8C%85%E9%9C%80%E8%A6%81%E5%85%88%E5%AE%8C%E6%88%90%E9%A6%96%E6%AC%A1%E5%8F%91%E5%B8%83"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 新包需要先完成首次发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%A3%80%E6%9F%A5-package-json"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 检查 package.json</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%9C%A8-npm-%E4%B8%AD%E9%85%8D%E7%BD%AE-Trusted-Publisher"><span class="nav-number">4.</span> <span class="nav-text">三、在 npm 中配置 Trusted Publisher</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%80%9A%E8%BF%87-npmjs-com-%E9%85%8D%E7%BD%AE"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 通过 npmjs.com 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Environment-%E6%98%AF%E5%90%A6%E5%BF%85%E9%A1%BB%E5%A1%AB%E5%86%99"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 Environment 是否必须填写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E4%BD%BF%E7%94%A8-npm-CLI-%E9%85%8D%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 使用 npm CLI 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%9C%A8-GitHub-%E4%B8%AD%E9%85%8D%E7%BD%AE%E5%8F%91%E5%B8%83%E7%8E%AF%E5%A2%83"><span class="nav-number">5.</span> <span class="nav-text">四、在 GitHub 中配置发布环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%88%9B%E5%BB%BA-Environment"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 创建 Environment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E9%85%8D%E7%BD%AE%E9%83%A8%E7%BD%B2%E4%BF%9D%E6%8A%A4%E8%A7%84%E5%88%99"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 配置部署保护规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E4%B8%8D%E9%9C%80%E8%A6%81%E5%88%9B%E5%BB%BA-NPM-TOKEN"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 不需要创建 NPM_TOKEN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E4%BF%9D%E6%8A%A4%E5%8F%91%E5%B8%83-Tag"><span class="nav-number">5.4.</span> <span class="nav-text">4.4 保护发布 Tag</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%BC%96%E5%86%99-GitHub-Actions-Workflow"><span class="nav-number">6.</span> <span class="nav-text">五、编写 GitHub Actions Workflow</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-id-token-write-%E6%98%AF%E5%85%B3%E9%94%AE%E6%9D%83%E9%99%90"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 id-token: write 是关键权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%B2%A1%E6%9C%89-NODE-AUTH-TOKEN"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 为什么没有 NODE_AUTH_TOKEN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B3%E9%97%AD%E5%8F%91%E5%B8%83%E4%BB%BB%E5%8A%A1%E4%B8%AD%E7%9A%84%E4%BE%9D%E8%B5%96%E7%BC%93%E5%AD%98"><span class="nav-number">6.3.</span> <span class="nav-text">5.3 为什么关闭发布任务中的依赖缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-Environment"><span class="nav-number">6.4.</span> <span class="nav-text">5.4 为什么使用 Environment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%A1%E9%AA%8C-Tag-%E5%92%8C-package-json-%E7%89%88%E6%9C%AC"><span class="nav-number">6.5.</span> <span class="nav-text">5.5 为什么校验 Tag 和 package.json 版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%89%A7%E8%A1%8C%E4%B8%80%E6%AC%A1%E5%8F%91%E5%B8%83"><span class="nav-number">7.</span> <span class="nav-text">六、执行一次发布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E6%9B%B4%E6%96%B0%E7%89%88%E6%9C%AC%E5%B9%B6%E5%88%9B%E5%BB%BA-Tag"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 更新版本并创建 Tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E9%AA%8C%E8%AF%81%E5%8F%91%E5%B8%83%E7%BB%93%E6%9E%9C"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 验证发布结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81Provenance-%E6%9D%A5%E6%BA%90%E8%AF%81%E6%98%8E"><span class="nav-number">8.</span> <span class="nav-text">七、Provenance 来源证明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81npm-v12-%E5%AF%B9%E5%8F%91%E5%B8%83-Workflow-%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">9.</span> <span class="nav-text">八、npm v12 对发布 Workflow 的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E7%A7%81%E6%9C%89%E4%BE%9D%E8%B5%96%E6%97%B6%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">10.</span> <span class="nav-text">九、项目使用私有依赖时的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%8A%A0%E5%9B%BA%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B"><span class="nav-number">11.</span> <span class="nav-text">十、进一步加固发布流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-OIDC-%E9%AA%8C%E8%AF%81%E6%88%90%E5%8A%9F%E5%90%8E%E7%A6%81%E6%AD%A2%E4%BC%A0%E7%BB%9F-Token-%E5%8F%91%E5%B8%83"><span class="nav-number">11.1.</span> <span class="nav-text">10.1 OIDC 验证成功后禁止传统 Token 发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E4%BD%BF%E7%94%A8-Staged-Publishing"><span class="nav-number">11.2.</span> <span class="nav-text">10.2 使用 Staged Publishing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E5%9B%BA%E5%AE%9A%E7%AC%AC%E4%B8%89%E6%96%B9-Action"><span class="nav-number">11.3.</span> <span class="nav-text">10.3 固定第三方 Action</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-%E5%B0%86%E6%B5%8B%E8%AF%95%E5%92%8C%E5%8F%91%E5%B8%83%E6%8B%86%E5%88%86"><span class="nav-number">11.4.</span> <span class="nav-text">10.4 将测试和发布拆分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="nav-number">12.</span> <span class="nav-text">十一、常见问题排查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-npm-ERR-code-ENEEDAUTH"><span class="nav-number">12.1.</span> <span class="nav-text">11.1 npm ERR! code ENEEDAUTH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-2-npm-whoami-%E5%A4%B1%E8%B4%A5"><span class="nav-number">12.2.</span> <span class="nav-text">11.2 npm whoami 失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-3-%E4%BD%BF%E7%94%A8-Reusable-Workflow-%E5%90%8E%E8%AE%A4%E8%AF%81%E5%A4%B1%E8%B4%A5"><span class="nav-number">12.3.</span> <span class="nav-text">11.3 使用 Reusable Workflow 后认证失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-4-%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91%E5%8F%AF%E4%BB%A5%E5%8F%91%E5%B8%83%EF%BC%8CTag-%E8%A7%A6%E5%8F%91%E5%A4%B1%E8%B4%A5"><span class="nav-number">12.4.</span> <span class="nav-text">11.4 手动触发可以发布，Tag 触发失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-5-npm-%E4%B8%AD%E6%89%BE%E4%B8%8D%E5%88%B0-Trusted-publishing"><span class="nav-number">12.5.</span> <span class="nav-text">11.5 npm 中找不到 Trusted publishing</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%AE%8C%E6%95%B4%E8%BF%81%E7%A7%BB%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95"><span class="nav-number">13.</span> <span class="nav-text">十二、完整迁移检查清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">14.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9C%9F%E5%AE%9E%E6%A1%88%E4%BE%8B"><span class="nav-number">15.</span> <span class="nav-text">真实案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">16.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">296</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/11/github-action/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-11</time>
+        <br>
+      GitHub Actions Workflow 详细指南
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/23/k8s-secret/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-23</time>
+        <br>
+      K8S 之 Secret
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/13/npm-study/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-13</time>
+        <br>
+      npm使用手册
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2020/11/15/springboot-oauth2-jwt-authserver/" rel="bookmark">
+        <time class="popular-posts-time">2020-11-15</time>
+        <br>
+      SpringBoot-OAuth2-JWT-AuthServer
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/08/01/mvn-depoly-maven-center-repository-new/" rel="bookmark">
+        <time class="popular-posts-time">2024-08-01</time>
+        <br>
+      发布Jar到Maven中央仓库--Maven版(最新方式)
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/11/npm-oidc-trusted-publishing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用 GitHub Actions 和 OIDC 安全发布 npm 包 | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用 GitHub Actions 和 OIDC 安全发布 npm 包
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-07-11 22:51:00 / 修改时间：16:15:39" itemprop="dateCreated datePublished" datetime="2026-07-11T22:51:00+08:00">2026-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/npm/" itemprop="url" rel="index"><span itemprop="name">npm</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/npm/nodejs/" itemprop="url" rel="index"><span itemprop="name">nodejs</span></a>
+        </span>
+    </span>
+
+  
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2026/07/11/npm-oidc-trusted-publishing/" class="leancloud_visitors" data-flag-title="使用 GitHub Actions 和 OIDC 安全发布 npm 包" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="摘要">摘要</h2>
+<p>本文介绍如何使用 npm Trusted Publishing，在 GitHub Actions 中通过 OpenID Connect（OIDC）发布 npm 包。整个发布过程不需要创建或保存长期有效的 <code>NPM_TOKEN</code>，并可通过指定仓库、Workflow 和 GitHub Environment 限制发布来源。</p>
+<p>本文将依次完成以下工作：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>解释为什么 npm 自动发布应从长期 Token 迁移到 OIDC。</p>
+</li>
+<li class="lvl-2">
+<p>介绍 OIDC 和 npm Trusted Publishing 的工作原理。</p>
+</li>
+<li class="lvl-2">
+<p>在 <a target="_blank" rel="noopener" href="http://npmjs.com">npmjs.com</a> 中为包添加 GitHub Actions Trusted Publisher。</p>
+</li>
+<li class="lvl-2">
+<p>在 GitHub 中配置 Environment、审批规则和最小权限。</p>
+</li>
+<li class="lvl-2">
+<p>编写一个完整、安全且不依赖 <code>NPM_TOKEN</code> 的发布 Workflow。</p>
+</li>
+<li class="lvl-2">
+<p>介绍私有依赖、首次发布、npm v12、Provenance 和常见错误。</p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="一、为什么要使用-OIDC-发布-npm-包">一、为什么要使用 OIDC 发布 npm 包</h2>
+<h3 id="1-1-npm-正在限制-2FA-bypass-Token">1.1 npm 正在限制 2FA-bypass Token</h3>
+<p>GitHub 在 2026 年 7 月 8 日发布的 <a target="_blank" rel="noopener" href="https://github.blog/changelog/2026-07-08-npm-install-time-security-and-gat-bypass2fa-deprecation/">npm install-time security and GAT bypass2fa deprecation</a> 中宣布：</p>
+<ol>
+<li class="lvl-3">
+<p>npm v12 已正式发布，并成为 <code>latest</code> 版本。</p>
+</li>
+<li class="lvl-3">
+<p>预计从 2026 年 8 月上旬开始，配置为绕过双因素认证的 Granular Access Token（GAT）将不能再绕过账户、包和组织管理操作的 2FA。</p>
+</li>
+<li class="lvl-3">
+<p>预计从 2027 年 1 月前后开始，2FA-bypass Token 将不能再直接发布 npm 包。</p>
+</li>
+<li class="lvl-3">
+<p>自动发布应迁移到 Trusted Publishing（OIDC），或者改用需要人工 2FA 审批的 Staged Publishing。</p>
+</li>
+</ol>
+<p>过去常见的自动发布方式，是在 npm 中创建一个允许发布且绕过 2FA 的 Token，再将它保存为 GitHub Repository Secret：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">publish</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">NODE_AUTH_TOKEN:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.NPM_TOKEN</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这种方案依赖一个长期凭证。只要 Token 没有过期或被撤销，拿到它的人就可能在允许的权限范围内持续操作。Token 还可能因为日志输出、错误配置、第三方 Action、开发者电脑或仓库 Secret 管理不当而泄漏。</p>
+<p>随着 2FA-bypass Token 的直接发布能力被逐步取消，继续围绕长期发布 Token 建设自动发布流程不仅风险更高，也不是可持续方案。</p>
+<h3 id="1-2-OIDC-解决了什么问题">1.2 OIDC 解决了什么问题</h3>
+<p>OIDC 发布不需要预先生成一个长期 npm 发布 Token。每次 Workflow 运行时：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GitHub Actions Job</span><br><span class="line">  → 向 GitHub OIDC Provider 请求短期 JWT</span><br><span class="line">  → npm 校验 JWT 的签名和身份声明</span><br><span class="line">  → npm 核对仓库、Workflow、Environment 等可信条件</span><br><span class="line">  → 本次 npm publish 获得短期发布权限</span><br><span class="line">  → Job 结束后凭证失效</span><br></pre></td></tr></table></figure>
+<p>与长期 Token 相比，OIDC 的主要优势是：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>没有长期发布密钥</strong>：GitHub Secrets 中不再需要保存 <code>NPM_TOKEN</code>。</p>
+</li>
+<li class="lvl-2">
+<p><strong>凭证生命周期短</strong>：身份令牌按 Job 动态生成，不能作为长期凭证反复使用。</p>
+</li>
+<li class="lvl-2">
+<p><strong>身份限制更精确</strong>：npm 可以只信任指定 GitHub 用户或组织、仓库、Workflow 文件和 Environment。</p>
+</li>
+<li class="lvl-2">
+<p><strong>不需要人工轮换 Token</strong>：减少 Token 创建、保存、更新和撤销的维护工作。</p>
+</li>
+<li class="lvl-2">
+<p><strong>降低泄漏影响</strong>：仓库里没有可直接复制走并长期使用的发布 Token。</p>
+</li>
+<li class="lvl-2">
+<p><strong>自动生成 Provenance</strong>：满足条件时，npm 会自动发布来源证明，让使用者可以确认包从哪个仓库和 Workflow 构建而来。</p>
+</li>
+</ul>
+<p>需要注意，OIDC 并不是“关闭认证”。它是将认证方式从“持有一个长期秘密”改为“由 GitHub 在运行时证明当前 Workflow 的身份”。</p>
+<h2 id="二、前置条件和限制">二、前置条件和限制</h2>
+<p>根据 <a target="_blank" rel="noopener" href="https://docs.npmjs.com/trusted-publishers/">npm Trusted Publishing 官方文档</a>，使用 GitHub Actions 发布时需要满足以下条件：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Node.js <code>&gt;= 22.14.0</code>。</p>
+</li>
+<li class="lvl-2">
+<p>npm CLI <code>&gt;= 11.5.1</code>。</p>
+</li>
+<li class="lvl-2">
+<p>使用 GitHub-hosted Runner，当前不支持 self-hosted Runner。</p>
+</li>
+<li class="lvl-2">
+<p>npm 包已经存在，并且当前 npm 用户拥有该包的管理权限。</p>
+</li>
+<li class="lvl-2">
+<p>Workflow 文件位于仓库的 <code>.github/workflows/</code> 目录。</p>
+</li>
+<li class="lvl-2">
+<p><code>package.json</code> 中的 <code>repository.url</code> 必须与发布来源的 GitHub 仓库准确对应。</p>
+</li>
+<li class="lvl-2">
+<p>一个 npm 包同一时间只能配置一个 Trusted Publisher。</p>
+</li>
+</ul>
+<p>本文使用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Node.js 24</span><br><span class="line">npm 12</span><br><span class="line">ubuntu-latest</span><br><span class="line">.github/workflows/publish.yml</span><br><span class="line">GitHub Environment: npm</span><br></pre></td></tr></table></figure>
+<h3 id="2-1-新包需要先完成首次发布">2.1 新包需要先完成首次发布</h3>
+<p>Trusted Publisher 是在已有 npm 包的 Settings 页面中配置的，因此全新的包通常需要先由维护者交互式发布一次：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm login</span><br><span class="line">npm publish --access public</span><br></pre></td></tr></table></figure>
+<p>首次发布时按照 npm 提示完成 2FA。包创建成功后，再配置 Trusted Publisher，后续版本即可完全交给 GitHub Actions 和 OIDC。</p>
+<p>不要为了首次发布而创建长期的 2FA-bypass Token。</p>
+<h3 id="2-2-检查-package-json">2.2 检查 package.json</h3>
+<p>一个公开作用域包可以使用如下配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;@your-scope/your-package&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;repository&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git+https://github.com/OWNER/REPOSITORY.git&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;publishConfig&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;access&quot;</span><span class="punctuation">:</span> <span class="string">&quot;public&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;registry&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://registry.npmjs.org/&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>需要重点检查：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>name</code> 必须是准备配置 Trusted Publisher 的 npm 包名。</p>
+</li>
+<li class="lvl-2">
+<p><code>version</code> 每次发布都必须递增，npm 不允许覆盖已有版本。</p>
+</li>
+<li class="lvl-2">
+<p><code>repository.url</code> 中的 <code>OWNER/REPOSITORY</code> 必须与实际 GitHub 仓库匹配。</p>
+</li>
+<li class="lvl-2">
+<p>公开作用域包建议设置 <code>publishConfig.access</code> 为 <code>public</code>，这样无需每次添加 <code>--access public</code>。</p>
+</li>
+<li class="lvl-2">
+<p><code>publishConfig.registry</code> 可以防止包被误发到其他 Registry。</p>
+</li>
+</ul>
+<h2 id="三、在-npm-中配置-Trusted-Publisher">三、在 npm 中配置 Trusted Publisher</h2>
+<h3 id="3-1-通过-npmjs-com-配置">3.1 通过 <a target="_blank" rel="noopener" href="http://npmjs.com">npmjs.com</a> 配置</h3>
+<p>登录 <a target="_blank" rel="noopener" href="https://www.npmjs.com/">npmjs.com</a>，进入要发布的包，然后打开：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Packages</span><br><span class="line">  → 选择包</span><br><span class="line">  → Settings</span><br><span class="line">  → Trusted publishing</span><br><span class="line">  → Select your publisher</span><br><span class="line">  → GitHub Actions</span><br></pre></td></tr></table></figure>
+<p>填写以下字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organization or user</td>
+<td><code>hanqunfeng</code></td>
+<td>GitHub 仓库所属用户或组织，不包含 <code>@</code></td>
+</tr>
+<tr>
+<td>Repository</td>
+<td><code>my-package</code></td>
+<td>只填写仓库名，不填写完整 URL</td>
+</tr>
+<tr>
+<td>Workflow filename</td>
+<td><code>publish.yml</code></td>
+<td>只填写文件名，不能填写 <code>.github/workflows/publish.yml</code></td>
+</tr>
+<tr>
+<td>Environment name</td>
+<td><code>npm</code></td>
+<td>可选；填写后，GitHub Job 必须使用同名 Environment</td>
+</tr>
+<tr>
+<td>Allowed actions</td>
+<td><code>npm publish</code></td>
+<td>允许 Workflow 直接发布</td>
+</tr>
+</tbody>
+</table>
+<p>所有字段都区分大小写，应与 GitHub 中的值完全一致。</p>
+<p>如果希望发布前必须由维护者进行 2FA 审批，可以只允许 <code>npm stage publish</code>。本文介绍自动直接发布，因此选择 <code>npm publish</code>。</p>
+<p>保存配置时 npm 不会验证仓库和 Workflow 是否真实存在。字段写错通常要等到第一次发布时才会出现 <code>ENEEDAUTH</code>，因此应在保存前逐项核对。</p>
+<h3 id="3-2-Environment-是否必须填写">3.2 Environment 是否必须填写</h3>
+<p>Environment 是可选项，但生产发布建议配置。填写 <code>npm</code> 后，npm 不仅检查仓库和 Workflow，还会检查 OIDC Token 中的 Environment 身份。</p>
+<p>这意味着下面两处必须完全一致：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm Trusted Publisher Environment name: npm</span><br><span class="line">GitHub Actions Job environment: npm</span><br></pre></td></tr></table></figure>
+<p>如果 npm 中填写了 Environment，但 Workflow 没有声明 <code>environment: npm</code>，发布认证会失败。</p>
+<h3 id="3-3-使用-npm-CLI-配置">3.3 使用 npm CLI 配置</h3>
+<p>也可以使用 <code>npm trust</code> 命令创建信任关系：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm trust github @your-scope/your-package \</span><br><span class="line">  --repo OWNER/REPOSITORY \</span><br><span class="line">  --file publish.yml \</span><br><span class="line">  --<span class="built_in">env</span> npm \</span><br><span class="line">  --allow-publish</span><br></pre></td></tr></table></figure>
+<p>先使用 <code>--dry-run</code> 检查参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">npm trust github @your-scope/your-package \</span><br><span class="line">  --repo OWNER/REPOSITORY \</span><br><span class="line">  --file publish.yml \</span><br><span class="line">  --<span class="built_in">env</span> npm \</span><br><span class="line">  --allow-publish \</span><br><span class="line">  --dry-run</span><br></pre></td></tr></table></figure>
+<p>这个命令与网页配置的作用相同。它需要当前终端已经登录 npm，并拥有目标包的管理权限。</p>
+<h2 id="四、在-GitHub-中配置发布环境">四、在 GitHub 中配置发布环境</h2>
+<h3 id="4-1-创建-Environment">4.1 创建 Environment</h3>
+<p>打开 GitHub 仓库，进入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Settings</span><br><span class="line">  → Environments</span><br><span class="line">  → New environment</span><br></pre></td></tr></table></figure>
+<p>Environment 名称填写：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm</span><br></pre></td></tr></table></figure>
+<p>名称应与 npm Trusted Publisher 中的 <code>Environment name</code> 完全一致。</p>
+<h3 id="4-2-配置部署保护规则">4.2 配置部署保护规则</h3>
+<p>可以根据仓库安全要求配置：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Required reviewers：发布前必须由指定维护者批准。</p>
+</li>
+<li class="lvl-2">
+<p>Deployment branches and tags：只允许受保护分支或指定 Tag 部署。</p>
+</li>
+<li class="lvl-2">
+<p>Prevent self-review：触发发布的人不能批准自己的发布。</p>
+</li>
+<li class="lvl-2">
+<p>Wait timer：批准后等待一段时间再开始发布。</p>
+</li>
+</ul>
+<p>如果使用 <code>v*</code> Tag 触发发布，建议只允许符合版本规则的 Tag，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v*</span><br></pre></td></tr></table></figure>
+<p>GitHub 不同套餐和仓库可见性支持的 Environment 保护能力可能不同，应以仓库 Settings 页面实际提供的选项为准。</p>
+<h3 id="4-3-不需要创建-NPM-TOKEN">4.3 不需要创建 NPM_TOKEN</h3>
+<p>OIDC 发布不需要在下面的位置添加 npm 发布 Token：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Settings</span><br><span class="line">  → Secrets and variables</span><br><span class="line">  → Actions</span><br></pre></td></tr></table></figure>
+<p>如果旧 Workflow 中存在 <code>NPM_TOKEN</code>：</p>
+<ol>
+<li class="lvl-3">
+<p>先保留 Secret，完成一次 OIDC 发布验证。</p>
+</li>
+<li class="lvl-3">
+<p>确认 Workflow 没有读取该 Secret。</p>
+</li>
+<li class="lvl-3">
+<p>删除旧 Workflow 中的 <code>NODE_AUTH_TOKEN: $&#123;&#123; secrets.NPM_TOKEN &#125;&#125;</code>。</p>
+</li>
+<li class="lvl-3">
+<p>最后在 GitHub 和 npm 中撤销不再使用的发布 Token。</p>
+</li>
+</ol>
+<p>不要在尚未验证 OIDC 可用前先撤销旧发布方式，否则可能中断发布。</p>
+<h3 id="4-4-保护发布-Tag">4.4 保护发布 Tag</h3>
+<p>仅仅使用 <code>push.tags: [&quot;v*&quot;]</code> 不代表任何人都应该能创建发布 Tag。组织仓库可以通过 GitHub Rulesets 限制谁能创建或更新匹配 <code>v*</code> 的 Tag：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Settings</span><br><span class="line">  → Rules</span><br><span class="line">  → Rulesets</span><br><span class="line">  → New ruleset</span><br><span class="line">  → New tag ruleset</span><br></pre></td></tr></table></figure>
+<p>Tag 保护与 Environment 审批配合使用，可以避免普通写权限成员通过创建 Tag 直接触发生产发布。</p>
+<h2 id="五、编写-GitHub-Actions-Workflow">五、编写 GitHub Actions Workflow</h2>
+<p>在项目中创建 <code>.github/workflows/publish.yml</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Publish</span> <span class="string">to</span> <span class="string">npm</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">tags:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;v*&quot;</span></span><br><span class="line">  <span class="attr">workflow_dispatch:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">concurrency:</span></span><br><span class="line">  <span class="attr">group:</span> <span class="string">npm-publish</span></span><br><span class="line">  <span class="attr">cancel-in-progress:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">publish:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Publish</span> <span class="string">package</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">environment:</span> <span class="string">npm</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">permissions:</span></span><br><span class="line">      <span class="attr">contents:</span> <span class="string">read</span></span><br><span class="line">      <span class="attr">id-token:</span> <span class="string">write</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Checkout</span> <span class="string">repository</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/checkout@v6</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">Node.js</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/setup-node@v6</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">node-version:</span> <span class="string">&quot;24&quot;</span></span><br><span class="line">          <span class="attr">registry-url:</span> <span class="string">&quot;https://registry.npmjs.org/&quot;</span></span><br><span class="line">          <span class="attr">package-manager-cache:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Show</span> <span class="string">runtime</span> <span class="string">versions</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          node --version</span></span><br><span class="line"><span class="string">          npm --version</span></span><br><span class="line"><span class="string"></span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Verify</span> <span class="string">tag</span> <span class="string">matches</span> <span class="string">package</span> <span class="string">version</span></span><br><span class="line">        <span class="attr">if:</span> <span class="string">github.event_name</span> <span class="string">==</span> <span class="string">&#x27;push&#x27;</span></span><br><span class="line">        <span class="attr">shell:</span> <span class="string">bash</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          PACKAGE_VERSION=&quot;$(node -p &quot;require(&#x27;./package.json&#x27;).version&quot;)&quot;</span></span><br><span class="line"><span class="string">          if [[ &quot;$&#123;GITHUB_REF_NAME&#125;&quot; != &quot;v$&#123;PACKAGE_VERSION&#125;&quot; ]]; then</span></span><br><span class="line"><span class="string">            echo &quot;Tag $&#123;GITHUB_REF_NAME&#125; does not match package version v$&#123;PACKAGE_VERSION&#125;&quot;</span></span><br><span class="line"><span class="string">            exit 1</span></span><br><span class="line"><span class="string">          fi</span></span><br><span class="line"><span class="string"></span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">dependencies</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">ci</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Run</span> <span class="string">tests</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">test</span> <span class="string">--if-present</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Build</span> <span class="string">package</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build</span> <span class="string">--if-present</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Preview</span> <span class="string">package</span> <span class="string">contents</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">pack</span> <span class="string">--dry-run</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Publish</span> <span class="string">package</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">publish</span></span><br></pre></td></tr></table></figure>
+<p>提交 Workflow：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .github/workflows/publish.yml</span><br><span class="line">git commit -m <span class="string">&quot;ci: publish npm package with OIDC&quot;</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+<h3 id="5-1-id-token-write-是关键权限">5.1 id-token: write 是关键权限</h3>
+<p>下面的权限允许当前 Job 向 GitHub OIDC Provider 请求 JWT：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">permissions:</span></span><br><span class="line">  <span class="attr">id-token:</span> <span class="string">write</span></span><br></pre></td></tr></table></figure>
+<p>根据 <a target="_blank" rel="noopener" href="https://docs.github.com/en/actions/reference/security/oidc">GitHub OIDC 参考文档</a>，<code>id-token: write</code> 只允许请求 OIDC Token，本身不会直接授予修改仓库或 npm 包的权限。npm 仍然会验证 Token，并根据 Trusted Publisher 配置决定是否允许发布。</p>
+<p><code>actions/checkout</code> 读取仓库代码还需要：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">permissions:</span></span><br><span class="line">  <span class="attr">contents:</span> <span class="string">read</span></span><br></pre></td></tr></table></figure>
+<p>将权限放在 <code>publish</code> Job 内，可以避免同一 Workflow 的其他 Job 获得请求 OIDC Token 的能力。</p>
+<h3 id="5-2-为什么没有-NODE-AUTH-TOKEN">5.2 为什么没有 NODE_AUTH_TOKEN</h3>
+<p>OIDC Workflow 中不应再写：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">env:</span></span><br><span class="line">  <span class="attr">NODE_AUTH_TOKEN:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.NPM_TOKEN</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>npm CLI 会识别 GitHub Actions OIDC 环境，在执行 <code>npm publish</code> 时完成身份交换。如果仍提供一个具有发布权限的长期 Token，可能会掩盖 Trusted Publisher 配置错误，让 Workflow 看似迁移成功，实际仍然依赖旧 Token。</p>
+<h3 id="5-3-为什么关闭发布任务中的依赖缓存">5.3 为什么关闭发布任务中的依赖缓存</h3>
+<p>示例使用：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">package-manager-cache:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>发布任务应优先保证构建来源清晰、可重复。缓存可以放在普通 CI 中加速测试，但 npm 官方示例建议发布构建不要使用依赖缓存，以减少旧缓存或受污染缓存进入发布产物的风险。</p>
+<h3 id="5-4-为什么使用-Environment">5.4 为什么使用 Environment</h3>
+<p>下面的配置有两个作用：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">environment:</span> <span class="string">npm</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li class="lvl-3">
+<p>让 OIDC Token 包含 <code>npm</code> Environment 身份，以匹配 npm Trusted Publisher。</p>
+</li>
+<li class="lvl-3">
+<p>应用 GitHub Environment 中配置的审批、Tag 限制和等待规则。</p>
+</li>
+</ol>
+<p>如果不准备使用 Environment，应同时删除：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>npm Trusted Publisher 中的 Environment name。</p>
+</li>
+<li class="lvl-2">
+<p>Workflow 中的 <code>environment: npm</code>。</p>
+</li>
+</ul>
+<h3 id="5-5-为什么校验-Tag-和-package-json-版本">5.5 为什么校验 Tag 和 package.json 版本</h3>
+<p><code>v1.2.3</code> Tag 应发布 <code>package.json</code> 中的 <code>1.2.3</code>。如果二者不一致，可能出现：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Tag 表示的版本与 npm 实际版本不同。</p>
+</li>
+<li class="lvl-2">
+<p>重复发布一个已经存在的版本。</p>
+</li>
+<li class="lvl-2">
+<p>Release Notes 与真实包版本错位。</p>
+</li>
+</ul>
+<p>Workflow 在安装依赖前进行校验，可以更早终止错误发布。</p>
+<h2 id="六、执行一次发布">六、执行一次发布</h2>
+<h3 id="6-1-更新版本并创建-Tag">6.1 更新版本并创建 Tag</h3>
+<p>例如发布补丁版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm version patch -m <span class="string">&quot;chore(release): %s&quot;</span></span><br><span class="line">git push</span><br><span class="line">git push --tags</span><br></pre></td></tr></table></figure>
+<p><code>npm version patch</code> 会：</p>
+<ol>
+<li class="lvl-3">
+<p>更新 <code>package.json</code> 和 <code>package-lock.json</code> 中的版本。</p>
+</li>
+<li class="lvl-3">
+<p>创建一个 Git Commit。</p>
+</li>
+<li class="lvl-3">
+<p>创建形如 <code>v1.0.1</code> 的 Git Tag。</p>
+</li>
+</ol>
+<p>Tag 推送到 GitHub 后，<code>publish.yml</code> 开始运行。如果 Environment 配置了 Required reviewers，Job 会在发布前等待审批。</p>
+<h3 id="6-2-验证发布结果">6.2 验证发布结果</h3>
+<p>在 GitHub 中检查：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Repository</span><br><span class="line">  → Actions</span><br><span class="line">  → Publish to npm</span><br></pre></td></tr></table></figure>
+<p>在命令行中检查：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm view @your-scope/your-package version</span><br><span class="line">npm view @your-scope/your-package dist-tags</span><br></pre></td></tr></table></figure>
+<p>还可以安装刚发布的版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @your-scope/your-package@1.0.1</span><br></pre></td></tr></table></figure>
+<h2 id="七、Provenance-来源证明">七、Provenance 来源证明</h2>
+<p>使用 GitHub Actions Trusted Publishing 时，npm 会在满足条件的情况下自动生成 Provenance，不需要添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish --provenance</span><br></pre></td></tr></table></figure>
+<p>自动生成需要同时满足：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>通过 OIDC Trusted Publishing 发布。</p>
+</li>
+<li class="lvl-2">
+<p>从公开 GitHub 仓库发布。</p>
+</li>
+<li class="lvl-2">
+<p>发布的是公开 npm 包。</p>
+</li>
+</ul>
+<p>Provenance 为包提供可验证的构建来源，包括源代码仓库和执行发布的 Workflow。使用者可以在 npm 包页面查看来源信息，从而降低包被伪造或发布链路不透明的风险。</p>
+<p>私有 GitHub 仓库当前不会生成 Provenance，即使最终发布的是公开 npm 包，但 OIDC Trusted Publishing 本身仍然可以使用。</p>
+<h2 id="八、npm-v12-对发布-Workflow-的影响">八、npm v12 对发布 Workflow 的影响</h2>
+<p>npm v12 除了推动发布认证迁移，还默认收紧了安装阶段的供应链安全策略：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>依赖的 <code>preinstall</code>、<code>install</code>、<code>postinstall</code> 生命周期脚本和隐式 <code>node-gyp</code> 构建默认不再自动执行。</p>
+</li>
+<li class="lvl-2">
+<p>Git 依赖默认不允许解析。</p>
+</li>
+<li class="lvl-2">
+<p>HTTPS Tarball 等远程 URL 依赖默认不允许解析。</p>
+</li>
+</ul>
+<p>升级 npm v12 后，应在开发环境中审查被阻止的依赖脚本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm approve-scripts --allow-scripts-pending</span><br></pre></td></tr></table></figure>
+<p>根据审查结果批准确实需要执行脚本的依赖，并将生成的 <code>allowScripts</code> 配置提交到 <code>package.json</code>。不要在 CI 中直接允许所有依赖脚本，否则会绕过 npm v12 新增的安全边界。</p>
+<p>在正式启用 npm v12 前，应本地运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm ci</span><br><span class="line">npm <span class="built_in">test</span></span><br><span class="line">npm run build --if-present</span><br><span class="line">npm pack --dry-run</span><br></pre></td></tr></table></figure>
+<p>确认原生模块、代码生成工具和构建依赖没有因为 install script 被阻止而失效。</p>
+<h2 id="九、项目使用私有依赖时的配置">九、项目使用私有依赖时的配置</h2>
+<p>Trusted Publishing 只负责 <code>npm publish</code> 或 <code>npm stage publish</code>，不会让 <code>npm ci</code> 自动获得私有包读取权限。</p>
+<p>如果项目依赖私有 npm 包，需要创建一个只读 Granular Access Token，并仅在安装步骤中使用：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">dependencies</span></span><br><span class="line">  <span class="attr">run:</span> <span class="string">npm</span> <span class="string">ci</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">NODE_AUTH_TOKEN:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.NPM_READ_TOKEN</span> <span class="string">&#125;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Publish</span> <span class="string">package</span> <span class="string">with</span> <span class="string">OIDC</span></span><br><span class="line">  <span class="attr">run:</span> <span class="string">npm</span> <span class="string">publish</span></span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>NPM_READ_TOKEN</code> 只授予读取必要私有包的权限。</p>
+</li>
+<li class="lvl-2">
+<p>不要为它启用发布权限或 2FA bypass。</p>
+</li>
+<li class="lvl-2">
+<p>不要在 <code>npm publish</code> 步骤中传递该 Token。</p>
+</li>
+<li class="lvl-2">
+<p>项目中的 <code>.npmrc</code> 只能引用环境变量，不能写入真实 Token。</p>
+</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//registry.npmjs.org/:<span class="attr">_authToken</span>=<span class="variable">$&#123;NODE_AUTH_TOKEN&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="十、进一步加固发布流程">十、进一步加固发布流程</h2>
+<h3 id="10-1-OIDC-验证成功后禁止传统-Token-发布">10.1 OIDC 验证成功后禁止传统 Token 发布</h3>
+<p>完成一次 OIDC 发布验证后，进入 npm 包设置：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Package</span><br><span class="line">  → Settings</span><br><span class="line">  → Publishing access</span><br><span class="line">  → Require two-factor authentication and disallow tokens</span><br></pre></td></tr></table></figure>
+<p>该选项会阻止传统 Token 发布，但不会阻止 Trusted Publisher 使用 OIDC。</p>
+<p>推荐迁移顺序：</p>
+<ol>
+<li class="lvl-3">
+<p>添加 Trusted Publisher。</p>
+</li>
+<li class="lvl-3">
+<p>提交不包含 <code>NPM_TOKEN</code> 的 Workflow。</p>
+</li>
+<li class="lvl-3">
+<p>成功发布一个新版本。</p>
+</li>
+<li class="lvl-3">
+<p>禁止传统 Token 发布。</p>
+</li>
+<li class="lvl-3">
+<p>撤销旧的自动发布 Token。</p>
+</li>
+<li class="lvl-3">
+<p>删除 GitHub 中不再使用的 <code>NPM_TOKEN</code> Secret。</p>
+</li>
+</ol>
+<h3 id="10-2-使用-Staged-Publishing">10.2 使用 Staged Publishing</h3>
+<p>安全要求更高的项目可以让自动化流程只暂存版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm stage publish</span><br></pre></td></tr></table></figure>
+<p>然后由维护者通过 <a target="_blank" rel="noopener" href="http://npmjs.com">npmjs.com</a> 或 CLI 完成 2FA 审批，版本才会公开。此时在 Trusted Publisher 中只允许 <code>npm stage publish</code>，不要允许直接 <code>npm publish</code>。</p>
+<h3 id="10-3-固定第三方-Action">10.3 固定第三方 Action</h3>
+<p>示例为了便于阅读使用：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">uses:</span> <span class="string">actions/checkout@v6</span></span><br><span class="line"><span class="attr">uses:</span> <span class="string">actions/setup-node@v6</span></span><br></pre></td></tr></table></figure>
+<p>对高安全要求的发布链路，可以将 Action 固定到审核过的完整 Commit SHA，并由 Dependabot 或 Renovate 提交升级 PR，避免可变 Tag 被上游修改。</p>
+<h3 id="10-4-将测试和发布拆分">10.4 将测试和发布拆分</h3>
+<p>复杂项目可以先运行没有 <code>id-token: write</code> 的测试 Job，全部通过后再运行发布 Job。只有最后一个 Job 拥有 OIDC 权限：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">test:</span></span><br><span class="line">    <span class="attr">permissions:</span></span><br><span class="line">      <span class="attr">contents:</span> <span class="string">read</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v6</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/setup-node@v6</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">node-version:</span> <span class="string">&quot;24&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">ci</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">test</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">publish:</span></span><br><span class="line">    <span class="attr">needs:</span> <span class="string">test</span></span><br><span class="line">    <span class="attr">environment:</span> <span class="string">npm</span></span><br><span class="line">    <span class="attr">permissions:</span></span><br><span class="line">      <span class="attr">contents:</span> <span class="string">read</span></span><br><span class="line">      <span class="attr">id-token:</span> <span class="string">write</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v6</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/setup-node@v6</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">node-version:</span> <span class="string">&quot;24&quot;</span></span><br><span class="line">          <span class="attr">registry-url:</span> <span class="string">&quot;https://registry.npmjs.org/&quot;</span></span><br><span class="line">          <span class="attr">package-manager-cache:</span> <span class="literal">false</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">ci</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build</span> <span class="string">--if-present</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">publish</span></span><br></pre></td></tr></table></figure>
+<p>如果测试 Job 生成构建 Artifact，发布 Job 下载 Artifact 后应校验来源和内容，避免“测试一份代码、发布另一份代码”。</p>
+<h2 id="十一、常见问题排查">十一、常见问题排查</h2>
+<h3 id="11-1-npm-ERR-code-ENEEDAUTH">11.1 npm ERR! code ENEEDAUTH</h3>
+<p>依次检查：</p>
+<ol>
+<li class="lvl-3">
+<p>Workflow 是否包含 <code>id-token: write</code>。</p>
+</li>
+<li class="lvl-3">
+<p>是否使用 GitHub-hosted Runner。</p>
+</li>
+<li class="lvl-3">
+<p>Node.js 是否 <code>&gt;= 22.14.0</code>。</p>
+</li>
+<li class="lvl-3">
+<p>npm 是否 <code>&gt;= 11.5.1</code>。</p>
+</li>
+<li class="lvl-3">
+<p>npm 中的 Organization、Repository 是否与当前仓库一致。</p>
+</li>
+<li class="lvl-3">
+<p>npm 中只填写了 <code>publish.yml</code>，而不是完整路径。</p>
+</li>
+<li class="lvl-3">
+<p>Workflow 文件名的大小写和扩展名是否完全一致。</p>
+</li>
+<li class="lvl-3">
+<p>npm 中配置了 Environment 时，Job 是否声明同名 <code>environment</code>。</p>
+</li>
+<li class="lvl-3">
+<p><code>package.json</code> 的 <code>repository.url</code> 是否指向当前 GitHub 仓库。</p>
+</li>
+<li class="lvl-4">
+<p><code>npm publish</code> 步骤是否意外传入了一个无效的 <code>NODE_AUTH_TOKEN</code>。</p>
+</li>
+</ol>
+<h3 id="11-2-npm-whoami-失败">11.2 npm whoami 失败</h3>
+<p>这是预期行为。OIDC 身份交换只在 <code>npm publish</code> 或 <code>npm stage publish</code> 时发生：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">whoami</span></span><br></pre></td></tr></table></figure>
+<p>不能用于验证当前 Workflow 的 OIDC 发布身份。</p>
+<h3 id="11-3-使用-Reusable-Workflow-后认证失败">11.3 使用 Reusable Workflow 后认证失败</h3>
+<p>如果使用 <code>workflow_call</code>，npm 可能校验调用方 Workflow 的文件名，而不是实际包含 <code>npm publish</code> 的被调用 Workflow。父、子 Workflow 还都需要正确传递 <code>id-token: write</code> 权限。</p>
+<p>遇到此问题时，应确认 npm Trusted Publisher 中登记的是实际参与 OIDC 身份声明的 Workflow 文件名。对于关键发布流程，直接在已登记的顶层 Workflow 中执行发布通常更容易审计。</p>
+<h3 id="11-4-手动触发可以发布，Tag-触发失败">11.4 手动触发可以发布，Tag 触发失败</h3>
+<p>检查：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Tag 是否满足 <code>v*</code>。</p>
+</li>
+<li class="lvl-2">
+<p>Tag 是否指向包含 <code>publish.yml</code> 的提交。</p>
+</li>
+<li class="lvl-2">
+<p>Tag 与 <code>package.json</code> 版本是否一致。</p>
+</li>
+<li class="lvl-2">
+<p>Environment 的 Deployment branches and tags 是否允许该 Tag。</p>
+</li>
+<li class="lvl-2">
+<p>Tag Ruleset 是否允许当前用户或自动化创建该 Tag。</p>
+</li>
+</ul>
+<h3 id="11-5-npm-中找不到-Trusted-publishing">11.5 npm 中找不到 Trusted publishing</h3>
+<p>常见原因包括：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>包还没有完成首次发布。</p>
+</li>
+<li class="lvl-2">
+<p>当前 npm 账号不是包维护者。</p>
+</li>
+<li class="lvl-2">
+<p>登录了错误的 npm 账号或组织。</p>
+</li>
+<li class="lvl-2">
+<p>当前账号没有修改包设置的权限。</p>
+</li>
+</ul>
+<h2 id="十二、完整迁移检查清单">十二、完整迁移检查清单</h2>
+<p>发布前：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox0"><label for="checkbox0">npm 包已经存在。</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox1"><label for="checkbox1">Node.js </label><code>&gt;= 22.14.0</code>，npm <code>&gt;= 11.5.1</code>。</p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox2"><label for="checkbox2"></label><code>package.json</code> 的包名、版本、Registry 和 <code>repository.url</code> 正确。</p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox3"><label for="checkbox3">npm Trusted Publisher 的仓库、Workflow 和 Environment 配置正确。</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox4"><label for="checkbox4">GitHub 中已创建同名 Environment。</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox5"><label for="checkbox5">Workflow 使用 GitHub-hosted Runner。</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox6"><label for="checkbox6">发布 Job 只有 </label><code>contents: read</code> 和 <code>id-token: write</code> 等必要权限。</p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox7"><label for="checkbox7">Workflow 的发布步骤没有使用 </label><code>NPM_TOKEN</code>。</p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox8"><label for="checkbox8">Tag 与 </label><code>package.json</code> 版本一致。</p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox9"><label for="checkbox9">npm v12 所需的依赖 install script 已经完成审查。</label></p>
+</li>
+</ul>
+<p>首次 OIDC 发布成功后：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox10"><label for="checkbox10">在 npm 包页面确认新版本和 Provenance。</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox11"><label for="checkbox11">将 Publishing access 改为要求 2FA 并禁止传统 Token。</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox12"><label for="checkbox12">撤销旧 npm 发布 Token。</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox13"><label for="checkbox13">删除 GitHub 中不再使用的 </label><code>NPM_TOKEN</code>。</p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox14"><label for="checkbox14">保留私有依赖所需的只读 Token，并限制其作用范围。</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox15"><label for="checkbox15">定期审计 Trusted Publisher、Environment 审批人和 Tag Ruleset。</label></p>
+</li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>npm 对 2FA-bypass Token 的限制意味着，长期发布 Token 不再适合作为 GitHub Actions 自动发布的基础。Trusted Publishing 使用 GitHub OIDC 在运行时证明 Workflow 身份，不需要保存长期发布密钥，并且可以将权限限制到指定仓库、Workflow 和 Environment。</p>
+<p>一套推荐的 npm 发布链路是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">受保护的版本 Tag</span><br><span class="line">  → GitHub Actions 测试和构建</span><br><span class="line">  → GitHub Environment 审批</span><br><span class="line">  → GitHub 签发短期 OIDC Token</span><br><span class="line">  → npm 验证 Trusted Publisher</span><br><span class="line">  → npm publish</span><br><span class="line">  → 自动生成 Provenance</span><br></pre></td></tr></table></figure>
+<p>完成迁移并验证成功后，再禁止传统 Token 发布并撤销旧 Token，才能真正移除长期凭证带来的供应链风险。</p>
+<h2 id="真实案例">真实案例</h2>
+<p>为了更好的便于读者理解，可以参考本人的开源项目 <a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/claude-trace">claude-trace</a></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/claude-trace/blob/main/.github/workflows/publish.yml">publish.yml</a>：使用 GitHub Actions 和 OIDC 自动发布 npm 包的完整 Workflow。</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/claude-trace/blob/main/scripts/publish-oidc.sh">publish-oidc.sh</a>：发布前检查版本、构建产物和 OIDC 环境的辅助脚本。</p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/claude-trace/blob/main/doc/publishing/oidc.md">oidc.md</a>：项目中配置、使用及排查 OIDC 发布流程的说明文档。</p>
+</li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.blog/changelog/2026-07-08-npm-install-time-security-and-gat-bypass2fa-deprecation/">npm install-time security and GAT bypass2fa deprecation</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.npmjs.com/trusted-publishers/">Trusted publishing for npm packages</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow/">Using private packages in a CI/CD workflow</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.npmjs.com/generating-provenance-statements/">Generating provenance statements</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.github.com/en/actions/concepts/security/openid-connect">GitHub Actions OpenID Connect</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://docs.github.com/en/actions/reference/security/oidc">OpenID Connect reference</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2026/07/11/npm-oidc-trusted-publishing/" title="使用 GitHub Actions 和 OIDC 安全发布 npm 包">https://blog.hanqunfeng.com/2026/07/11/npm-oidc-trusted-publishing/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/github/" rel="tag"><i class="fa fa-tag"></i> github</a>
+              <a href="/tags/npm/" rel="tag"><i class="fa fa-tag"></i> npm</a>
+              <a href="/tags/oidc/" rel="tag"><i class="fa fa-tag"></i> oidc</a>
+              <a href="/tags/github-actions/" rel="tag"><i class="fa fa-tag"></i> github-actions</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/11/github-action/" rel="prev" title="GitHub Actions Workflow 详细指南">
+                  <i class="fa fa-angle-left"></i> GitHub Actions Workflow 详细指南
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">817k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">49:30</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>

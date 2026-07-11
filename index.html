@@ -935,7 +935,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">295</span>
+          <span class="site-state-item-count">296</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -946,7 +946,7 @@ i.ban {
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">66</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1012,6 +1012,160 @@ i.ban {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/11/npm-oidc-trusted-publishing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/11/npm-oidc-trusted-publishing/" class="post-title-link" itemprop="url">使用 GitHub Actions 和 OIDC 安全发布 npm 包</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-07-11 22:51:00 / 修改时间：16:15:39" itemprop="dateCreated datePublished" datetime="2026-07-11T22:51:00+08:00">2026-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/npm/" itemprop="url" rel="index"><span itemprop="name">npm</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/npm/nodejs/" itemprop="url" rel="index"><span itemprop="name">nodejs</span></a>
+        </span>
+    </span>
+
+  
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2026/07/11/npm-oidc-trusted-publishing/" class="leancloud_visitors" data-flag-title="使用 GitHub Actions 和 OIDC 安全发布 npm 包" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<p>本文介绍如何使用 npm Trusted Publishing，在 GitHub Actions 中通过 OpenID Connect（OIDC）发布 npm 包。整个发布过程不需要创建或保存长期有效的 <code>NPM_TOKEN</code>，并可通过指定仓库、Workflow 和 GitHub Environment 限制发布来源。</p>
+<p>本文将依次完成以下工作：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>解释为什么 npm 自动发布应从长期 Token 迁移到 OIDC。</p>
+</li>
+<li class="lvl-2">
+<p>介绍 OIDC 和 npm Trusted Publishing 的工作原理。</p>
+</li>
+<li class="lvl-2">
+<p>在 <a target="_blank" rel="noopener" href="http://npmjs.com">npmjs.com</a> 中为包添加 GitHub Actions Trusted Publisher。</p>
+</li>
+<li class="lvl-2">
+<p>在 GitHub 中配置 Environment、审批规则和最小权限。</p>
+</li>
+<li class="lvl-2">
+<p>编写一个完整、安全且不依赖 <code>NPM_TOKEN</code> 的发布 Workflow。</p>
+</li>
+<li class="lvl-2">
+<p>介绍私有依赖、首次发布、npm v12、Provenance 和常见错误。</p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/07/11/npm-oidc-trusted-publishing/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2265,147 +2419,6 @@ GitHub Actions 会执行代码和第三方 Action，复制示例前应根据项�
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/01/13/redis7-module-RediSearch-vector/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/01/13/redis7-module-RediSearch-vector/" class="post-title-link" itemprop="url">RediSearch 开发实战 之 向量检索</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-01-13 21:30:05" itemprop="dateCreated datePublished" datetime="2026-01-13T21:30:05+08:00">2026-01-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-01-14 15:58:32" itemprop="dateModified" datetime="2026-01-14T15:58:32+08:00">2026-01-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
-        </span>
-    </span>
-
-  
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-
-
-    <span id="/2026/01/13/redis7-module-RediSearch-vector/" class="leancloud_visitors" data-flag-title="RediSearch 开发实战 之 向量检索" title="阅读次数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
-    </span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">本文介绍 Redis 扩展模块 – RediSearch 操作 向量检索 的方法(<code>非 Redis8 中新增的向量功能</code>)</li>
-<li class="lvl-2">本文基于<code>redis-7.4.7</code>，<code>springboot-3.5.8</code></li>
-<li class="lvl-2">Redis官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a></li>
-<li class="lvl-2">Redis 命令文档：<a target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/">https://redis.io/docs/latest/commands/</a></li>
-<li class="lvl-2">RediSearch 的安装参见 <a href="/2025/12/26/redis7-module-RediSearch/" title="Redis 扩展模块 -- RediSearch 的安装方法">Redis 扩展模块 -- RediSearch 的安装方法</a></li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/01/13/redis7-module-RediSearch-vector/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2432,14 +2445,14 @@ GitHub Actions 会执行代码和第三方 Action，复制示例前应根据项�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">812k</span>
+    <span title="站点总字数">817k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">49:12</span>
+    <span title="站点阅读时长">49:30</span>
   </span>
 </div>
 <div class="busuanzi-count">
