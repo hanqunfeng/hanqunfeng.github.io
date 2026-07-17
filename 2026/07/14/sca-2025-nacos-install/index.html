@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/atelier-seaside-light","dark":"tomorrow-night-bright"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="摘要   依据 Spring Cloud Alibaba 版本发布说明，搭建与 Spring Cloud Alibaba 2025.0.0.0 对应的 Nacos Server 3.0.3。   覆盖服务端单机搭建（二进制包 + Docker）、MySQL 外置持久化、多节点集群，并补充 Spring Boot 应用侧的最小接入配置。   同版本配套的 Sentinel Dashboard 见">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3">
+<meta property="og:url" content="https://blog.hanqunfeng.com/2026/07/14/sca-2025-nacos-install/index.html">
+<meta property="og:site_name" content="飘逸峰的博客">
+<meta property="og:description" content="摘要   依据 Spring Cloud Alibaba 版本发布说明，搭建与 Spring Cloud Alibaba 2025.0.0.0 对应的 Nacos Server 3.0.3。   覆盖服务端单机搭建（二进制包 + Docker）、MySQL 外置持久化、多节点集群，并补充 Spring Boot 应用侧的最小接入配置。   同版本配套的 Sentinel Dashboard 见">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-14T08:43:58.000Z">
+<meta property="article:modified_time" content="2026-07-16T06:32:04.304Z">
+<meta property="article:author" content="飘逸峰">
+<meta property="article:tag" content="nacos">
+<meta property="article:tag" content="spring-cloud-alibaba">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.hanqunfeng.com/2026/07/14/sca-2025-nacos-install/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.hanqunfeng.com/2026/07/14/sca-2025-nacos-install/","path":"2026/07/14/sca-2025-nacos-install/","title":"Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3 | 飘逸峰的博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GWTEYMZ5M8"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GWTEYMZ5M8","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js" defer></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js" defer></script>
+  <script async src="https://hm.baidu.com/hm.js?e5cd6c30fc944bddf6ed6ae96edc722b"></script>
+
+
+
+
+
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"dark","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js" defer></script>
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js" defer></script>
+
+
+<META http-equiv="Pragma" content="no-cache">
+<META http-equiv="Cache-Control" content="no-cache">
+<META http-equiv="Expire" content="0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js-expand/httpToHttps.js"></script>
+<meta name="keywords" content="hanqf,hanqunfeng,飘逸峰的博客,Java,Spring,SpringBoot,linux,Mysql">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start --><script> let HEXO_MMEDIA_DATA = { js: [], css: [], aplayerData: [], metingData: [], artPlayerData: [], dplayerData: []}; </script><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="飘逸峰的博客" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">飘逸峰的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Spring--Java程序员的春天</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa-solid fa-house fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa-solid fa-table-cells fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa-solid fa-box-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa-solid fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-book"><a href="/book/" rel="section"><i class="fa-solid fa-book fa-fw"></i>资料</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa-solid fa-rss fa-fw"></i>RSS</a></li><li class="menu-item menu-item-hot"><a href="/hot/" rel="section"><i class="fa-solid fa-signal fa-fw"></i>阅读排行榜</a></li><li class="menu-item menu-item-charts"><a href="/charts/" rel="section"><i class="fa-solid fa-chart-bar fa-fw"></i>统计图</a></li><li class="menu-item menu-item-lastmod"><a href="/lastmod/" rel="section"><i class="fa-solid fa-pen-to-square fa-fw"></i>最新更新列表</a></li><li class="menu-item menu-item-comments"><a href="https://github.com/hanqunfeng/blog_comments/issues" rel="section" target="_blank"><i class="fa-solid fa-comments fa-fw"></i>评论</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script src="/calendar/calendar.js"></script>
+
+
+<style>
+#img_css {
+    cursor:pointer;
+    width: 100%;
+    text-align:center;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
+}
+
+
+
+.calendar-ct ul,.calendar-ct ol,.calendar-ct li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarDiv {
+    width: 200px;
+    margin: 0px auto;
+}
+
+#toast{
+    padding: 4px;
+    width: 800px;
+    background-color: rgb(255, 128, 142);
+    
+    position: fixed;
+    z-index: 25;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 400px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius:40px;
+    border-bottom-left-radius:0px;
+    border-top-left-radius:40px;
+}
+.titleContent {
+    text-decoration:none;
+    border-bottom-color:#fff;
+    
+    color: #fff;
+    font-size: 20px;
+    margin-left:4px;
+}
+.titleIco {
+    margin-left:40px;
+}
+
+.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    margin: auto;
+}
+
+.month-items {
+    padding-left:4px;
+}
+
+.have.have2.have3.have4{
+    color: #69dbdc!important;
+}
+
+.month-now {
+    background: none !important;
+    padding: 4px 0px 4px 3px; /* 上（top）、右（right）、下（bottom）、左（left） */
+    font:  500 14px sans-serif !important;
+}
+
+i.xiu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #F43;
+    padding: 0 0;
+    margin: 0 0;
+}
+i.ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 8px;
+    color: #999;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.xiu-ban {
+    font-size: 12px;
+}
+</style>
+
+<div id="img_css">
+
+
+
+
+
+<img src="/images_glob/jiaoshijie.jpeg" id="img_910" style="display: none !important;"/>
+<img src="/images_glob/9_18.png" id="img_918" style="display: none !important;"/>
+<img src="/images_glob/10_1.png" id="img_101" style="display: none !important;"/>
+<img src="/images_glob/zhongqiujie.jpg" id="img_zqj" style="display: none !important;"/>
+<img src="/images_glob/duanwujie.jpg" id="img_dwj" style="display: none !important;"/>
+<img src="/images_glob/yuanxiaojie.jpeg" id="img_yxj" style="display: none !important;"/>
+<img src="/images_glob/yuandan.jpeg" id="img_yd" style="display: none !important;"/>
+<img src="/images_glob/qingmingjie.jpeg" id="img_qmj" style="display: none !important;"/>
+<img src="/images_glob/5_1.jpeg" id="img_51" style="display: none !important;"/>
+<img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
+<img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
+
+
+<img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
+
+
+
+
+</div>
+
+<div id="calendarDiv">
+    <div id="ca" style="margin-bottom: 10px;">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+	  $('#img_css').click(function(){
+                location.href = "/404";
+      });
+
+    let date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    console.log(year,month,day);
+
+     // 显示当前年份图片
+    $("#img_year").attr("src", "/images_glob/" + year + ".png");
+    $("#img_year").show();
+
+    // 阳历节日、纪念日
+    // 显示9月3日抗战胜利纪念日图片
+    if(month==9 && day==3){
+        $("#img_93").show();
+    }
+    // 显示918图片
+    if(month==9 && day==18){
+        $("#img_918").show();
+    }
+    // 显示9月10日教师节图片
+    else if(month==9 && day==10){
+        $("#img_910").show();
+    }
+    // 显示10月1日国庆节图片
+    else if(month==10 && (day >= 1 && day <= 7)){
+        $("#img_101").show();
+    }
+    // 显示5月1日劳动节图片
+    else if(month==5 && (day >= 1 && day <= 5)){
+        $("#img_51").show();
+    }
+    // 显示清明节图片
+    else if(month==4 && (day >= 4 && day <= 6)){
+        $("#img_qmj").show();
+    }
+    // 显示元旦图片
+    else if(month==1 && day==1){
+        $("#img_yd").show();
+    }
+    // 其它日期不显示任何图片
+    else{
+        $("#img_93").hide();
+        $("#img_918").hide();
+        $("#img_910").hide();
+        $("#img_101").hide();
+        $("#img_qmj").hide();
+        $("#img_yd").hide();
+        $("#img_51").hide();
+    }
+
+    // 农历节日、纪念日
+    // 将“初一”“初二”…“十五”映射成数字 1~15
+    const dayMap = {
+        "初一": 1, "初二": 2, "初三": 3, "初四": 4, "初五": 5,
+        "初六": 6, "初七": 7, "初八": 8, "初九": 9, "初十": 10,
+        "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15
+    };
+    let monthStr = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    let dayStr = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    var fulltime = year + "-" + monthStr + "-" + dayStr;
+    $.ajax({
+        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+        type: 'GET',
+        async: false,  // 设置 async 参数为 false
+        success: function(data) {
+            
+            
+            // 中秋节
+            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+                $("#img_zqj").show();
+            }
+            // 端午节
+            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+                $("#img_dwj").show();
+            }
+            // 元宵节
+            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+                $("#img_yxj").show();
+            }
+            // 农历新年
+            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+                $("#img_new_year").show();
+            }
+            // 其它日期不显示任何图片
+            else {
+                $("#img_zqj").hide();
+                $("#img_dwj").hide();
+                $("#img_yxj").hide();
+                $("#img_new_year").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('请求失败:', status, error);
+        }
+    });
+
+
+
+      function coverLayer(tag) {
+        var overContainer = $('<div class=over></div>');//蒙层
+        with (overContainer) {
+            if (tag == 1) {
+                appendTo("body");
+                css('height', $(document).height());
+                css('display', 'block');
+                css('opacity', 1);
+                css("background-color", "#FFFFFF");
+                css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+            } else {
+                css('display', 'none');
+
+            }
+        }
+
+      overContainer.click(function(){
+        coverLayer(0);
+        $(".over").remove();
+        $(".toast").hide(transtime);
+        $("#toast").html("");
+      });
+    }
+
+
+      //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8083
+      var localhostPaht = curWwwPath.substring(0, pos);
+      head = localhostPaht;
+      transtime=300; // dong
+
+      function getCountByDate(date,view){
+        var dateObj = new Date(date);
+        var keytime = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1);
+        
+        
+        let mycalendarElement = mycalendar[keytime];
+        
+        let n = 0;
+        if(view=="month"){
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                n = mycalendarElement.length;
+            }
+        }else{
+            if (mycalendarElement && mycalendarElement.length !== undefined) {
+                for (var i = 0; i < mycalendarElement.length; i++) {
+                    let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                    if (date == ordertime) {
+                        n++;
+                    }
+                }
+            }
+        }
+        
+        return n;
+      }
+       // 初始化班休数据
+       ban_xiu_data = null;
+       // 获取当前时间戳（毫秒级）
+       const timestamp = Date.now();
+       if(!ban_xiu_data){
+          $.ajax({
+            url: '/ban_xiu.json?timestamp='+ timestamp,
+            type: 'GET',
+            async: false,  // 设置 async 参数为 false
+            dataType: "json",
+            success: function(data) {
+                ban_xiu_data = data;
+                //console.log(ban_xiu_data)
+                //console.log(ban_xiu_data['2021-01-01'])
+            },
+            error: function(xhr, status, error) {
+                console.error('请求失败:', status, error);
+            }
+        });
+       }
+
+
+       $('#ca').calendar({
+        width: 200,
+        height: 200,
+        onMouseenter: function (view, date, data) {
+          
+
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var fulltime = year + "-" + month + "-" + day;
+          let n = 0;
+
+          let self = this;
+
+          if (view == "month") {
+                n = getCountByDate(fulltime,view);
+                if(n>0){
+                  $(this).attr('title','创作[' + n + ']篇');
+                }else if(n==0){
+                  $(this).attr('title','');
+                }
+            } else {
+
+                let this_title = $(self).attr('title')
+                if(this_title){
+                    fulltime = this_title.substring(0,10);
+                }
+                n = getCountByDate(fulltime,view);
+                if(n==0){
+
+                    // 发送同步 GET 请求
+                    //$.ajax({
+                    //    url: 'https://yinli.hanqunfeng.com/lunar?date='+fulltime,
+                    //    type: 'GET',
+                    //   async: false,  // 设置 async 参数为 false
+                    //    success: function(data) {
+                    //        
+                    //        
+                    //        $(self).attr('title',fulltime + "," + '农历[' + data.data.gzYear + '年' + data.data.IMonthCn + data.data.IDayCn + '#' + data.data.Animal + ']');
+
+                    //    },
+                    //    error: function(xhr, status, error) {
+                    //        console.error('请求失败:', status, error);
+                    //    }
+                    //});
+
+                    $.ajax({
+                        url: 'https://wannianli.hanqunfeng.com/get_data?date='+fulltime,
+                        type: 'GET',
+                        async: false,  // 设置 async 参数为 false
+                        success: function(data) {
+                            
+                            
+                            if(data.wnl_holidays=='None'){
+                                $(self).attr('title',fulltime + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }else{
+                                $(self).attr('title',fulltime + "[" + data.wnl_holidays + "]" + "," + '农历[' + data.wnl_nl_year  + data.wnl_nl_month + data.wnl_nl_day + '#' + data.wnl_animal_year + ']');
+                            }
+
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('请求失败:', status, error);
+                        }
+                    });
+                }
+                else if(n>0){
+                  $(this).attr('title',fulltime + "," + '创作[' + n + ']篇->点击查看');
+                }
+
+
+            }
+        },
+        onSelected: function (view, date, data) {   // 点击事件
+            //console.log(view, date, data);
+            //if(date == 'Invalid Date'){
+              //  date = new Date();
+            //}
+            //console.log(view, date, data);
+
+            if (view == "month") {
+                
+                let fullYear = date.getFullYear();
+                monthTag(fullYear, date.getMonth() + 1);
+            } else {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var fulltime = year + "-" + month + "-" + day;
+                var keytime = year + "-" + (date.getMonth() + 1);
+                let mycalendarElement = mycalendar[keytime];
+                $(".toast").hide(transtime);
+                $("#toast").html("");
+
+                coverLayer(0);
+                $(".over").remove();
+
+                //创建一个空数组，用于存放有文章的日期
+                let mycalendar_ordertimes = [];
+
+                let n = 0;
+                if (mycalendarElement && mycalendarElement.length !== undefined) {
+                    for (var i = 0; i < mycalendarElement.length; i++) {
+                        let ordertime = mycalendarElement[i]["date"].substring(0, 10);
+                        //将ordertime添加到mycalendar_ordertimes数组中
+                        mycalendar_ordertimes.push(ordertime);
+
+                        if (fulltime == ordertime) {
+                            n++;
+                            if(n==1){
+                            coverLayer(1);
+                            autoWidth();
+                            $(".toast").show(transtime);
+                            }
+                            
+
+                            var title = mycalendarElement[i]["title"];
+                            var link = head + mycalendarElement[i]["link"];
+                            $("#toast").append('<i class="fas fa-circle titleIco"></i> <a class="titleContent"' + 'href="' + link + '">' + title + '</a><br/>');
+                            
+                        }
+                    }
+                }
+                n = 0;
+
+                //判断mycalendar_ordertimes数组中是否包含fulltime，不包含就打开万年历页面
+                if(mycalendar_ordertimes.indexOf(fulltime) == -1){
+                    window.open("https://www.wnl.cc/"+year+"/"+month+day+".html", "_new");
+                }
+            }
+        }
+    });
+    });
+
+    function autoWidth(){
+      var windowWidth = $(document).width();
+      if(windowWidth <= 1000){
+        $(".toast").css('width','80%');
+      }
+    }
+
+    function resolveyear() { // 准备数据
+        var currentyear = getCurrentyear();
+        var currentmonth = getCurrentmonth();
+        
+        gblmonth = currentmonth;
+        if (currentmonth == 13) { // 首次加载，需要延时
+            setCurrentmonth(1); // 首次以后不延时直接执行
+            setTimeout(function () {
+                $("#ca").append('<div id="toast" class="toast"></div>');
+                $(".toast").hide();
+                if (mycalendar) {
+                    monthTag(currentyear);
+                } else {
+                    
+                }
+            }, 2000);
+        } else {
+            monthTag(currentyear, null);
+        }
+    }
+
+    // 对月份进行设置，json文件中存在的才显示
+    function monthTag(currentyear, date) {
+        
+
+        // 此处对当前月份下的日子进行匹配
+        if (date) {
+            var month = date;
+        } else {
+            var currentData = new Date();
+            var month = currentData.getMonth() + 1;
+        }
+
+        removeHaveClass();
+        // debugger;
+        var flag = true;
+        var mycalValue = new Array()
+        for (let i = 1; i <= 12; i++) {
+            if (mycalendar[currentyear + "-" + i]) {
+                
+                addHaveClass(i);
+
+
+                if (flag) { // 只在内部循环一次，当前页的数据后就不再管了
+                    flag = false;
+                    if (mycalendar[currentyear + "-" + month]) {
+                        for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                            var pagedata = mycalendar[currentyear + "-" + month][j];
+                            var needdate = pagedata["date"].substring(8, 10);
+                            if (needdate < 10) {
+                                needdate = needdate.replace(0, "");
+                            }
+                            mycalValue[j] = needdate; // 存到一个数组中备用
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        resolveday(month, mycalValue, currentyear);
+    }
+
+    function formatDate(year, month, day) {
+        // 检查 month 是否为 1
+        if (month < 10) {
+            month = "0" + month;
+        }
+        // 检查 day 是否为 1
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // 返回格式化后的日期
+        
+        return year + "-" + month + "-" + day;
+    }
+
+
+    // 对月份下的日期进行渲染
+    function resolveday(month, mycalValue, currentyear) {
+        $(".toast").hide("transtime");
+
+        var precurrentyear=currentyear;
+        var nextcurrentyear=currentyear;
+        
+        //当前月份及之后的月份都是 undefined
+        if(month === undefined){
+            //这里只初始化了当前月份，之后的月份还是不能初始化，就会导致后面获取不到对应的 $("#cal" + month) 对象
+            month = new Date().getMonth()+1;
+        }
+        var preMonth = month - 1 > 0 ? month - 1 : 12;
+        var nextMonth = month + 1 > 12 ? 1 : month + 1;
+        if (preMonth==12) {
+            precurrentyear = currentyear - 1;
+        }
+        if(nextMonth==1){
+            nextcurrentyear = currentyear + 1;
+        }
+        
+
+        let attr = $("#cal" + month).children("li");
+
+        // if (preMonth != 1 && nextMonth != 1) { // 没有年份的跳跃
+            var prevalue =judgeMonth(precurrentyear,preMonth); // 前一个月存在的数据
+            var nextvalue =judgeMonth(nextcurrentyear,nextMonth); // 后一个月存在的数据
+            jQuery.each(attr, function () {
+                let emptclass = jQuery(this).attr("class");
+                //console.log("emptclass",emptclass);
+                if (emptclass) {
+                    if(emptclass=="old"){ // 前一个月的数据
+                     var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                     if (prevalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                         jQuery(this).css("color","#FF808E");
+                     }
+                     dateStr = formatDate(precurrentyear,preMonth,dayVal);
+                     jQuery(this).attr('title',dateStr);
+
+                     if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 } else if(emptclass=="new"){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (nextvalue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(nextcurrentyear,nextMonth,dayVal);
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }else if(emptclass.includes("now")){
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#0088FF");
+                    }
+                    //console.log(currentyear,month,dayVal)
+                    dateStr = formatDate(currentyear,month,dayVal);
+
+                    jQuery(this).attr('title',dateStr);
+
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                 }
+
+                }else {
+                    var dayVal = jQuery(this).text().replace("休", "").replace("班", "");
+                    if (mycalValue.indexOf(dayVal) > -1) { // 存在于数组之中,给当天的日期加一个样式
+                        jQuery(this).css("color","#FF808E");
+                    }
+                    dateStr = formatDate(currentyear,month,dayVal);
+                    //console.log(dateStr);
+                    jQuery(this).attr('title',dateStr);
+                    if(ban_xiu_data){
+                        if(ban_xiu_data[dateStr] == '班'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="ban">班</i>');
+                            }
+                        }
+                        if(ban_xiu_data[dateStr] == '休'){
+                            if(jQuery(this).find('i').length == 0){
+                                jQuery(this).addClass('xiu-ban');
+                                jQuery(this).prepend('<i class="xiu">休</i>');
+                            }
+                        }
+                    }
+
+                }
+            });
+        // }
+    }
+
+    function judgeMonth(currentyear,month) { // 解析当前年份与月份中存在的文章
+        
+        var Value = new Array();
+        if (mycalendar[currentyear + "-" + month]) {
+            for (var j = 0; j < mycalendar[currentyear + "-" + month].length; j++) {
+                var pagedata = mycalendar[currentyear + "-" + month][j];
+                var needdate = pagedata["date"].substring(8, 10);
+                if (needdate < 10) {
+                    needdate = needdate.replace(0, "");
+                }
+                Value[j] = needdate; // 存到一个数组中备用
+            }
+        }
+        
+        return Value;
+    }
+
+    // 相对当前月份的上一月与下一月判断解析
+    function nextMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function preMonth() {
+        $(".toast").hide("transtime");
+        monthTag(getCurrentyear(), getCurrentmonth());
+    }
+
+    function retuenday() {
+        if (mycalendar) {
+            monthTag(getCurrentyear(), getCurrentmonth());
+        }
+    }
+
+    // 日历控件自适应窗口大小
+      var tid;
+      var refreshRem = function () {
+        var windowWidth = $(document).width();
+        if (windowWidth >= 992) {
+            $('#calendarDiv').show();
+        } else {
+            $('#calendarDiv').hide();
+        }
+      };
+      addEventListener('resize', function () {
+               clearTimeout(tid);
+               tid = setTimeout(refreshRem, 300);
+           }, false);
+      addEventListener('pageshow', function (e) {
+               if (e.persisted) {
+                   clearTimeout(tid);
+                   tid = setTimeout(refreshRem, 300);
+               }
+           }, false);
+      refreshRem();
+
+</script>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%89%88%E6%9C%AC%E5%AF%B9%E7%85%A7"><span class="nav-number">2.</span> <span class="nav-text">一、版本对照</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Spring-Cloud-Alibaba-2025-0-x-%E9%80%82%E9%85%8D%E5%85%B3%E7%B3%BB"><span class="nav-number">2.1.</span> <span class="nav-text">1. Spring Cloud Alibaba 2025.0.x 适配关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">2.2.</span> <span class="nav-text">2. 环境准备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%90%AD%E5%BB%BA-Nacos-3-0-3"><span class="nav-number">3.</span> <span class="nav-text">二、搭建 Nacos 3.0.3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85%E5%8D%95%E6%9C%BA%E5%90%AF%E5%8A%A8%EF%BC%88%E6%8E%A8%E8%8D%90%E5%85%88%E7%90%86%E8%A7%A3%E6%B5%81%E7%A8%8B%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">1. 方式一：二进制包单机启动（推荐先理解流程）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E4%B8%8B%E8%BD%BD"><span class="nav-number">3.1.1.</span> <span class="nav-text">（1）下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E7%94%9F%E6%88%90%E9%89%B4%E6%9D%83%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.2.</span> <span class="nav-text">（2）生成鉴权相关配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E4%BF%AE%E6%94%B9%E7%AB%AF%E5%8F%A3%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">3.1.3.</span> <span class="nav-text">（3）修改端口（可选）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89%E5%90%AF%E5%8A%A8-%E5%81%9C%E6%AD%A2"><span class="nav-number">3.1.4.</span> <span class="nav-text">（4）启动 &#x2F; 停止</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%885%EF%BC%89%E9%AA%8C%E8%AF%81"><span class="nav-number">3.1.5.</span> <span class="nav-text">（5）验证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9ADocker-%E5%8D%95%E6%9C%BA%EF%BC%88%E5%B5%8C%E5%85%A5%E5%BC%8F-Derby%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">2. 方式二：Docker 单机（嵌入式 Derby）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Docker-Compose-%E6%9C%80%E5%B0%8F%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.3.</span> <span class="nav-text">3. Docker Compose 最小示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81MySQL-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">三、MySQL 持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">4.1.</span> <span class="nav-text">1. 准备数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85%EF%BC%9A%E6%94%B9%E9%85%8D%E7%BD%AE%E5%90%8E%E5%8D%95%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-number">4.2.</span> <span class="nav-text">2. 二进制包：改配置后单机启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Docker%EF%BC%9A%E5%8D%95%E6%9C%BA-%E5%A4%96%E7%BD%AE-Compose-%E5%86%85%E7%BD%AE-MySQL"><span class="nav-number">4.3.</span> <span class="nav-text">3. Docker：单机 + 外置 &#x2F; Compose 内置 MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E8%BF%9E%E6%8E%A5%E5%B7%B2%E6%9C%89-MySQL"><span class="nav-number">4.3.1.</span> <span class="nav-text">（1）连接已有 MySQL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89Docker-Compose-%E4%B8%80%E9%94%AE%EF%BC%88Nacos-MySQL%EF%BC%89"><span class="nav-number">4.3.2.</span> <span class="nav-text">（2）Docker Compose 一键（Nacos + MySQL）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="nav-number">5.</span> <span class="nav-text">四、集群搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85%E4%B8%89%E8%8A%82%E7%82%B9%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.1.</span> <span class="nav-text">1. 二进制包三节点示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%90%84%E8%8A%82%E7%82%B9%E7%BB%9F%E4%B8%80-application-properties"><span class="nav-number">5.1.1.</span> <span class="nav-text">（1）各节点统一 application.properties</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%90%84%E8%8A%82%E7%82%B9%E7%9B%B8%E5%90%8C%E7%9A%84-conf-cluster-conf"><span class="nav-number">5.1.2.</span> <span class="nav-text">（2）各节点相同的 conf&#x2F;cluster.conf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E5%90%AF%E5%8A%A8%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="nav-number">5.1.3.</span> <span class="nav-text">（3）启动与验证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Docker-Compose-%E9%9B%86%E7%BE%A4%E7%A4%BA%E4%BE%8B%EF%BC%88hostname-%E6%A8%A1%E5%BC%8F%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">2. Docker Compose 集群示例（hostname 模式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.3.</span> <span class="nav-text">3. Nginx 反向代理示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E6%8E%A8%E8%8D%90%EF%BC%9A%E4%BF%9D%E6%8C%81%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E5%81%8F%E7%A7%BB%EF%BC%88%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%97%A0%E6%84%9F%EF%BC%89"><span class="nav-number">5.3.1.</span> <span class="nav-text">（1）推荐：保持默认端口偏移（客户端无感）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%B9%E5%A4%96%E7%AB%AF%E5%8F%A3%E6%97%B6%EF%BC%9A%E4%BB%8D%E9%A1%BB%E4%BF%9D%E6%8C%81-1000-%E5%81%8F%E7%A7%BB"><span class="nav-number">5.3.2.</span> <span class="nav-text">（2）自定义对外端口时：仍须保持 +1000 偏移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89HTTPS-%E6%8E%A7%E5%88%B6%E5%8F%B0%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">5.3.3.</span> <span class="nav-text">（3）HTTPS 控制台（可选）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89Nginx-%E7%9B%B8%E5%85%B3%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">5.3.4.</span> <span class="nav-text">（4）Nginx 相关注意点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%9B%86%E7%BE%A4%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">5.4.</span> <span class="nav-text">4. 集群常见问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%BA%94%E7%94%A8%E4%BE%A7%E5%BF%AB%E9%80%9F%E6%8E%A5%E5%85%A5%EF%BC%88SCA-2025-0-0-0%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">五、应用侧快速接入（SCA 2025.0.0.0）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-BOM-%E4%B8%8E%E4%BE%9D%E8%B5%96"><span class="nav-number">6.1.</span> <span class="nav-text">1. BOM 与依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-application-yml-%E7%A4%BA%E4%BE%8B"><span class="nav-number">6.2.</span> <span class="nav-text">2. application.yml 示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BB%A3%E7%A0%81%E6%9C%80%E5%B0%8F%E7%A4%BA%E4%BE%8B"><span class="nav-number">6.3.</span> <span class="nav-text">3. 代码最小示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%81%94%E8%B0%83%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95"><span class="nav-number">7.</span> <span class="nav-text">六、联调检查清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">七、参考链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="飘逸峰"
+      src="/uploads/me.png">
+  <p class="site-author-name" itemprop="name">飘逸峰</p>
+  <div class="site-description" itemprop="description">分享成长与快乐的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">298</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13320506/qunfeng-han" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13320506&#x2F;qunfeng-han" rel="noopener me" target="_blank"><i class="fa-brands fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/hanqunfeng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hanqunfeng" rel="noopener me" target="_blank"><i class="fa-brands fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/hanqunfeng/" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;hanqunfeng&#x2F;" rel="noopener me" target="_blank"><i class="fa-brands fa-git fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hanqunfeng.coding.net/" title="Coding → https:&#x2F;&#x2F;hanqunfeng.coding.net" rel="noopener me" target="_blank"><i class="fa-solid fa-code fa-fw"></i>Coding</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<div class="toBottom">
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+直达底部
+<i class="fa-solid fa-circle-arrow-down" aria-hidden="true"></i>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa-solid fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://tongji.baidu.com/web/welcome/login" title="http:&#x2F;&#x2F;tongji.baidu.com&#x2F;web&#x2F;welcome&#x2F;login" rel="noopener" target="_blank">百度统计</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://zhanzhang.baidu.com/" title="http:&#x2F;&#x2F;zhanzhang.baidu.com" rel="noopener" target="_blank">百度站长</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://search.google.com/search-console" title="https:&#x2F;&#x2F;search.google.com&#x2F;search-console" rel="noopener" target="_blank">Google Search Console</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.aliyun.com/" title="https:&#x2F;&#x2F;www.aliyun.com" rel="noopener" target="_blank">阿里云</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://leancloud.cn/" title="https:&#x2F;&#x2F;leancloud.cn" rel="noopener" target="_blank">Leancloud</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="http://www.fontawesome.com.cn/faicons/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;faicons&#x2F;" rel="noopener" target="_blank">FontAwsome</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/14/sca-2025-sentinel-install/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-14</time>
+        <br>
+      Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/19/docker-install-aws/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-19</time>
+        <br>
+      AWS专有服务器如何安装Docker
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/09/26/mysql8-forget-root-password/" rel="bookmark">
+        <time class="popular-posts-time">2022-09-26</time>
+        <br>
+      MySql--忘记root密码后如何重置
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2018/12/12/activemq-springboot/" rel="bookmark">
+        <time class="popular-posts-time">2018-12-12</time>
+        <br>
+      Spring Boot2学习笔记--activemq
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/22/docker-command-image/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-22</time>
+        <br>
+      Docker 命令 之 镜像(Image)
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/14/sca-2025-nacos-install/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3 | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-14 16:43:58" itemprop="dateCreated datePublished" datetime="2026-07-14T16:43:58+08:00">2026-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-07-16 14:32:04" itemprop="dateModified" datetime="2026-07-16T14:32:04+08:00">2026-07-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/%E5%BE%AE%E6%9C%8D%E5%8A%A1/spring-cloud-alibaba/" itemprop="url" rel="index"><span itemprop="name">spring-cloud-alibaba</span></a>
+        </span>
+    </span>
+
+  
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+
+
+    <span id="/2026/07/14/sca-2025-nacos-install/" class="leancloud_visitors" data-flag-title="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>22 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>依据 <a target="_blank" rel="noopener" href="https://sca.aliyun.com/docs/2025.x/overview/version-explain/">Spring Cloud Alibaba 版本发布说明</a>，搭建与 <strong>Spring Cloud Alibaba 2025.0.0.0</strong> 对应的 <strong>Nacos Server 3.0.3</strong>。</p>
+</li>
+<li class="lvl-2">
+<p>覆盖服务端单机搭建（二进制包 + Docker）、<strong>MySQL 外置持久化</strong>、<strong>多节点集群</strong>，并补充 Spring Boot 应用侧的最小接入配置。</p>
+</li>
+<li class="lvl-2">
+<p>同版本配套的 Sentinel Dashboard 见 <a href="/2026/07/14/sca-2025-sentinel-install/" title="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9">Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9</a>。</p>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="一、版本对照">一、版本对照</h2>
+<h3 id="1-Spring-Cloud-Alibaba-2025-0-x-适配关系">1. Spring Cloud Alibaba 2025.0.x 适配关系</h3>
+<p>摘自官方 <a target="_blank" rel="noopener" href="https://sca.aliyun.com/docs/2025.x/overview/version-explain/">版本发布说明</a>：</p>
+<table>
+<thead>
+<tr>
+<th>Spring Cloud Alibaba Version</th>
+<th>Spring Cloud Version</th>
+<th>Spring Boot Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025.0.0.0</td>
+<td>2025.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<p>同页「组件版本关系」中，与 <code>2025.0.0.0</code> 对应的 Nacos 版本为：</p>
+<table>
+<thead>
+<tr>
+<th>Spring Cloud Alibaba Version</th>
+<th>Nacos Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025.0.0.0</td>
+<td>3.0.3</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>对比：同属 2025.x 的 <code>2025.1.0.0</code> 适配 Spring Boot 4.0 / Spring Cloud 2025.1，组件为 Nacos <code>3.1.1</code>。若走 Boot 4 路线请勿混用本文 Nacos 版本。</p>
+</blockquote>
+<h3 id="2-环境准备">2. 环境准备</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>要求说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nacos 3.0.3</td>
+<td>官方要求 <strong>64 位 JDK 17+</strong>；建议机器至少 2C4G</td>
+</tr>
+<tr>
+<td>MySQL（持久化 / 集群推荐）</td>
+<td><strong>5.6.5+</strong>（建议 8.0）；集群生产强烈建议外置 MySQL，勿用嵌入式 Derby</td>
+</tr>
+<tr>
+<td>Docker（可选）</td>
+<td>Docker 20+ / Docker Compose v2</td>
+</tr>
+<tr>
+<td>集群节点</td>
+<td>建议 <strong>≥ 3</strong> 奇数台，防止脑裂</td>
+</tr>
+</tbody>
+</table>
+<p>端口规划：</p>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>端口</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nacos 控制台</td>
+<td><code>8080</code></td>
+<td>Nacos 3.x 控制台入口</td>
+</tr>
+<tr>
+<td>Nacos 主端口</td>
+<td><code>8848</code></td>
+<td>客户端注册 / 配置</td>
+</tr>
+<tr>
+<td>客户端 gRPC</td>
+<td><code>9848</code></td>
+<td>客户端通信（主端口 +1000，需与 8848 一并放行）</td>
+</tr>
+<tr>
+<td>服务端间 gRPC</td>
+<td><code>9849</code></td>
+<td>集群节点间通信（主端口 +1001）</td>
+</tr>
+<tr>
+<td>Raft</td>
+<td><code>7848</code></td>
+<td>集群选主 / 一致性（主端口 -1000）</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="二、搭建-Nacos-3-0-3">二、搭建 Nacos 3.0.3</h2>
+<p>官方文档：<a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/quickstart/quick-start/">Nacos 快速开始</a>、<a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/quickstart/quick-start-docker/">Docker 快速开始</a>。</p>
+<p>% note warning %<br>
+Nacos 3.x 相对 2.x 有几处常见差异，搭建前先记住：</p>
+<ol>
+<li class="lvl-3">
+<p>控制台地址为 <code>http://127.0.0.1:8080/index.html</code>（不再是 <code>http://ip:8848/nacos</code>）。</p>
+</li>
+<li class="lvl-3">
+<p>控制台鉴权默认开启；启动前必须配置 JWT 密钥与服务端身份识别参数。</p>
+</li>
+<li class="lvl-3">
+<p>首次打开控制台需要<strong>初始化管理员用户 <code>nacos</code> 的密码</strong>（不再提供默认 <code>nacos/nacos</code>）。</p>
+</li>
+<li class="lvl-3">
+<p>Spring Cloud Alibaba <code>2025.0.x</code> 若使用 <code>public</code> / 空命名空间，需使用 Nacos Server 3.x，与本文版本一致。</p>
+</li>
+</ol>
+<p>% endnote %</p>
+<h3 id="1-方式一：二进制包单机启动（推荐先理解流程）">1. 方式一：二进制包单机启动（推荐先理解流程）</h3>
+<h4 id="（1）下载">（1）下载</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 任选其一</span></span><br><span class="line"><span class="comment"># 官网下载页：https://nacos.io/download/nacos-server/</span></span><br><span class="line">wget https://download.nacos.io/nacos-server/nacos-server-3.0.3.zip</span><br><span class="line">unzip nacos-server-3.0.3.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># GitHub Release：https://github.com/alibaba/nacos/releases/tag/3.0.3</span></span><br><span class="line">wget https://github.com/alibaba/nacos/releases/download/3.0.3/nacos-server-3.0.3.tar.gz</span><br><span class="line">tar -zxvf nacos-server-3.0.3.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> nacos</span><br></pre></td></tr></table></figure>
+<h4 id="（2）生成鉴权相关配置">（2）生成鉴权相关配置</h4>
+<p>三个参数均<strong>无官方默认值</strong>，需自行生成并固定保存（集群节点必须一致）：</p>
+<table>
+<thead>
+<tr>
+<th>配置项 / 环境变量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nacos.core.auth.plugin.nacos.token.secret.key</code> / <code>NACOS_AUTH_TOKEN</code></td>
+<td>签发 accessToken 的 JWT 密钥（Base64，原始长度建议 ≥ 32）</td>
+</tr>
+<tr>
+<td><code>nacos.core.auth.server.identity.key</code> / <code>NACOS_AUTH_IDENTITY_KEY</code></td>
+<td>服务端身份识别 Key</td>
+</tr>
+<tr>
+<td><code>nacos.core.auth.server.identity.value</code> / <code>NACOS_AUTH_IDENTITY_VALUE</code></td>
+<td>服务端身份识别 Value</td>
+</tr>
+</tbody>
+</table>
+<p>示例生成方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># JWT 密钥：先生成 ≥32 字符明文，再 Base64</span></span><br><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br><span class="line"><span class="comment"># 3kphyB8N/h/7NHvoXdvM7hwfCsnpBXK+1nlruWb2gUQ=</span></span><br><span class="line">openssl rand -<span class="built_in">base64</span> 48</span><br><span class="line"><span class="comment"># PZhCxx3Rj5Z3GZ59tBkxSElxHCKPMTEtInHiJSVqUnz435/H2iwY3buSEX0DFQ6j</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># identity key / value 可用任意自定义字符串，例如：</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;nacos_identity_key&#x27;</span> | <span class="built_in">base64</span></span><br><span class="line"><span class="comment"># bmFjb3NfaWRlbnRpdHlfa2V5</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;nacos_identity_value&#x27;</span> | <span class="built_in">base64</span></span><br><span class="line"><span class="comment"># bmFjb3NfaWRlbnRpdHlfdmFsdWU=</span></span><br></pre></td></tr></table></figure>
+<p>也可在首次执行 <code>startup.sh -m standalone</code> 时按提示交互填入，<br>
+填入后会写入 <code>conf/application.properties</code>。<br>
+但建议直接修改配置文件，因为 base64 生成的编码可能含有特殊字符导致配置失败。</p>
+<p>手动写入示例（请替换为你自己的值）：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### conf/application.properties 片段</span></span><br><span class="line"><span class="comment"># 使用“内置的 Nacos 原生鉴权体系”，默认 nacos，还支持 ldap</span></span><br><span class="line"><span class="attr">nacos.core.auth.system.type</span>=<span class="string">nacos</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 总开关，是否开启 Nacos 服务端 API 的鉴权系统，默认为 false（当前值）：表示关闭鉴权。</span></span><br><span class="line"><span class="comment"># 此时任何人无需用户名密码即可通过 Open API 访问、修改 Nacos 上的配置和服务列表。这在生产环境是极不安全的。</span></span><br><span class="line"><span class="attr">nacos.core.auth.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 是否开启 Nacos 管理 API 的鉴权，默认为true</span></span><br><span class="line"><span class="attr">nacos.core.auth.admin.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 是否开启 Nacos 控制台（Web UI）的鉴权，默认为true</span></span><br><span class="line"><span class="attr">nacos.core.auth.console.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 用于识别请求来源的身份键值对（白名单机制）</span></span><br><span class="line"><span class="comment"># 当 nacos.core.auth.enabled=true 时生效</span></span><br><span class="line"><span class="comment"># 如果请求的 Header 中包含 key=nacos_identity_key 且 value=nacos_identity_value，Nacos 会认为这是一个受信任的内部服务器请求（例如通过 Nginx 代理转发的请求，或者 Nacos 集群节点间的通信），从而跳过常规的用户 Token 鉴权。</span></span><br><span class="line"><span class="comment"># 在生产环境中，必须修改这两个默认值，防止被恶意利用绕过鉴权。</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.key</span>=<span class="string">替换为你的identityKey</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.value</span>=<span class="string">替换为你的identityValue</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 用于生成 Token 的密钥（Base64 编码的字符串）</span></span><br><span class="line"><span class="comment"># Nacos 使用 JWT (JSON Web Token) 机制，该密钥用于签名和验证 Token。</span></span><br><span class="line"><span class="comment"># 在生产环境中，必须将其设置为一个复杂的、唯一的 Base64 字符串，并确保所有 Nacos 节点使用相同的密钥（集群模式下）</span></span><br><span class="line"><span class="attr">nacos.core.auth.plugin.nacos.token.secret.key</span>=<span class="string">替换为你的Base64密钥</span></span><br></pre></td></tr></table></figure>
+<h4 id="（3）修改端口（可选）">（3）修改端口（可选）</h4>
+<p>Nacos 3.x 已把 <strong>Server API</strong> 与 <strong>控制台</strong> 拆成两个独立 HTTP 端口。改端口时请使用下面专用配置，<strong>不要再写 <code>server.port</code></strong>（它是 Spring Boot 全局 HTTP 端口，容易让 Server 与控制台抢同一端口而启动失败）。参见 <a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/manual/admin/system-configurations/">系统参数</a>。</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nacos.server.main.port</code></td>
+<td><code>8848</code></td>
+<td>Server 主端口（HTTP OpenAPI / Admin）</td>
+</tr>
+<tr>
+<td><code>nacos.console.port</code></td>
+<td><code>8080</code></td>
+<td>控制台端口</td>
+</tr>
+<tr>
+<td>gRPC <code>主端口 + 1000</code></td>
+<td><code>9848</code></td>
+<td>客户端 gRPC（<strong>随主端口偏移，不能单独随意指定</strong>）</td>
+</tr>
+<tr>
+<td>gRPC <code>主端口 + 1001</code></td>
+<td><code>9849</code></td>
+<td>服务端间 gRPC</td>
+</tr>
+<tr>
+<td>Raft <code>主端口 - 1000</code></td>
+<td><code>7848</code></td>
+<td>集群 Raft（单机可忽略）</td>
+</tr>
+</tbody>
+</table>
+<p><code>conf/application.properties</code> 示例（把主端口改成 <code>8849</code>、控制台改成 <code>8081</code>）：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">nacos.server.main.port</span>=<span class="string">8849</span></span><br><span class="line"><span class="attr">nacos.console.port</span>=<span class="string">8081</span></span><br></pre></td></tr></table></figure>
+<p>改完后实际端口变为：</p>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>新端口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>控制台</td>
+<td><code>8081</code> → <code>http://127.0.0.1:8081/index.html</code></td>
+</tr>
+<tr>
+<td>Server 主端口</td>
+<td><code>8849</code></td>
+</tr>
+<tr>
+<td>客户端 gRPC</td>
+<td><code>9849</code>（<code>8849 + 1000</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>客户端 <code>spring.cloud.nacos.server-addr</code> 只填主端口即可，例如 <code>127.0.0.1:8849</code>；gRPC 端口由客户端按同样偏移规则自动推算。</p>
+<p>防火墙 / 安全组至少放行：<strong>控制台端口、主端口、客户端 gRPC（主端口+1000）</strong>。</p>
+<h4 id="（4）启动-停止">（4）启动 / 停止</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Linux / macOS 单机模式</span></span><br><span class="line">sh bin/startup.sh -m standalone</span><br><span class="line"><span class="comment"># Ubuntu 若 [[ 报错，改用：</span></span><br><span class="line"><span class="comment"># bash bin/startup.sh -m standalone</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定jdk环境，也可以将 JAVA_HOME 添加到 bin/startup.sh 中</span></span><br><span class="line">JAVA_HOME=/usr/local/jvm/jdk17  \</span><br><span class="line">  sh bin/startup.sh -m standalone</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看启动日志</span></span><br><span class="line"><span class="built_in">tail</span> -f logs/start.out</span><br></pre></td></tr></table></figure>
+<p>看到类似日志表示成功：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Nacos started successfully in stand alone mode. use embedded storage</span><br></pre></td></tr></table></figure>
+<p>停止：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh bin/shutdown.sh</span><br></pre></td></tr></table></figure>
+<h4 id="（5）验证">（5）验证</h4>
+<ol>
+<li class="lvl-3">
+<p>浏览器打开：<code>http://127.0.0.1:8080/index.html</code>（若改过控制台端口则替换），按提示初始化 <code>nacos</code> 管理员密码。</p>
+</li>
+<li class="lvl-3">
+<p>或用 API <strong>首次</strong>初始化管理员密码（密码为空则会随机生成，务必保存）：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">&#x27;http://127.0.0.1:8848/nacos/v3/auth/user/admin&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;password=YourStrongPassword&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>% note warning %<br>
+该接口<strong>只能在尚未创建管理员用户时调用一次</strong>。成功后再次调用会返回类似：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;code&quot;</span><span class="punctuation">:</span><span class="number">409</span><span class="punctuation">,</span><span class="attr">&quot;message&quot;</span><span class="punctuation">:</span><span class="string">&quot;have admin user cannot use it.&quot;</span><span class="punctuation">,</span><span class="attr">&quot;data&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>说明管理员 <code>nacos</code> 已存在，此时应改用登录接口拿 <code>accessToken</code>，而不是继续调 <code>/admin</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -s -X POST <span class="string">&#x27;http://127.0.0.1:8848/nacos/v3/auth/user/login&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;username=nacos&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;password=当初初始化时设置的密码&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>% endnote %</p>
+<ol start="3">
+<li class="lvl-3">
+<p>服务注册 / 发现快速探测（v3 Client API）。</p>
+</li>
+</ol>
+<p>若已开启客户端鉴权（<code>nacos.core.auth.enabled=true</code>，报 <code>401 User not found</code> / <code>403 Forbidden</code> 时就是这种情况），须先登录拿 <code>accessToken</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 登录（密码为你初始化的 nacos 管理员密码）</span></span><br><span class="line">TOKEN=$(curl -s -X POST <span class="string">&#x27;http://127.0.0.1:8848/nacos/v3/auth/user/login&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;username=nacos&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;password=YourStrongPassword&#x27;</span> | sed -n <span class="string">&#x27;s/.*&quot;accessToken&quot;:&quot;\([^&quot;]*\)&quot;.*/\1/p&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;TOKEN=<span class="variable">$TOKEN</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 注册（Header 或 query 携带 accessToken 均可）</span></span><br><span class="line">curl -X POST <span class="string">&quot;http://127.0.0.1:8848/nacos/v3/client/ns/instance?serviceName=quickstart.test.service&amp;ip=127.0.0.1&amp;port=8080&amp;accessToken=<span class="variable">$&#123;TOKEN&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 发现</span></span><br><span class="line">curl -X GET <span class="string">&quot;http://127.0.0.1:8848/nacos/v3/client/ns/instance/list?serviceName=quickstart.test.service&amp;accessToken=<span class="variable">$&#123;TOKEN&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<p>未开启客户端鉴权时，可省略登录，直接调用无 <code>accessToken</code> 的 URL（官方快速开始示例即为此种情况）。</p>
+<h3 id="2-方式二：Docker-单机（嵌入式-Derby）">2. 方式二：Docker 单机（嵌入式 Derby）</h3>
+<p>官方镜像：<code>nacos/nacos-server:v3.0.3</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NACOS_AUTH_TOKEN=<span class="string">&quot;<span class="subst">$(openssl rand -base64 48)</span>&quot;</span></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_IDENTITY_KEY=<span class="string">&quot;nacos_identity_key&quot;</span></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_IDENTITY_VALUE=<span class="string">&quot;nacos_identity_value&quot;</span></span><br><span class="line"></span><br><span class="line">docker pull nacos/nacos-server:v3.0.3</span><br><span class="line"></span><br><span class="line">docker run -d \</span><br><span class="line">  --name nacos-standalone \</span><br><span class="line">  -e MODE=standalone \</span><br><span class="line">  -e NACOS_AUTH_TOKEN=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_TOKEN&#125;</span>&quot;</span> \</span><br><span class="line">  -e NACOS_AUTH_IDENTITY_KEY=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_IDENTITY_KEY&#125;</span>&quot;</span> \</span><br><span class="line">  -e NACOS_AUTH_IDENTITY_VALUE=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_IDENTITY_VALUE&#125;</span>&quot;</span> \</span><br><span class="line">  -e JVM_XMS=512m \</span><br><span class="line">  -e JVM_XMX=512m \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  -p 8848:8848 \</span><br><span class="line">  -p 9848:9848 \</span><br><span class="line">  nacos/nacos-server:v3.0.3</span><br></pre></td></tr></table></figure>
+<p>若要改容器内端口，使用镜像环境变量（对应配置见上一节）：</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>对应配置</th>
+<th>默认</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NACOS_APPLICATION_PORT</code></td>
+<td><code>nacos.server.main.port</code></td>
+<td><code>8848</code></td>
+</tr>
+<tr>
+<td><code>NACOS_CONSOLE_PORT</code></td>
+<td><code>nacos.console.port</code></td>
+<td><code>8080</code></td>
+</tr>
+</tbody>
+</table>
+<p>示例：主端口 <code>8849</code>、控制台 <code>8081</code>（gRPC 随之变为 <code>9849</code>，映射要一起改）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name nacos-standalone \</span><br><span class="line">  -e MODE=standalone \</span><br><span class="line">  -e NACOS_APPLICATION_PORT=8849 \</span><br><span class="line">  -e NACOS_CONSOLE_PORT=8081 \</span><br><span class="line">  -e NACOS_AUTH_TOKEN=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_TOKEN&#125;</span>&quot;</span> \</span><br><span class="line">  -e NACOS_AUTH_IDENTITY_KEY=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_IDENTITY_KEY&#125;</span>&quot;</span> \</span><br><span class="line">  -e NACOS_AUTH_IDENTITY_VALUE=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_IDENTITY_VALUE&#125;</span>&quot;</span> \</span><br><span class="line">  -e JVM_XMS=512m \</span><br><span class="line">  -e JVM_XMX=512m \</span><br><span class="line">  -p 8081:8081 \</span><br><span class="line">  -p 8849:8849 \</span><br><span class="line">  -p 9849:9849 \</span><br><span class="line">  nacos/nacos-server:v3.0.3</span><br></pre></td></tr></table></figure>
+<p>查看日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs -f nacos-standalone</span><br></pre></td></tr></table></figure>
+<p>出现 <code>Nacos started successfully ...</code> 后，访问 <code>http://127.0.0.1:8080/index.html</code> 初始化管理员密码。</p>
+<p>% note info %<br>
+低配机器务必限制 JVM，否则容易 OOM / 卡死。生产请改用外置 MySQL，详见下文「三、MySQL 持久化」。</p>
+<p>% endnote %</p>
+<h3 id="3-Docker-Compose-最小示例">3. Docker Compose 最小示例</h3>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-compose-nacos.yml</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nacos:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nacos/nacos-server:v3.0.3</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nacos</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MODE:</span> <span class="string">standalone</span></span><br><span class="line">      <span class="comment"># 如需改端口，取消注释并同步改 ports 映射与 gRPC（主端口+1000）</span></span><br><span class="line">      <span class="comment"># NACOS_APPLICATION_PORT: 8849</span></span><br><span class="line">      <span class="comment"># NACOS_CONSOLE_PORT: 8081</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_TOKEN:</span> <span class="string">$&#123;NACOS_AUTH_TOKEN&#125;</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_IDENTITY_KEY:</span> <span class="string">$&#123;NACOS_AUTH_IDENTITY_KEY&#125;</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_IDENTITY_VALUE:</span> <span class="string">$&#123;NACOS_AUTH_IDENTITY_VALUE&#125;</span></span><br><span class="line">      <span class="attr">JVM_XMS:</span> <span class="string">512m</span></span><br><span class="line">      <span class="attr">JVM_XMX:</span> <span class="string">512m</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8848:8848&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9848:9848&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NACOS_AUTH_TOKEN=<span class="string">&quot;<span class="subst">$(openssl rand -base64 32)</span>&quot;</span></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_IDENTITY_KEY=<span class="string">&quot;nacos_identity_key&quot;</span></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_IDENTITY_VALUE=<span class="string">&quot;nacos_identity_value&quot;</span></span><br><span class="line"></span><br><span class="line">docker compose -f docker-compose-nacos.yml up -d</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="三、MySQL-持久化">三、MySQL 持久化</h2>
+<p>单机快速体验可用嵌入式 Derby；<strong>配置中心数据、用户权限等需要跨重启保活，或后续要做集群时，必须切换外置 MySQL</strong>。官方部署说明：<a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/deployment/deployment-standalone/">单机模式部署</a>、<a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/deployment/deployment-cluster/">集群模式部署</a>。</p>
+<h3 id="1-准备数据库">1. 准备数据库</h3>
+<ol>
+<li class="lvl-3">
+<p>MySQL <strong>5.6.5+</strong>（建议 8.0），字符集建议 <code>utf8mb4</code>。</p>
+</li>
+<li class="lvl-3">
+<p>创建库与账号（密码请自行替换）：</p>
+</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE nacos <span class="keyword">DEFAULT</span> <span class="keyword">CHARACTER SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_unicode_ci;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;nacos&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;Nacos_Db_Passw0rd&#x27;</span>;</span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> nacos.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;nacos&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li class="lvl-3">
+<p>导入官方表结构（发行包内 <code>conf/mysql-schema.sql</code>，或从 <a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/blob/3.0.3/distribution/conf/mysql-schema.sql">Nacos 源码 conf</a> 下载同版本脚本）：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 nacos 解压目录执行</span></span><br><span class="line">mysql -h127.0.0.1 -P3306 -unacos -p nacos &lt; conf/mysql-schema.sql</span><br></pre></td></tr></table></figure>
+<p>% note warning %<br>
+请使用与 <strong>Nacos 3.0.3</strong> 同版本的 <code>mysql-schema.sql</code>，勿混用 2.x 脚本。初始化只需执行一次；多节点集群共享同一库。</p>
+<p>% endnote %</p>
+<h3 id="2-二进制包：改配置后单机启动">2. 二进制包：改配置后单机启动</h3>
+<p>编辑 <code>conf/application.properties</code>，取消 / 补充 MySQL 相关项（示例）：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 使用 MySQL 数据源（与 3.0.3 发行包 conf/application.properties 一致）</span></span><br><span class="line"><span class="attr">spring.sql.init.platform</span>=<span class="string">mysql</span></span><br><span class="line"></span><br><span class="line"><span class="attr">db.num</span>=<span class="string">1</span></span><br><span class="line"><span class="attr">db.url.0</span>=<span class="string">jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true</span></span><br><span class="line"><span class="attr">db.user</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">db.password</span>=<span class="string">Nacos_Db_Passw0rd</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### 鉴权（与第二节一致，必须已配置）</span></span><br><span class="line"><span class="attr">nacos.core.auth.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">nacos.core.auth.system.type</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">nacos.core.auth.plugin.nacos.token.secret.key</span>=<span class="string">替换为你的Base64密钥</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.key</span>=<span class="string">替换为你的identityKey</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.value</span>=<span class="string">替换为你的identityValue</span></span><br></pre></td></tr></table></figure>
+<p>启动方式与单机 Derby 相同：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh bin/startup.sh -m standalone</span><br></pre></td></tr></table></figure>
+<p>成功时日志类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Nacos started successfully in stand alone mode. use external storage</span><br></pre></td></tr></table></figure>
+<p>对比 Derby 时的 <code>use embedded storage</code>，若仍显示 embedded，说明 MySQL 配置未生效。</p>
+<h3 id="3-Docker：单机-外置-Compose-内置-MySQL">3. Docker：单机 + 外置 / Compose 内置 MySQL</h3>
+<h4 id="（1）连接已有-MySQL">（1）连接已有 MySQL</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name nacos-standalone-mysql \</span><br><span class="line">  -e MODE=standalone \</span><br><span class="line">  -e SPRING_DATASOURCE_PLATFORM=mysql \</span><br><span class="line">  -e MYSQL_SERVICE_HOST=192.168.1.10 \</span><br><span class="line">  -e MYSQL_SERVICE_PORT=3306 \</span><br><span class="line">  -e MYSQL_SERVICE_DB_NAME=nacos \</span><br><span class="line">  -e MYSQL_SERVICE_USER=nacos \</span><br><span class="line">  -e MYSQL_SERVICE_PASSWORD=Nacos_Db_Passw0rd \</span><br><span class="line">  -e MYSQL_SERVICE_DB_PARAM=<span class="string">&#x27;characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true&#x27;</span> \</span><br><span class="line">  -e NACOS_AUTH_TOKEN=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_TOKEN&#125;</span>&quot;</span> \</span><br><span class="line">  -e NACOS_AUTH_IDENTITY_KEY=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_IDENTITY_KEY&#125;</span>&quot;</span> \</span><br><span class="line">  -e NACOS_AUTH_IDENTITY_VALUE=<span class="string">&quot;<span class="variable">$&#123;NACOS_AUTH_IDENTITY_VALUE&#125;</span>&quot;</span> \</span><br><span class="line">  -e JVM_XMS=512m \</span><br><span class="line">  -e JVM_XMX=512m \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  -p 8848:8848 \</span><br><span class="line">  -p 9848:9848 \</span><br><span class="line">  nacos/nacos-server:v3.0.3</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SPRING_DATASOURCE_PLATFORM</code></td>
+<td>设为 <code>mysql</code> 启用外置库</td>
+</tr>
+<tr>
+<td><code>MYSQL_SERVICE_HOST</code> / <code>PORT</code> / <code>DB_NAME</code></td>
+<td>库地址</td>
+</tr>
+<tr>
+<td><code>MYSQL_SERVICE_USER</code> / <code>PASSWORD</code></td>
+<td>账号密码（勿含逗号 <code>,</code>）</td>
+</tr>
+<tr>
+<td><code>MYSQL_SERVICE_DB_PARAM</code></td>
+<td>JDBC 附加参数</td>
+</tr>
+</tbody>
+</table>
+<p>容器启动前请已在目标库执行过 <code>mysql-schema.sql</code>。</p>
+<h4 id="（2）Docker-Compose-一键（Nacos-MySQL）">（2）Docker Compose 一键（Nacos + MySQL）</h4>
+<p>也可直接参考 <a target="_blank" rel="noopener" href="https://github.com/nacos-group/nacos-docker">nacos-docker</a> 的 <code>example/standalone-mysql.yaml</code>（版本在 <code>.env</code> 固定为 <code>v3.0.3</code>，并先跑 <code>mysql-init.sh</code> 准备初始化脚本）。自写最小示例如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-compose-nacos-mysql.yml</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:8.0.30</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nacos-mysql</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">MYSQL_DATABASE:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">MYSQL_USER:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">MYSQL_PASSWORD:</span> <span class="string">Nacos_Db_Passw0rd</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="comment"># 将 mysql-schema.sql 放到 ./mysql-init/ 下，首次启动自动导入</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./mysql-init:/docker-entrypoint-initdb.d</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">nacos-mysql-data:/var/lib/mysql</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--character-set-server=utf8mb4</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--collation-server=utf8mb4_unicode_ci</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3306:3306&quot;</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">test:</span> [<span class="string">&quot;CMD&quot;</span>, <span class="string">&quot;mysqladmin&quot;</span>, <span class="string">&quot;ping&quot;</span>, <span class="string">&quot;-h&quot;</span>, <span class="string">&quot;localhost&quot;</span>]</span><br><span class="line">      <span class="attr">interval:</span> <span class="string">5s</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">10s</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">10</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">nacos:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nacos/nacos-server:v3.0.3</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nacos</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="attr">mysql:</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_healthy</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MODE:</span> <span class="string">standalone</span></span><br><span class="line">      <span class="attr">SPRING_DATASOURCE_PLATFORM:</span> <span class="string">mysql</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_HOST:</span> <span class="string">mysql</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_PORT:</span> <span class="number">3306</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_DB_NAME:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_USER:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_PASSWORD:</span> <span class="string">Nacos_Db_Passw0rd</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_DB_PARAM:</span> <span class="string">characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_TOKEN:</span> <span class="string">$&#123;NACOS_AUTH_TOKEN&#125;</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_IDENTITY_KEY:</span> <span class="string">$&#123;NACOS_AUTH_IDENTITY_KEY&#125;</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_IDENTITY_VALUE:</span> <span class="string">$&#123;NACOS_AUTH_IDENTITY_VALUE&#125;</span></span><br><span class="line">      <span class="attr">JVM_XMS:</span> <span class="string">512m</span></span><br><span class="line">      <span class="attr">JVM_XMX:</span> <span class="string">512m</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8848:8848&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9848:9848&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">nacos-mysql-data:</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p mysql-init</span><br><span class="line"><span class="comment"># 从发行包拷贝同版本脚本</span></span><br><span class="line"><span class="built_in">cp</span> /path/to/nacos/conf/mysql-schema.sql mysql-init/</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_TOKEN=<span class="string">&quot;<span class="subst">$(openssl rand -base64 32)</span>&quot;</span></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_IDENTITY_KEY=<span class="string">&quot;nacos_identity_key&quot;</span></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_IDENTITY_VALUE=<span class="string">&quot;nacos_identity_value&quot;</span></span><br><span class="line"></span><br><span class="line">docker compose -f docker-compose-nacos-mysql.yml up -d</span><br></pre></td></tr></table></figure>
+<p>常见问题：</p>
+<ol>
+<li class="lvl-3">
+<p><strong><code>Public Key Retrieval is not allowed</code></strong>：JDBC URL / <code>MYSQL_SERVICE_DB_PARAM</code> 追加 <code>allowPublicKeyRetrieval=true</code>。</p>
+</li>
+<li class="lvl-3">
+<p><strong><code>db.num is null</code> / 连不上库</strong>：确认 <code>spring.sql.init.platform=mysql</code>（或环境变量 <code>SPRING_DATASOURCE_PLATFORM=mysql</code>）及 <code>db.*</code> 完整。</p>
+</li>
+<li class="lvl-3">
+<p><strong>重启后数据仍丢</strong>：可能仍跑在 Derby，或 MySQL volume 未挂载成功。</p>
+</li>
+</ol>
+<hr>
+<h2 id="四、集群搭建">四、集群搭建</h2>
+<p>生产推荐：<strong>≥ 3 个 Nacos 节点 + 外置 MySQL（建议高可用）+ 域名 / 内网 SLB 对外暴露主端口与客户端 gRPC</strong>。直连任意单节点 IP 也可工作，但节点故障后客户端需改配置，运维成本更高。架构说明见 <a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/deployment/deployment-cluster/">集群模式部署</a>。</p>
+<p>% note warning %<br>
+集群模式下：</p>
+<ol>
+<li class="lvl-3">
+<p><strong>必须共享同一套外置 MySQL</strong>（嵌入式 Derby 虽可用 <code>-p embedded</code> 靠 Raft 组逻辑集群，排障成本高，官方不推荐生产）。</p>
+</li>
+<li class="lvl-3">
+<p>所有节点的 <strong>鉴权三件套必须完全一致</strong>（<code>token.secret.key</code> / <code>identity.key</code> / <code>identity.value</code>）。</p>
+</li>
+<li class="lvl-3">
+<p>节点间需放行：主端口、客户端 gRPC（+1000）、服务端 gRPC（+1001）、Raft（-1000）。</p>
+</li>
+<li class="lvl-3">
+<p>启动命令<strong>不要</strong>再带 <code>-m standalone</code>。</p>
+</li>
+</ol>
+<p>% endnote %</p>
+<h3 id="1-二进制包三节点示例">1. 二进制包三节点示例</h3>
+<p>假设三台机器（或同机不同端口，演示时可改；生产请每机一进程）：</p>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>IP</th>
+<th>主端口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nacos-1</td>
+<td><code>192.168.1.11</code></td>
+<td><code>8848</code></td>
+</tr>
+<tr>
+<td>nacos-2</td>
+<td><code>192.168.1.12</code></td>
+<td><code>8848</code></td>
+</tr>
+<tr>
+<td>nacos-3</td>
+<td><code>192.168.1.13</code></td>
+<td><code>8848</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="（1）各节点统一-application-properties">（1）各节点统一 <code>application.properties</code></h4>
+<p>在上一节 MySQL 配置基础上，保证三台鉴权参数相同，并按需指定本机地址（多网卡时尤其重要）：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 多网卡时可固定对外 IP，避免注册成错误网卡</span></span><br><span class="line"><span class="comment"># nacos.inetutils.ip-address=192.168.1.11</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring.sql.init.platform</span>=<span class="string">mysql</span></span><br><span class="line"><span class="attr">db.num</span>=<span class="string">1</span></span><br><span class="line"><span class="attr">db.url.0</span>=<span class="string">jdbc:mysql://192.168.1.10:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true</span></span><br><span class="line"><span class="attr">db.user</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">db.password</span>=<span class="string">Nacos_Db_Passw0rd</span></span><br><span class="line"></span><br><span class="line"><span class="attr">nacos.core.auth.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">nacos.core.auth.console.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">nacos.core.auth.system.type</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">nacos.core.auth.plugin.nacos.token.secret.key</span>=<span class="string">替换为你的Base64密钥</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.key</span>=<span class="string">替换为你的identityKey</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.value</span>=<span class="string">替换为你的identityValue</span></span><br></pre></td></tr></table></figure>
+<h4 id="（2）各节点相同的-conf-cluster-conf">（2）各节点相同的 <code>conf/cluster.conf</code></h4>
+<p>三台机器内容一致，每行 <code>ip:主端口</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># conf/cluster.conf</span><br><span class="line">192.168.1.11:8848</span><br><span class="line">192.168.1.12:8848</span><br><span class="line">192.168.1.13:8848</span><br></pre></td></tr></table></figure>
+<h4 id="（3）启动与验证">（3）启动与验证</h4>
+<p>每台分别执行（<strong>集群模式，无 <code>-m standalone</code></strong>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sh bin/startup.sh</span><br><span class="line"><span class="comment"># Ubuntu：bash bin/startup.sh</span></span><br></pre></td></tr></table></figure>
+<p>成功日志类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Nacos started successfully in cluster mode. use external storage</span><br></pre></td></tr></table></figure>
+<p>任选一台控制台（或经 SLB）打开：<code>http://任意节点控制台端口/index.html</code>。管理员密码只需初始化一次（数据在 MySQL）。</p>
+<p>控制台「集群管理」应能看到 3 个节点；也可用健康检查 / 成员列表 API（需先登录拿 token，方式同第二节）。</p>
+<p>客户端 <code>server-addr</code> 可填：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="comment"># 推荐：VIP / 域名（内网 SLB 同时转发 8848 与 9848）</span></span><br><span class="line">      <span class="attr">server-addr:</span> <span class="string">nacos.example.internal:8848</span></span><br><span class="line">      <span class="comment"># 或直连多地址（逗号分隔）</span></span><br><span class="line">      <span class="comment"># server-addr: 192.168.1.11:8848,192.168.1.12:8848,192.168.1.13:8848</span></span><br></pre></td></tr></table></figure>
+<p>% note tip %<br>
+若前面挂了四层负载或 Nginx，<strong>8848 与 9848 都要转发且保持「主端口 +1000 = gRPC」的偏移</strong>。只转 8848、不转 gRPC，或把 gRPC 配成 HTTP/HTTP2，会出现注册失败或频繁超时。完整示例见下文「Nginx 反向代理」。</p>
+<p>% endnote %</p>
+<h3 id="2-Docker-Compose-集群示例（hostname-模式）">2. Docker Compose 集群示例（hostname 模式）</h3>
+<p>官方示例：<a target="_blank" rel="noopener" href="https://github.com/nacos-group/nacos-docker/blob/master/example/cluster-hostname.yaml">nacos-docker <code>example/cluster-hostname.yaml</code></a>。核心环境变量：</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MODE</code></td>
+<td><code>cluster</code>（镜像默认）</td>
+<td>集群模式</td>
+</tr>
+<tr>
+<td><code>PREFER_HOST_MODE</code></td>
+<td><code>hostname</code></td>
+<td>节点互相用 hostname 发现</td>
+</tr>
+<tr>
+<td><code>NACOS_SERVERS</code></td>
+<td><code>nacos1:8848 nacos2:8848 nacos3:8848</code></td>
+<td>空格分隔的成员列表</td>
+</tr>
+<tr>
+<td><code>SPRING_DATASOURCE_PLATFORM</code></td>
+<td><code>mysql</code></td>
+<td>外置库</td>
+</tr>
+<tr>
+<td><code>NACOS_AUTH_*</code></td>
+<td>与单机相同</td>
+<td><strong>三节点必须相同</strong></td>
+</tr>
+</tbody>
+</table>
+<p>自写精简示例如下（生产请将 MySQL 换为外部高可用库，并收紧密码）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-compose-nacos-cluster.yml</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:8.0.30</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nacos-mysql</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">MYSQL_DATABASE:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">MYSQL_USER:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">MYSQL_PASSWORD:</span> <span class="string">Nacos_Db_Passw0rd</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./mysql-init:/docker-entrypoint-initdb.d</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">nacos-mysql-data:/var/lib/mysql</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">test:</span> [<span class="string">&quot;CMD&quot;</span>, <span class="string">&quot;mysqladmin&quot;</span>, <span class="string">&quot;ping&quot;</span>, <span class="string">&quot;-h&quot;</span>, <span class="string">&quot;localhost&quot;</span>]</span><br><span class="line">      <span class="attr">interval:</span> <span class="string">5s</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">10s</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">10</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">nacos1:</span> <span class="string">&amp;nacos-node</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nacos/nacos-server:v3.0.3</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">nacos1</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nacos1</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="attr">mysql:</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_healthy</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">PREFER_HOST_MODE:</span> <span class="string">hostname</span></span><br><span class="line">      <span class="attr">NACOS_SERVERS:</span> <span class="string">nacos1:8848</span> <span class="string">nacos2:8848</span> <span class="string">nacos3:8848</span></span><br><span class="line">      <span class="attr">SPRING_DATASOURCE_PLATFORM:</span> <span class="string">mysql</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_HOST:</span> <span class="string">mysql</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_PORT:</span> <span class="number">3306</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_DB_NAME:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_USER:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_PASSWORD:</span> <span class="string">Nacos_Db_Passw0rd</span></span><br><span class="line">      <span class="attr">MYSQL_SERVICE_DB_PARAM:</span> <span class="string">characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_TOKEN:</span> <span class="string">$&#123;NACOS_AUTH_TOKEN&#125;</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_IDENTITY_KEY:</span> <span class="string">$&#123;NACOS_AUTH_IDENTITY_KEY&#125;</span></span><br><span class="line">      <span class="attr">NACOS_AUTH_IDENTITY_VALUE:</span> <span class="string">$&#123;NACOS_AUTH_IDENTITY_VALUE&#125;</span></span><br><span class="line">      <span class="attr">JVM_XMS:</span> <span class="string">512m</span></span><br><span class="line">      <span class="attr">JVM_XMX:</span> <span class="string">512m</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8848:8848&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9848:9848&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">nacos2:</span></span><br><span class="line">    <span class="string">&lt;&lt;:</span> <span class="string">*nacos-node</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">nacos2</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nacos2</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8081:8080&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8849:8848&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9849:9848&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">nacos3:</span></span><br><span class="line">    <span class="string">&lt;&lt;:</span> <span class="string">*nacos-node</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">nacos3</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nacos3</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8082:8080&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8850:8848&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9850:9848&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">nacos-mysql-data:</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p mysql-init</span><br><span class="line"><span class="built_in">cp</span> /path/to/nacos/conf/mysql-schema.sql mysql-init/</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_TOKEN=<span class="string">&quot;<span class="subst">$(openssl rand -base64 32)</span>&quot;</span></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_IDENTITY_KEY=<span class="string">&quot;nacos_identity_key&quot;</span></span><br><span class="line"><span class="built_in">export</span> NACOS_AUTH_IDENTITY_VALUE=<span class="string">&quot;nacos_identity_value&quot;</span></span><br><span class="line"></span><br><span class="line">docker compose -f docker-compose-nacos-cluster.yml up -d</span><br><span class="line">docker compose -f docker-compose-nacos-cluster.yml logs -f nacos1</span><br></pre></td></tr></table></figure>
+<p>本机快速验证时，应用可临时连 <code>127.0.0.1:8848</code>（或逗号列出 <code>8848,8849,8850</code>）。真实环境仍建议用域名 / SLB / Nginx 统一入口。</p>
+<h3 id="3-Nginx-反向代理示例">3. Nginx 反向代理示例</h3>
+<p>官方说明：<a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/deployment/deployment-overview/">部署架构概览</a>、<a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/guide/admin/nginx-cluster-load-balance-guide/">Nginx 负载均衡指南</a>。</p>
+<p>对外建议暴露：</p>
+<table>
+<thead>
+<tr>
+<th>对外端口</th>
+<th>协议</th>
+<th>后端</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>8848</code></td>
+<td>HTTP</td>
+<td>各节点 <code>8848</code></td>
+<td>OpenAPI / 鉴权 login 等</td>
+</tr>
+<tr>
+<td><code>9848</code></td>
+<td><strong>TCP（stream）</strong></td>
+<td>各节点 <code>9848</code></td>
+<td>客户端 gRPC 长连接（<strong>= 8848 + 1000</strong>）</td>
+</tr>
+<tr>
+<td><code>8080</code></td>
+<td>HTTP</td>
+<td>各节点 <code>8080</code></td>
+<td>Nacos 3.x 控制台</td>
+</tr>
+</tbody>
+</table>
+<p><strong>不要</strong>把 gRPC 配成 <code>http</code> / <code>http2</code> 反代，否则连接会被掐断，表现为服务反复上下线。节点间端口 <code>9849</code>、<code>7848</code> 仅内网互通，勿对公网开放。</p>
+<p>先确认 Nginx 带 <code>stream</code> 模块：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx -V 2&gt;&amp;1 | <span class="built_in">tr</span> <span class="string">&#x27; &#x27;</span> <span class="string">&#x27;\n&#x27;</span> | grep -E <span class="string">&#x27;stream&#x27;</span></span><br><span class="line"><span class="comment"># 应能看到 --with-stream</span></span><br></pre></td></tr></table></figure>
+<h4 id="（1）推荐：保持默认端口偏移（客户端无感）">（1）推荐：保持默认端口偏移（客户端无感）</h4>
+<p><code>server-addr</code> 填 <code>nacos.example.com:8848</code> 时，客户端会自动连 <code>nacos.example.com:9848</code>，因此 Nginx <strong>对外监听端口也必须满足同一偏移</strong>：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/nginx/nginx.conf 片段（stream 必须与 http 同级，不能写在 http &#123;&#125; 里）</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">worker_processes</span> auto;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span> <span class="number">10240</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------- gRPC：四层 TCP 反代 ----------</span></span><br><span class="line"><span class="section">stream</span> &#123;</span><br><span class="line">    <span class="section">upstream</span> nacos_grpc &#123;</span><br><span class="line">        <span class="comment"># 可选：按客户端 IP 粘滞，减少长连接漂移</span></span><br><span class="line">        <span class="attribute">hash</span> <span class="variable">$remote_addr</span> consistent;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.11:9848</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.12:9848</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.13:9848</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">9848</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> nacos_grpc;</span><br><span class="line">        <span class="attribute">proxy_connect_timeout</span> <span class="number">10s</span>;</span><br><span class="line">        <span class="comment"># gRPC 长连接，超时宜设大一些</span></span><br><span class="line">        <span class="attribute">proxy_timeout</span> <span class="number">300s</span>;</span><br><span class="line">        <span class="attribute">proxy_next_upstream</span> <span class="literal">on</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------- HTTP：API + 控制台 ----------</span></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span>       mime.types;</span><br><span class="line">    <span class="attribute">default_type</span>  application/octet-stream;</span><br><span class="line">    <span class="attribute">sendfile</span>      <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">keepalive_timeout</span> <span class="number">65</span>;</span><br><span class="line">    <span class="comment"># 配置内容可能较大</span></span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">20m</span>;</span><br><span class="line"></span><br><span class="line">    <span class="section">upstream</span> nacos_api &#123;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.11:8848</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.12:8848</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.13:8848</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">upstream</span> nacos_console &#123;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.11:8080</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.12:8080</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.13:8080</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">30s</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 客户端 / OpenAPI：http://nacos.example.com:8848</span></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">8848</span>;</span><br><span class="line">        <span class="attribute">server_name</span> nacos.example.com;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://nacos_api;</span><br><span class="line">            <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br><span class="line">            <span class="attribute">proxy_connect_timeout</span> <span class="number">5s</span>;</span><br><span class="line">            <span class="attribute">proxy_read_timeout</span> <span class="number">60s</span>;</span><br><span class="line">            <span class="attribute">proxy_send_timeout</span> <span class="number">60s</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 可选：简单探活</span></span><br><span class="line">        <span class="section">location</span> = /nacos/v3/console/health/readiness &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://nacos_api;</span><br><span class="line">            <span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 控制台：http://nacos-console.example.com:8080/index.html</span></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">8080</span>;</span><br><span class="line">        <span class="attribute">server_name</span> nacos-console.example.com;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://nacos_console;</span><br><span class="line">            <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br><span class="line">            <span class="comment"># 控制台前端资源 / 接口</span></span><br><span class="line">            <span class="attribute">proxy_connect_timeout</span> <span class="number">5s</span>;</span><br><span class="line">            <span class="attribute">proxy_read_timeout</span> <span class="number">60s</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>检查并热加载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -t &amp;&amp; nginx -s reload</span><br></pre></td></tr></table></figure>
+<p>应用侧只填 Nginx 入口：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">server-addr:</span> <span class="string">nacos.example.com:8848</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">YourStrongPassword</span></span><br></pre></td></tr></table></figure>
+<p>浏览器访问控制台：<code>http://nacos-console.example.com:8080/index.html</code>。</p>
+<h4 id="（2）自定义对外端口时：仍须保持-1000-偏移">（2）自定义对外端口时：仍须保持 +1000 偏移</h4>
+<p>若希望对外用 <code>7847</code>（HTTP）而不想占用 <code>8848</code>，则 gRPC 必须对外监听 <code>8847</code>（= <code>7847 + 1000</code>），客户端才能算出正确端口：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">stream</span> &#123;</span><br><span class="line">    <span class="section">upstream</span> nacos_grpc &#123;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.11:9848</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.12:9848</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.13:9848</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">8847</span>;          <span class="comment"># = 对外主端口 + 1000</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> nacos_grpc;</span><br><span class="line">        <span class="attribute">proxy_timeout</span> <span class="number">300s</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="section">upstream</span> nacos_api &#123;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.11:8848</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.12:8848</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.13:8848</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="section">upstream</span> nacos_console &#123;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.11:8080</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.12:8080</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">192.168.1.13:8080</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 对外主端口 7847：可同时按路径拆 API 与控制台（官方指南同思路）</span></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">7847</span>;</span><br><span class="line">        <span class="attribute">server_name</span> nacos.example.com;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> /nacos/ &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://nacos_api/nacos/;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Nacos 3.x 控制台路径无 /nacos 前缀</span></span><br><span class="line">        <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://nacos_console;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时客户端：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.cloud.nacos.server-addr:</span> <span class="string">nacos.example.com:7847</span></span><br></pre></td></tr></table></figure>
+<p>控制台：<code>http://nacos.example.com:7847/index.html</code>。</p>
+<h4 id="（3）HTTPS-控制台（可选）">（3）HTTPS 控制台（可选）</h4>
+<p>仅给控制台上证书即可；客户端注册发现一般仍走内网明文 <code>8848/9848</code>。证书终止在 Nginx，后端继续 <code>http://nacos_console</code>。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl http2;</span><br><span class="line">    <span class="attribute">server_name</span> nacos-console.example.com;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">ssl_certificate</span>     /etc/nginx/certs/nacos-console.crt;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /etc/nginx/certs/nacos-console.key;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://nacos_console;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-Proto https;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="（4）Nginx-相关注意点">（4）Nginx 相关注意点</h4>
+<ol>
+<li class="lvl-3">
+<p><strong><code>stream</code> 与 <code>http</code> 同级</strong>：写在 <code>http &#123;&#125;</code> 内会直接报错。</p>
+</li>
+<li class="lvl-3">
+<p><strong>偏移不能破</strong>：对外 <code>主端口</code> 与 <code>主端口+1000</code> 必须成对出现。</p>
+</li>
+<li class="lvl-3">
+<p><strong>单机也可用同一套配置</strong>：<code>upstream</code> 里只留一个 <code>server</code> 即可。</p>
+</li>
+<li class="lvl-3">
+<p><strong>扩容</strong>：新增节点后改 Nginx <code>upstream</code> 再 <code>nginx -s reload</code>，应用无需改 <code>server-addr</code>。</p>
+</li>
+<li class="lvl-3">
+<p><strong>安全</strong>：生产尽量内网暴露 <code>8848/9848</code>；控制台可单独域名 + HTTPS + IP 白名单。</p>
+</li>
+</ol>
+<h3 id="4-集群常见问题">4. 集群常见问题</h3>
+<ol>
+<li class="lvl-3">
+<p><strong>节点无法互相发现</strong>：检查 <code>cluster.conf</code> / <code>NACOS_SERVERS</code> 是否互通；防火墙是否放行 <code>8848/9848/9849/7848</code>。</p>
+</li>
+<li class="lvl-3">
+<p><strong>鉴权不一致导致节点异常</strong>：三件套任一不一致都会出问题，务必三台拷贝同一份配置。</p>
+</li>
+<li class="lvl-3">
+<p><strong>多网卡注册成内网错误 IP</strong>：设置 <code>nacos.inetutils.ip-address</code> 或 Docker 的 <code>NACOS_SERVER_IP</code>。</p>
+</li>
+<li class="lvl-3">
+<p><strong>只用 2 节点</strong>：偶数节点在半数故障时易无法选主，生产请用奇数台（≥3）。</p>
+</li>
+<li class="lvl-3">
+<p><strong>Nginx 后客户端连不上 / 反复掉线</strong>：检查是否遗漏 <code>9848</code> 的 <code>stream</code> TCP 转发，或误用了 HTTP2；对外端口是否满足「主端口 +1000」。</p>
+</li>
+</ol>
+<hr>
+<h2 id="五、应用侧快速接入（SCA-2025-0-0-0）">五、应用侧快速接入（SCA 2025.0.0.0）</h2>
+<p>官方指南：<a target="_blank" rel="noopener" href="https://sca.aliyun.com/docs/2025.x/user-guide/nacos/quick-start/">SCA · Nacos 快速开始</a>。</p>
+<h3 id="1-BOM-与依赖">1. BOM 与依赖</h3>
+<p>父 POM / 依赖管理：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>2025.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>2025.0.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>业务模块按需引入（版本由 BOM 管理）：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 注册发现 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 配置中心 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 服务间调用负载均衡（消费端常用） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-loadbalancer<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Starter 会传递依赖 <code>nacos-client:3.0.3</code>，与上文服务端版本对齐。</p>
+</blockquote>
+<h3 id="2-application-yml-示例">2. <code>application.yml</code> 示例</h3>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">18082</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">demo-provider</span></span><br><span class="line">  <span class="attr">config:</span></span><br><span class="line">    <span class="attr">import:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">optional:nacos:demo-provider.properties?refreshEnabled=true</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">server-addr:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:8848</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">YourStrongPassword</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">$&#123;spring.cloud.nacos.server-addr&#125;</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">$&#123;spring.cloud.nacos.server-addr&#125;</span></span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">properties</span></span><br></pre></td></tr></table></figure>
+<p>% note tip %<br>
+<code>2025.0.x</code> 起建议统一使用 <code>spring.config.import</code> 拉取 Nacos 配置；<code>shared-configs</code> / <code>extension-configs</code> 等旧方式已废弃。更靠后的 <code>2025.1.x</code> 会正式废弃 Bootstrap，接入时直接写在 <code>application.yml</code> 即可。</p>
+<p>% endnote %</p>
+<h3 id="3-代码最小示例">3. 代码最小示例</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProviderApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ProviderApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="六、联调检查清单">六、联调检查清单</h2>
+<table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>预期结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nacos 进程 / 容器</td>
+<td>单机：<code>stand alone</code>；集群：<code>cluster mode</code>；外置库：<code>use external storage</code></td>
+</tr>
+<tr>
+<td>Nacos 控制台</td>
+<td><code>http://127.0.0.1:8080/index.html</code>（或 Nginx / 域名）可登录</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>config_info</code> 等表有数据；重启 Nacos 后配置不丢</td>
+</tr>
+<tr>
+<td>集群节点</td>
+<td>控制台「集群管理」可见全部节点且状态正常</td>
+</tr>
+<tr>
+<td><code>8848</code> / <code>9848</code>（及集群 <code>9849</code> / <code>7848</code>）</td>
+<td>防火墙或安全组已放行</td>
+</tr>
+<tr>
+<td>Nginx 反代</td>
+<td><code>8848</code> HTTP + <code>9848</code> TCP（stream）成对；<code>nginx -V</code> 含 <code>--with-stream</code></td>
+</tr>
+<tr>
+<td>应用注册</td>
+<td>Nacos「服务管理」可见实例，且 healthy</td>
+</tr>
+<tr>
+<td>客户端版本</td>
+<td><code>nacos-client 3.0.3</code>（由 SCA BOM 引入）</td>
+</tr>
+</tbody>
+</table>
+<p>常见问题：</p>
+<ol>
+<li class="lvl-3">
+<p><strong>应用连不上 Nacos</strong>：除了 <code>8848</code>，还必须打通 <code>9848</code>（gRPC）；经 Nginx / SLB 时两条链路都要转，且保持主端口 +1000 偏移。</p>
+</li>
+<li class="lvl-3">
+<p><strong>控制台 404 / 打不开</strong>：Nacos 3.x 用 <code>8080</code>，不要再用 <code>8848/nacos</code>。</p>
+</li>
+<li class="lvl-3">
+<p><strong>外网 IP 打不开控制台</strong>：本机 <code>curl</code> 正常且监听 <code>*:8080</code> 时，多半是云安全组未放行控制台端口；与 <code>nacos.inetutils.ip-address</code> 无关。</p>
+</li>
+<li class="lvl-3">
+<p><strong>重启后配置丢失</strong>：仍在用 Derby，或未导入 / 未指向 MySQL。</p>
+</li>
+<li class="lvl-3">
+<p><strong>集群某节点起不来</strong>：核对 <code>cluster.conf</code>、鉴权三件套一致性、数据库连通性。</p>
+</li>
+<li class="lvl-3">
+<p><strong>经 Nginx 后服务反复上下线</strong>：常因 gRPC 用了 HTTP/HTTP2 反代；应改为 <code>stream</code> TCP，并把 <code>proxy_timeout</code> 调大。</p>
+</li>
+<li class="lvl-3">
+<p><strong>版本混用</strong>：按 SCA 官方矩阵固定 <strong>Nacos 3.0.3</strong> 最省事。</p>
+</li>
+</ol>
+<hr>
+<h2 id="七、参考链接">七、参考链接</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://sca.aliyun.com/docs/2025.x/overview/version-explain/">Spring Cloud Alibaba 版本发布说明（2025.x）</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://sca.aliyun.com/docs/2025.x/user-guide/nacos/quick-start/">SCA · Nacos 快速开始</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/quickstart/quick-start/">Nacos 3.0 快速开始</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/quickstart/quick-start-docker/">Nacos Docker 快速开始</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/deployment/deployment-standalone/">Nacos 单机模式部署</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/deployment/deployment-cluster/">Nacos 集群模式部署</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/deployment/deployment-overview/">Nacos 部署架构概览（含 VIP/Nginx 注意点）</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/guide/admin/nginx-cluster-load-balance-guide/">Nacos 集群 Nginx 负载均衡指南</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/auth/">Nacos 权限校验（3.0）</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/manual/admin/system-configurations/">Nacos 系统参数（含端口）</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/blob/3.0.3/distribution/conf/mysql-schema.sql">mysql-schema.sql（3.0.3）</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/nacos-group/nacos-docker">nacos-docker</a></p>
+</li>
+<li class="lvl-2">
+<a href="/2026/07/14/sca-2025-sentinel-install/" title="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9">Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9</a>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+<div style="text-align:center;color: #ccc;font-size:14px;">---------------- The End ----------------</div>
+
+<div>
+    <!-- 分享 css & js 此处会被Meting.js干扰，暂时关闭-->
+    <link rel="stylesheet" href="/social-share/share.min.css">
+    <script src="/social-share/share.min.js"></script>
+    <div class="social-share" style="float:right">分享到：</div>
+</div>
+
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpg" alt="飘逸峰 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpg" alt="飘逸峰 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>飘逸峰
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.hanqunfeng.com/2026/07/14/sca-2025-nacos-install/" title="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3">https://blog.hanqunfeng.com/2026/07/14/sca-2025-nacos-install/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://www.jianshu.com/users/763c53661578/latest_articles">
+            <span class="icon">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+
+            <span class="label">简书</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="http://blog.csdn.net/hanqunfeng">
+            <span class="icon">
+              <i class="fa-solid fa-c"></i>
+            </span>
+
+            <span class="label">CSDN</span>
+          </a>
+      </div>
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa-solid fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/spring-cloud-alibaba/" rel="tag"><i class="fa fa-tag"></i> spring-cloud-alibaba</a>
+              <a href="/tags/nacos/" rel="tag"><i class="fa fa-tag"></i> nacos</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/11/npm-oidc-trusted-publishing/" rel="prev" title="使用 GitHub Actions 和 OIDC 安全发布 npm 包">
+                  <i class="fa fa-angle-left"></i> 使用 GitHub Actions 和 OIDC 安全发布 npm 包
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/14/sca-2025-sentinel-install/" rel="next" title="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9">
+                  Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备2021006748号-1 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa-solid fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">飘逸峰</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">831k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">50:20</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-circle-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa-solid fa-chart-area"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+<span id="show_hidden">🇨🇳</span>
+
+<style>
+
+  .toBottomClass {
+    color:#333333;
+    font-size:38px;
+    background: #ffffff;
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border-radius: 50%;
+    border: none;
+    right: 32px;
+    bottom: 116px;
+    left: unset;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .hover {
+            color: #FF9966;
+            cursor:pointer;
+        }
+</style>
+
+
+<script type="text/javascript">
+          jQuery(function ($) {
+
+            // 控制黑暗和白天按钮旋转180度
+            var current = 0;
+						$('#taiji').click(function(){
+                current = (current+180)%360;
+                this.style.transform = 'rotate('+current+'deg)';
+            });
+
+            $('.darkmode-toggle').before('<div class="toBottom toBottomClass" title="直达底部"><i class="fa fa-arrow-circle-down" aria-hidden="true"/><div>');
+          });
+</script>
+
+<script type="text/javascript">
+
+    let a = true;
+
+    let gao=0;
+
+    let no_clear = true;
+    var timer;
+
+    jQuery(function ($) {
+
+        $(".toBottom").bind("mouseover", function () {
+            $(this).addClass("hover");
+        });
+
+
+        $(".toBottom").bind("mouseout", function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".toBottom").on("click",function () {
+            //只有在非最底部时才能触发事件，避免最底部连续点击造成无法向上滚动
+            if(a){
+                if(gao == 0){
+                    //设置定时器
+                    timer=setInterval("scrollwindow()",10);
+                }else{
+                    no_clear = false;
+                    $("html,body").animate({ scrollTop: gao }, 1000);//gao为滚动条的位置，1000为滚动的时延
+                }
+
+            }
+
+        });
+    });
+
+    //滚动函数
+
+    function scrollwindow(){
+        gao=gao+100;
+        window.scroll(0,gao);
+    }
+
+    //清除定时器
+    function clear(){
+        if(no_clear){
+            clearInterval(timer);
+        }
+    }
+
+    //滚动到底部触发函数
+    window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+               //滚动条到底部的条件
+            if(scrollTop+windowHeight==scrollHeight){
+                
+                
+                clear();
+                a = false;
+             }else{
+                a = true;
+             }
+        }
+
+
+</script>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hanqunfeng" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '<img id="taiji" src="/images_glob/yin-yang_262f.png" title="外观切换"/>',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"hanqunfeng/blog_comments","issue_term":"title","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+<style>
+#divcss5{
+    margin:0 auto;
+    border:0px solid #000;
+    width: 100%;
+    text-align:center;
+    }
+</style>
+
+<div id="divcss5">
+
+
+
+</div>
+<!-- hexo injector body_end start --><script src="/assets/mmedia/mmedia-loader.js"></script><!-- hexo injector body_end end --></body>
+</html>
