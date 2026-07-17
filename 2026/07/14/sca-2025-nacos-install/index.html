@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   依据 Spring Cloud Alibaba 版本发布说明，搭建与 Spring Cloud Alibaba 2025.0.0.0 对应的 Nacos Server 3.0.3。   覆盖服务端单机搭建（二进制包 + Docker）、MySQL 外置持久化、多节点集群，并补充 Spring Boot 应用侧的最小接入配置。   同版本配套的 Sentinel Dashboard 见">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-14T08:43:58.000Z">
-<meta property="article:modified_time" content="2026-07-16T06:32:04.304Z">
+<meta property="article:modified_time" content="2026-07-17T09:09:04.585Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="nacos">
 <meta property="article:tag" content="spring-cloud-alibaba">
@@ -945,12 +945,12 @@ i.ban {
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-count">54</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags">
-        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-count">71</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1107,7 +1107,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-07-16 14:32:04" itemprop="dateModified" datetime="2026-07-16T14:32:04+08:00">2026-07-16</time>
+      <time title="修改时间：2026-07-17 17:09:04" itemprop="dateModified" datetime="2026-07-17T17:09:04+08:00">2026-07-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1319,23 +1319,14 @@ i.ban {
 <hr>
 <h2 id="二、搭建-Nacos-3-0-3">二、搭建 Nacos 3.0.3</h2>
 <p>官方文档：<a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/quickstart/quick-start/">Nacos 快速开始</a>、<a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/quickstart/quick-start-docker/">Docker 快速开始</a>。</p>
-<p>% note warning %<br>
-Nacos 3.x 相对 2.x 有几处常见差异，搭建前先记住：</p>
+<div class="note warning"><p>Nacos 3.x 相对 2.x 有几处常见差异，搭建前先记住：</p>
 <ol>
-<li class="lvl-3">
-<p>控制台地址为 <code>http://127.0.0.1:8080/index.html</code>（不再是 <code>http://ip:8848/nacos</code>）。</p>
-</li>
-<li class="lvl-3">
-<p>控制台鉴权默认开启；启动前必须配置 JWT 密钥与服务端身份识别参数。</p>
-</li>
-<li class="lvl-3">
-<p>首次打开控制台需要<strong>初始化管理员用户 <code>nacos</code> 的密码</strong>（不再提供默认 <code>nacos/nacos</code>）。</p>
-</li>
-<li class="lvl-3">
-<p>Spring Cloud Alibaba <code>2025.0.x</code> 若使用 <code>public</code> / 空命名空间，需使用 Nacos Server 3.x，与本文版本一致。</p>
-</li>
+<li class="lvl-3">控制台地址为 <code>http://127.0.0.1:8080/index.html</code>（不再是 <code>http://ip:8848/nacos</code>）。</li>
+<li class="lvl-3">控制台鉴权默认开启；启动前必须配置 JWT 密钥与服务端身份识别参数。</li>
+<li class="lvl-3">首次打开控制台需要<strong>初始化管理员用户 <code>nacos</code> 的密码</strong>（不再提供默认 <code>nacos/nacos</code>）。</li>
+<li class="lvl-3">Spring Cloud Alibaba <code>2025.0.x</code> 若使用 <code>public</code> / 空命名空间，需使用 Nacos Server 3.x，与本文版本一致。</li>
 </ol>
-<p>% endnote %</p>
+</div>
 <h3 id="1-方式一：二进制包单机启动（推荐先理解流程）">1. 方式一：二进制包单机启动（推荐先理解流程）</h3>
 <h4 id="（1）下载">（1）下载</h4>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 任选其一</span></span><br><span class="line"><span class="comment"># 官网下载页：https://nacos.io/download/nacos-server/</span></span><br><span class="line">wget https://download.nacos.io/nacos-server/nacos-server-3.0.3.zip</span><br><span class="line">unzip nacos-server-3.0.3.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># GitHub Release：https://github.com/alibaba/nacos/releases/tag/3.0.3</span></span><br><span class="line">wget https://github.com/alibaba/nacos/releases/download/3.0.3/nacos-server-3.0.3.tar.gz</span><br><span class="line">tar -zxvf nacos-server-3.0.3.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> nacos</span><br></pre></td></tr></table></figure>
@@ -1451,12 +1442,11 @@ Nacos 3.x 相对 2.x 有几处常见差异，搭建前先记住：</p>
 </li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">&#x27;http://127.0.0.1:8848/nacos/v3/auth/user/admin&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;password=YourStrongPassword&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>% note warning %<br>
-该接口<strong>只能在尚未创建管理员用户时调用一次</strong>。成功后再次调用会返回类似：</p>
+<div class="note warning"><p>该接口<strong>只能在尚未创建管理员用户时调用一次</strong>。成功后再次调用会返回类似：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;code&quot;</span><span class="punctuation">:</span><span class="number">409</span><span class="punctuation">,</span><span class="attr">&quot;message&quot;</span><span class="punctuation">:</span><span class="string">&quot;have admin user cannot use it.&quot;</span><span class="punctuation">,</span><span class="attr">&quot;data&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 <p>说明管理员 <code>nacos</code> 已存在，此时应改用登录接口拿 <code>accessToken</code>，而不是继续调 <code>/admin</code>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -s -X POST <span class="string">&#x27;http://127.0.0.1:8848/nacos/v3/auth/user/login&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;username=nacos&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;password=当初初始化时设置的密码&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>% endnote %</p>
+</div>
 <ol start="3">
 <li class="lvl-3">
 <p>服务注册 / 发现快速探测（v3 Client API）。</p>
@@ -1520,9 +1510,8 @@ Nacos 3.x 相对 2.x 有几处常见差异，搭建前先记住：</p>
 </li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 nacos 解压目录执行</span></span><br><span class="line">mysql -h127.0.0.1 -P3306 -unacos -p nacos &lt; conf/mysql-schema.sql</span><br></pre></td></tr></table></figure>
-<p>% note warning %<br>
-请使用与 <strong>Nacos 3.0.3</strong> 同版本的 <code>mysql-schema.sql</code>，勿混用 2.x 脚本。初始化只需执行一次；多节点集群共享同一库。</p>
-<p>% endnote %</p>
+<div class="note warning"><p>请使用与 <strong>Nacos 3.0.3</strong> 同版本的 <code>mysql-schema.sql</code>，勿混用 2.x 脚本。初始化只需执行一次；多节点集群共享同一库。</p>
+</div>
 <h3 id="2-二进制包：改配置后单机启动">2. 二进制包：改配置后单机启动</h3>
 <p>编辑 <code>conf/application.properties</code>，取消 / 补充 MySQL 相关项（示例）：</p>
 <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 使用 MySQL 数据源（与 3.0.3 发行包 conf/application.properties 一致）</span></span><br><span class="line"><span class="attr">spring.sql.init.platform</span>=<span class="string">mysql</span></span><br><span class="line"></span><br><span class="line"><span class="attr">db.num</span>=<span class="string">1</span></span><br><span class="line"><span class="attr">db.url.0</span>=<span class="string">jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true</span></span><br><span class="line"><span class="attr">db.user</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">db.password</span>=<span class="string">Nacos_Db_Passw0rd</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### 鉴权（与第二节一致，必须已配置）</span></span><br><span class="line"><span class="attr">nacos.core.auth.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">nacos.core.auth.system.type</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">nacos.core.auth.plugin.nacos.token.secret.key</span>=<span class="string">替换为你的Base64密钥</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.key</span>=<span class="string">替换为你的identityKey</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.value</span>=<span class="string">替换为你的identityValue</span></span><br></pre></td></tr></table></figure>
@@ -1580,23 +1569,14 @@ Nacos 3.x 相对 2.x 有几处常见差异，搭建前先记住：</p>
 <hr>
 <h2 id="四、集群搭建">四、集群搭建</h2>
 <p>生产推荐：<strong>≥ 3 个 Nacos 节点 + 外置 MySQL（建议高可用）+ 域名 / 内网 SLB 对外暴露主端口与客户端 gRPC</strong>。直连任意单节点 IP 也可工作，但节点故障后客户端需改配置，运维成本更高。架构说明见 <a target="_blank" rel="noopener" href="https://nacos.io/docs/v3.0/manual/admin/deployment/deployment-cluster/">集群模式部署</a>。</p>
-<p>% note warning %<br>
-集群模式下：</p>
+<div class="note warning"><p>集群模式下：</p>
 <ol>
-<li class="lvl-3">
-<p><strong>必须共享同一套外置 MySQL</strong>（嵌入式 Derby 虽可用 <code>-p embedded</code> 靠 Raft 组逻辑集群，排障成本高，官方不推荐生产）。</p>
-</li>
-<li class="lvl-3">
-<p>所有节点的 <strong>鉴权三件套必须完全一致</strong>（<code>token.secret.key</code> / <code>identity.key</code> / <code>identity.value</code>）。</p>
-</li>
-<li class="lvl-3">
-<p>节点间需放行：主端口、客户端 gRPC（+1000）、服务端 gRPC（+1001）、Raft（-1000）。</p>
-</li>
-<li class="lvl-3">
-<p>启动命令<strong>不要</strong>再带 <code>-m standalone</code>。</p>
-</li>
+<li class="lvl-3"><strong>必须共享同一套外置 MySQL</strong>（嵌入式 Derby 虽可用 <code>-p embedded</code> 靠 Raft 组逻辑集群，排障成本高，官方不推荐生产）。</li>
+<li class="lvl-3">所有节点的 <strong>鉴权三件套必须完全一致</strong>（<code>token.secret.key</code> / <code>identity.key</code> / <code>identity.value</code>）。</li>
+<li class="lvl-3">节点间需放行：主端口、客户端 gRPC（+1000）、服务端 gRPC（+1001）、Raft（-1000）。</li>
+<li class="lvl-3">启动命令<strong>不要</strong>再带 <code>-m standalone</code>。</li>
 </ol>
-<p>% endnote %</p>
+</div>
 <h3 id="1-二进制包三节点示例">1. 二进制包三节点示例</h3>
 <p>假设三台机器（或同机不同端口，演示时可改；生产请每机一进程）：</p>
 <table>
