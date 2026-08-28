@@ -77,8 +77,6 @@
   <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"OGMvTuds9s7tzvWNopJHAJ5W-gzGzoHsz","app_key":"A0HB73VDqWDODaRS4yyiW6V8","server_url":null,"security":false}</script>
-  <script src="/js/third-party/statistics/lean-analytics.js" defer></script>
 
 
   
@@ -1070,6 +1068,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -1086,15 +1086,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/05/13/jvm-tools-01/" class="leancloud_visitors" data-flag-title="JVM 之 命令行工具" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/05/13/jvm-tools-01/"
+          data-title="JVM 之 命令行工具">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -1251,6 +1318,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -1267,15 +1336,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/05/12/jvm-gc-01/" class="leancloud_visitors" data-flag-title="JVM 之 内存模型与垃圾回收机制(GC)" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/05/12/jvm-gc-01/"
+          data-title="JVM 之 内存模型与垃圾回收机制(GC)">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -1432,6 +1568,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -1448,15 +1586,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/05/08/jvm-classloader-01/" class="leancloud_visitors" data-flag-title="JVM 之 类加载器" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/05/08/jvm-classloader-01/"
+          data-title="JVM 之 类加载器">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -1617,6 +1822,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -1633,15 +1840,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/04/22/elasticsearch-06-api-aggs/" class="leancloud_visitors" data-flag-title="Elasticsearch 的 REST APIs:聚合查询" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/04/22/elasticsearch-06-api-aggs/"
+          data-title="Elasticsearch 的 REST APIs:聚合查询">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -1802,6 +2076,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -1818,15 +2094,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/04/17/elasticsearch-05-api/" class="leancloud_visitors" data-flag-title="Elasticsearch 的 REST APIs" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/04/17/elasticsearch-05-api/"
+          data-title="Elasticsearch 的 REST APIs">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -1978,6 +2321,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -1994,15 +2339,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/04/16/elasticsearch-04-cert/" class="leancloud_visitors" data-flag-title="Elasticsearch的证书过期处理方法" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/04/16/elasticsearch-04-cert/"
+          data-title="Elasticsearch的证书过期处理方法">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -2160,6 +2572,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -2176,15 +2590,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/04/07/elk-02-springboot/" class="leancloud_visitors" data-flag-title="Springboot整合Logstash实现日志采集" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/04/07/elk-02-springboot/"
+          data-title="Springboot整合Logstash实现日志采集">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -2340,6 +2821,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -2356,15 +2839,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/03/27/elk-01/" class="leancloud_visitors" data-flag-title="一文搞懂ELK" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/03/27/elk-01/"
+          data-title="一文搞懂ELK">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -2522,6 +3072,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -2538,15 +3090,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/03/25/elasticsearch-03-plugins/" class="leancloud_visitors" data-flag-title="linux下Elasticsearch插件安装" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/03/25/elasticsearch-03-plugins/"
+          data-title="linux下Elasticsearch插件安装">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
@@ -2698,6 +3317,8 @@ i.ban {
   
   
 
+  
+
   <!-- 置顶，精品 -->
   <span class="post-meta-item post-meta-badges">
       <span class="post-badge post-badge-top">
@@ -2714,15 +3335,82 @@ i.ban {
     <span class="post-meta-break"></span>
 
 </div>
-
-
-    <span id="/2025/03/24/elasticsearch-02-install-cluster/" class="leancloud_visitors" data-flag-title="linux下安装Elasticsearch集群" title="阅读次数">
-      <span class="post-meta-item-icon">
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
     </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2025/03/24/elasticsearch-02-install-cluster/"
+          data-title="linux下安装Elasticsearch集群">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-lines"></i>
