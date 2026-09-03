@@ -292,6 +292,13 @@ i.ban {
 <img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
 <img src="/images_glob/8_15.png" id="img_815" style="display: none !important;"/>
 <img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
+<img src="/images_glob/chuxi.png" id="img_cx" style="display: none !important;" />
+<img src="/images_glob/12_13.jpeg" id="img_1213" style="display: none !important;" />
+<img src="/images_glob/qixi.jpeg" id="img_qx" style="display: none !important;" />
+<img src="/images_glob/chongyang.jpg" id="img_cyj" style="display: none !important;" />
+<img src="/images_glob/7_1.jpeg" id="img_71" style="display: none !important;" />
+<img src="/images_glob/8_1.png" id="img_81" style="display: none !important;" />
+<img src="/images_glob/6_1.png" id="img_61" style="display: none !important;" />
 
 
 <img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
@@ -329,7 +336,7 @@ i.ban {
         $("#img_93").show();
     }
     // 显示918图片
-    if(month==9 && day==18){
+    else if(month==9 && day==18){
         $("#img_918").show();
     }
     // 显示9月10日教师节图片
@@ -344,6 +351,10 @@ i.ban {
     else if(month==5 && (day >= 1 && day <= 5)){
         $("#img_51").show();
     }
+    // 显示6月1日儿童节图片
+    else if(month==6 && day==1){
+        $("#img_61").show();
+    }
     // 显示清明节图片
     else if(month==4 && (day >= 4 && day <= 6)){
         $("#img_qmj").show();
@@ -352,8 +363,21 @@ i.ban {
     else if(month==1 && day==1){
         $("#img_yd").show();
     }
+    // 显示建党节图片
+    else if(month==7 && day==1){
+        $("#img_71").show();
+    }
+    // 显示建军节图片
+    else if(month==8 && day==1){
+        $("#img_81").show();
+    }
+    // 显示日本投降日图片
     else if(month==8 && day==15){
         $("#img_815").show();
+    }
+    // 显示国家公祭日图片
+    else if(month==12 && day==13){
+        $("#img_1213").show();
     }
     // 其它日期不显示任何图片
     else{
@@ -364,7 +388,11 @@ i.ban {
         $("#img_qmj").hide();
         $("#img_yd").hide();
         $("#img_51").hide();
+        $("#img_61").hide();
+        $("#img_71").hide();
+        $("#img_81").hide();
         $("#img_815").hide();
+        $("#img_1213").hide();
     }
 
     // 农历节日、纪念日
@@ -384,26 +412,43 @@ i.ban {
         success: function(data) {
             
             
+            const nlMonth = data.wnl_nl_month;
+            const nlDay = data.wnl_nl_day;
+            // 除夕：优先用万年历 holidays 字段（兼容小月廿九 / 大月三十）
+            if(data.wnl_holidays && data.wnl_holidays.indexOf("除夕") !== -1){
+                $("#img_cx").show();
+            }
             // 中秋节
-            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+            else if(nlMonth == "八月" && nlDay == "十五"){
                 $("#img_zqj").show();
             }
             // 端午节
-            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+            else if(nlMonth == "五月" && nlDay == "初五"){
                 $("#img_dwj").show();
             }
+            // 七夕
+            else if(nlMonth == "七月" && nlDay == "初七"){
+                $("#img_qx").show();
+            }
+            // 重阳节
+            else if(nlMonth == "九月" && nlDay == "初九"){
+                $("#img_cyj").show();
+            }
             // 元宵节
-            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+            else if(nlMonth == "正月" && nlDay == "十五"){
                 $("#img_yxj").show();
             }
             // 农历新年
-            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+            else if(nlMonth == "正月" && (dayMap[nlDay] >=1 && dayMap[nlDay] <=14)){
                 $("#img_new_year").show();
             }
             // 其它日期不显示任何图片
             else {
+                $("#img_cx").hide();
                 $("#img_zqj").hide();
                 $("#img_dwj").hide();
+                $("#img_qx").hide();
+                $("#img_cyj").hide();
                 $("#img_yxj").hide();
                 $("#img_new_year").hide();
             }

@@ -280,6 +280,13 @@ i.ban {
 <img src="/images_glob/9_3.png" id="img_93" style="display: none !important;">
 <img src="/images_glob/8_15.png" id="img_815" style="display: none !important;">
 <img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;">
+<img src="/images_glob/chuxi.png" id="img_cx" style="display: none !important;">
+<img src="/images_glob/12_13.jpeg" id="img_1213" style="display: none !important;">
+<img src="/images_glob/qixi.jpeg" id="img_qx" style="display: none !important;">
+<img src="/images_glob/chongyang.jpg" id="img_cyj" style="display: none !important;">
+<img src="/images_glob/7_1.jpeg" id="img_71" style="display: none !important;">
+<img src="/images_glob/8_1.png" id="img_81" style="display: none !important;">
+<img src="/images_glob/6_1.png" id="img_61" style="display: none !important;">
 
 
 <img src="/images_glob/2024.png" id="img_year" style="display: none !important;">
@@ -317,7 +324,7 @@ i.ban {
         $("#img_93").show();
     }
     // 显示918图片
-    if(month==9 && day==18){
+    else if(month==9 && day==18){
         $("#img_918").show();
     }
     // 显示9月10日教师节图片
@@ -332,6 +339,10 @@ i.ban {
     else if(month==5 && (day >= 1 && day <= 5)){
         $("#img_51").show();
     }
+    // 显示6月1日儿童节图片
+    else if(month==6 && day==1){
+        $("#img_61").show();
+    }
     // 显示清明节图片
     else if(month==4 && (day >= 4 && day <= 6)){
         $("#img_qmj").show();
@@ -340,8 +351,21 @@ i.ban {
     else if(month==1 && day==1){
         $("#img_yd").show();
     }
+    // 显示建党节图片
+    else if(month==7 && day==1){
+        $("#img_71").show();
+    }
+    // 显示建军节图片
+    else if(month==8 && day==1){
+        $("#img_81").show();
+    }
+    // 显示日本投降日图片
     else if(month==8 && day==15){
         $("#img_815").show();
+    }
+    // 显示国家公祭日图片
+    else if(month==12 && day==13){
+        $("#img_1213").show();
     }
     // 其它日期不显示任何图片
     else{
@@ -352,7 +376,11 @@ i.ban {
         $("#img_qmj").hide();
         $("#img_yd").hide();
         $("#img_51").hide();
+        $("#img_61").hide();
+        $("#img_71").hide();
+        $("#img_81").hide();
         $("#img_815").hide();
+        $("#img_1213").hide();
     }
 
     // 农历节日、纪念日
@@ -372,26 +400,43 @@ i.ban {
         success: function(data) {
             
             
+            const nlMonth = data.wnl_nl_month;
+            const nlDay = data.wnl_nl_day;
+            // 除夕：优先用万年历 holidays 字段（兼容小月廿九 / 大月三十）
+            if(data.wnl_holidays && data.wnl_holidays.indexOf("除夕") !== -1){
+                $("#img_cx").show();
+            }
             // 中秋节
-            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+            else if(nlMonth == "八月" && nlDay == "十五"){
                 $("#img_zqj").show();
             }
             // 端午节
-            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+            else if(nlMonth == "五月" && nlDay == "初五"){
                 $("#img_dwj").show();
             }
+            // 七夕
+            else if(nlMonth == "七月" && nlDay == "初七"){
+                $("#img_qx").show();
+            }
+            // 重阳节
+            else if(nlMonth == "九月" && nlDay == "初九"){
+                $("#img_cyj").show();
+            }
             // 元宵节
-            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+            else if(nlMonth == "正月" && nlDay == "十五"){
                 $("#img_yxj").show();
             }
             // 农历新年
-            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+            else if(nlMonth == "正月" && (dayMap[nlDay] >=1 && dayMap[nlDay] <=14)){
                 $("#img_new_year").show();
             }
             // 其它日期不显示任何图片
             else {
+                $("#img_cx").hide();
                 $("#img_zqj").hide();
                 $("#img_dwj").hide();
+                $("#img_qx").hide();
+                $("#img_cyj").hide();
                 $("#img_yxj").hide();
                 $("#img_new_year").hide();
             }
@@ -1351,7 +1396,7 @@ i.ban {
                 type: 'pie',
                 radius: '75%',
                 color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
-                data: [{"name":"技术","value":293},{"name":"linux","value":44},{"name":"springboot2","value":11},{"name":"aws","value":20},{"name":"linux常用命令","value":34},{"name":"Java","value":20},{"name":"eks","value":19},{"name":"s3","value":1},{"name":"macos","value":2},{"name":"学习","value":5},{"name":"Ansible","value":3},{"name":"docker","value":16},{"name":"elastic","value":8},{"name":"springboot","value":17},{"name":"随笔","value":4},{"name":"java","value":13},{"name":"语文","value":1},{"name":"jvm","value":3},{"name":"k8s","value":25},{"name":"kafka","value":7},{"name":"elasticsearch","value":6},{"name":"kibana","value":2},{"name":"logstash","value":1},{"name":"英语","value":4},{"name":"nfs","value":1},{"name":"zabbix","value":1},{"name":"Hexo","value":2},{"name":"maven","value":5},{"name":"macos","value":1},{"name":"java多线程","value":13},{"name":"mongodb","value":8},{"name":"mac","value":1},{"name":"小学","value":1},{"name":"工具","value":2},{"name":"mysql","value":26},{"name":"npm","value":2},{"name":"rabbitmq","value":5},{"name":"redis","value":45},{"name":"分布式","value":7},{"name":"rocketmq","value":9},{"name":"Docker","value":1},{"name":"微服务","value":2},{"name":"r2dbc","value":1},{"name":"logstash","value":1},{"name":"springsecurity","value":1},{"name":"音标","value":2},{"name":"自然拼读","value":1},{"name":"句法","value":1},{"name":"mvnd","value":1},{"name":"nexus","value":1},{"name":"mongodb","value":1},{"name":"mybase","value":2},{"name":"nodejs","value":2},{"name":"分布式","value":5},{"name":"分布式","value":9},{"name":"spring-cloud-alibaba","value":2},{"name":"sharding-sphere","value":4},{"name":"UTC","value":1},{"name":"vibecoding","value":1},{"name":"zookeeper","value":1},{"name":"分布式","value":1}],
+                data: [{"name":"技术","value":293},{"name":"linux","value":44},{"name":"aws","value":20},{"name":"springboot2","value":11},{"name":"linux常用命令","value":34},{"name":"eks","value":19},{"name":"Java","value":20},{"name":"s3","value":1},{"name":"macos","value":2},{"name":"学习","value":5},{"name":"docker","value":16},{"name":"Ansible","value":3},{"name":"elastic","value":8},{"name":"springboot","value":17},{"name":"随笔","value":4},{"name":"java","value":13},{"name":"语文","value":1},{"name":"k8s","value":25},{"name":"jvm","value":3},{"name":"kafka","value":7},{"name":"elasticsearch","value":6},{"name":"kibana","value":2},{"name":"logstash","value":1},{"name":"英语","value":4},{"name":"zabbix","value":1},{"name":"java多线程","value":13},{"name":"nfs","value":1},{"name":"macos","value":1},{"name":"maven","value":5},{"name":"Hexo","value":2},{"name":"mongodb","value":8},{"name":"mac","value":1},{"name":"小学","value":1},{"name":"工具","value":2},{"name":"mysql","value":26},{"name":"npm","value":2},{"name":"rabbitmq","value":5},{"name":"redis","value":45},{"name":"分布式","value":7},{"name":"rocketmq","value":9},{"name":"音标","value":2},{"name":"logstash","value":1},{"name":"Docker","value":1},{"name":"r2dbc","value":1},{"name":"自然拼读","value":1},{"name":"微服务","value":2},{"name":"句法","value":1},{"name":"springsecurity","value":1},{"name":"mvnd","value":1},{"name":"sharding-sphere","value":4},{"name":"nexus","value":1},{"name":"UTC","value":1},{"name":"vibecoding","value":1},{"name":"mongodb","value":1},{"name":"mybase","value":2},{"name":"nodejs","value":2},{"name":"分布式","value":5},{"name":"分布式","value":9},{"name":"spring-cloud-alibaba","value":2},{"name":"zookeeper","value":1},{"name":"分布式","value":1}],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -1387,7 +1432,7 @@ i.ban {
                     color: color
                 }
             },
-            indicator: [{"name":"技术","max":294},{"name":"linux","max":294},{"name":"springboot2","max":294},{"name":"aws","max":294},{"name":"linux常用命令","max":294},{"name":"Java","max":294},{"name":"eks","max":294},{"name":"s3","max":294},{"name":"macos","max":294},{"name":"学习","max":294},{"name":"Ansible","max":294},{"name":"docker","max":294},{"name":"elastic","max":294},{"name":"springboot","max":294},{"name":"随笔","max":294},{"name":"java","max":294},{"name":"语文","max":294},{"name":"jvm","max":294},{"name":"k8s","max":294},{"name":"kafka","max":294},{"name":"elasticsearch","max":294},{"name":"kibana","max":294},{"name":"logstash","max":294},{"name":"英语","max":294},{"name":"nfs","max":294},{"name":"zabbix","max":294},{"name":"Hexo","max":294},{"name":"maven","max":294},{"name":"macos","max":294},{"name":"java多线程","max":294},{"name":"mongodb","max":294},{"name":"mac","max":294},{"name":"小学","max":294},{"name":"工具","max":294},{"name":"mysql","max":294},{"name":"npm","max":294},{"name":"rabbitmq","max":294},{"name":"redis","max":294},{"name":"分布式","max":294},{"name":"rocketmq","max":294},{"name":"Docker","max":294},{"name":"微服务","max":294},{"name":"r2dbc","max":294},{"name":"logstash","max":294},{"name":"springsecurity","max":294},{"name":"音标","max":294},{"name":"自然拼读","max":294},{"name":"句法","max":294},{"name":"mvnd","max":294},{"name":"nexus","max":294},{"name":"mongodb","max":294},{"name":"mybase","max":294},{"name":"nodejs","max":294},{"name":"分布式","max":294},{"name":"分布式","max":294},{"name":"spring-cloud-alibaba","max":294},{"name":"sharding-sphere","max":294},{"name":"UTC","max":294},{"name":"vibecoding","max":294},{"name":"zookeeper","max":294},{"name":"分布式","max":294}],
+            indicator: [{"name":"技术","max":294},{"name":"linux","max":294},{"name":"aws","max":294},{"name":"springboot2","max":294},{"name":"linux常用命令","max":294},{"name":"eks","max":294},{"name":"Java","max":294},{"name":"s3","max":294},{"name":"macos","max":294},{"name":"学习","max":294},{"name":"docker","max":294},{"name":"Ansible","max":294},{"name":"elastic","max":294},{"name":"springboot","max":294},{"name":"随笔","max":294},{"name":"java","max":294},{"name":"语文","max":294},{"name":"k8s","max":294},{"name":"jvm","max":294},{"name":"kafka","max":294},{"name":"elasticsearch","max":294},{"name":"kibana","max":294},{"name":"logstash","max":294},{"name":"英语","max":294},{"name":"zabbix","max":294},{"name":"java多线程","max":294},{"name":"nfs","max":294},{"name":"macos","max":294},{"name":"maven","max":294},{"name":"Hexo","max":294},{"name":"mongodb","max":294},{"name":"mac","max":294},{"name":"小学","max":294},{"name":"工具","max":294},{"name":"mysql","max":294},{"name":"npm","max":294},{"name":"rabbitmq","max":294},{"name":"redis","max":294},{"name":"分布式","max":294},{"name":"rocketmq","max":294},{"name":"音标","max":294},{"name":"logstash","max":294},{"name":"Docker","max":294},{"name":"r2dbc","max":294},{"name":"自然拼读","max":294},{"name":"微服务","max":294},{"name":"句法","max":294},{"name":"springsecurity","max":294},{"name":"mvnd","max":294},{"name":"sharding-sphere","max":294},{"name":"nexus","max":294},{"name":"UTC","max":294},{"name":"vibecoding","max":294},{"name":"mongodb","max":294},{"name":"mybase","max":294},{"name":"nodejs","max":294},{"name":"分布式","max":294},{"name":"分布式","max":294},{"name":"spring-cloud-alibaba","max":294},{"name":"zookeeper","max":294},{"name":"分布式","max":294}],
             nameGap: 5,
             center: ['50%','55%'],
             radius: '75%',
@@ -1399,7 +1444,7 @@ i.ban {
             itemStyle: {normal: {areaStyle: {type: 'default'}}},
             data : [
                 {
-                    value : [293,44,11,20,34,20,19,1,2,5,3,16,8,17,4,13,1,3,25,7,6,2,1,4,1,1,2,5,1,13,8,1,1,2,26,2,5,45,7,9,1,2,1,1,1,2,1,1,1,1,1,2,2,5,9,2,4,1,1,1,1],
+                    value : [293,44,20,11,34,19,20,1,2,5,16,3,8,17,4,13,1,25,3,7,6,2,1,4,1,13,1,1,5,2,8,1,1,2,26,2,5,45,7,9,2,1,1,1,1,2,1,1,1,4,1,1,1,1,2,2,5,9,2,1,1],
                     // name : 'Categories:'
                     name: '✒️文章篇数'
                 }

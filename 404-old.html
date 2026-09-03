@@ -286,6 +286,13 @@ i.ban {
 <img src="/images_glob/9_3.png" id="img_93" style="display: none !important;"/>
 <img src="/images_glob/8_15.png" id="img_815" style="display: none !important;"/>
 <img src="/images_glob/new_year.png" id="img_new_year" style="display: none !important;" />
+<img src="/images_glob/chuxi.png" id="img_cx" style="display: none !important;" />
+<img src="/images_glob/12_13.jpeg" id="img_1213" style="display: none !important;" />
+<img src="/images_glob/qixi.jpeg" id="img_qx" style="display: none !important;" />
+<img src="/images_glob/chongyang.jpg" id="img_cyj" style="display: none !important;" />
+<img src="/images_glob/7_1.jpeg" id="img_71" style="display: none !important;" />
+<img src="/images_glob/8_1.png" id="img_81" style="display: none !important;" />
+<img src="/images_glob/6_1.png" id="img_61" style="display: none !important;" />
 
 
 <img src="/images_glob/2024.png" id="img_year" style="display: none !important;" />
@@ -323,7 +330,7 @@ i.ban {
         $("#img_93").show();
     }
     // 显示918图片
-    if(month==9 && day==18){
+    else if(month==9 && day==18){
         $("#img_918").show();
     }
     // 显示9月10日教师节图片
@@ -338,6 +345,10 @@ i.ban {
     else if(month==5 && (day >= 1 && day <= 5)){
         $("#img_51").show();
     }
+    // 显示6月1日儿童节图片
+    else if(month==6 && day==1){
+        $("#img_61").show();
+    }
     // 显示清明节图片
     else if(month==4 && (day >= 4 && day <= 6)){
         $("#img_qmj").show();
@@ -346,8 +357,21 @@ i.ban {
     else if(month==1 && day==1){
         $("#img_yd").show();
     }
+    // 显示建党节图片
+    else if(month==7 && day==1){
+        $("#img_71").show();
+    }
+    // 显示建军节图片
+    else if(month==8 && day==1){
+        $("#img_81").show();
+    }
+    // 显示日本投降日图片
     else if(month==8 && day==15){
         $("#img_815").show();
+    }
+    // 显示国家公祭日图片
+    else if(month==12 && day==13){
+        $("#img_1213").show();
     }
     // 其它日期不显示任何图片
     else{
@@ -358,7 +382,11 @@ i.ban {
         $("#img_qmj").hide();
         $("#img_yd").hide();
         $("#img_51").hide();
+        $("#img_61").hide();
+        $("#img_71").hide();
+        $("#img_81").hide();
         $("#img_815").hide();
+        $("#img_1213").hide();
     }
 
     // 农历节日、纪念日
@@ -378,26 +406,43 @@ i.ban {
         success: function(data) {
             
             
+            const nlMonth = data.wnl_nl_month;
+            const nlDay = data.wnl_nl_day;
+            // 除夕：优先用万年历 holidays 字段（兼容小月廿九 / 大月三十）
+            if(data.wnl_holidays && data.wnl_holidays.indexOf("除夕") !== -1){
+                $("#img_cx").show();
+            }
             // 中秋节
-            if(data.wnl_nl_month == "八月" && data.wnl_nl_day == "十五"){
+            else if(nlMonth == "八月" && nlDay == "十五"){
                 $("#img_zqj").show();
             }
             // 端午节
-            else if(data.wnl_nl_month == "五月" && data.wnl_nl_day == "初五"){
+            else if(nlMonth == "五月" && nlDay == "初五"){
                 $("#img_dwj").show();
             }
+            // 七夕
+            else if(nlMonth == "七月" && nlDay == "初七"){
+                $("#img_qx").show();
+            }
+            // 重阳节
+            else if(nlMonth == "九月" && nlDay == "初九"){
+                $("#img_cyj").show();
+            }
             // 元宵节
-            else if(data.wnl_nl_month == "正月" && data.wnl_nl_day == "十五"){
+            else if(nlMonth == "正月" && nlDay == "十五"){
                 $("#img_yxj").show();
             }
             // 农历新年
-            else if(data.wnl_nl_month == "正月" && (dayMap[data.wnl_nl_day] >=1 && dayMap[data.wnl_nl_day] <=14)){
+            else if(nlMonth == "正月" && (dayMap[nlDay] >=1 && dayMap[nlDay] <=14)){
                 $("#img_new_year").show();
             }
             // 其它日期不显示任何图片
             else {
+                $("#img_cx").hide();
                 $("#img_zqj").hide();
                 $("#img_dwj").hide();
+                $("#img_qx").hide();
+                $("#img_cyj").hide();
                 $("#img_yxj").hide();
                 $("#img_new_year").hide();
             }
@@ -1035,12 +1080,12 @@ i.ban {
      data-hbe-format="4"
      data-wpm="Oh, this is an invalid password. Check and try again, please."
      data-whm="Oh, this is an invalid password. Check and try again, please."
-     data-salt="801b441458f4f0292c0c9cc8e4b8c0a87ce55e43edfdc696ee0084e71aca7cdc"
-     data-nonce="5a59c3da32c049bc5752f7be"
+     data-salt="f0207a881a2d685546d43035c72dc7acc15c80353d7aaa59c025f37fb80d50c3"
+     data-nonce="e821be6679b38cb7341a24ac"
      data-kdf-iterations="600000"
      data-auto-save="false">
   <script id="hbeData" type="hbeData">
-    ce1c077de806c2f9614a762176ed1c6515b00cb7ffaa3369c7095377da3a0ace12d9004a4657b37e3a7df552b449981440a3651248ff3177fc5fe4b47a73162244e722313be021506bfbc2d53ef1f8a245cb89b8df2234cfee5ffc2593179083c76d757e33da86f50b6a4b07018015c6378a2aa4b1aa40d7c78348a2e85a1277c611f3619edc0315cf0f6346895c623815de28731292085efbe612c0fa0a17694ed92043b581adb61c476a703a98e44acbe74acd74d4ab000c8c1d14ddcc68a16f8726d05269ed47e5da9ca4ceba8bb0202fd1903c58506e1105a7d37dc4c99e2d0d6ef5c7f0aeb9786b00cca10c2f0f331803d84bc1de38bc4b03d266fc62e9908fa716945b5b62424f29fd82a85fd800d4da8c4cb4a81041fbc96e747e7537d20addffa2199cb6c29ace16c8baf56355a46cf8528d640725f623cfa6596ef7c95ef1a5d575795bbb5e56d04d4d94137d0f452c36b2b3380f1f96e3cb941634cc461785daf6c9a75d97dee10977025239d26a7ad09ac09a86acd9964f2a9870a6f201f1ebcf5046fdb57808423197cc1d8bcae49c7003f143255a6cf67bec4c44409f6e2e9a8dfd3cbee8f9c9a617c14903c281bd7e3cae7a051b65544f6bdd77795a45871741b63848fe0d1c705959ce9b6c099e85eaefc5d96be925d359821ecb4936ef7d506dbaa982cfca147c605b6912e8997f2333ba56eb4326270686bd16226f809d3595fb7cd30535309c811143cbc8155cbb46b7219731a44deebaf2f44ebfd351d73098a97e03e8ef2ea73da7f15b41ab87089f1b4cf84a6fe21f5b41a174b475d9cc495ebfe3a81ebebe482f9e00b17306106826b684db25d71a5a47d1819d6439f6427ce27b5ea09c8f618a6cd8865747430b0bc3eacb851d4799edc04054ea8d08043586e743e8635eafe8673a914526c485f7995cba71389a3dd2cf0e47082abb9a9cbea88b7c82d4c80ae1666230dec5516d0ef958b7ab02c75490abbd649d40c86e8dff9a6522244353f6a90252af4b28b68a70475d164ccd8170fdbba6034552577e03a2b6089cfc782bbb1d2fa7f9359661f6322226dbcebdb25f0aa7f7d6b568cdd491d65187814d22226a36856a4d6725b6b808a0fc46d77df2ebf829eca088990e11c1c29d2548e43a5483bfbef280831012a7e9d8ba4d3a6b2769e0b3471f152f5b456acc6da9b4104d7efed27ad323c031a48a7d9df4ce46d3c87713224f923414e9cc6be5c39c8242682cb6a443ab7a197b7b18f55e2fee718f0a8109d82c6ba2864ec8c738375cc92fb24a0fec8f069d9be0c221c8adaea070d58f9f3cee9314baa6ab8a1bbe3f38ad1633149fff6655272cc006883fdd38e6cd0374faccad5d7d9233703f71b78b92cccb5be2c1df4b87d37fea5976c4e436c77621ac51d54ab7f556e98d4910a42fe9f621a0d00c3cab72b8c8641977cc44ff0f967829cea66b91c84032706db620728fe7f073638d8882646756530414b860cb5e1dd398648b6710332269b5ed0fd4af6549a76ae08ecfe226bf95d0642daa181696d7444d26b8ad98b38e3b5e84c0900a7529db6337a70e12c8f671c0c90049299238608fdffcb4cdc20dad27c8ccb3db1360b3e734ac42c35ab8e404dc04b4057ea3f9aa3d29f420278cbef55de869bd4d55493b9bfb7661e7e3ed7d70e035a4cceac266772360db6820e561a4953d8f9b56c98e1339c1b5f2de24aab7ae61bb69bd2f95c53a2aac8face72ffd6e5dbc03b9d7b2e160bec3be1e86054730ba4843e9727024ac95afa04c34c958d754d5d021042fe9f3d193392d8798b48f06c1c4dd1fe2f3e18876443dd61e8cd5ed94895882fbfbdcdfd354a372d1fac4f38cf7818ceb219a14faeb18ea20312529318775f06069baffa46ae146e46a5ee6df80e4075d4b4d8da8731151308aa301663dd022b27fcf7b70ecaf319c598fd8f94d8333bcd6815acdf27059efe0701d69b190b4928ddcd4a9bc82ce813b08036d35506545731af3f50fad9ef1a7824fa0f14a72e514def187c255950d00c87cc5c14d715fa3fa9412bf744e27dcbf8e3ab9abc8dcd17942d397fe8e47e86a12dc8c658509ec0c8fec9b250b713ffd73d08e06b5e2dc5b8dec6ac3146b0d2e29c6f7d8165f9a1eacecf2190ac9e76fbf7155a76247c858bfe1a6f149ef161690b53b6c67b6957365a756cafe80591759c5fa5ab4def4af973f5b8af237974ca9924e6d95b0e14eaea2318b27f9f70fc02763bc800261fe05cb472a5e86f1a39b424ef361e6ae9f97fd6d96bc2ac94d7d6e5fa038311be0ebbe933c587860f82b94c4aa8a9f51c0d4dab819eadc774375d148bd460cfe0c9d231bb91c441af0c3b93f93c919f1fa5d70eb01a64638827f7cbc5e90334d6f2fd6ca61bf6d4c86fd9cc15d8d42851243ecdb139fa4fb327321f813bf40107b65e1ff16902921f577fb171755f56dcfb909b983d87170ea146d523c01a56f1b7df928f8f3294dfd85fae2d7626c0e1d574e8aa196d3efa2fb40dd050e4a4eaf83108821a2caa7729ca921a8a5b30a8c1d625efb8ddc569023d7057c2ef15678b0c66a1f252c1fb64112ab382554d3cbd039e563a347abb7fa5669fe1b7b005c38387419c9180a6f529c483fc3231e2659697885f676c85f9e7d77c606bbc14220b36f00c4619f60003a89233226a041021dad5fa5059a06445d1b51887ddd68a05e5df4377049027ef0e0718cf1a6aa29c78d238c8c04638a74d86870cb62307dd4f3685d62672a9a1c7a78716045a889571367347f7a36293d5110f26fff3caa495d7f3eb79fef2e7540a209965aed3cc4c3f91005261b7a40be5ed2d04a699e02ba08b20a406aa3827b1f7e972df2cde9ff1928354ff0917058d0a2830e0000936bf8c0147f6ba37dba1b2e54f2ef020a402f76a45cc66d03ab21def2e8d97e75d18617518dec6baa8e916116eb11fa2912cb042ae98dee6d28568bc8deb10f4bf486a30e3bf67326fb963e2d2e969550bf89ab8e4e61cd3321c3165ea584df70da7b1c1733ad986ef64127e5bbe8fd1dac634d0eaf2a8748f7337cd266e493da80e9d210a81b8632fa4edb7bbd05ff972fd3cbcc045d183cbdd5788ccbbce7c8aec0812d0bd75f5780300c204280
+    d82af0c39ecb0543f114a0a87d064bbad5291dc4589ddc6e0c48f7c43004e455302cb8faac8aff0f5eccc72040ccb76f48c86e6f32a07058fb26b6c3c143e0eba2152f7d1e2152734faf2f6b0f3622dc524c4edfea5669a19988e64178f739c20b3720d45794373eee7bb1edca4e890c429fab65671e677108bb30575bce418d240a88b807de5cfcd9c46dd518688d6a0cb81b64ea7c02db6c5ccecd63924b7eb008aeccb9bec03f3854da0eec5a52e59368296def92d9746d6ef142e179e9d518130d5e5a49271cb6d7e5edbdfc8ecb05bf43e3927f9214eee6b7ab42bf5cd4400a86063d5bd39d9433ef58b3414bd52d76f27757b618d2e144fdce5eb93a1367d9af738160e523dc9496de0285862c8d8ffc385c7ba64c3e671c8e279ead9fb7532ab5ea5d4db2ad9518a8bf196fe3c7ba50a40953374db0fcff81cbe758aeae7da16fe09e48c67bfc3281c716d5cb48874816e8a1e96d6294e7bc72df768a62e91d8c779f4fe447382a166c85abaecd22f9733ae9c4ce9f6086803bfc964545154c2e46d4ba5350723cec61784cd2aa69ed3d570525e55f6f9bb3032f1ba01c7fac283623808036c9efa48d9486e46ee9f4068c76d3d5202e6c8d50c34d8b8c6e8c7ebacb3d8ed3191b4ec5790578a3fdb971d2d390c05b4033f6a272ed8fe25b53245da6d5652d618df676e0e787eaa6a20bcff0f6de8d94bcd0137a91838a6ad20dc6b5d8037c782bcfeb036aff0967e04c8fddee58f5a4a4021600bf82c181264353c6078ba82fa4ba0dbe23d7bb1f4286077b0f3b990485489472bef682277068e8f42e7a90390f5ec162b8d84c39c697c33961bea7e95255f94e6d1bee9ee9bcb533923126605b904b02a06f29e38d3c0cec94d4d4248cf6658b1bb10ec35c2c7bb0e34f97a2323c4eeba43637f31793675de53287663821c87ca421f9fa35bb5d7efee3f6e84c007fa3d5813cecf891d1992d45a8341acd08bbdb2416069a7053bf8c2f8854934b9b21d12ecb0a5119d6e532391db9b879bb991e3beb11e05c8070e8b7bb604c4fc09592073d059fe72806085cb35e34ba8ac171b0828127bb951bdc4dc9869d0aa86a4c4fe3f3aed227b300f21b3afaee6ee388225f8727fdecae30c87567d782b9cfc448bd0f58ced09069ebd38063a19497d72e22ad3424f4ad82bb04d116d2fe1d5fa81851cbb5fb08044637644d912bab59bf8feeccce915be40424552c8c8f933da041788b2529598123ab2607b23d6ad8a5b17272b0ffc8d450c5c249fc622693b78de797f968680dee91e07e1916ab3cc5c238df3b2c4a3380d5f27e4a478ab9314a780d4329367fd207a4f0b76f7e6a9e50abd58b83c0078f5af1a9f4960a01a04a0632c44ea03e80429161f11ed88579628276715c873ceceb8e68b99be4cfb88cf087747f9ba7e8bb04bac3a6e1acbe5f1f828ce77235b555b4113be10f3b10a5f4b789854c3e5ef4264b3d7985dc210c26231f8af62857a837cee5b47fd878374199421d04008e61cf12627f0e69d5baa58e7da631dd349a5b5f4647dce097c4b10bd4b19d0c90ccea1fff805cde83be8c080cafe94b9363ce48570323798dd7c5e776098aeeb8049ff878126c1153a7e01ace2ff69a009b7bc63861c9837462848d1a68ee48b119dde8e35d0ba1d41452974cc4f70521eab00a1ef0f5fbead4d3a66a090e1eb212a1f88463b6a617057c03182f2900cd17d444b80929ceb650fe66f0d97b79d57fbef90baa339a3c46378588a2360e3ba55abe430043f0c342a9c74416ce0de6042607a70317e5f33660d661979ba2fdbb06e263010fd2dfabb63801c4cbbd43bbfe584b332316658b94844a8a4da079cc72fab353d804e78d386063b751d1055df9072426f685adc3806072f733d3990023f1a671d784edad2cf2e1bbf23b5e0f2e5f95279bc7a9316732cd6f8ff16db0b9f080bbede5cef24209453aeeacc43e626aa26a388cb49e1abdbae58a6c1d6940c7575e9074a3219a2975a097a73546b94dfe4c94682d1114d20ae060119886f92fb9dc0ce4b28018c1db5ea9672c37388b40cc796745fe1a2a1a582f7aa2b5bebe1bf0e2885ab401e10ea29418aea36b78f92eb2e56a73db1abde00c7d0e879a8ee1f66754795fc242c454caff9612af728fd2af7cba6458c5b33c44f78b2389a5398e3c54aadf7a3fc86d0a4cfba3307524a5e59ed348b3ad2a08f1a706899329f1b844993fd9568c59e8afbe2f758d11a1e84cde5fad27bef258bbf1e8874f44ad8a2f4d161cf5530d7b3bb79d7852f85f71ed58fdaeec8af6b2dc68bac6ad303369801bd063201defb79e59ff37cfc5448d7c9eecabe2a34486179fe5960857fbe959dc0c8465da8b48c098710f04c82ae0b4fdc1c4f7d7511e7d4f8153291be5bed91adebc467a0f023def21757768c436e4d5e93f792445a9c659c8070d32c42221ae51290af03bd2fd45dedfe8ace4cf19aab99cabf99500ef98dae3f77c6ccc41b50521e0e8cd592a6b4320b39def9c604dae273df72349855f08b29377de4cc75f549087677ec108d80b3b2c84cea080da4adcc3aa6f6cc22d2a1822ecb0cf2c81887be372efcd25e72e4b3979bfb2c87318503f47708b865c9c48c12c48e7cbf8d2d311fbc74c7f98257b5a89f6bb4a96e7b7db980ca602e52f441ff046f09a9a425be2eac855c3e8828f84624f1074cefbafd3fa876a55956f4b1fcf502c07c61694887689c4287e28f72651dd527c5cce90c296312adc2836185dd6aceb709044fdbf235cc82ca3f4b7d0e1b4747b8f176836f36fdb8f30c376154e0ba337b881324dc4ea8bc27b3da011b5a20fe3719aa0a24a0a3786ed963a12d45756ceaa741b9545b917361e463c8d3dd9251bdb30ed67b9dde25004cacf07e829d51f3b7daa81cba9d6e9ccc60451e65310d32c9ace2dfc753e1c5b5676af1ca64c1807db20993139f5ea3ffbf51dcae8bb118f8edc8b7d337fb3c8c8189b9681151a1f0858f72f6f0ce16d9793fab75e9c6628bd37403792b2c04940dc3302676fc9044e0f0186a8ecc2de319772e87fff1294d9fdc2f98885e14a9ae40c8d71394c92d725a1458dda8a744e69a4c3f951f296f88f9414e4b57ed8d68d150f42853591
   </script>
   <div class="hbe hbe-content">
     <form id="hbeForm" class="hbe hbe-form" onsubmit="return false">
