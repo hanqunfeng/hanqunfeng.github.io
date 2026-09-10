@@ -977,7 +977,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">304</span>
+          <span class="site-state-item-count">305</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1054,6 +1054,247 @@ i.ban {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/09/10/linux-command17-ldd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/10/linux-command17-ldd/" class="post-title-link" itemprop="url">Linux常用命令--ldd</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-10 10:10:05 / 修改时间：17:23:44" itemprop="dateCreated datePublished" datetime="2026-09-10T10:10:05+08:00">2026-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" itemprop="url" rel="index"><span itemprop="name">linux常用命令</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/09/10/linux-command17-ldd/"
+          data-title="Linux常用命令--ldd">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+    20| ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍 <code>ldd</code> 命令的使用方法，以及动态链接库依赖的排查思路。</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/09/10/linux-command17-ldd/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -3128,214 +3369,6 @@ if (!window.__postViewReady) {
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/11/github-action/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/11/github-action/" class="post-title-link" itemprop="url">GitHub Actions Workflow 详细指南</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-07-11 21:30:05" itemprop="dateCreated datePublished" datetime="2026-07-11T21:30:05+08:00">2026-07-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-07-13 12:25:15" itemprop="dateModified" datetime="2026-07-13T12:25:15+08:00">2026-07-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/07/11/github-action/"
-          data-title="GitHub Actions Workflow 详细指南">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>8.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>30 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>本文面向第一次接触 GitHub Actions 的开发者，从基本概念、YAML 语法和变量表达式开始，逐步介绍 CI、测试矩阵、缓存、构建产物、发布、OIDC、安全和排错。</p>
-<blockquote>
-<p>文档中的示例需要放在仓库的 <code>.github/workflows/</code> 目录中，例如 <code>.github/workflows/ci.yml</code>。<br>
-GitHub Actions 会执行代码和第三方 Action，复制示例前应根据项目实际情况调整权限、Node.js 版本和命令。</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/07/11/github-action/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -3362,14 +3395,14 @@ GitHub Actions 会执行代码和第三方 Action，复制示例前应根据项�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">864k</span>
+    <span title="站点总字数">868k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">52:22</span>
+    <span title="站点阅读时长">52:36</span>
   </span>
 </div>
 <div class="busuanzi-count">
