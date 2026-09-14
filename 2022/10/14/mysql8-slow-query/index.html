@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   MySql知识点介绍: 慢查询   本文基于mysql-8.0.30，https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;8.0&#x2F;en&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-14T13:40:05.000Z">
-<meta property="article:modified_time" content="2024-05-07T08:11:48.183Z">
+<meta property="article:modified_time" content="2026-09-14T08:16:39.290Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -965,7 +965,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="nav-number">2.</span> <span class="nav-text">慢查询</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">常见面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="nav-number">3.</span> <span class="nav-text">慢查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%85%A2SQL%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5"><span class="nav-number">4.</span> <span class="nav-text">慢SQL如何排查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8A%8A%E6%85%A2SQL%E6%89%BE%E5%87%BA%E6%9D%A5"><span class="nav-number">4.1.</span> <span class="nav-text">1. 把慢SQL找出来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%85%88%E7%9C%8B%E6%95%B0%E5%AD%97%EF%BC%8C%E5%88%A4%E6%96%AD%E6%85%A2%E5%9C%A8%E5%93%AA"><span class="nav-number">4.2.</span> <span class="nav-text">2. 先看数字，判断慢在哪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-EXPLAIN-%E7%9C%8B%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%8E%E4%B9%88%E8%B5%B0"><span class="nav-number">4.3.</span> <span class="nav-text">3. EXPLAIN 看优化器怎么走</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AF%B9%E7%97%87%E6%94%B9"><span class="nav-number">4.4.</span> <span class="nav-text">4. 对症改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81"><span class="nav-number">4.5.</span> <span class="nav-text">5. 回归验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%85%A2SQL%E9%97%AE%E9%A2%98%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%EF%BC%9F"><span class="nav-number">4.6.</span> <span class="nav-text">慢SQL问题如何排查？</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1058,10 +1058,17 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-table-info/" rel="bookmark">
+      <a class="popular-posts-link" href="/2022/09/26/mysql8-explain/" rel="bookmark">
         <time class="popular-posts-time">2022-09-26</time>
         <br>
-      MySql--表信息相关
+      MySql执行计划
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/10/14/mysql8-innodb-buffer-pool/" rel="bookmark">
+        <time class="popular-posts-time">2022-10-14</time>
+        <br>
+      MySql--InnoDB Buffer Pool
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1072,24 +1079,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-user/" rel="bookmark">
+      <a class="popular-posts-link" href="/2022/09/26/mysql8-process/" rel="bookmark">
         <time class="popular-posts-time">2022-09-26</time>
         <br>
-      MySql--用户管理
+      MySql--线程管理
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-variables/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-26</time>
+      <a class="popular-posts-link" href="/2022/10/14/mysql8-lock/" rel="bookmark">
+        <time class="popular-posts-time">2022-10-14</time>
         <br>
-      MySql--系统变量
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-only_full_group_by/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-26</time>
-        <br>
-      MySql--ONLY_FULL_GROUP_BY
+      MySql--锁
       </a>
     </li>
   </ul>
@@ -1148,7 +1148,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-07 16:11:48" itemprop="dateModified" datetime="2024-05-07T16:11:48+08:00">2024-05-07</time>
+      <time title="修改时间：2026-09-14 16:16:39" itemprop="dateModified" datetime="2026-09-14T16:16:39+08:00">2026-09-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1268,14 +1268,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>689</span>
+      <span>2.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
+      <span>8 分钟</span>
     </span>
 
         </div>
@@ -1311,6 +1311,12 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <span id="more"></span>
+<h2 id="常见面试题">常见面试题</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.<a href="#how-to-debug-slow-sql">慢SQL问题如何排查？</a></p>
+</li>
+</ul>
 <h2 id="慢查询">慢查询</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1334,6 +1340,148 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysqldumpslow <span class="operator">-</span>s r <span class="operator">-</span>t <span class="number">10</span> <span class="operator">/</span>usr<span class="operator">/</span><span class="keyword">local</span><span class="operator">/</span>soft<span class="operator">/</span>mysql8<span class="operator">/</span>datas<span class="operator">/</span>mysql<span class="operator">/</span>ip<span class="number">-10</span><span class="number">-250</span><span class="number">-0</span><span class="number">-214</span><span class="operator">-</span>slow.log</span><br><span class="line"></span><br><span class="line"># 参数说明：</span><br><span class="line"><span class="operator">-</span>s 对结果进行排序，怎么排，根据后面所带的 (c,t,l,r,<span class="keyword">at</span>,al,ar)，缺省为<span class="keyword">at</span></span><br><span class="line">  c:总次数 t:总时间 l:锁的时间 r:获得的结果行数</span><br><span class="line">  <span class="keyword">at</span>,al,ar :指t,l,r平均数 【例如：<span class="keyword">at</span> <span class="operator">=</span> 总时间<span class="operator">/</span>总次数】</span><br><span class="line"><span class="operator">-</span>t NUM just <span class="keyword">show</span> the top n queries：仅显示前n条查询</span><br><span class="line"><span class="operator">-</span>g <span class="keyword">PATTERN</span> grep: <span class="keyword">only</span> consider stmts that include this string：通过grep来筛选语句。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>SET GLOBAL slow_query_log=1</code> 只对当前运行实例生效，重启后丢失，线上应写进 <a href="/2022/09/14/mysql8-config/" title="MySql单节点、主从、双主的构建方法">MySql单节点、主从、双主的构建方法</a>。<code>SET GLOBAL long_query_time</code> 只影响之后新建的连接，当前会话还要再 <code>SET SESSION long_query_time=...</code>。默认 10 秒太宽，生产常见是 1~2 秒；<code>log_queries_not_using_indexes</code> 容易把日志打爆，一般保持关闭，用下面的 <code>performance_schema</code> 来抓全表扫描。</p>
+</blockquote>
+<p><a id="how-to-debug-slow-sql"></a></p>
+<h2 id="慢SQL如何排查">慢SQL如何排查</h2>
+<p>排查就五步：<code>把慢SQL找出来</code> → <code>看数字判断慢在哪</code> → <code>EXPLAIN 看怎么走</code> → <code>对症改</code> → <code>回归验证</code>。不要一上来就加索引，先分清是 SQL 本身慢、锁等待、还是机器 IO/CPU 已经打满。</p>
+<h3 id="1-把慢SQL找出来">1. 把慢SQL找出来</h3>
+<p>正在发生的、已经发生的、没开慢日志的，三条路。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>正在卡住：看当前线程，做法见 <a href="/2022/09/26/mysql8-process/" title="MySql--线程管理">MySql--线程管理</a></p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">FULL</span> PROCESSLIST;</span><br><span class="line"><span class="comment">-- 或</span></span><br><span class="line"><span class="keyword">SELECT</span> ID, <span class="keyword">USER</span>, HOST, DB, COMMAND, <span class="type">TIME</span>, STATE, INFO</span><br><span class="line"><span class="keyword">FROM</span> information_schema.processlist</span><br><span class="line"><span class="keyword">WHERE</span> COMMAND <span class="operator">!=</span> <span class="string">&#x27;Sleep&#x27;</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="type">TIME</span> <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
+<p><code>Time</code> 很大且 <code>State</code> 长期停在 <code>Sending data</code> / <code>Creating sort index</code> / <code>Waiting for ... lock</code>，这条就是现场。<code>Waiting for ... lock</code> 先去查锁，不要先改 SQL，锁相关见 <a href="/2022/10/14/mysql8-lock/" title="MySql--锁">MySql--锁</a>。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>已经发生过：慢查询日志 + <code>mysqldumpslow</code>（见上文）。优先看：</p>
+<ul class="lvl-2">
+<li class="lvl-4"><code>-s t</code> 总耗时最高：对系统伤害最大</li>
+<li class="lvl-4"><code>-s c</code> 次数最多：单次不慢、积少成多</li>
+<li class="lvl-4"><code>-s r</code> 扫描/返回行数最多：典型没走好索引</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>没开慢日志，MySQL 8.0 默认开了 <code>performance_schema</code>，直接问摘要表：</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> SCHEMA_NAME,</span><br><span class="line">       DIGEST_TEXT,</span><br><span class="line">       COUNT_STAR,</span><br><span class="line">       ROUND(SUM_TIMER_WAIT<span class="operator">/</span><span class="number">1e12</span>, <span class="number">3</span>)  <span class="keyword">AS</span> total_s,</span><br><span class="line">       ROUND(AVG_TIMER_WAIT<span class="operator">/</span><span class="number">1e12</span>, <span class="number">3</span>)  <span class="keyword">AS</span> avg_s,</span><br><span class="line">       SUM_ROWS_EXAMINED,</span><br><span class="line">       SUM_ROWS_SENT</span><br><span class="line"><span class="keyword">FROM</span> performance_schema.events_statements_summary_by_digest</span><br><span class="line"><span class="keyword">WHERE</span> SCHEMA_NAME <span class="keyword">IS</span> <span class="keyword">NOT NULL</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> SUM_TIMER_WAIT <span class="keyword">DESC</span></span><br><span class="line">LIMIT <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p>装了 <code>sys</code> 库更省事：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sys.statement_analysis <span class="keyword">ORDER</span> <span class="keyword">BY</span> total_latency <span class="keyword">DESC</span> LIMIT <span class="number">10</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sys.statements_with_full_table_scans LIMIT <span class="number">10</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sys.statements_with_sorting LIMIT <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="2-先看数字，判断慢在哪">2. 先看数字，判断慢在哪</h3>
+<p>慢日志里三个数字最有用，先定性再动手：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">现象</th>
+<th style="text-align:left">慢在哪</th>
+<th style="text-align:left">下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>Lock_time</code> 接近 <code>Query_time</code></td>
+<td style="text-align:left">在等锁，SQL 本身不一定差</td>
+<td style="text-align:left"><a href="/2022/10/14/mysql8-lock/" title="MySql--锁">MySql--锁</a>、<a href="/2022/09/26/mysql8-process/" title="MySql--线程管理">MySql--线程管理</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Rows_examined</code> 远大于 <code>Rows_sent</code></td>
+<td style="text-align:left">扫了很多行才筛出几行，索引/条件有问题</td>
+<td style="text-align:left"><code>EXPLAIN</code>，再看 <a href="/2022/09/26/mysql8-index/" title="MySql索引">MySql索引</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Rows_examined</code> 不大，但 <code>Query_time</code> 很大</td>
+<td style="text-align:left">单行很重，或结果集太大、磁盘 IO、网络</td>
+<td style="text-align:left">少查列、分页、看 Buffer Pool</td>
+</tr>
+<tr>
+<td style="text-align:left">次数极多、单次耗时一般</td>
+<td style="text-align:left">热点 SQL 被循环调用</td>
+<td style="text-align:left">先改调用次数，再改 SQL</td>
+</tr>
+</tbody>
+</table>
+<p>经验值：<code>Rows_examined / Rows_sent</code> 越大越冤。返回 10 行却扫了 100 万行，优先查索引，不要先加机器。</p>
+<h3 id="3-EXPLAIN-看优化器怎么走">3. EXPLAIN 看优化器怎么走</h3>
+<p>字段含义见 <a href="/2022/09/26/mysql8-explain/" title="MySql执行计划">MySql执行计划</a>。排查时先盯这几列：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>type</code>：从好到差大致是 <code>system</code> &gt; <code>const</code> &gt; <code>eq_ref</code> &gt; <code>ref</code> &gt; <code>range</code> &gt; <code>index</code> &gt; <code>ALL</code>。<code>ALL</code> 就是全表扫描，单表数据量大时基本就是慢 SQL。</p>
+</li>
+<li class="lvl-2">
+<p><code>key</code> 为 <code>NULL</code>：没用上索引。对照 <code>possible_keys</code>，有候选却没用，多半是条件写法和索引不匹配。</p>
+</li>
+<li class="lvl-2">
+<p><code>rows</code>：优化器估的扫描行数，越大越慢。这是估算，和慢日志里真实的 <code>Rows_examined</code> 对一下。</p>
+</li>
+<li class="lvl-2">
+<p><code>Extra</code>：</p>
+<ul class="lvl-2">
+<li class="lvl-4"><code>Using filesort</code> / <code>Using temporary</code>：排序或分组没走索引</li>
+<li class="lvl-4"><code>Using where</code>：存储引擎取出后再用 where 过滤，往往扫描偏多</li>
+<li class="lvl-4"><code>Using index</code>：覆盖索引，通常是好事</li>
+<li class="lvl-4"><code>Using index condition</code>：索引条件下推，比回表后再过滤好</li>
+</ul>
+</li>
+</ul>
+<p>MySQL 8.0.18 起可以用 <code>EXPLAIN ANALYZE</code>，跑一遍真实执行，给出每一步实际耗时和实际行数，比普通 <code>EXPLAIN</code> 更接近现场：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN ANALYZE <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> employees <span class="keyword">WHERE</span> name <span class="operator">=</span> <span class="string">&#x27;LiLei&#x27;</span> <span class="keyword">AND</span> age <span class="operator">=</span> <span class="number">22</span>;</span><br></pre></td></tr></table></figure>
+<p>改 SQL 或加索引之后，用 <code>SHOW WARNINGS</code> 看优化器重写后的语句，避免自己以为改对了、优化器其实没按你想的走。</p>
+<h3 id="4-对症改">4. 对症改</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>SQL / 索引问题（最常见）</p>
+<ul class="lvl-2">
+<li class="lvl-4">where / join / order by / group by 列上没有合适索引，或违反最左前缀。联合索引、覆盖索引、前缀索引见 <a href="/2022/09/26/mysql8-index/" title="MySql索引">MySql索引</a>。</li>
+<li class="lvl-4">索引列包了函数、做了运算、隐式类型转换（<code>'123'</code> 和 <code>123</code>、字符集不一致），索引失效，表现就是 <code>possible_keys</code> 有值但 <code>key</code> 为 <code>NULL</code>，或 <code>type=ALL</code>。常见场景和改法见 <a href="/2022/09/26/mysql8-index/" title="MySql索引">MySql索引</a>。</li>
+<li class="lvl-4"><code>SELECT *</code> 导致无法覆盖索引，必须回表；只查需要的列。</li>
+<li class="lvl-4">深分页 <code>LIMIT 100000, 20</code>：先按索引把主键翻出来再回表，不要直接大 offset。</li>
+<li class="lvl-4">统计信息不准，优化器选错索引：<code>ANALYZE TABLE t;</code> 更新索引基数。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>锁等待</p>
+<ul class="lvl-2">
+<li class="lvl-4"><code>Lock_time</code> 高、<code>State</code> 带 lock、<code>SHOW ENGINE INNODB STATUS</code> 里有 <code>LOCK WAIT</code>。先找长事务、没提交的 <code>for update</code>，再考虑是不是没走索引把行锁升级成了表锁，见 <a href="/2022/10/14/mysql8-lock/" title="MySql--锁">MySql--锁</a>。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>执行环境</p>
+<ul class="lvl-2">
+<li class="lvl-4">Buffer Pool 命中率低，热数据全在磁盘上，见 <a href="/2022/10/14/mysql8-innodb-buffer-pool/" title="MySql--InnoDB Buffer Pool">MySql--InnoDB Buffer Pool</a>。</li>
+<li class="lvl-4">单次返回结果集过大，时间花在 <code>Sending data</code> 和网络上，加分页、少选列。</li>
+<li class="lvl-4">服务器 CPU / 磁盘已经打满，所有 SQL 一起变慢：这不是单条 SQL 的问题，先看机器和连接数。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-回归验证">5. 回归验证</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>同一条 SQL 再 <code>EXPLAIN</code> / <code>EXPLAIN ANALYZE</code>，确认 <code>type</code>、<code>key</code>、<code>rows</code> 变好了。</p>
+</li>
+<li class="lvl-2">
+<p>用生产可比的数据量看耗时，不要只在几十行的测试表上宣布优化成功。</p>
+</li>
+<li class="lvl-2">
+<p>观察慢日志和 <code>events_statements_summary_by_digest</code> 里这条 digest 的 <code>COUNT_STAR</code>、<code>AVG_TIMER_WAIT</code> 是否下降。</p>
+</li>
+<li class="lvl-2">
+<p>加索引后用 <code>SHOW INDEX</code> 看 <code>Cardinality</code>，并盯一下写入是否变慢——索引不是免费的，原则见 <a href="/2022/09/26/mysql8-index/" title="MySql索引">MySql索引</a>。</p>
+</li>
+</ul>
+<div class="note success"><h3 id="慢SQL问题如何排查？">慢SQL问题如何排查？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">先分清三种慢：<code>SQL 执行慢</code>（扫描行数多）、<code>等锁慢</code>（<code>Lock_time</code> 高）、<code>环境慢</code>（IO/CPU/网络/结果集）。搞混了就会给一条在等锁的 SQL 乱加索引。</li>
+<li class="lvl-2">找 SQL：现场用 <code>SHOW PROCESSLIST</code>，历史用慢查询日志 + <code>mysqldumpslow</code>，没开慢日志用 <code>performance_schema.events_statements_summary_by_digest</code> 或 <code>sys.statement_analysis</code>。</li>
+<li class="lvl-2">定性：<code>Rows_examined &gt;&gt; Rows_sent</code> 查索引；<code>Lock_time</code> 接近总耗时查锁；次数多单次不慢查调用方。</li>
+<li class="lvl-2">分析：<code>EXPLAIN</code> 看 <code>type</code> / <code>key</code> / <code>rows</code> / <code>Extra</code>，8.0 用 <code>EXPLAIN ANALYZE</code> 看真实耗时。<code>type=ALL</code>、<code>key=NULL</code>、<code>Using filesort</code>、<code>Using temporary</code> 是最常见的红灯。</li>
+<li class="lvl-2">处理：条件与索引对齐（最左前缀、避免函数和隐式转换）、能覆盖就覆盖、深分页改写、<code>ANALYZE TABLE</code> 刷新统计信息；等锁就收短事务；环境问题看 Buffer Pool 和结果集大小。</li>
+<li class="lvl-2">验证：同样数据量复测，digest 统计下降才算完。线上务必把慢日志写进配置并定期扫，不要只靠临时 <code>SET GLOBAL</code>。</li>
+</ul>
+</div>
 
     </div>
 
@@ -1473,14 +1621,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">869k</span>
+    <span title="站点总字数">883k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">52:39</span>
+    <span title="站点阅读时长">53:31</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  本文介绍 SpringBoot 集成 Redis 的方法 本文基于redis-7.4.7，springboot-3.5.8 Redis官网：https:&#x2F;&#x2F;redis.io&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-01-12T14:30:05.000Z">
-<meta property="article:modified_time" content="2026-01-12T08:39:11.238Z">
+<meta property="article:modified_time" content="2026-09-14T09:38:29.494Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -965,7 +965,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="nav-number">2.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-application-yml"><span class="nav-number">3.</span> <span class="nav-text">配置 application.yml</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">单机模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sentinel-%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">sentinel 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.3.</span> <span class="nav-text">cluster 模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-%E9%85%8D%E7%BD%AE%E7%B1%BB"><span class="nav-number">4.</span> <span class="nav-text">SpringBoot 配置类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%81%E8%A3%85-RedisTemplate"><span class="nav-number">4.1.</span> <span class="nav-text">封装 RedisTemplate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E6%B3%A8%E8%A7%A3%E5%BC%8F%E7%BC%93%E5%AD%98"><span class="nav-number">4.2.</span> <span class="nav-text">开启注解式缓存</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">常见面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="nav-number">3.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-application-yml"><span class="nav-number">4.</span> <span class="nav-text">配置 application.yml</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.1.</span> <span class="nav-text">单机模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sentinel-%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.2.</span> <span class="nav-text">sentinel 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.3.</span> <span class="nav-text">cluster 模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-%E9%85%8D%E7%BD%AE%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">SpringBoot 配置类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%81%E8%A3%85-RedisTemplate"><span class="nav-number">5.1.</span> <span class="nav-text">封装 RedisTemplate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E6%B3%A8%E8%A7%A3%E5%BC%8F%E7%BC%93%E5%AD%98"><span class="nav-number">5.2.</span> <span class="nav-text">开启注解式缓存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C-MySql-%E5%92%8C-Redis-%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">如何保障 MySql 和 Redis 数据一致性？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E7%A7%8D%E5%86%99%E6%B3%95%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%8E%A8%E8%8D%90%E4%B8%80%E7%A7%8D"><span class="nav-number">6.1.</span> <span class="nav-text">四种写法，为什么只推荐一种</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E3%80%8C%E5%88%A0%E7%BC%93%E5%AD%98%E3%80%8D%E8%80%8C%E4%B8%8D%E6%98%AF%E3%80%8C%E6%9B%B4%E6%96%B0%E7%BC%93%E5%AD%98%E3%80%8D"><span class="nav-number">6.2.</span> <span class="nav-text">为什么是「删缓存」而不是「更新缓存」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E8%A6%81%E8%A7%A3%E5%86%B3%E7%9A%84%E6%98%AF%E3%80%8C%E5%88%A0%E7%BC%93%E5%AD%98%E8%BF%99%E4%B8%80%E6%AD%A5%E5%8F%AF%E8%83%BD%E5%A4%B1%E8%B4%A5%E3%80%8D"><span class="nav-number">6.3.</span> <span class="nav-text">真正要解决的是「删缓存这一步可能失败」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E5%AE%B9%E6%98%93%E6%BC%8F%E6%8E%89%E7%9A%84%E5%9D%91"><span class="nav-number">6.4.</span> <span class="nav-text">两个容易漏掉的坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E4%B8%9A%E5%8A%A1%E8%A6%81%E6%B1%82%E9%80%89"><span class="nav-number">6.5.</span> <span class="nav-text">按业务要求选</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1079,17 +1079,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/05/redis7-config/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-05</time>
-        <br>
-      Redis 7 + ACL 单节点、主从、哨兵、集群构建方法
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/17/redis7-ReentrantLock/" rel="bookmark">
         <time class="popular-posts-time">2025-12-17</time>
         <br>
       一个基于 Redis 的可重入分布式锁的实现
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/05/redis7-config/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-05</time>
+        <br>
+      Redis 7 + ACL 单节点、主从、哨兵、集群构建方法
       </a>
     </li>
   </ul>
@@ -1140,9 +1140,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-01-12 22:30:05 / 修改时间：16:39:11" itemprop="dateCreated datePublished" datetime="2026-01-12T22:30:05+08:00">2026-01-12</time>
+      <time title="创建时间：2026-01-12 22:30:05" itemprop="dateCreated datePublished" datetime="2026-01-12T22:30:05+08:00">2026-01-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-14 17:38:29" itemprop="dateModified" datetime="2026-09-14T17:38:29+08:00">2026-09-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1262,14 +1268,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.3k</span>
+      <span>2.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
+      <span>9 分钟</span>
     </span>
 
         </div>
@@ -1285,6 +1291,12 @@ if (!window.__postViewReady) {
 <li class="lvl-2">Redis官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a></li>
 </ul>
 <span id="more"></span>
+<h2 id="常见面试题">常见面试题</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.<a href="#cache-consistency">如何保障 MySql 和 Redis 数据一致性？</a></p>
+</li>
+</ul>
 <h2 id="引入依赖">引入依赖</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1585,6 +1597,93 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="comment">// 缓存分组</span></span><br><span class="line"><span class="meta">@CacheConfig(cacheNames = &quot;commonCache&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SystemUserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">ISystemUserService</span> &#123;</span><br><span class="line">   <span class="meta">@Autowired</span></span><br><span class="line">   SystemUserJpaRepository systemUserJpaRepository;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//向组内添加缓存</span></span><br><span class="line">   <span class="meta">@Cacheable(key = &quot;&#x27;SystemUserServiceImpl.findAll&#x27;&quot;)</span></span><br><span class="line">   <span class="keyword">public</span> List&lt;SystemUser&gt; <span class="title function_">findAll</span><span class="params">()</span> &#123;</span><br><span class="line">      List&lt;SystemUser&gt; systemUserList = systemUserJpaRepository.findAll();</span><br><span class="line">      <span class="keyword">return</span> systemUserList;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">//向组内添加缓存</span></span><br><span class="line">   <span class="meta">@Cacheable(key = &quot;&#x27;SystemUserServiceImpl.findById_&#x27;+ #userId&quot;)</span></span><br><span class="line">   <span class="keyword">public</span> SystemUser <span class="title function_">findById</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> systemUserJpaRepository.findById(userId);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">// 删除组内指定缓存</span></span><br><span class="line">   <span class="meta">@CacheEvict(key = &quot;&#x27;SystemUserServiceImpl.findById_&#x27;+ #userId&quot;)</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteById</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> systemUserJpaRepository.deleteById(userId);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">// 删除本组全部缓存</span></span><br><span class="line">   <span class="meta">@CacheEvict(allEntries = true, beforeInvocation = true)</span></span><br><span class="line">   <span class="keyword">public</span> SystemUser <span class="title function_">add</span><span class="params">(SystemUser user)</span> &#123;</span><br><span class="line">      systemUserJpaRepository.save(user);</span><br><span class="line">      <span class="keyword">return</span> user;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a id="cache-consistency"></a></p>
+<h2 id="如何保障-MySql-和-Redis-数据一致性？">如何保障 MySql 和 Redis 数据一致性？</h2>
+<p>先把结论说死：<strong>MySQL 和 Redis 是两个独立系统，没有分布式事务，就不存在真正的强一致。</strong> 能做到的是<code>最终一致 + 有兜底</code>。所以方案的目标不是「永不出错」，而是<code>不一致的窗口足够短</code>、<code>出错能自愈</code>。真要强一致，就别用缓存，或者读写都加分布式锁（见 <a href="/2026/01/09/redis-Redisson-01-base/" title="Redisson 简介">Redisson 简介</a>）。</p>
+<h3 id="四种写法，为什么只推荐一种">四种写法，为什么只推荐一种</h3>
+<p>以「更新一条数据」为例，缓存和 DB 的操作顺序一共四种组合：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">写法</th>
+<th style="text-align:left">问题</th>
+<th style="text-align:left">结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">先更新 DB，再<strong>更新</strong>缓存</td>
+<td style="text-align:left">并发写会乱序：A 改 DB → B 改 DB → B 写缓存 → A 写缓存，缓存最终是 A 的旧值</td>
+<td style="text-align:left">不用</td>
+</tr>
+<tr>
+<td style="text-align:left">先删缓存，再更新 DB</td>
+<td style="text-align:left">删完到 DB 提交之间，读请求会把<strong>旧值</strong>重新加载进缓存，之后长期是脏数据</td>
+<td style="text-align:left">不用</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>先更新 DB，再删缓存</strong></td>
+<td style="text-align:left">仍有极小窗口（读请求恰好在 DB 提交前读到旧值、在删缓存后才回填），但要求读比写还慢，概率很低</td>
+<td style="text-align:left"><strong>推荐，即 Cache-Aside</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">先删缓存 → 更新 DB → 延迟再删一次</td>
+<td style="text-align:left">用第二次删兜住上面的窗口，代价是多一次删除和延迟逻辑</td>
+<td style="text-align:left">高要求时叠加</td>
+</tr>
+</tbody>
+</table>
+<p>Spring Cache 的 <code>@CacheEvict</code> 就是第三种语义。注意上文示例里的 <code>beforeInvocation = true</code> 表示<strong>方法执行前</strong>就删缓存，等于退化成「先删缓存再更新 DB」；对一致性敏感的写操作应该用默认的 <code>beforeInvocation = false</code>（方法成功返回后才删），失败就不删。</p>
+<h3 id="为什么是「删缓存」而不是「更新缓存」">为什么是「删缓存」而不是「更新缓存」</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>删除是幂等的</strong>，重复执行、乱序执行结果都一样，天生抗并发；写缓存则要拼顺序。</p>
+</li>
+<li class="lvl-2">
+<p><strong>懒加载更省</strong>：写多读少时，更新缓存的计算大多会被下一次更新覆盖，白算。</p>
+</li>
+<li class="lvl-2">
+<p><strong>成本低</strong>：删只需要 key，更新要能拼出完整的缓存值（宽对象往往还得回查几张表）。</p>
+</li>
+</ul>
+<h3 id="真正要解决的是「删缓存这一步可能失败」">真正要解决的是「删缓存这一步可能失败」</h3>
+<p>DB 提交成功、删缓存失败，缓存就一直是脏的。三种兜法，从简单到干净：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>重试</strong>：删失败进本地重试队列或 MQ 延迟重试，不要在业务线程里死等。</p>
+</li>
+<li class="lvl-2">
+<p><strong>延迟双删</strong>：更新 DB 后立刻删一次，再延迟 N 毫秒删第二次，用来清掉窗口期被回填的旧值。延迟要<strong>大于一次读操作（含回填）的耗时</strong>，一般几百毫秒到 1 秒，靠压测定。</p>
+</li>
+<li class="lvl-2">
+<p><strong>订阅 binlog 异步删（推荐）</strong>：业务代码只管写 MySQL，用 Canal/Debezium 监听 binlog 再删对应的 key。好处是业务无侵入、不会漏（位点可重放），和 MySQL 同步到 ES 是同一条链路和同一套保证，见 <a href="/2022/10/14/mysql8-binlog/" title="MySql--binlog">MySql--binlog</a>。</p>
+</li>
+</ul>
+<h3 id="两个容易漏掉的坑">两个容易漏掉的坑</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>主从延迟</strong>：读写分离时，更新主库并删缓存后，读请求打到从库拿到旧数据又写回缓存，于是缓存又脏了。要么延迟删的时间覆盖主从延迟，要么这类查询强制读主库。半同步复制见 <a href="/2022/09/14/mysql8-config/" title="MySql单节点、主从、双主的构建方法">MySql单节点、主从、双主的构建方法</a>。</p>
+</li>
+<li class="lvl-2">
+<p><strong>TTL 是最后一道防线，必须设</strong>。上文 <code>entryTtl</code> 那段就是干这个的：所有删除逻辑都失效时，缓存也会在过期后自动回到正确值。不设 TTL 的缓存出一次问题就是永久脏数据。不同分组设不同 TTL 还能顺带打散过期时间，避免缓存雪崩。</p>
+</li>
+</ul>
+<h3 id="按业务要求选">按业务要求选</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>能容忍秒级不一致（大多数读多写少的查询）：<strong>Cache-Aside + TTL</strong>，就够了。</p>
+</li>
+<li class="lvl-2">
+<p>不想让业务代码管缓存、或删除不能丢：<strong>Cache-Aside + binlog 异步删</strong>。</p>
+</li>
+<li class="lvl-2">
+<p>短时间内绝不能读到旧值（余额、库存）：不要用缓存兜，直接读 MySQL，或用 Redisson 分布式锁把读写串起来，见 <a href="/2025/12/17/redis7-ReentrantLock/" title="一个基于 Redis 的可重入分布式锁的实现">一个基于 Redis 的可重入分布式锁的实现</a>。</p>
+</li>
+</ul>
+<blockquote>
+<p>一句话总结：<strong>先写 MySQL，再删 Redis；删除要保证不丢（重试或 binlog 订阅）；所有 key 都设 TTL 兜底。</strong> 不要更新缓存、不要先删后写，也不要指望缓存和 DB 强一致。</p>
+</blockquote>
+
     </div>
 
     
@@ -1723,14 +1822,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">869k</span>
+    <span title="站点总字数">883k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">52:39</span>
+    <span title="站点阅读时长">53:31</span>
   </span>
 </div>
 <div class="busuanzi-count">

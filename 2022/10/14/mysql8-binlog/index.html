@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   MySql知识点介绍: binlog相关   本文基于mysql-8.0.30，https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;8.0&#x2F;en&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-14T13:31:05.000Z">
-<meta property="article:modified_time" content="2024-05-07T08:00:35.266Z">
+<meta property="article:modified_time" content="2026-09-14T09:34:34.358Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -965,7 +965,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binlog%E7%9B%B8%E5%85%B3"><span class="nav-number">2.</span> <span class="nav-text">binlog相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E7%9A%84%E5%B0%8F%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.1.</span> <span class="nav-text">一个数据恢复的小示例</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">常见面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binlog%E7%9B%B8%E5%85%B3"><span class="nav-number">3.</span> <span class="nav-text">binlog相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E7%9A%84%E5%B0%8F%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">一个数据恢复的小示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySql%E5%90%8C%E6%AD%A5%E5%88%B0ES%EF%BC%8C%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">MySql同步到ES，如何保证数据一致性？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%9D%A1%E5%90%8C%E6%AD%A5%E8%B7%AF%EF%BC%8C%E4%B8%80%E8%87%B4%E6%80%A7%E4%BB%8E%E5%BC%B1%E5%88%B0%E5%BC%BA"><span class="nav-number">4.1.</span> <span class="nav-text">三条同步路，一致性从弱到强</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Canal-%E5%B7%B2%E7%BB%8F%E8%83%BD%E8%87%AA%E5%8A%A8%E5%90%8C%E6%AD%A5%E4%BA%86%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%8E%A5-Kafka"><span class="nav-number">4.2.</span> <span class="nav-text">Canal 已经能自动同步了，为什么还要接 Kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-binlog-format-%E4%B8%80%E5%AE%9A%E8%A6%81%E6%98%AF-ROW"><span class="nav-number">4.3.</span> <span class="nav-text">为什么 binlog_format 一定要是 ROW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8-binlog-%E6%8A%8A%E4%B8%80%E8%87%B4%E6%80%A7%E5%81%9A%E6%89%8E%E5%AE%9E"><span class="nav-number">4.4.</span> <span class="nav-text">用 binlog 把一致性做扎实</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%BF%BB%E8%BD%A6"><span class="nav-number">4.5.</span> <span class="nav-text">常见翻车</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySql%E5%90%8C%E6%AD%A5%E5%88%B0ES%EF%BC%8C%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9F"><span class="nav-number">4.6.</span> <span class="nav-text">MySql同步到ES，如何保证数据一致性？</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1058,10 +1058,24 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-table-info/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-26</time>
+      <a class="popular-posts-link" href="/2025/10/13/kafka-03-webui/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
         <br>
-      MySql--表信息相关
+      Kafka 的 Web UI 之 Kafbat UI
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/09/23/springboot-data-jpa-aop-history/" rel="bookmark">
+        <time class="popular-posts-time">2022-09-23</time>
+        <br>
+      Springboot-JPA之AOP保存历史记录
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/13/kafka-02-protocol/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-13</time>
+        <br>
+      Kafka 通信协议、SSL加密和身份验证
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1072,24 +1086,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-user/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-26</time>
+      <a class="popular-posts-link" href="/2025/10/16/kafka-05-install-kraft/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-16</time>
         <br>
-      MySql--用户管理
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/10/14/mysql8-slow-query/" rel="bookmark">
-        <time class="popular-posts-time">2022-10-14</time>
-        <br>
-      MySql--慢查询
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-variables/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-26</time>
-        <br>
-      MySql--系统变量
+      Kafka 的安装：基于 KRaft 模式
       </a>
     </li>
   </ul>
@@ -1148,7 +1148,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-07 16:00:35" itemprop="dateModified" datetime="2024-05-07T16:00:35+08:00">2024-05-07</time>
+      <time title="修改时间：2026-09-14 17:34:34" itemprop="dateModified" datetime="2026-09-14T17:34:34+08:00">2026-09-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1268,14 +1268,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>925</span>
+      <span>3.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
+      <span>13 分钟</span>
     </span>
 
         </div>
@@ -1311,6 +1311,12 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <span id="more"></span>
+<h2 id="常见面试题">常见面试题</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.<a href="#mysql-to-es">MySql同步到ES，如何保证数据一致性？</a></p>
+</li>
+</ul>
 <h2 id="binlog相关">binlog相关</h2>
 <p>MySQL的二进制日志binlog可以说是MySQL最重要的日志，它记录了所有的DDL和DML语句（除了数据查询语句select）,其以事件形式记录，还包含语句所执行的消耗的时间，MySQL的二进制日志是事务安全型的，所以binlog内记录的是事务提交成功后的内容。</p>
 <ul class="lvl-0">
@@ -1378,6 +1384,141 @@ if (!window.__postViewReady) {
 如果数据库开启了GTID，需要先关闭再导入binlog数据，否则不能导入binlog数据<br>
 临时关闭方式: 更改 GTID_MODE 状态顺序为 ON&lt;-&gt;ON_PERMISSIVE&lt;-&gt;OFF_PERMISSIVE&lt;-&gt;OFF ，需要按照顺序依次改变。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 查看 GTID_MODE 当前状态</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;gtid_mode&#x27;</span>;</span><br><span class="line"># 修改GTID_MODE 状态为 ON_PERMISSIVE</span><br><span class="line"><span class="keyword">set</span> @<span class="variable">@GLOBAL</span>.GTID_MODE<span class="operator">=</span>ON_PERMISSIVE;</span><br><span class="line"># 修改GTID_MODE 状态为 OFF_PERMISSIVE</span><br><span class="line"><span class="keyword">set</span> @<span class="variable">@GLOBAL</span>.GTID_MODE<span class="operator">=</span>OFF_PERMISSIVE;</span><br><span class="line"># 修改GTID_MODE 状态为 OFF</span><br><span class="line"><span class="keyword">set</span> @<span class="variable">@GLOBAL</span>.GTID_MODE<span class="operator">=</span>OFF;</span><br></pre></td></tr></table></figure>
+</div>
+<p><a id="mysql-to-es"></a></p>
+<h2 id="MySql同步到ES，如何保证数据一致性？">MySql同步到ES，如何保证数据一致性？</h2>
+<p>先把预期说死：<strong>ES 不是 MySQL 的同步副本，做不到和 InnoDB 同一毫秒的强一致。</strong> 主数据永远在 MySQL，ES 是为搜索/聚合服务的派生视图。工程上要保证的是：<code>不丢、不乱序覆盖、可重放、可对账</code>，延迟通常是秒级的最终一致。谁要读刚写入的那一行，去 MySQL 查，不要赌 ES 已经可搜。</p>
+<h3 id="三条同步路，一致性从弱到强">三条同步路，一致性从弱到强</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>应用双写 MySQL + ES：两次网络调用没有原子性，MySQL 成功 ES 失败就会漂。并发更新也没有全局顺序。除非再上本地消息表（和业务同一事务写入 outbox），否则不要用双写当主方案。</p>
+</li>
+<li class="lvl-2">
+<p>定时 JDBC 拉取（Logstash <code>jdbc</code> 按 <code>update_time</code> 扫表）：实现简单，但删数据容易漏（要靠软删）、同一秒多条更新可能被 <code>&gt;</code> 漏掉、对账窗口大。只适合变更很少、能接受分钟级延迟的场景。</p>
+</li>
+<li class="lvl-2">
+<p><strong>听 binlog（Canal / Maxwell / Debezium）</strong>：和从库同一条链路。上文写过，binlog 里是<strong>事务提交成功后</strong>的事件，顺序就是提交顺序。这是面试和线上的主流答案。</p>
+</li>
+</ul>
+<h3 id="Canal-已经能自动同步了，为什么还要接-Kafka">Canal 已经能自动同步了，为什么还要接 Kafka</h3>
+<p>先分清职责：<strong>Canal 只做「伪装从库拉 binlog → 解析成结构化变更事件」，它不负责写 ES</strong>。写 ES 的永远是消费端（你自己的程序，或 canal-adapter）。所以链路天然分成「谁产出事件」和「谁消费事件」两段，Kafka 是可选的中间层，不是必需品。</p>
+<p>Canal 有两种投递方式：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>TCP 直连</code>：消费端用 canal-client 直接从 canal server 拉，<strong>不需要 Kafka</strong>。小系统、单一下游就这么用，链路最短。</p>
+</li>
+<li class="lvl-2">
+<p><code>MQ 模式</code>：canal server 直接把事件投给 Kafka / RocketMQ / RabbitMQ / Pulsar，消费端改成订阅 MQ。</p>
+</li>
+</ul>
+<p>规模上来后才需要 Kafka，理由按重要性排：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>多个下游</strong>。ES、Redis 缓存、数仓、风控往往都要同一份变更。直连模式下每个下游各挂一个 canal instance，就是对主库开 N 个 dump 连接、传 N 份 binlog；接 Kafka 后 binlog 只拉一次，下游各用自己的 consumer group，互不干扰。这是最硬的理由。</p>
+</li>
+<li class="lvl-2">
+<p><strong>削峰和反压</strong>。批量刷数据、大事务会让 binlog 瞬间涌出几十万行事件，而 ES bulk 写入有上限。直连时消费端一卡，位点就推不动；万一长时间追不上，binlog 被 <code>binlog_expire_logs_seconds</code> 清掉，就只能重做全量。Kafka 是能落盘、保留几天的大缓冲，把生产和消费速率解耦。</p>
+</li>
+<li class="lvl-2">
+<p><strong>可重放</strong>。改了 ES mapping 要重建索引、或消费端写出 bug 需要重跑，把 offset 重置到几天前即可，不用回 MySQL 重做全量，也不赌 binlog 还在。而且 Kafka 里已经是解析好的结构化事件，比重新解析 binlog 便宜。</p>
+</li>
+<li class="lvl-2">
+<p><strong>并行且保序</strong>。按主键 hash 分区，多个消费者实例并行处理不同分区，同一行仍然有序。直连模式想并发就得自己实现分片和保序。</p>
+</li>
+<li class="lvl-2">
+<p><strong>可观测与故障隔离</strong>。Kafka 的 consumer lag 一眼能看出堆积多少；某条消息一直写不进 ES 可以进死信队列旁路掉，而不是卡死整条流。</p>
+</li>
+</ul>
+<blockquote>
+<p>所以判断标准很简单：<strong>只有 ES 一个下游、变更量不大、能接受消费端故障期间靠 binlog 保留期兜底，就别上 Kafka</strong>，canal-client 或 canal-adapter 直接写 ES 更省事。下游多、峰值高、需要重放，才值得付出维护 Kafka 的成本。Debezium 略有不同，它的典型形态就是跑在 Kafka Connect 上；想不要 Kafka 得用 Debezium Server 或嵌入式 Engine。</p>
+</blockquote>
+<p>前置：<code>binlog-format=ROW</code> + <code>binlog_row_image=FULL</code>，两个都是 MySQL 8.0 的默认值（见 <a href="/2022/09/14/mysql8-config/" title="MySql单节点、主从、双主的构建方法">MySql单节点、主从、双主的构建方法</a>）。</p>
+<p><code>binlog_row_image</code> 的关键不是「带旧值」：<code>MINIMAL</code> 下<strong>后镜像只有被改动的列</strong>，消费端拼不出整篇文档，只能再回查 MySQL；前镜像则只有主键，删 ES 文档其实够用。要整行覆盖就必须 <code>FULL</code>。</p>
+<h3 id="为什么-binlog-format-一定要是-ROW">为什么 binlog_format 一定要是 ROW</h3>
+<p>根本原因：<strong>ROW 记的是「哪几行、变成了什么值」，STATEMENT 记的是「执行过哪句 SQL」。而下游要的是行，不是 SQL。</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 假设执行了这么一条</span></span><br><span class="line"><span class="keyword">UPDATE</span> orders <span class="keyword">SET</span> status <span class="operator">=</span> <span class="number">1</span> <span class="keyword">WHERE</span> create_time <span class="operator">&lt;</span> <span class="string">&#x27;2024-01-01&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- STATEMENT 格式的 binlog 里只有上面那行 SQL 原文</span></span><br><span class="line"><span class="comment">-- ROW 格式的 binlog 里是 N 条行事件，每条都带主键和各列的前后值</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>STATEMENT 下消费端不知道改了哪些行</strong>。上面这条可能命中 50 万行，也可能 0 行。想知道受影响的主键，消费端得自己实现一遍 SQL 解析 + 优化器 + 执行，这不现实。ES 的写入单位是一篇文档（<code>_id</code> = 主键），没有主键列表就无法转换成 ES 操作。</p>
+</li>
+<li class="lvl-2">
+<p><strong>DELETE 同理</strong>。<code>DELETE FROM orders WHERE ...</code> 不告诉你删了哪些 <code>_id</code>，ROW 的前镜像才给出主键。</p>
+</li>
+<li class="lvl-2">
+<p><strong>ES 需要整行，不是增量 SQL</strong>。覆盖一篇文档要该行所有列的当前值，只有 ROW（且 <code>FULL</code>）提供。</p>
+</li>
+<li class="lvl-2">
+<p><strong>STATEMENT 本身就不可靠</strong>。<code>NOW()</code>、<code>RAND()</code>、<code>UUID()</code>、无 <code>ORDER BY</code> 的 <code>LIMIT</code> 更新、并发 <code>AUTO_INCREMENT</code>，重放结果和原库不一致——这也是主从复制推荐 ROW 的原因。</p>
+</li>
+<li class="lvl-2">
+<p><strong>MIXED 也不行</strong>。它是由主库在写 binlog 时<strong>按语句二选一</strong>：平时用 STATEMENT，只有判定 STATEMENT 不安全时才改用 ROW。对 CDC 来说等于「有的语句解析得出、有的解析不出」，链路不可用。</p>
+</li>
+</ul>
+<blockquote>
+<p>补充：<code>binlog_format</code> 自 <strong>MySQL 8.0.34 起已被标记为废弃</strong>，未来版本只保留 ROW。所以这个前置条件在 8.0 上通常本来就满足，新系统也不该再考虑 STATEMENT/MIXED。</p>
+</blockquote>
+<h3 id="用-binlog-把一致性做扎实">用 binlog 把一致性做扎实</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>全量 + 增量衔接（顺序不能反）</strong>：必须<strong>先记位点，再灌全量</strong>。正确做法是开一个 <code>REPEATABLE READ</code> 事务，先 <code>SHOW MASTER STATUS</code> 记下 File + Position（或 GTID），再在这个事务里按主键扫表灌 ES，最后从那个位点开始追增量。Debezium 的初始快照就是这个顺序。</p>
+<ul class="lvl-2">
+<li class="lvl-4">反过来「先灌全量、结束时再记位点」会<strong>丢数据</strong>：某行在扫描早期被读走、扫描期间又被改，这条 UPDATE 的位点早于你记下的位点，增量阶段不会重放，ES 里永远是旧值。</li>
+<li class="lvl-4">位点取在前面，快照与增量必然有重叠，重叠靠下面的幂等消化，这是安全的。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><strong>幂等</strong>：ES 文档 <code>_id</code> 用 MySQL 主键，写入一律 <code>index</code>（覆盖）。Canal 至少一次投递，重启从上次位点重放，重复消息打上去还是同一篇文档。DELETE 事件对应 ES <code>delete</code>。</p>
+</li>
+<li class="lvl-2">
+<p><strong>版本号防回退</strong>：只有幂等不够。重试、并发 bulk 都可能让<strong>旧事件后到</strong>，把新值盖回去。给写入带上单调递增的版本（行上的版本列、<code>update_time</code> 毫秒，或 binlog 位点编码成数字），用 ES 的 <code>version_type=external</code>，旧版本会被拒掉而不是覆盖。注意删除后的版本号只保留 <code>index.gc_deletes</code>（默认 60s），超过这个窗口的迟到旧事件仍可能把已删文档写回来。</p>
+</li>
+<li class="lvl-2">
+<p><strong>保序</strong>：同一主键的变更要按顺序落到 ES。走 Kafka 就让 partition key = 主键，同一行进同一分区；直连模式下自己按主键 hash 分线程，绝不能把同一行的事件丢给不同线程并发处理。否则旧 UPDATE 后到，会把新值盖掉。不同行可以并行。</p>
+</li>
+<li class="lvl-2">
+<p><strong>位点提交</strong>：消费成功写入 ES 之后，再提交 Canal/Kafka 位点。ES 失败就重试，不要跳过。Canal 伪装成从库，位点丢了就等于丢数据。</p>
+</li>
+<li class="lvl-2">
+<p><strong>宽表/多表</strong>：订单 + 明细这种要拼成一篇 ES 文档的，不能只听一张表。听相关表的 binlog，用主键回查 MySQL 再整篇覆盖，或在消息里带足够字段本地拼。这是一致性最容易烂的地方。回查读到的是当前最新值，可能比手上这条事件还新，所以版本号要用<strong>回查时刻</strong>的值，不能用事件里的旧时间戳，否则后续正常事件会被判成旧版本而丢弃。</p>
+</li>
+<li class="lvl-2">
+<p><strong>对账</strong>：定时按主键抽样或全量比对 <code>count</code>、<code>max(update_time)</code>、哈希。不一致的以 MySQL 为准重刷那一篇。binlog 只能保证「从某位点之后按顺序放」，保证不了历史已经漂了的数据自己回来。</p>
+</li>
+<li class="lvl-2">
+<p><strong>可见性</strong>：ES 默认 <code>refresh_interval=1s</code>，写入成功不等于马上搜得到。搜索允许秒级延迟；如果业务是「写入后立刻搜到自己」，这条链路不该走 ES，或对该次写入 <code>refresh=wait_for</code>（吞吐会掉）。</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 消费端必需</span></span><br><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;binlog_format&#x27;</span>;     <span class="comment">-- ROW</span></span><br><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;binlog_row_image&#x27;</span>;  <span class="comment">-- FULL</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 全量前取一致位点：位点在扫表之前记，不是之后</span></span><br><span class="line"><span class="keyword">START</span> TRANSACTION <span class="keyword">WITH</span> CONSISTENT SNAPSHOT;</span><br><span class="line"><span class="keyword">SHOW</span> MASTER STATUS;   <span class="comment">-- 记下 File / Position / GTID，增量从这里追</span></span><br><span class="line"><span class="comment">-- 然后在本事务内按主键分批 SELECT 灌入 ES，最后 COMMIT</span></span><br></pre></td></tr></table></figure>
+<p><code>mysqldump --single-transaction --source-data=2</code> 导出的文件头部也会带上快照那一刻的位点，可以直接拿来当增量起点。</p>
+<h3 id="常见翻车">常见翻车</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>Statement/Mixed binlog：消费端看不到完整行，无法稳定映射成 ES 文档。<code>ROW</code> 但 <code>binlog_row_image=MINIMAL</code> 也一样，后镜像缺列。</p>
+</li>
+<li class="lvl-2">
+<p>先灌全量、后记位点：看着能跑，实际丢的是「扫描期间被改过的行」，而且不对账根本发现不了。</p>
+</li>
+<li class="lvl-2">
+<p>只同步 INSERT/UPDATE，不处理 DELETE，ES 变垃圾堆。</p>
+</li>
+<li class="lvl-2">
+<p>双写 + 定时任务一起跑，没有版本号，后到的旧数据覆盖新数据。</p>
+</li>
+<li class="lvl-2">
+<p>大事务、从库延迟：Canal 挂在主库会抢 binlog 带宽；挂从库则一致性还受复制延迟影响，见 <a href="/2022/09/14/mysql8-config/" title="MySql单节点、主从、双主的构建方法">MySql单节点、主从、双主的构建方法</a> 半同步那节。</p>
+</li>
+<li class="lvl-2">
+<p>表结构变了 ES mapping 没变：加列可先 <a href="/2022/09/26/mysql8-table-info/" title="MySql--表信息相关">MySql--表信息相关</a> 里的 INSTANT，再更新 mapping；改类型往往要重建索引。</p>
+</li>
+</ul>
+<div class="note success"><h3 id="MySql同步到ES，如何保证数据一致性？">MySql同步到ES，如何保证数据一致性？</h3>
+<ul class="lvl-0">
+<li class="lvl-2">先定性：ES 是派生索引，和 MySQL 是最终一致，不是分布式事务。主库为准；刚写完要强一致的读走 MySQL。</li>
+<li class="lvl-2">主路径用 ROW + <code>binlog_row_image=FULL</code>（Canal/Debezium）+ 按主键分区的 MQ：提交顺序即同步顺序。</li>
+<li class="lvl-2">全量与增量的衔接：<strong>先记位点再灌全量</strong>（<code>START TRANSACTION WITH CONSISTENT SNAPSHOT</code> + <code>SHOW MASTER STATUS</code>），重叠靠幂等消化。顺序写反就会丢掉扫描期间被改的行。</li>
+<li class="lvl-2">一致性四件套：<code>_id=主键</code> 覆盖写入做幂等；同一主键保序；<code>version_type=external</code> 带单调版本号防旧事件回退；位点在 ES 写成功后再提交，失败重试。多表宽文档用主键回查整篇覆盖。</li>
+<li class="lvl-2">定时对账补洞；删除事件要删 ES。不要用无 outbox 的双写当主方案，也不要只靠 <code>update_time</code> 轮询指望不丢。</li>
+</ul>
 </div>
 
     </div>
@@ -1518,14 +1659,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">869k</span>
+    <span title="站点总字数">883k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">52:39</span>
+    <span title="站点阅读时长">53:31</span>
   </span>
 </div>
 <div class="busuanzi-count">

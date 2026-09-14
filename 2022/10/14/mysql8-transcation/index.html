@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   MySql知识点介绍: 事务   本文基于mysql-8.0.30，https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;8.0&#x2F;en&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-14T13:32:05.000Z">
-<meta property="article:modified_time" content="2024-05-07T08:01:02.238Z">
+<meta property="article:modified_time" content="2026-09-14T08:38:27.294Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -1058,10 +1058,10 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-forget-root-password/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-26</time>
+      <a class="popular-posts-link" href="/2022/10/14/mysql8-lock/" rel="bookmark">
+        <time class="popular-posts-time">2022-10-14</time>
         <br>
-      MySql--忘记root密码后如何重置
+      MySql--锁
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1072,10 +1072,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-table-info/" rel="bookmark">
+      <a class="popular-posts-link" href="/2022/09/26/mysql8-forget-root-password/" rel="bookmark">
         <time class="popular-posts-time">2022-09-26</time>
         <br>
-      MySql--表信息相关
+      MySql--忘记root密码后如何重置
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/10/14/mysql8-redo-undo/" rel="bookmark">
+        <time class="popular-posts-time">2022-10-14</time>
+        <br>
+      MySql--Redo Log 和 Undo Log
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1141,7 +1148,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-07 16:01:02" itemprop="dateModified" datetime="2024-05-07T16:01:02+08:00">2024-05-07</time>
+      <time title="修改时间：2026-09-14 16:38:27" itemprop="dateModified" datetime="2026-09-14T16:38:27+08:00">2026-09-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1439,7 +1446,7 @@ if (!window.__postViewReady) {
 <p>不同的应用对读一致性和事务隔离程度的要求也是不同的,比如许多应用对“不可重复读&quot;和“幻读”并不敏感,可能更关心数据并发访问的能力。</p>
 </li>
 <li class="lvl-2">
-<p>Mysql默认的事务隔离级别是<code>可重复读(REPEATABLE-READ)</code></p>
+<p>Mysql默认的事务隔离级别是<code>可重复读(REPEATABLE-READ)</code>。InnoDB 下它如何用 MVCC + 临键锁落地，见 <a href="/2022/10/14/mysql8-mvcc/" title="MySql--MVCC">MySql--MVCC</a>。</p>
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查看当前数据库的事务隔离级别，mysql8之前使用`tx_isolation`</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;transaction_isolation&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+----------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name         <span class="operator">|</span> <span class="keyword">Value</span>          <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+----------------+</span></span><br><span class="line"><span class="operator">|</span> transaction_isolation <span class="operator">|</span> REPEATABLE<span class="operator">-</span>READ <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+----------------+</span></span><br><span class="line"># 设置事务隔离级别</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> transaction_isolation<span class="operator">=</span><span class="string">&#x27;READ-COMMITTED&#x27;</span>;</span><br></pre></td></tr></table></figure>
@@ -1582,14 +1589,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">869k</span>
+    <span title="站点总字数">883k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">52:39</span>
+    <span title="站点阅读时长">53:31</span>
   </span>
 </div>
 <div class="busuanzi-count">
