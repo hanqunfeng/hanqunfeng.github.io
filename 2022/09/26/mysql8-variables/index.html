@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   MySql知识点介绍:系统变量   本文基于mysql-8.0.30，https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;8.0&#x2F;en&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-26T13:37:05.000Z">
-<meta property="article:modified_time" content="2024-05-07T07:52:38.025Z">
+<meta property="article:modified_time" content="2026-09-15T07:26:01.980Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -965,7 +965,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">系统变量</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">系统变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E4%BF%AE%E6%94%B9%E5%85%A8%E5%B1%80%E5%8F%82%E6%95%B0%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">在线修改全局参数持久化</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1086,10 +1086,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/26/mysql8-only_full_group_by/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-26</time>
+      <a class="popular-posts-link" href="/2024/05/08/mysql8-upgrade/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-08</time>
         <br>
-      MySql--ONLY_FULL_GROUP_BY
+      MySql--从Mysql5.7升级到Mysql8
       </a>
     </li>
   </ul>
@@ -1148,7 +1148,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-07 15:52:38" itemprop="dateModified" datetime="2024-05-07T15:52:38+08:00">2024-05-07</time>
+      <time title="修改时间：2026-09-15 15:26:01" itemprop="dateModified" datetime="2026-09-15T15:26:01+08:00">2026-09-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1268,7 +1268,7 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>731</span>
+      <span>744</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1321,6 +1321,7 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># 查看全部全局变量</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables\G</span><br><span class="line"></span><br><span class="line"># 查看指定变量，如wait_timeout，也可以使用<span class="operator">%</span>进行模糊匹配</span><br><span class="line"># 默认<span class="number">8</span>小时，客户端超过这个时间没有向服务端发送命令，服务器端会自动断开连接</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> &quot;wait_timeout&quot;;</span><br><span class="line"># 定值查询可以使用如下<span class="keyword">sql</span>形式</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> @<span class="variable">@wait_timeout</span>;</span><br><span class="line"># 模糊匹配</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%log_bin%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 设置全局变量，只要mysql不重启就会一直有效，注意，客户端需要重新连接才能生效</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> <span class="keyword">global</span> wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> @<span class="variable">@global</span>.wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br><span class="line"></span><br><span class="line"># 当前会话有效</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> session wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br><span class="line"># 当前会话可简写为如下形式</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> wait_timeout<span class="operator">=</span><span class="number">288000</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="在线修改全局参数持久化">在线修改全局参数持久化</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>MySQL 8.0 版本支持在线修改全局参数持久化，通过加上 <code>PERSIST</code> 关键字，可以将调整持久化到新的配置文件中，再次重启 db 还可以应用到最新的参数。</p>
@@ -1328,37 +1329,37 @@ if (!window.__postViewReady) {
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist max_connections<span class="operator">=</span><span class="number">300</span>;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
-<li class="lvl-4">
-<p>这种方式并不会修改mysql的配置文件，而是在datadir路径下创建一个<code>mysqld-auto.cnf</code>文件，在数据库启动时，会首先读取它配置文件，最后才读取mysqld-auto.cnf文件。不要手工修改这个文件。</p>
+<li class="lvl-2">
+<p>这种方式并不会修改mysql的配置文件，而是在<code>datadir</code>路径下创建一个<code>mysqld-auto.cnf</code>文件，在数据库启动时，会首先读取主配置文件(my.cnf)，然后接着读取mysqld-auto.cnf文件。不要手工修改这个文件。</p>
 </li>
 </ul>
-  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2, <span class="string">&quot;mysql_dynamic_parse_early_variables&quot;</span>: &#123;<span class="string">&quot;max_connections&quot;</span>: &#123;<span class="string">&quot;Value&quot;</span>: <span class="string">&quot;300&quot;</span>, <span class="string">&quot;Metadata&quot;</span>: &#123;<span class="string">&quot;Host&quot;</span>: <span class="string">&quot;localhost&quot;</span>, <span class="string">&quot;User&quot;</span>: <span class="string">&quot;root&quot;</span>, <span class="string">&quot;Timestamp&quot;</span>: 1665567597776824&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2, <span class="string">&quot;mysql_dynamic_parse_early_variables&quot;</span>: &#123;<span class="string">&quot;max_connections&quot;</span>: &#123;<span class="string">&quot;Value&quot;</span>: <span class="string">&quot;300&quot;</span>, <span class="string">&quot;Metadata&quot;</span>: &#123;<span class="string">&quot;Host&quot;</span>: <span class="string">&quot;localhost&quot;</span>, <span class="string">&quot;User&quot;</span>: <span class="string">&quot;root&quot;</span>, <span class="string">&quot;Timestamp&quot;</span>: 1665567597776824&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
-<li class="lvl-4">
-<p>可手动删除mysqld-auto.cnf文件或将<code>persisted_globals_load</code>变量设置为off来避免该文件的加载。</p>
+<li class="lvl-2">
+<p>可手动删除<code>mysqld-auto.cnf</code>文件或将<code>persisted_globals_load</code>变量设置为off来避免该文件的加载。</p>
 </li>
 </ul>
-  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;persisted_globals_load&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name          <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> persisted_globals_load <span class="operator">|</span> <span class="keyword">ON</span>    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;persisted_globals_load&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name          <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> persisted_globals_load <span class="operator">|</span> <span class="keyword">ON</span>    <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
-<li class="lvl-4">
-<p>持久化为默认值: 全局变量持久化为默认值。注意，是默认值，而不是修改前的值</p>
+<li class="lvl-2">
+<p>持久化为默认值: 全局变量持久化为默认值。注意，是<code>默认值</code>，而不是修改前的值</p>
 </li>
 </ul>
-  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist max_connections<span class="operator">=</span><span class="keyword">default</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist max_connections<span class="operator">=</span><span class="keyword">default</span>;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
-<li class="lvl-4">
-<p>清空持久化变量: 只会清空mysqld-auto.cnf中的配置，不会改变已经持久化的变量值</p>
+<li class="lvl-2">
+<p>清空持久化变量: 只会清空<code>mysqld-auto.cnf</code>中的配置，不会改变已经持久化的变量值</p>
 </li>
 </ul>
-  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> reset persist;</span><br></pre></td></tr></table></figure>
-  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> reset persist;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2&#125;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
-<li class="lvl-4">
-<p>修改只读变量，对于read only的参数，修改参数后需要重启才能生效</p>
+<li class="lvl-2">
+<p>修改只读变量，对于<code>read only</code>的参数，修改参数后需要重启才能生效</p>
 </li>
 </ul>
-  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">ERROR <span class="number">1238</span> (HY000): Variable <span class="string">&#x27;innodb_log_file_size&#x27;</span> <span class="keyword">is</span> a read <span class="keyword">only</span> variable</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist_only innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">ERROR <span class="number">3630</span> (<span class="number">42000</span>): Access denied; you need SYSTEM_VARIABLES_ADMIN <span class="keyword">and</span> PERSIST_RO_VARIABLES_ADMIN privileges <span class="keyword">for</span> this operation</span><br><span class="line"># 先授权</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">GRANT</span> SYSTEM_VARIABLES_ADMIN,PERSIST_RO_VARIABLES_ADMIN <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist_only innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_log_file_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name        <span class="operator">|</span> <span class="keyword">Value</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> innodb_log_file_size <span class="operator">|</span> <span class="number">268435456</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br></pre></td></tr></table></figure>
-  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2, <span class="string">&quot;mysql_static_variables&quot;</span>: &#123;<span class="string">&quot;innodb_log_file_size&quot;</span>: &#123;<span class="string">&quot;Value&quot;</span>: <span class="string">&quot;2073741824&quot;</span>, <span class="string">&quot;Metadata&quot;</span>: &#123;<span class="string">&quot;Host&quot;</span>: <span class="string">&quot;localhost&quot;</span>, <span class="string">&quot;User&quot;</span>: <span class="string">&quot;root&quot;</span>, <span class="string">&quot;Timestamp&quot;</span>: 1665568764002942&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">ERROR <span class="number">1238</span> (HY000): Variable <span class="string">&#x27;innodb_log_file_size&#x27;</span> <span class="keyword">is</span> a read <span class="keyword">only</span> variable</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist_only innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">ERROR <span class="number">3630</span> (<span class="number">42000</span>): Access denied; you need SYSTEM_VARIABLES_ADMIN <span class="keyword">and</span> PERSIST_RO_VARIABLES_ADMIN privileges <span class="keyword">for</span> this operation</span><br><span class="line"># 先授权</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">GRANT</span> SYSTEM_VARIABLES_ADMIN,PERSIST_RO_VARIABLES_ADMIN <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">set</span> persist_only innodb_log_file_size<span class="operator">=</span><span class="number">2073741824</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;innodb_log_file_size&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name        <span class="operator">|</span> <span class="keyword">Value</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> innodb_log_file_size <span class="operator">|</span> <span class="number">268435456</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------+</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more mysqld-auto.cnf</span><br><span class="line">&#123;<span class="string">&quot;Version&quot;</span>: 2, <span class="string">&quot;mysql_static_variables&quot;</span>: &#123;<span class="string">&quot;innodb_log_file_size&quot;</span>: &#123;<span class="string">&quot;Value&quot;</span>: <span class="string">&quot;2073741824&quot;</span>, <span class="string">&quot;Metadata&quot;</span>: &#123;<span class="string">&quot;Host&quot;</span>: <span class="string">&quot;localhost&quot;</span>, <span class="string">&quot;User&quot;</span>: <span class="string">&quot;root&quot;</span>, <span class="string">&quot;Timestamp&quot;</span>: 1665568764002942&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -1498,14 +1499,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">883k</span>
+    <span title="站点总字数">888k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">53:31</span>
+    <span title="站点阅读时长">53:49</span>
   </span>
 </div>
 <div class="busuanzi-count">

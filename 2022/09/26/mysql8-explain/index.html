@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   MySql知识点介绍:执行计划   本文基于mysql-8.0.30，https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;8.0&#x2F;en&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-26T13:31:05.000Z">
-<meta property="article:modified_time" content="2026-09-14T08:11:21.272Z">
+<meta property="article:modified_time" content="2026-09-15T02:54:20.219Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -965,7 +965,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">2.</span> <span class="nav-text">执行计划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">2.1.</span> <span class="nav-text">什么是执行计划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">2.2.</span> <span class="nav-text">查看执行计划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E7%82%B9%E5%B1%9E%E6%80%A7%E8%AF%B4%E6%98%8E"><span class="nav-number">2.3.</span> <span class="nav-text">重点属性说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#id"><span class="nav-number">2.3.1.</span> <span class="nav-text">id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#select-type"><span class="nav-number">2.3.2.</span> <span class="nav-text">select_type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#table"><span class="nav-number">2.3.3.</span> <span class="nav-text">table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#type"><span class="nav-number">2.3.4.</span> <span class="nav-text">type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#possible-keys"><span class="nav-number">2.3.5.</span> <span class="nav-text">possible_keys</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#key"><span class="nav-number">2.3.6.</span> <span class="nav-text">key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#key-len"><span class="nav-number">2.3.7.</span> <span class="nav-text">key_len</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ref"><span class="nav-number">2.3.8.</span> <span class="nav-text">ref</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rows"><span class="nav-number">2.3.9.</span> <span class="nav-text">rows</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#filtered"><span class="nav-number">2.3.10.</span> <span class="nav-text">filtered</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Extra"><span class="nav-number">2.3.11.</span> <span class="nav-text">Extra</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#filesort%E6%96%87%E4%BB%B6%E6%8E%92%E5%BA%8F%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">filesort文件排序方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">优化总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84sql"><span class="nav-number">5.</span> <span class="nav-text">查看优化后的sql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2inner-join%E4%B9%8B%E6%98%BE%E5%BC%8F%E8%BF%9E%E6%8E%A5-VS-%E9%9A%90%E5%BC%8F%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%BB%8E%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8A%E7%9C%8B%E4%B8%A4%E8%80%85%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B%EF%BC%8C%E6%8E%A8%E8%8D%90%E5%B8%A6on%E7%9A%84%E6%98%BE%E7%A4%BA%E6%9F%A5%E8%AF%A2"><span class="nav-number">6.</span> <span class="nav-text">关联查询inner join之显式连接 VS 隐式连接，从执行计划上看两者是一回事，推荐带on的显示查询</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">常见面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">3.</span> <span class="nav-text">执行计划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">3.1.</span> <span class="nav-text">什么是执行计划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">3.2.</span> <span class="nav-text">查看执行计划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E7%82%B9%E5%B1%9E%E6%80%A7%E8%AF%B4%E6%98%8E"><span class="nav-number">3.3.</span> <span class="nav-text">重点属性说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#id"><span class="nav-number">3.3.1.</span> <span class="nav-text">id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#select-type"><span class="nav-number">3.3.2.</span> <span class="nav-text">select_type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#table"><span class="nav-number">3.3.3.</span> <span class="nav-text">table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#type"><span class="nav-number">3.3.4.</span> <span class="nav-text">type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#possible-keys"><span class="nav-number">3.3.5.</span> <span class="nav-text">possible_keys</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#key"><span class="nav-number">3.3.6.</span> <span class="nav-text">key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#key-len"><span class="nav-number">3.3.7.</span> <span class="nav-text">key_len</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ref"><span class="nav-number">3.3.8.</span> <span class="nav-text">ref</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rows"><span class="nav-number">3.3.9.</span> <span class="nav-text">rows</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#filtered"><span class="nav-number">3.3.10.</span> <span class="nav-text">filtered</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Extra"><span class="nav-number">3.3.11.</span> <span class="nav-text">Extra</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%BF%E5%88%B0%E4%B8%80%E6%9D%A1%E6%85%A2-SQL-%E7%9A%84-EXPLAIN%EF%BC%8C%E4%BD%A0%E6%80%8E%E4%B9%88%E8%AF%BB%EF%BC%9F"><span class="nav-number">3.4.</span> <span class="nav-text">拿到一条慢 SQL 的 EXPLAIN，你怎么读？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BC%98%E5%85%88%E7%9C%8B%E5%93%AA%E5%87%A0%E5%88%97%EF%BC%9F"><span class="nav-number">3.4.1.</span> <span class="nav-text">1. 优先看哪几列？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-type-%E5%B8%B8%E8%A7%81%E6%A1%A3%E4%BD%8D%EF%BC%88%E5%A5%BD-%E2%86%92-%E5%B7%AE%EF%BC%89"><span class="nav-number">3.4.2.</span> <span class="nav-text">2. type 常见档位（好 → 差）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95%E9%87%8C%E5%93%AA%E4%BA%9B%E5%88%97%E7%9C%9F%E6%AD%A3%E7%94%A8%E4%BA%8E%E5%AE%9A%E4%BD%8D%EF%BC%9Fkey-len-%E7%9C%8B%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.4.3.</span> <span class="nav-text">3. 联合索引里哪些列真正用于定位？key_len 看什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-possible-keys-%E6%9C%89%E5%80%BC%E4%BD%86-key-%E4%B8%BA-NULL%EF%BC%9FExtra-%E7%BA%A2%E7%81%AF%EF%BC%9F"><span class="nav-number">3.4.4.</span> <span class="nav-text">4. possible_keys 有值但 key 为 NULL？Extra 红灯？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#filesort%E6%96%87%E4%BB%B6%E6%8E%92%E5%BA%8F%E6%96%B9%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">filesort文件排序方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">优化总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84sql"><span class="nav-number">6.</span> <span class="nav-text">查看优化后的sql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2inner-join%E4%B9%8B%E6%98%BE%E5%BC%8F%E8%BF%9E%E6%8E%A5-VS-%E9%9A%90%E5%BC%8F%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%BB%8E%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8A%E7%9C%8B%E4%B8%A4%E8%80%85%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B%EF%BC%8C%E6%8E%A8%E8%8D%90%E5%B8%A6on%E7%9A%84%E6%98%BE%E7%A4%BA%E6%9F%A5%E8%AF%A2"><span class="nav-number">7.</span> <span class="nav-text">关联查询inner join之显式连接 VS 隐式连接，从执行计划上看两者是一回事，推荐带on的显示查询</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1065,17 +1065,17 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/11/22/mysql-sql-optimization/" rel="bookmark">
-        <time class="popular-posts-time">2022-11-22</time>
-        <br>
-      MySql--sql语句优化
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2022/09/26/mysql8-index/" rel="bookmark">
         <time class="popular-posts-time">2022-09-26</time>
         <br>
       MySql索引
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/11/22/mysql-sql-optimization/" rel="bookmark">
+        <time class="popular-posts-time">2022-11-22</time>
+        <br>
+      MySql--sql语句优化
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1086,10 +1086,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/10/14/mysql8-innodb-buffer-pool/" rel="bookmark">
-        <time class="popular-posts-time">2022-10-14</time>
+      <a class="popular-posts-link" href="/2022/10/26/mysql-sql-function/" rel="bookmark">
+        <time class="popular-posts-time">2022-10-26</time>
         <br>
-      MySql--InnoDB Buffer Pool
+      MySql--sql语句与常用函数
       </a>
     </li>
   </ul>
@@ -1148,7 +1148,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-14 16:11:21" itemprop="dateModified" datetime="2026-09-14T16:11:21+08:00">2026-09-14</time>
+      <time title="修改时间：2026-09-15 10:54:20" itemprop="dateModified" datetime="2026-09-15T10:54:20+08:00">2026-09-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1268,14 +1268,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.1k</span>
+      <span>4.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>15 分钟</span>
+      <span>18 分钟</span>
     </span>
 
         </div>
@@ -1311,6 +1311,12 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <span id="more"></span>
+<h2 id="常见面试题">常见面试题</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.<a href="#read-explain">拿到一条慢 SQL 的 EXPLAIN，你怎么读？</a></p>
+</li>
+</ul>
 <h2 id="执行计划">执行计划</h2>
 <blockquote>
 <p>慢SQL的完整排查流程（找SQL、看锁、看扫描行数、回归验证）见 <a href="/2022/10/14/mysql8-slow-query/" title="MySql--慢查询">MySql--慢查询</a>，本文只讲拿到SQL之后如何读 <code>EXPLAIN</code>。</p>
@@ -1487,6 +1493,107 @@ datetime：8字节<br>
 5）Using filesort：将用外部排序而不是索引排序，数据较小时从内存排序，否则需要在磁盘完成排序，需要使用索引优化<br>
 6）Select tables optimized away：使用某些聚合函数（比如 max、min）来访问存在索引的某个字段</p>
 </div>
+<p><a id="read-explain"></a></p>
+<div class="note success"><h3 id="拿到一条慢-SQL-的-EXPLAIN，你怎么读？">拿到一条慢 SQL 的 EXPLAIN，你怎么读？</h3>
+<p><strong>场景</strong>：<code>employees</code> 有联合索引 <code>idx_name_age_position(name, age, position)</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">WHERE</span> name <span class="operator">=</span> <span class="string">&#x27;LiLei&#x27;</span> <span class="keyword">AND</span> age <span class="operator">&gt;</span> <span class="number">20</span> <span class="keyword">AND</span> position <span class="operator">=</span> <span class="string">&#x27;manager&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="1-优先看哪几列？">1. 优先看哪几列？</h4>
+<p>排查时先盯这四列（完整字段含义见上文各小节）：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>type</code>：访问方式好不好，差到 <code>ALL</code>/<code>index</code> 往往就是慢因。</p>
+</li>
+<li class="lvl-2">
+<p><code>key</code>：实际用了哪个索引；为 <code>NULL</code> 基本等于没走索引定位。</p>
+</li>
+<li class="lvl-2">
+<p><code>rows</code>：优化器估的扫描行数，不是结果集行数；越大越慢。可与慢日志里真实的 <code>Rows_examined</code> 对照（见 <a href="/2022/10/14/mysql8-slow-query/" title="MySql--慢查询">MySql–慢查询</a>）。</p>
+</li>
+<li class="lvl-2">
+<p><code>Extra</code>：有没有覆盖索引、临时表、文件排序等「额外代价」。</p>
+</li>
+</ul>
+<p>辅看：<code>possible_keys</code>（候选）、<code>key_len</code>（用了索引多长/几列）、<code>filtered</code>（在扫描行里预计还剩百分之几满足其余条件）。</p>
+<h4 id="2-type-常见档位（好-→-差）">2. <code>type</code> 常见档位（好 → 差）</h4>
+<p>文中完整链更长，面试常背这一截：<br>
+<code>system</code> &gt; <code>const</code> &gt; <code>eq_ref</code> &gt; <code>ref</code> &gt; <code>range</code> &gt; <code>index</code> &gt; <code>ALL</code><br>
+一般至少到 <code>range</code>，最好到 <code>ref</code>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">type</th>
+<th style="text-align:left">人话</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>const</code> / <code>system</code></td>
+<td style="text-align:left">最多命中一行，如主键/唯一键等值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>eq_ref</code></td>
+<td style="text-align:left">JOIN 时被驱动表用主键或唯一键，一行对一行</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>ref</code></td>
+<td style="text-align:left">普通索引等值（或唯一索引前缀），可能多行</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>range</code></td>
+<td style="text-align:left">索引范围：<code>&gt;</code>、<code>&lt;</code>、<code>BETWEEN</code>、<code>IN</code> 等</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>index</code></td>
+<td style="text-align:left">扫完整个二级索引（比 ALL 轻，仍可能很重）</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>ALL</code></td>
+<td style="text-align:left">全表扫聚簇索引叶子，大表上的红灯</td>
+</tr>
+</tbody>
+</table>
+<p>本题有 <code>age &gt; 20</code>，正常应是 <code>range</code>（或更好），不该是 <code>ALL</code>。</p>
+<h4 id="3-联合索引里哪些列真正用于定位？key-len-看什么？">3. 联合索引里哪些列真正用于定位？<code>key_len</code> 看什么？</h4>
+<p>条件：<code>name = ?</code>（等值）→ <code>age &gt; ?</code>（范围）→ <code>position = ?</code>（等值）。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>最左前缀：<code>name</code> 能用。</p>
+</li>
+<li class="lvl-2">
+<p><code>age</code> 是范围，也能用于索引范围扫描。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>age</code> 截断后续列</strong>：<code>position</code> <strong>不能再用于索引定位</strong>（可能靠 ICP 在索引里过滤，见 <code>Using index condition</code>），详见 <a href="/2022/09/26/mysql8-index/" title="MySql索引">MySql索引</a>。</p>
+</li>
+<li class="lvl-2">
+<p><code>key_len</code>：实际用到的索引字节数。本题 utf8mb3、<code>name varchar(24) NOT NULL</code> 约 <code>24×3+2=74</code>，再加 <code>age int</code> 的 4，若只用到 <code>name+age</code>，<code>key_len</code> 大约是 <strong>78</strong>；若看到明显更长，再对照是否把后续列也算进了使用长度。以 <code>key_len</code> 为准判断「用到第几列」，不要想当然以为三个条件都走了索引。</p>
+</li>
+<li class="lvl-2">
+<p><code>SELECT *</code> 无法覆盖索引，即使 <code>key</code> 有值也往往要回表；只查索引列时 <code>Extra</code> 才容易出现 <code>Using index</code>。</p>
+</li>
+</ul>
+<h4 id="4-possible-keys-有值但-key-为-NULL？Extra-红灯？">4. <code>possible_keys</code> 有值但 <code>key</code> 为 NULL？Extra 红灯？</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>候选有、实际不用</strong>：常见是表很小，优化器觉得全表扫更便宜；或统计信息不准（<code>ANALYZE TABLE</code>）；也可能条件写法导致用索引更亏。不是「索引坏了」。</p>
+</li>
+<li class="lvl-2">
+<p><code>Using index</code>：覆盖索引，通常是好事。</p>
+</li>
+<li class="lvl-2">
+<p><code>Using filesort</code>：排序没走索引，额外排序。</p>
+</li>
+<li class="lvl-2">
+<p><code>Using temporary</code>：要建临时表（去重/分组/部分 Union 等）。</p>
+</li>
+<li class="lvl-2">
+<p>优先处理：<code>type=ALL</code> 且 <code>key=NULL</code>，以及不该出现的 <code>Using filesort</code> / <code>Using temporary</code>（能靠索引消掉就消）。<code>Using where</code> 单独出现不等于没走索引，别误判。</p>
+</li>
+</ul>
+<blockquote>
+<p>面试可背：先看 <code>type</code>/<code>key</code>/<code>rows</code>/<code>Extra</code>；<code>type</code> 至少 <code>range</code>；联合索引等值在前、范围截断后面列，用 <code>key_len</code> 核对；<code>possible_keys</code>≠一定用上；<code>filesort</code>/<code>temporary</code> 优先优化。</p>
+</blockquote>
+</div>
 <h2 id="filesort文件排序方式">filesort文件排序方式</h2>
 <blockquote>
 <p>单路排序：是一次性取出满足条件行的所有字段，然后在sort buffer中进行排序；<br>
@@ -1657,14 +1764,14 @@ MySQL通过比较系统变量 max_length_for_sort_data(默认1024字节)的大�
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">883k</span>
+    <span title="站点总字数">888k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">53:31</span>
+    <span title="站点阅读时长">53:49</span>
   </span>
 </div>
 <div class="busuanzi-count">

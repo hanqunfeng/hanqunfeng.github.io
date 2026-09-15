@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   sql语句与常用函数介绍   本文基于mysql-8.0.30，https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;8.0&#x2F;en&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-26T13:30:05.000Z">
-<meta property="article:modified_time" content="2024-04-03T03:45:37.334Z">
+<meta property="article:modified_time" content="2026-09-15T02:26:56.923Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -965,7 +965,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql%E5%85%B3%E9%94%AE%E5%AD%97%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">Mysql关键字执行顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#distinct-%E5%8E%BB%E9%87%8D"><span class="nav-number">3.</span> <span class="nav-text">distinct:去重</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#with-rollup-%E5%88%86%E7%BB%84%E5%90%8E%E8%81%9A%E5%90%88"><span class="nav-number">4.</span> <span class="nav-text">with rollup:分组后聚合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#group-concat-%E5%88%86%E7%BB%84%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%B0%86%E5%88%86%E7%BB%84%E4%B8%8B%E7%9A%84%E5%85%A8%E9%83%A8column%E7%94%A8%E5%88%86%E9%9A%94%E7%AC%A6%E8%BF%9E%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">group_concat(): 分组连接，将分组下的全部column用分隔符连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#over-%E5%BC%80%E7%AA%97%E5%87%BD%E6%95%B0"><span class="nav-number">6.</span> <span class="nav-text">over(): 开窗函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%A1%8C%E5%8F%B7"><span class="nav-number">7.</span> <span class="nav-text">查询行号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">8.</span> <span class="nav-text">Mysql常用函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="nav-number">8.1.</span> <span class="nav-text">数学函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0-%E5%B8%B8%E7%94%A8%E4%BA%8EGROUP-BY%E4%BB%8E%E5%8F%A5%E7%9A%84SELECT%E6%9F%A5%E8%AF%A2%E4%B8%AD"><span class="nav-number">8.2.</span> <span class="nav-text">聚合函数(常用于GROUP BY从句的SELECT查询中)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0"><span class="nav-number">8.3.</span> <span class="nav-text">字符串函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4%E5%87%BD%E6%95%B0"><span class="nav-number">8.4.</span> <span class="nav-text">日期和时间函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E5%87%BD%E6%95%B0"><span class="nav-number">8.5.</span> <span class="nav-text">加密函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%87%BD%E6%95%B0"><span class="nav-number">8.6.</span> <span class="nav-text">信息函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%87%BD%E6%95%B0"><span class="nav-number">8.7.</span> <span class="nav-text">其它函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="nav-number">9.</span> <span class="nav-text">流程控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%87%BD%E6%95%B0"><span class="nav-number">9.1.</span> <span class="nav-text">控制函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5case%E2%80%A6when"><span class="nav-number">9.2.</span> <span class="nav-text">控制语句case…when</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">10.</span> <span class="nav-text">算术运算符</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">常见面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql%E5%85%B3%E9%94%AE%E5%AD%97%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">3.</span> <span class="nav-text">Mysql关键字执行顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#distinct-%E5%8E%BB%E9%87%8D"><span class="nav-number">4.</span> <span class="nav-text">distinct:去重</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%8E%86%E5%8F%B2%E5%8E%BB%E9%87%8D-%E6%8E%92%E5%BA%8F%EF%BC%9ADISTINCT-ORDER-BY-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8F%AF%E9%9D%A0%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">搜索历史去重 + 排序：DISTINCT + ORDER BY 为什么不可靠？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F%E7%BB%93%E6%9E%9C%E5%8F%AF%E8%83%BD%E6%80%8E%E6%A0%B7%EF%BC%9F"><span class="nav-number">4.1.1.</span> <span class="nav-text">1. 有什么问题？结果可能怎样？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%BB%93%E5%90%88%E5%85%B3%E9%94%AE%E5%AD%97%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%E8%AF%B4%E6%98%8E%E5%8E%9F%E5%9B%A0"><span class="nav-number">4.1.2.</span> <span class="nav-text">2. 结合关键字执行顺序说明原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%80%8E%E4%B9%88%E6%94%B9%EF%BC%9F"><span class="nav-number">4.1.3.</span> <span class="nav-text">3. 怎么改？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E8%BF%BD%E9%97%AE%EF%BC%9AWHERE-%E5%92%8C-HAVING-%E5%9C%A8%E8%BF%99%E9%87%8C%E5%88%86%E5%88%AB%E9%80%82%E5%90%88%E5%B9%B2%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">4.1.4.</span> <span class="nav-text">4. 追问：WHERE 和 HAVING 在这里分别适合干什么？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#with-rollup-%E5%88%86%E7%BB%84%E5%90%8E%E8%81%9A%E5%90%88"><span class="nav-number">5.</span> <span class="nav-text">with rollup:分组后聚合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#group-concat-%E5%88%86%E7%BB%84%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%B0%86%E5%88%86%E7%BB%84%E4%B8%8B%E7%9A%84%E5%85%A8%E9%83%A8column%E7%94%A8%E5%88%86%E9%9A%94%E7%AC%A6%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">group_concat(): 分组连接，将分组下的全部column用分隔符连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#over-%E5%BC%80%E7%AA%97%E5%87%BD%E6%95%B0"><span class="nav-number">7.</span> <span class="nav-text">over(): 开窗函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%A1%8C%E5%8F%B7"><span class="nav-number">8.</span> <span class="nav-text">查询行号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">9.</span> <span class="nav-text">Mysql常用函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="nav-number">9.1.</span> <span class="nav-text">数学函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0-%E5%B8%B8%E7%94%A8%E4%BA%8EGROUP-BY%E4%BB%8E%E5%8F%A5%E7%9A%84SELECT%E6%9F%A5%E8%AF%A2%E4%B8%AD"><span class="nav-number">9.2.</span> <span class="nav-text">聚合函数(常用于GROUP BY从句的SELECT查询中)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0"><span class="nav-number">9.3.</span> <span class="nav-text">字符串函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4%E5%87%BD%E6%95%B0"><span class="nav-number">9.4.</span> <span class="nav-text">日期和时间函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E5%87%BD%E6%95%B0"><span class="nav-number">9.5.</span> <span class="nav-text">加密函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%87%BD%E6%95%B0"><span class="nav-number">9.6.</span> <span class="nav-text">信息函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%87%BD%E6%95%B0"><span class="nav-number">9.7.</span> <span class="nav-text">其它函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="nav-number">10.</span> <span class="nav-text">流程控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%87%BD%E6%95%B0"><span class="nav-number">10.1.</span> <span class="nav-text">控制函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5case%E2%80%A6when"><span class="nav-number">10.2.</span> <span class="nav-text">控制语句case…when</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">11.</span> <span class="nav-text">算术运算符</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1079,6 +1079,13 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2022/10/14/mysql8-mvcc/" rel="bookmark">
+        <time class="popular-posts-time">2022-10-14</time>
+        <br>
+      MySql--MVCC
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2022/09/26/mysql8-explain/" rel="bookmark">
         <time class="popular-posts-time">2022-09-26</time>
         <br>
@@ -1141,7 +1148,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
+      <time title="修改时间：2026-09-15 10:26:56" itemprop="dateModified" datetime="2026-09-15T10:26:56+08:00">2026-09-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1261,14 +1268,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>9.1k</span>
+      <span>9.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>33 分钟</span>
+      <span>36 分钟</span>
     </span>
 
         </div>
@@ -1313,6 +1320,12 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <span id="more"></span>
+<h2 id="常见面试题">常见面试题</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>1.<a href="#distinct-order-by">搜索历史去重 + 排序：<code>DISTINCT</code> + <code>ORDER BY</code> 为什么不可靠？</a></p>
+</li>
+</ul>
 <h2 id="Mysql关键字执行顺序">Mysql关键字执行顺序</h2>
 <table>
 <thead>
@@ -1394,6 +1407,75 @@ WHERE与HAVING的区别：WHERE是对记录进行筛选；而HAVING是对按GROU
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 错误方式</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span>(t.search) <span class="keyword">FROM</span> tbl_search_history t <span class="keyword">where</span> t.user_id <span class="operator">=</span> :userId <span class="keyword">ORDER</span> <span class="keyword">BY</span> t.id <span class="keyword">desc</span></span><br><span class="line"></span><br><span class="line"># 正确方式</span><br><span class="line"><span class="keyword">SELECT</span> t.search <span class="keyword">FROM</span> tbl_search_history t <span class="keyword">WHERE</span> t.user_id <span class="operator">=</span> :userId <span class="keyword">GROUP</span> <span class="keyword">BY</span> t.search <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">MAX</span>(t.id) <span class="keyword">desc</span></span><br></pre></td></tr></table></figure>
+<p><a id="distinct-order-by"></a></p>
+<div class="note success"><h3 id="搜索历史去重-排序：DISTINCT-ORDER-BY-为什么不可靠？">搜索历史去重 + 排序：<code>DISTINCT</code> + <code>ORDER BY</code> 为什么不可靠？</h3>
+<p><strong>场景</strong>：表 <code>tbl_search_history</code>（<code>id</code> 自增主键、<code>user_id</code>、<code>search</code>、<code>create_time</code>）。要求：某用户搜过的关键词，同一关键词只留一条，并按最近一次搜索倒序。</p>
+<p>错误写法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> <span class="keyword">search</span></span><br><span class="line"><span class="keyword">FROM</span> tbl_search_history</span><br><span class="line"><span class="keyword">WHERE</span> user_id <span class="operator">=</span> ?</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="1-有什么问题？结果可能怎样？">1. 有什么问题？结果可能怎样？</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>看起来「去重 + 按 id 倒序」，实际<strong>排序语义不成立</strong>，甚至可能直接报错。</p>
+</li>
+<li class="lvl-2">
+<p>MySQL 8.0 在 <code>ONLY_FULL_GROUP_BY</code> 模式下（默认开启，见 <a href="/2022/09/26/mysql8-only_full_group_by/" title="MySql--ONLY_FULL_GROUP_BY">MySql–ONLY_FULL_GROUP_BY</a>），<code>ORDER BY id</code> 而 <code>SELECT</code> 列表里没有 <code>id</code>，且 <code>id</code> 也不是按 <code>search</code> 的聚合结果，常会报：<code>Expression #1 of ORDER BY clause is not in SELECT list, references column ... which is not in SELECT list; this is incompatible with DISTINCT</code>。</p>
+</li>
+<li class="lvl-2">
+<p>即便旧模式或放宽了 sql_mode 能跑通：去重后每个 <code>search</code> 只剩一行，但这行对应的是哪条历史记录的 <code>id</code> <strong>不确定</strong>；<code>ORDER BY id</code> 排的也不是「该关键词最近一次出现的 id」。产品要的「按最近搜索时间倒序」得不到保证，列表顺序会飘。</p>
+</li>
+</ul>
+<h4 id="2-结合关键字执行顺序说明原因">2. 结合关键字执行顺序说明原因</h4>
+<p>上文执行顺序里，和本题相关的几步是：<br>
+<code>FROM</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <strong><code>SELECT [DISTINCT]</code></strong> → <strong><code>ORDER BY</code></strong> → <code>LIMIT</code></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>WHERE</code> 先按 <code>user_id</code> 滤出行。</p>
+</li>
+<li class="lvl-2">
+<p>随后进入 <code>SELECT</code>，<code>DISTINCT</code> 对 <code>search</code> <strong>去重</strong>。去重时引擎只保证「每个 search 值出现一次」，<strong>不会按 <code>ORDER BY</code> 去挑「id 最大的那一行」</strong>——因为 <code>ORDER BY</code> 还没执行。</p>
+</li>
+<li class="lvl-2">
+<p>去重完成后，结果集里往往只剩 <code>search</code> 这一列（或等价投影），原来的 <code>id</code> 已经丢掉；再 <code>ORDER BY id</code> 等于在「没有可靠 id 的集合」上排序。</p>
+</li>
+<li class="lvl-2">
+<p>所以：<strong>不是「先按 id 排好再去重」</strong>，而是「先去重再排序」；去重又不保留「最近一次」的元数据，排序目标自然落空。</p>
+</li>
+</ul>
+<p>一句话：<code>DISTINCT</code> 只管值唯一，不管「保留哪条完整行」；<code>ORDER BY</code> 又排在它后面，无法指挥它如何取行。</p>
+<h4 id="3-怎么改？">3. 怎么改？</h4>
+<p>用 <code>GROUP BY</code> 去重，并用聚合函数显式表达「最近一次」：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> t.search</span><br><span class="line"><span class="keyword">FROM</span> tbl_search_history t</span><br><span class="line"><span class="keyword">WHERE</span> t.user_id <span class="operator">=</span> ?</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> t.search</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="built_in">MAX</span>(t.id) <span class="keyword">DESC</span>;</span><br><span class="line"><span class="comment">-- 若业务按时间：ORDER BY MAX(t.create_time) DESC</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>GROUP BY search</code>：每个关键词一组。</p>
+</li>
+<li class="lvl-2">
+<p><code>MAX(id)</code> / <code>MAX(create_time)</code>：组内最近一次的序号/时间，语义清晰，也能过 <code>ONLY_FULL_GROUP_BY</code>。</p>
+</li>
+<li class="lvl-2">
+<p>需要同时返回「最近一次的完整行」时，用开窗函数（见下文 <code>over()</code>）：</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">search</span>, id, create_time</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">search</span>, id, create_time,</span><br><span class="line">         <span class="built_in">ROW_NUMBER</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">search</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> id <span class="keyword">DESC</span>) <span class="keyword">AS</span> rn</span><br><span class="line">  <span class="keyword">FROM</span> tbl_search_history</span><br><span class="line">  <span class="keyword">WHERE</span> user_id <span class="operator">=</span> ?</span><br><span class="line">) t</span><br><span class="line"><span class="keyword">WHERE</span> rn <span class="operator">=</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="4-追问：WHERE-和-HAVING-在这里分别适合干什么？">4. 追问：<code>WHERE</code> 和 <code>HAVING</code> 在这里分别适合干什么？</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>WHERE</code>：对<strong>行</strong>过滤，发生在分组前。<code>user_id = ?</code> 必须写在 <code>WHERE</code>，缩小参与分组的行数。</p>
+</li>
+<li class="lvl-2">
+<p><code>HAVING</code>：对<strong>分组后的组</strong>过滤，发生在 <code>GROUP BY</code> 之后，才能用聚合结果。例如「只保留搜过至少 3 次的关键词」：</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">search</span></span><br><span class="line"><span class="keyword">FROM</span> tbl_search_history</span><br><span class="line"><span class="keyword">WHERE</span> user_id <span class="operator">=</span> ?</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="keyword">search</span></span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="operator">&gt;=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="built_in">MAX</span>(id) <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本题「按用户过滤」是行级条件，用 <code>WHERE</code> 即可；没有「对组再筛选」的需求时，不必写 <code>HAVING</code>。把 <code>user_id = ?</code> 写进 <code>HAVING</code> 也能跑，但会先扫更多行再丢弃，一般更差，也不符合「行条件用 WHERE」的习惯。</p>
+</li>
+</ul>
+<blockquote>
+<p>面试可背：<code>DISTINCT</code> + <code>ORDER BY 非投影列</code> 不可靠；要「去重且按最近一次排序」用 <code>GROUP BY</code> + <code>MAX(...)</code>，或开窗 <code>ROW_NUMBER()</code>；行过滤 <code>WHERE</code>，组过滤 <code>HAVING</code>。</p>
+</blockquote>
+</div>
 <h2 id="with-rollup-分组后聚合">with rollup:分组后聚合</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -2629,14 +2711,14 @@ year,quarter,month,week,day,hour,minute,second,microsecond,day_hour,day_minute,d
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">883k</span>
+    <span title="站点总字数">888k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">53:31</span>
+    <span title="站点阅读时长">53:49</span>
   </span>
 </div>
 <div class="busuanzi-count">
