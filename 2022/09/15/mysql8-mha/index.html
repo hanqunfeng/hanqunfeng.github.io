@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/atelier-seaside-light","dark":"tomorrow-night-bright"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="摘要  MySql-MHA的构建过程 本文基于mysql-8.0.30,mha4mysql-0.58-0.el7.centos MHA 0.58 已停更多年，只适合当时的 MySQL 8.0；不适用于 MySQL 8.4 LTS 及 9.x。新部署请改用 InnoDB Cluster 等方案">
+    <meta name="description" content="摘要  MySql-MHA的构建过程 本文基于mysql-8.0.30,mha4mysql-0.58-0.el7.centos MHA 0.58 已停更多年，只适合当时的 MySQL 8.0；不适用于 MySQL 8.4 LTS 及 9.x。新部署请改用 InnoDB Cluster；若必须保留传统一主多从，可评估社区版 MHA-Go（见 MySQL 8.4 上使用社区版 MHA-Go）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySql-MHA的构建方法">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2022/09/15/mysql8-mha/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  MySql-MHA的构建过程 本文基于mysql-8.0.30,mha4mysql-0.58-0.el7.centos MHA 0.58 已停更多年，只适合当时的 MySQL 8.0；不适用于 MySQL 8.4 LTS 及 9.x。新部署请改用 InnoDB Cluster 等方案">
+<meta property="og:description" content="摘要  MySql-MHA的构建过程 本文基于mysql-8.0.30,mha4mysql-0.58-0.el7.centos MHA 0.58 已停更多年，只适合当时的 MySQL 8.0；不适用于 MySQL 8.4 LTS 及 9.x。新部署请改用 InnoDB Cluster；若必须保留传统一主多从，可评估社区版 MHA-Go（见 MySQL 8.4 上使用社区版 MHA-Go）">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-15T13:30:05.000Z">
-<meta property="article:modified_time" content="2026-09-15T08:25:02.625Z">
+<meta property="article:modified_time" content="2026-09-16T08:08:46.382Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
@@ -965,7 +965,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E4%BB%80%E4%B9%88%E6%98%AF-MHA"><span class="nav-number">2.</span> <span class="nav-text">0.什么是 MHA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.</span> <span class="nav-text">能解决什么问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E9%87%8C%E6%9C%89%E4%B8%A4%E7%B1%BB%E8%A7%92%E8%89%B2"><span class="nav-number">2.2.</span> <span class="nav-text">架构里有两类角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB%E6%97%B6%E5%A4%A7%E8%87%B4%E5%9C%A8%E5%B9%B2%E4%BB%80%E4%B9%88"><span class="nav-number">2.3.</span> <span class="nav-text">故障转移时大致在干什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C%E6%9C%AC%E6%96%87%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.4.</span> <span class="nav-text">和本文的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%98%E9%80%82%E7%94%A8%E4%BA%8E%E6%9C%80%E6%96%B0-MySQL-%E5%90%97"><span class="nav-number">2.5.</span> <span class="nav-text">还适用于最新 MySQL 吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E4%BC%BC%E5%B7%A5%E5%85%B7%E6%80%8E%E4%B9%88%E9%80%89"><span class="nav-number">2.6.</span> <span class="nav-text">类似工具怎么选</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%8A%82%E7%82%B9%E8%A7%84%E5%88%92"><span class="nav-number">3.</span> <span class="nav-text">1.节点规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95"><span class="nav-number">4.</span> <span class="nav-text">2.免密登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%B8%8B%E8%BD%BD%E5%8F%8A%E5%AE%89%E8%A3%85MHA%E5%AE%89%E8%A3%85%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">3.下载及安装MHA安装包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E6%90%AD%E5%BB%BA"><span class="nav-number">6.</span> <span class="nav-text">4.mysql主从复制搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%BB%8E%E8%8A%82%E7%82%B9%E4%B9%9F%E8%A6%81%E5%88%9B%E5%BB%BA%E5%90%8C%E6%AD%A5%E5%B8%90%E5%8F%B7"><span class="nav-number">7.</span> <span class="nav-text">5.从节点也要创建同步帐号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E8%8A%82%E7%82%B9%E8%AE%BE%E7%BD%AE%E5%90%8C%E6%AD%A5"><span class="nav-number">7.1.</span> <span class="nav-text">从节点设置同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-MHA%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%8B%A5%E6%9C%89%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90%E7%9A%84mysql%E7%94%A8%E6%88%B7"><span class="nav-number">8.</span> <span class="nav-text">6.MHA需要一个拥有管理员权限的mysql用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%9C%A8mha-manager%E8%8A%82%E7%82%B9%E4%B8%8A%E7%BC%96%E5%86%99MHA%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">9.</span> <span class="nav-text">7.在mha-manager节点上编写MHA管理配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%A3%80%E6%B5%8B%E5%90%84%E8%8A%82%E7%82%B9%E9%97%B4ssh%E4%BA%92%E4%BF%A1%E9%80%9A%E4%BF%A1%E9%85%8D%E7%BD%AE%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE"><span class="nav-number">10.</span> <span class="nav-text">8.检测各节点间ssh互信通信配置是否正确</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%A3%80%E6%9F%A5%E7%AE%A1%E7%90%86%E7%9A%84MySQL%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4%E7%9A%84%E8%BF%9E%E6%8E%A5%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E6%98%AF%E5%90%A6OK"><span class="nav-number">11.</span> <span class="nav-text">9.检查管理的MySQL复制集群的连接配置参数是否OK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E7%AE%A1%E7%90%86MHA"><span class="nav-number">12.</span> <span class="nav-text">10.管理MHA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E6%B5%8B%E8%AF%95-MHA-%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">13.</span> <span class="nav-text">11.测试 MHA 故障转移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E5%85%88%E6%8C%89-5-%E4%BB%8E%E8%8A%82%E7%82%B9%E4%B9%9F%E8%A6%81%E5%88%9B%E5%BB%BA%E5%90%8C%E6%AD%A5%E5%B8%90%E5%8F%B7-%E4%B8%AD%E7%9A%84%E9%94%99%E8%AF%AF%E6%96%B9%E5%BC%8F%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="nav-number">13.1.</span> <span class="nav-text">我们先按&quot;5.从节点也要创建同步帐号&quot;中的错误方式进行测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E6%9D%A5%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E8%BF%99%E4%B8%AA%E5%A4%B1%E8%B4%A5%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">13.2.</span> <span class="nav-text">我们来分析一下这个失败的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E5%86%8D%E6%8C%89-5-%E4%BB%8E%E8%8A%82%E7%82%B9%E4%B9%9F%E8%A6%81%E5%88%9B%E5%BB%BA%E5%90%8C%E6%AD%A5%E5%B8%90%E5%8F%B7-%E4%B8%AD%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E5%BC%8F%E6%90%AD%E5%BB%BA%E5%A5%BD%E4%B8%BB%E4%BB%8E%E5%90%8E%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="nav-number">13.3.</span> <span class="nav-text">我们再按&quot;5.从节点也要创建同步帐号&quot;中的正确方式搭建好主从后进行测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MHA%E8%84%9A%E6%9C%AC%E6%89%A9%E5%B1%95"><span class="nav-number">14.</span> <span class="nav-text">MHA脚本扩展</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E4%BB%80%E4%B9%88%E6%98%AF-MHA"><span class="nav-number">2.</span> <span class="nav-text">0.什么是 MHA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.</span> <span class="nav-text">能解决什么问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E9%87%8C%E6%9C%89%E4%B8%A4%E7%B1%BB%E8%A7%92%E8%89%B2"><span class="nav-number">2.2.</span> <span class="nav-text">架构里有两类角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB%E6%97%B6%E5%A4%A7%E8%87%B4%E5%9C%A8%E5%B9%B2%E4%BB%80%E4%B9%88"><span class="nav-number">2.3.</span> <span class="nav-text">故障转移时大致在干什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C%E6%9C%AC%E6%96%87%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.4.</span> <span class="nav-text">和本文的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%98%E9%80%82%E7%94%A8%E4%BA%8E%E6%9C%80%E6%96%B0-MySQL-%E5%90%97"><span class="nav-number">2.5.</span> <span class="nav-text">还适用于最新 MySQL 吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E4%BC%BC%E5%B7%A5%E5%85%B7%E6%80%8E%E4%B9%88%E9%80%89"><span class="nav-number">2.6.</span> <span class="nav-text">类似工具怎么选</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BE%E5%8C%BA%E7%89%88-MHA-Go-%E7%9A%84%E7%89%88%E6%9C%AC%E8%BE%B9%E7%95%8C"><span class="nav-number">2.6.1.</span> <span class="nav-text">社区版 MHA-Go 的版本边界</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%8A%82%E7%82%B9%E8%A7%84%E5%88%92"><span class="nav-number">3.</span> <span class="nav-text">1.节点规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95"><span class="nav-number">4.</span> <span class="nav-text">2.免密登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%B8%8B%E8%BD%BD%E5%8F%8A%E5%AE%89%E8%A3%85MHA%E5%AE%89%E8%A3%85%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">3.下载及安装MHA安装包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E6%90%AD%E5%BB%BA"><span class="nav-number">6.</span> <span class="nav-text">4.mysql主从复制搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%BB%8E%E8%8A%82%E7%82%B9%E4%B9%9F%E8%A6%81%E5%88%9B%E5%BB%BA%E5%90%8C%E6%AD%A5%E5%B8%90%E5%8F%B7"><span class="nav-number">7.</span> <span class="nav-text">5.从节点也要创建同步帐号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E8%8A%82%E7%82%B9%E8%AE%BE%E7%BD%AE%E5%90%8C%E6%AD%A5"><span class="nav-number">7.1.</span> <span class="nav-text">从节点设置同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-MHA%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%8B%A5%E6%9C%89%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90%E7%9A%84mysql%E7%94%A8%E6%88%B7"><span class="nav-number">8.</span> <span class="nav-text">6.MHA需要一个拥有管理员权限的mysql用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%9C%A8mha-manager%E8%8A%82%E7%82%B9%E4%B8%8A%E7%BC%96%E5%86%99MHA%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">9.</span> <span class="nav-text">7.在mha-manager节点上编写MHA管理配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%A3%80%E6%B5%8B%E5%90%84%E8%8A%82%E7%82%B9%E9%97%B4ssh%E4%BA%92%E4%BF%A1%E9%80%9A%E4%BF%A1%E9%85%8D%E7%BD%AE%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE"><span class="nav-number">10.</span> <span class="nav-text">8.检测各节点间ssh互信通信配置是否正确</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%A3%80%E6%9F%A5%E7%AE%A1%E7%90%86%E7%9A%84MySQL%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4%E7%9A%84%E8%BF%9E%E6%8E%A5%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E6%98%AF%E5%90%A6OK"><span class="nav-number">11.</span> <span class="nav-text">9.检查管理的MySQL复制集群的连接配置参数是否OK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E7%AE%A1%E7%90%86MHA"><span class="nav-number">12.</span> <span class="nav-text">10.管理MHA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E6%B5%8B%E8%AF%95-MHA-%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">13.</span> <span class="nav-text">11.测试 MHA 故障转移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E5%85%88%E6%8C%89-5-%E4%BB%8E%E8%8A%82%E7%82%B9%E4%B9%9F%E8%A6%81%E5%88%9B%E5%BB%BA%E5%90%8C%E6%AD%A5%E5%B8%90%E5%8F%B7-%E4%B8%AD%E7%9A%84%E9%94%99%E8%AF%AF%E6%96%B9%E5%BC%8F%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="nav-number">13.1.</span> <span class="nav-text">我们先按&quot;5.从节点也要创建同步帐号&quot;中的错误方式进行测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E6%9D%A5%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E8%BF%99%E4%B8%AA%E5%A4%B1%E8%B4%A5%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">13.2.</span> <span class="nav-text">我们来分析一下这个失败的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E5%86%8D%E6%8C%89-5-%E4%BB%8E%E8%8A%82%E7%82%B9%E4%B9%9F%E8%A6%81%E5%88%9B%E5%BB%BA%E5%90%8C%E6%AD%A5%E5%B8%90%E5%8F%B7-%E4%B8%AD%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E5%BC%8F%E6%90%AD%E5%BB%BA%E5%A5%BD%E4%B8%BB%E4%BB%8E%E5%90%8E%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="nav-number">13.3.</span> <span class="nav-text">我们再按&quot;5.从节点也要创建同步帐号&quot;中的正确方式搭建好主从后进行测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MHA%E8%84%9A%E6%9C%AC%E6%89%A9%E5%B1%95"><span class="nav-number">14.</span> <span class="nav-text">MHA脚本扩展</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -980,7 +980,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">307</span>
+          <span class="site-state-item-count">308</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1072,10 +1072,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2022/09/14/mysql8-config/" rel="bookmark">
-        <time class="popular-posts-time">2022-09-14</time>
+      <a class="popular-posts-link" href="/2026/09/16/mysql8.4-mha-go/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-16</time>
         <br>
-      MySql单节点、主从、双主的构建方法
+      MySQL 8.4 上使用社区版 MHA-Go
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1086,10 +1086,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2026/01/11/redis7-command-05-script-function/" rel="bookmark">
-        <time class="popular-posts-time">2026-01-11</time>
+      <a class="popular-posts-link" href="/2022/09/14/mysql8-config/" rel="bookmark">
+        <time class="popular-posts-time">2022-09-14</time>
         <br>
-      Redis 命令详解：Scripting / Functions 命令
+      MySql单节点、主从、双主的构建方法
       </a>
     </li>
   </ul>
@@ -1148,7 +1148,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-15 16:25:02" itemprop="dateModified" datetime="2026-09-15T16:25:02+08:00">2026-09-15</time>
+      <time title="修改时间：2026-09-16 16:08:46" itemprop="dateModified" datetime="2026-09-16T16:08:46+08:00">2026-09-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1268,14 +1268,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.5k</span>
+      <span>7.8k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>27 分钟</span>
+      <span>28 分钟</span>
     </span>
 
         </div>
@@ -1288,7 +1288,7 @@ if (!window.__postViewReady) {
 <ul class="lvl-0">
 <li class="lvl-2">MySql-MHA的构建过程</li>
 <li class="lvl-2">本文基于<code>mysql-8.0.30</code>,<code>mha4mysql-0.58-0.el7.centos</code></li>
-<li class="lvl-2">MHA 0.58 已停更多年，只适合当时的 MySQL 8.0；<strong>不适用于 MySQL 8.4 LTS 及 9.x</strong>。新部署请改用 InnoDB Cluster 等方案</li>
+<li class="lvl-2">MHA 0.58 已停更多年，只适合当时的 MySQL 8.0；<strong>不适用于 MySQL 8.4 LTS 及 9.x</strong>。新部署请改用 InnoDB Cluster；若必须保留传统一主多从，可评估社区版 <strong>MHA-Go</strong>（见 <a href="/2026/09/16/mysql8.4-mha-go/" title="MySQL 8.4 上使用社区版 MHA-Go">MySQL 8.4 上使用社区版 MHA-Go</a>）</li>
 </ul>
 <span id="more"></span>
 <h2 id="0-什么是-MHA">0.什么是 MHA</h2>
@@ -1425,9 +1425,9 @@ if (!window.__postViewReady) {
 </tr>
 <tr>
 <td style="text-align:left"><strong>MHA-Go</strong></td>
-<td style="text-align:left">仍想保持「一主多从 + 外部 failover」、且已上 8.4 + GTID</td>
+<td style="text-align:left">仍想保持「一主多从 + 外部 failover」、且已上 <strong>8.4.x 或 9.7</strong> + GTID</td>
 <td style="text-align:left">Perl MHA 的 Go 重写：单二进制、不强制每台装 Node</td>
-<td style="text-align:left">项目较新，生产前要自己做故障演练</td>
+<td style="text-align:left">社区项目；<strong>不支持 5.7 / 8.0 / 9.6</strong>，详见下文与 <a href="/2026/09/16/mysql8.4-mha-go/" title="MySQL 8.4 上使用社区版 MHA-Go">MySQL 8.4 上使用社区版 MHA-Go</a></td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Orchestrator</strong></td>
@@ -1443,6 +1443,47 @@ if (!window.__postViewReady) {
 </tr>
 </tbody>
 </table>
+<h4 id="社区版-MHA-Go-的版本边界">社区版 MHA-Go 的版本边界</h4>
+<p>原版 Perl MHA（本文 0.58）停更后，社区有 Go 重写项目 <a target="_blank" rel="noopener" href="https://github.com/fanderchan/mha_go">mha_go</a>。它<strong>不是</strong>原版的补丁分支，而是按现代 MySQL GTID 单主拓扑重写的工具，和本文的 RPM/INI/<code>masterha_manager</code> <strong>不通用</strong>。</p>
+<p>按项目 README（写作时以 <code>v0.1.4</code> 为准）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">MySQL 版本</th>
+<th style="text-align:left">MHA-Go</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>8.4.x</strong></td>
+<td style="text-align:left">主力支持（发布基线）</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>9.7 ER/EA</strong></td>
+<td style="text-align:left">前向兼容目标；配置里 <code>version_series</code> 写 <code>&quot;9.7&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">5.7 / 8.0 / 9.6</td>
+<td style="text-align:left"><strong>不支持</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">非 GTID（文件位点复制）</td>
+<td style="text-align:left"><strong>不支持</strong></td>
+</tr>
+</tbody>
+</table>
+<p>因此：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文的 <code>mysql-8.0.30</code> + <code>mha4mysql-0.58</code> <strong>不能</strong>换成装一个 MHA-Go 就继续用；8.0 存量若仍要外部 failover，只能继续维护原版 MHA，或先迁到 8.4 + GTID 再评估 MHA-Go。</p>
+</li>
+<li class="lvl-2">
+<p>新环境若坚持「异步一主多从 + 外部选主」，目标应是 <strong>MySQL 8.4 LTS + GTID + MHA-Go</strong>，用法见 <a href="/2026/09/16/mysql8.4-mha-go/" title="MySQL 8.4 上使用社区版 MHA-Go">MySQL 8.4 上使用社区版 MHA-Go</a>。</p>
+</li>
+<li class="lvl-2">
+<p>更推荐的新架构仍是 <strong>InnoDB Cluster</strong>（见 <a href="/2026/09/15/mysql8.4-innodb-cluster/" title="MySQL 8.4 InnoDB Cluster 的构建方法">MySQL 8.4 InnoDB Cluster 的构建方法</a>），不必为了「像以前一样用 MHA」而强行上 MHA-Go。</p>
+</li>
+</ul>
 <p>补充两点，避免和 MHA 的职责搞混：</p>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1457,6 +1498,12 @@ if (!window.__postViewReady) {
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><a target="_blank" rel="noopener" href="https://github.com/yoshinorim/mha4mysql-manager">MHA 0.58</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/fanderchan/mha_go">MHA-Go（社区）</a></p>
+</li>
+<li class="lvl-2">
+<p><a target="_blank" rel="noopener" href="https://github.com/fanderchan/mha_go/releases">MHA-Go Releases</a></p>
 </li>
 <li class="lvl-2">
 <p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/mysql-shell/8.4/en/mysql-innodb-cluster.html">MySQL 8.4 InnoDB Cluster</a></p>
@@ -1919,14 +1966,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">909k</span>
+    <span title="站点总字数">914k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">55:05</span>
+    <span title="站点阅读时长">55:23</span>
   </span>
 </div>
 <div class="busuanzi-count">
