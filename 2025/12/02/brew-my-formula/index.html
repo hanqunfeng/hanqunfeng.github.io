@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   brew是一个软件包管理器，同时支持MacOS和Linux，可以很方便地安装各种软件，比如git、node、python等。   本文介绍如何在macos下创建自己的 Formula   本文基于 MacOS 15.7.2，brew 版本为 Homebrew 5.0.3。   关于 brew 的安装及使用可以参考 MacOS软件包管理器--brew">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-02T13:55:05.000Z">
-<meta property="article:modified_time" content="2026-09-23T02:38:41.067Z">
+<meta property="article:modified_time" content="2026-09-23T07:10:42.828Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="brew">
 <meta property="article:tag" content="macos">
@@ -967,7 +967,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B%E5%BC%80%E5%A7%8B"><span class="nav-number">2.</span> <span class="nav-text">从一个简单示例开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAGithub%E4%BB%93%E5%BA%93%EF%BC%8C%E7%94%A8%E4%BA%8E%E5%AD%98%E5%82%A8-color-echo-%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.</span> <span class="nav-text">创建一个Github仓库，用于存储 color_echo 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83-color-echo"><span class="nav-number">2.2.</span> <span class="nav-text">发布 color_echo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-tap-%E4%BB%93%E5%BA%93"><span class="nav-number">2.2.1.</span> <span class="nav-text">创建 tap 仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA-Formula-%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.2.</span> <span class="nav-text">手写一个 Formula 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4-Formula-%E6%96%87%E4%BB%B6%E5%88%B0Github%E4%BB%93%E5%BA%93"><span class="nav-number">2.2.3.</span> <span class="nav-text">提交 Formula 文件到Github仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Formula"><span class="nav-number">2.2.4.</span> <span class="nav-text">安装 Formula</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-Formula"><span class="nav-number">2.2.5.</span> <span class="nav-text">测试 Formula</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#formula-%E6%96%87%E4%BB%B6%E6%A8%A1%E6%9D%BF"><span class="nav-number">3.</span> <span class="nav-text">formula 文件模板</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%9C%9F%E5%AE%9E%E6%A1%88%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">一个真实案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B%E5%BC%80%E5%A7%8B"><span class="nav-number">2.</span> <span class="nav-text">从一个简单示例开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAGithub%E4%BB%93%E5%BA%93%EF%BC%8C%E7%94%A8%E4%BA%8E%E5%AD%98%E5%82%A8-color-echo-%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.</span> <span class="nav-text">创建一个Github仓库，用于存储 color_echo 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83-color-echo"><span class="nav-number">2.2.</span> <span class="nav-text">发布 color_echo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-tap-%E4%BB%93%E5%BA%93"><span class="nav-number">2.2.1.</span> <span class="nav-text">创建 tap 仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA-Formula-%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.2.</span> <span class="nav-text">手写一个 Formula 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4-Formula-%E6%96%87%E4%BB%B6%E5%88%B0Github%E4%BB%93%E5%BA%93"><span class="nav-number">2.2.3.</span> <span class="nav-text">提交 Formula 文件到Github仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Formula"><span class="nav-number">2.2.4.</span> <span class="nav-text">安装 Formula</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-Formula"><span class="nav-number">2.2.5.</span> <span class="nav-text">测试 Formula</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E6%96%B0%E7%89%88%E6%9C%AC"><span class="nav-number">2.2.6.</span> <span class="nav-text">发布新版本</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#formula-%E6%96%87%E4%BB%B6%E6%A8%A1%E6%9D%BF"><span class="nav-number">3.</span> <span class="nav-text">formula 文件模板</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%9C%9F%E5%AE%9E%E6%A1%88%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">一个真实案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1067,13 +1067,6 @@ i.ban {
       brew -- 创建自己的 Cask
       </a>
     </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2018/03/27/protocol-buffer-study-python/" rel="bookmark">
-        <time class="popular-posts-time">2018-03-27</time>
-        <br>
-      Protocol Buffer学习笔记(Python)
-      </a>
-    </li>
   </ul>
 
           </div>
@@ -1130,7 +1123,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-23 10:38:41" itemprop="dateModified" datetime="2026-09-23T10:38:41+08:00">2026-09-23</time>
+      <time title="修改时间：2026-09-23 15:10:42" itemprop="dateModified" datetime="2026-09-23T15:10:42+08:00">2026-09-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1246,14 +1239,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4k</span>
+      <span>4.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>14 分钟</span>
+      <span>16 分钟</span>
     </span>
 
         </div>
@@ -1363,6 +1356,22 @@ if (!window.__postViewReady) {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换 tap，注意: 执行搜索和安装时需要先切换 tap，否则需要使用完整包名 hanqunfeng/color_echo/color_echo</span></span><br><span class="line">brew tap hanqunfeng/color_echo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索</span></span><br><span class="line">brew search color_echo</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">==&gt; Formulae</span><br><span class="line">hanqunfeng/color_echo/color_echo              color-code</span><br><span class="line"></span><br><span class="line"><span class="comment"># 完整包名搜索</span></span><br><span class="line">brew search hanqunfeng/color_echo/color_echo</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">==&gt; Formulae</span><br><span class="line">color_echo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">brew install color_echo</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">==&gt; Fetching downloads <span class="keyword">for</span>: color_echo</span><br><span class="line">✔︎ Formula color_echo (1.0.0)                                   [Verifying     2.1KB/  2.1KB]</span><br><span class="line">==&gt; Installing color_echo from hanqunfeng/color_echo</span><br><span class="line">🍺  /usr/local/Cellar/color_echo/1.0.0: 4 files, 7.4KB, built <span class="keyword">in</span> 5 seconds</span><br><span class="line">==&gt; Running `brew cleanup color_echo`...</span><br><span class="line">Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.</span><br><span class="line">Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).</span><br></pre></td></tr></table></figure>
 <h4 id="测试-Formula">测试 Formula</h4>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">color_echo --<span class="built_in">help</span></span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">用法: color_echo [参数] 内容</span><br><span class="line"></span><br><span class="line">参数说明:</span><br><span class="line">  -c, --color &lt;color&gt;        设置前景色（文字颜色）</span><br><span class="line">                             可选颜色: black red green yellow blue magenta cyan white</span><br><span class="line"></span><br><span class="line">  -b, --<span class="built_in">bg</span> &lt;color&gt;           设置背景色</span><br><span class="line">                             可选颜色: black red green yellow blue magenta cyan white</span><br><span class="line"></span><br><span class="line">      --bold                 加粗字体</span><br><span class="line">      --underline            下划线</span><br><span class="line">      --italic               斜体字体（仅部分终端,Terminal 不支持，iTerm2 支持）</span><br><span class="line"></span><br><span class="line">  -n                         不换行输出，兼容 <span class="built_in">echo</span> 的 -n 参数</span><br><span class="line"></span><br><span class="line">  -h, --<span class="built_in">help</span>                 显示帮助信息</span><br><span class="line"></span><br><span class="line">示例:</span><br><span class="line">  color_echo --color green <span class="string">&quot;Hello World&quot;</span></span><br><span class="line">  color_echo -c red -b yellow --bold <span class="string">&quot;Error Message&quot;</span></span><br><span class="line">  color_echo --underline <span class="string">&quot;This is underlined&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="发布新版本">发布新版本</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>color_echo 仓库打了新 tag 之后，要改 tap 里的 Formula，再提交到 GitHub。别人 <code>brew update</code> 之后才会装到新版本。<code>brew livecheck</code> 只报告有没有新版本，不会改文件。<code>brew create</code> 只用于第一次生成，文件已经存在时不能拿来升级。</p>
+</li>
+<li class="lvl-2">
+<p>可以手工改 <code>Formula/color_echo.rb</code>。这里的 <code>url</code> 写死了 <code>v1.0.0</code>，把地址里的版本和 <code>sha256</code> 换成新 tag 的值。<code>sha256</code> 用 <code>shasum -a 256</code> 计算，和第一次发布时一样。如果 <code>url</code> 里写的是 <code>#&#123;version&#125;</code>，地址会跟着变，只改 <code>version</code> 和 <code>sha256</code>。</p>
+</li>
+<li class="lvl-2">
+<p>也可以用命令改。<code>--write-only</code> 会下载新 tag、算出 <code>sha256</code>、写回本地 <code>.rb</code>，不会 fork，也不会开拉取请求。不加 <code>--write-only</code> 时，这条命令会按官方仓库的流程尝试开拉取请求。</p>
+</li>
+<li class="lvl-2">
+<p>两种改法最后都要在 tap 仓库里提交并推送。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 命令改文件。url 写死版本时，用 --url 指到新 tag</span></span><br><span class="line">brew bump-formula-pr --write-only \</span><br><span class="line">  --url=https://github.com/hanqunfeng/color_echo/archive/refs/tags/v1.0.1.tar.gz \</span><br><span class="line">  hanqunfeng/color_echo/color_echo</span><br><span class="line"></span><br><span class="line"><span class="comment"># url 里已经是 #&#123;version&#125; 时，只给新版本号</span></span><br><span class="line"><span class="comment"># brew bump-formula-pr --write-only --version=1.0.1 hanqunfeng/color_echo/color_echo</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 看过 diff 后提交到 GitHub。手工改文件的话，从这里开始即可</span></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="subst">$(brew --repo hanqunfeng/color_echo)</span>&quot;</span></span><br><span class="line">git diff</span><br><span class="line">git add Formula/color_echo.rb</span><br><span class="line">git commit -m <span class="string">&quot;color_echo 1.0.1&quot;</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
 <h2 id="formula-文件模板">formula 文件模板</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1638,14 +1647,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">934k</span>
+    <span title="站点总字数">935k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">56:38</span>
+    <span title="站点阅读时长">56:40</span>
   </span>
 </div>
 <div class="busuanzi-count">
