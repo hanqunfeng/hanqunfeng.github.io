@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   brew是一个软件包管理器，同时支持MacOS和Linux，可以很方便地安装各种软件，比如git、node、python等。   brew虽然支持linux，但是实际使用中很少会使用brew来管理linux的软件包。   本文介绍如何在macos下安装brew，以及如何使用brew管理各种软件包。   本文的安装和命令示例基于 MacOS Intel Ventura 13.7.1，br">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-28T13:55:05.000Z">
-<meta property="article:modified_time" content="2026-09-23T08:51:39.035Z">
+<meta property="article:modified_time" content="2026-10-08T06:38:41.916Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="brew">
 <meta property="article:tag" content="macos">
@@ -967,7 +967,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8MacOS%E4%B8%8A%E5%AE%89%E8%A3%85brew%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">在MacOS上安装brew的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.1.</span> <span class="nav-text">方法一：使用脚本安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%BD%BF%E7%94%A8PKG%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.2.</span> <span class="nav-text">方法二：使用PKG文件安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9A%E5%9B%BD%E5%86%85%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEgithub%E5%9C%B0%E5%9D%80%E6%97%B6%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">2.1.3.</span> <span class="nav-text">方法三：国内无法访问github地址时可以使用国内镜像源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="nav-number">2.1.4.</span> <span class="nav-text">验证是否安装成功</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%91%BD%E4%BB%A4%E8%A1%A5%E5%85%A8"><span class="nav-number">2.1.5.</span> <span class="nav-text">配置命令补全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDbrew"><span class="nav-number">2.1.6.</span> <span class="nav-text">卸载brew</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">3.1.</span> <span class="nav-text">一些常用的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#brew-edit-%E7%BC%96%E8%BE%91-formula-cask-%E7%9A%84%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC"><span class="nav-number">3.2.</span> <span class="nav-text">brew edit: 编辑 formula &#x2F; cask 的安装脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#brew-4-0-%E4%B9%8B%E5%90%8E%EF%BC%9A%E5%8F%AA%E6%9C%89%E5%AE%98%E6%96%B9-core-cask-%E7%9A%84%E6%9C%AC%E5%9C%B0%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E4%B8%8D%E7%94%9F%E6%95%88"><span class="nav-number">3.2.1.</span> <span class="nav-text">brew 4.0 之后：只有官方 core &#x2F; cask 的本地修改默认不生效</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#brew-%E5%AE%89%E8%A3%85%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">brew 安装流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">5.</span> <span class="nav-text">配置国内镜像源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Homebrew-%E5%B8%B8%E7%94%A8%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">Homebrew 常用的环境变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HOMEBREW-GITHUB-API-TOKEN"><span class="nav-number">6.1.</span> <span class="nav-text">HOMEBREW_GITHUB_API_TOKEN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HOMEBREW-DEVELOPER"><span class="nav-number">6.2.</span> <span class="nav-text">HOMEBREW_DEVELOPER</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%A1%AE%E8%AE%A4%E5%BC%80%E5%8F%91%E8%80%85%E6%A8%A1%E5%BC%8F%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF"><span class="nav-number">6.2.1.</span> <span class="nav-text">如何确认开发者模式是否开启</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E8%80%85%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BD%9C%E7%94%A8"><span class="nav-number">6.2.2.</span> <span class="nav-text">开发者模式的主要作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E2%9D%97-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%BA%94%E8%AF%A5%E5%BC%80%E5%90%AF-HOMEBREW-DEVELOPER%EF%BC%9F"><span class="nav-number">6.2.3.</span> <span class="nav-text">❗ 什么时候应该开启 HOMEBREW_DEVELOPER？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="nav-number">7.</span> <span class="nav-text">重要的说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">7.1.</span> <span class="nav-text">环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Homebrew-4-0-%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%96%B0%E5%8F%98%E5%8C%96"><span class="nav-number">7.2.</span> <span class="nav-text">Homebrew 4.0 带来的新变化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E9%95%9C%E5%83%8F%E6%BA%90%E7%9A%84%E5%88%87%E6%8D%A2%E6%9D%A5%E7%90%86%E8%A7%A3brew%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E5%8C%85%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-number">7.3.</span> <span class="nav-text">从镜像源的切换来理解brew下载安装包的过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E-4-5-%E5%88%B0-7-0"><span class="nav-number">8.</span> <span class="nav-text">从 4.5 到 7.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-0%EF%BC%882025-04-29%EF%BC%89"><span class="nav-number">8.1.</span> <span class="nav-text">4.5.0（2025-04-29）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-0%EF%BC%882025-08-05%EF%BC%89"><span class="nav-number">8.2.</span> <span class="nav-text">4.6.0（2025-08-05）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-0-0%EF%BC%882025-11-12%EF%BC%89"><span class="nav-number">8.3.</span> <span class="nav-text">5.0.0（2025-11-12）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-0%EF%BC%882026-03-10%EF%BC%89"><span class="nav-number">8.4.</span> <span class="nav-text">5.1.0（2026-03-10）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-0-0%EF%BC%882026-06-11%EF%BC%89"><span class="nav-number">8.5.</span> <span class="nav-text">6.0.0（2026-06-11）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-0-0%EF%BC%882026-09-13%EF%BC%89"><span class="nav-number">8.6.</span> <span class="nav-text">7.0.0（2026-09-13）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1MacOS%E5%8D%87%E7%BA%A7%E5%90%8E%E5%AF%BC%E8%87%B4vim%E4%B8%8D%E5%8F%AF%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B"><span class="nav-number">9.</span> <span class="nav-text">记录一次MacOS升级后导致vim不可用的解决过程</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8MacOS%E4%B8%8A%E5%AE%89%E8%A3%85brew%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">在MacOS上安装brew的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.1.</span> <span class="nav-text">方法一：使用脚本安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%BD%BF%E7%94%A8PKG%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.2.</span> <span class="nav-text">方法二：使用PKG文件安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9A%E5%9B%BD%E5%86%85%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEgithub%E5%9C%B0%E5%9D%80%E6%97%B6%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">2.1.3.</span> <span class="nav-text">方法三：国内无法访问github地址时可以使用国内镜像源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="nav-number">2.1.4.</span> <span class="nav-text">验证是否安装成功</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%91%BD%E4%BB%A4%E8%A1%A5%E5%85%A8"><span class="nav-number">2.1.5.</span> <span class="nav-text">配置命令补全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDbrew"><span class="nav-number">2.1.6.</span> <span class="nav-text">卸载brew</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">3.1.</span> <span class="nav-text">一些常用的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#brew-edit-%E7%BC%96%E8%BE%91-formula-cask-%E7%9A%84%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC"><span class="nav-number">3.2.</span> <span class="nav-text">brew edit: 编辑 formula &#x2F; cask 的安装脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#brew-4-0-%E4%B9%8B%E5%90%8E%EF%BC%9A%E5%8F%AA%E6%9C%89%E5%AE%98%E6%96%B9-core-cask-%E7%9A%84%E6%9C%AC%E5%9C%B0%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E4%B8%8D%E7%94%9F%E6%95%88"><span class="nav-number">3.2.1.</span> <span class="nav-text">brew 4.0 之后：只有官方 core &#x2F; cask 的本地修改默认不生效</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#brew-%E5%AE%89%E8%A3%85%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">brew 安装流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">5.</span> <span class="nav-text">配置国内镜像源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Homebrew-%E5%B8%B8%E7%94%A8%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">Homebrew 常用的环境变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HOMEBREW-GITHUB-API-TOKEN"><span class="nav-number">6.1.</span> <span class="nav-text">HOMEBREW_GITHUB_API_TOKEN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HOMEBREW-DEVELOPER"><span class="nav-number">6.2.</span> <span class="nav-text">HOMEBREW_DEVELOPER</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%A1%AE%E8%AE%A4%E5%BC%80%E5%8F%91%E8%80%85%E6%A8%A1%E5%BC%8F%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF"><span class="nav-number">6.2.1.</span> <span class="nav-text">如何确认开发者模式是否开启</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E8%80%85%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BD%9C%E7%94%A8"><span class="nav-number">6.2.2.</span> <span class="nav-text">开发者模式的主要作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E2%9D%97-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%BA%94%E8%AF%A5%E5%BC%80%E5%90%AF-HOMEBREW-DEVELOPER%EF%BC%9F"><span class="nav-number">6.2.3.</span> <span class="nav-text">❗ 什么时候应该开启 HOMEBREW_DEVELOPER？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="nav-number">7.</span> <span class="nav-text">重要的说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">7.1.</span> <span class="nav-text">环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Homebrew-4-0-%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%96%B0%E5%8F%98%E5%8C%96"><span class="nav-number">7.2.</span> <span class="nav-text">Homebrew 4.0 带来的新变化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JSON-API-%E5%A4%9A%E4%B9%85%E4%BC%9A%E5%86%8D%E4%B8%8B%E8%BD%BD%E4%B8%80%E6%AC%A1"><span class="nav-number">7.2.1.</span> <span class="nav-text">JSON API 多久会再下载一次</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B0%91%E4%B8%8B%E8%BD%BD%E5%87%A0%E6%AC%A1"><span class="nav-number">7.2.1.1.</span> <span class="nav-text">少下载几次</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E9%95%9C%E5%83%8F%E6%BA%90%E7%9A%84%E5%88%87%E6%8D%A2%E6%9D%A5%E7%90%86%E8%A7%A3brew%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E5%8C%85%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-number">7.3.</span> <span class="nav-text">从镜像源的切换来理解brew下载安装包的过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E-4-5-%E5%88%B0-7-0"><span class="nav-number">8.</span> <span class="nav-text">从 4.5 到 7.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-0%EF%BC%882025-04-29%EF%BC%89"><span class="nav-number">8.1.</span> <span class="nav-text">4.5.0（2025-04-29）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-0%EF%BC%882025-08-05%EF%BC%89"><span class="nav-number">8.2.</span> <span class="nav-text">4.6.0（2025-08-05）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-0-0%EF%BC%882025-11-12%EF%BC%89"><span class="nav-number">8.3.</span> <span class="nav-text">5.0.0（2025-11-12）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-0%EF%BC%882026-03-10%EF%BC%89"><span class="nav-number">8.4.</span> <span class="nav-text">5.1.0（2026-03-10）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-0-0%EF%BC%882026-06-11%EF%BC%89"><span class="nav-number">8.5.</span> <span class="nav-text">6.0.0（2026-06-11）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-0-0%EF%BC%882026-09-13%EF%BC%89"><span class="nav-number">8.6.</span> <span class="nav-text">7.0.0（2026-09-13）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1MacOS%E5%8D%87%E7%BA%A7%E5%90%8E%E5%AF%BC%E8%87%B4vim%E4%B8%8D%E5%8F%AF%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B"><span class="nav-number">9.</span> <span class="nav-text">记录一次MacOS升级后导致vim不可用的解决过程</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1130,7 +1130,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-23 16:51:39" itemprop="dateModified" datetime="2026-09-23T16:51:39+08:00">2026-09-23</time>
+      <time title="修改时间：2026-10-08 14:38:41" itemprop="dateModified" datetime="2026-10-08T14:38:41+08:00">2026-10-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1246,14 +1246,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>9.6k</span>
+      <span>10k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>35 分钟</span>
+      <span>38 分钟</span>
     </span>
 
         </div>
@@ -1491,7 +1491,7 @@ if (!window.__postViewReady) {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 丢弃 Homebrew 所有本地仓库中的未提交修改，恢复为上游状态</span></span><br><span class="line">brew update-reset</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>日常只装软件、不改脚本的话，不建议长期开启 <code>HOMEBREW_NO_INSTALL_FROM_API=1</code>，否则会失去 4.0 之后 JSON API 带来的速度优势。</p>
+<p>日常只装软件、不改脚本的话，不建议长期开启 <code>HOMEBREW_NO_INSTALL_FROM_API=1</code>，否则会失去 4.0 之后 JSON API 带来的速度优势。这个开关还会把安装前自动 <code>brew update</code> 的间隔从 24 小时缩到 5 分钟。</p>
 </li>
 </ul>
 <h2 id="brew-安装流程">brew 安装流程</h2>
@@ -1630,10 +1630,28 @@ if (!window.__postViewReady) {
 <td><code>brew developer on/off</code> 控制</td>
 </tr>
 <tr>
+<td><strong>HOMEBREW_API_AUTO_UPDATE_SECS</strong></td>
+<td><code>450</code></td>
+<td>检查 JSON API 元数据是否有新版本的间隔（秒）</td>
+<td><code>install</code>、<code>outdated</code>、<code>upgrade</code>、<code>bundle</code>、<code>release</code> 和带参数的 <code>tap</code> 按此间隔检查；<code>info</code>、<code>search</code>、<code>services</code> 等为 7 天</td>
+</tr>
+<tr>
+<td><strong>HOMEBREW_AUTO_UPDATE_SECS</strong></td>
+<td><code>86400</code>（24 小时）</td>
+<td>部分命令执行前自动执行一次 <code>brew update</code> 的间隔（秒）</td>
+<td>跑过开发者命令后为 <code>3600</code>；设置了 <code>HOMEBREW_NO_INSTALL_FROM_API</code> 时为 <code>300</code></td>
+</tr>
+<tr>
 <td><strong>HOMEBREW_NO_AUTO_UPDATE</strong></td>
 <td>未设置</td>
-<td>禁止 brew 命令自动 update</td>
-<td>可以防止在运行brew install、brew upgrade、brew reinstall  等命令时自动执行一次 brew update</td>
+<td>关闭命令前的自动 <code>brew update</code>，同时关闭 API 自动检查</td>
+<td>作用于上面同一批命令。需要自己定期 <code>brew update</code></td>
+</tr>
+<tr>
+<td><strong>HOMEBREW_FORCE_API_AUTO_UPDATE</strong></td>
+<td>未设置</td>
+<td>在 <code>HOMEBREW_NO_AUTO_UPDATE=1</code> 时仍按间隔刷新 API</td>
+<td>只恢复 API 检查，不恢复安装前的 <code>brew update</code></td>
 </tr>
 <tr>
 <td><strong>HOMEBREW_VERBOSE</strong></td>
@@ -1836,13 +1854,64 @@ if (!window.__postViewReady) {
 <p>JSON文件会从<a target="_blank" rel="noopener" href="https://formulae.brew.sh">formulae.brew.sh</a>下载，而不再使用<code>homebrew/core</code>、<code>homebrew/cask</code>两个仓库，所以升级到4.0后，本地的<code>homebrew/core</code>、<code>homebrew/cask</code> 仓库都可以删除以释放磁盘空间。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看本地仓库</span></span><br><span class="line">$ brew tap</span><br><span class="line">homebrew/cask <span class="comment"># cask 仓库，GUI的工具会从此下载，brew4.0后不再使用</span></span><br><span class="line">homebrew/core <span class="comment"># core 仓库，即 formula 仓库，命令行工具会从此下载，brew4.0后不再使用</span></span><br><span class="line">homebrew/services <span class="comment"># 4.0 时还要单独 tap；4.5 起 brew services 已内置，这个仓库可以 untap</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除本地仓库</span></span><br><span class="line">$ brew untap homebrew/core</span><br><span class="line">$ brew untap homebrew/cask</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时再次执行 brew outdated 等命令时，会看到json文件被下载了，默认情况下，该json文件间隔24小时更新一次</span></span><br><span class="line">$ brew outdated</span><br><span class="line">==&gt; Downloading https://formulae.brew.sh/api/formula.jws.json</span><br><span class="line"><span class="comment">##################################################################################### 100.0%</span></span><br><span class="line">==&gt; Downloading https://formulae.brew.sh/api/cask.jws.json</span><br><span class="line"><span class="comment">##################################################################################### 100.0%</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## brew5.0+会看到如下输出：</span></span><br><span class="line">✔︎ JSON API formula_tap_migrations.jws.json                     [Downloaded    2.1KB/  2.1KB]</span><br><span class="line">✔︎ JSON API cask_tap_migrations.jws.json                        [Downloaded    2.4KB/  2.4KB]</span><br><span class="line">✔︎ JSON API cask.jws.json                                       [Downloaded   15.0MB/ 15.0MB]</span><br><span class="line">✔︎ JSON API formula.jws.json                                    [Downloaded   31.7MB/ 31.7MB]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看本地仓库</span></span><br><span class="line">$ brew tap</span><br><span class="line">homebrew/cask <span class="comment"># cask 仓库，GUI的工具会从此下载，brew4.0后不再使用</span></span><br><span class="line">homebrew/core <span class="comment"># core 仓库，即 formula 仓库，命令行工具会从此下载，brew4.0后不再使用</span></span><br><span class="line">homebrew/services <span class="comment"># 4.0 时还要单独 tap；4.5 起 brew services 已内置，这个仓库可以 untap</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除本地仓库</span></span><br><span class="line">$ brew untap homebrew/core</span><br><span class="line">$ brew untap homebrew/cask</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时再次执行 brew outdated 等命令时，会看到 json 文件被下载</span></span><br><span class="line"><span class="comment"># 这类命令默认每 450 秒检查一次 API（HOMEBREW_API_AUTO_UPDATE_SECS）</span></span><br><span class="line"><span class="comment"># 安装前的完整 brew update 才是默认 24 小时（HOMEBREW_AUTO_UPDATE_SECS）</span></span><br><span class="line">$ brew outdated</span><br><span class="line">==&gt; Downloading https://formulae.brew.sh/api/formula.jws.json</span><br><span class="line"><span class="comment">##################################################################################### 100.0%</span></span><br><span class="line">==&gt; Downloading https://formulae.brew.sh/api/cask.jws.json</span><br><span class="line"><span class="comment">##################################################################################### 100.0%</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## brew5.0+会看到如下输出：</span></span><br><span class="line">✔︎ JSON API formula_tap_migrations.jws.json                     [Downloaded    2.1KB/  2.1KB]</span><br><span class="line">✔︎ JSON API cask_tap_migrations.jws.json                        [Downloaded    2.4KB/  2.4KB]</span><br><span class="line">✔︎ JSON API cask.jws.json                                       [Downloaded   15.0MB/ 15.0MB]</span><br><span class="line">✔︎ JSON API formula.jws.json                                    [Downloaded   31.7MB/ 31.7MB]</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>如果还想使用旧的仓库模式，只要配置下环境变量</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export HOMEBREW_NO_INSTALL_FROM_API=1&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+<h4 id="JSON-API-多久会再下载一次">JSON API 多久会再下载一次</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>上面示例里的 JSON 缓存在 <code>$(brew --cache)/api</code>。它有两套互不影响的计时器。隔几分钟又看到几十 MB 的 <code>Downloaded</code>，是第一套到点了；隔一天先出现 <code>Auto-updated Homebrew!</code>，是第二套到点了。</p>
+</li>
+<li class="lvl-2">
+<p><strong>JSON API 元数据检查</strong>：<code>HOMEBREW_API_AUTO_UPDATE_SECS</code>，默认 <strong>450 秒</strong>。<code>install</code>、<code>outdated</code>、<code>upgrade</code>、<code>bundle</code>、<code>release</code>，以及带参数的 <code>tap</code>（例如 <code>brew tap user/repo</code>）会看缓存文件的修改时间。超过 450 秒就用 curl <code>--time-cond</code> 向 <a target="_blank" rel="noopener" href="https://formulae.brew.sh">formulae.brew.sh</a> 发条件请求。服务端文件没有变化时，不会把整份 JSON 再下下来；formula / cask 更新很频繁，服务端文件经常是新的，于是会看到 <code>formula.jws.json</code>、<code>cask.jws.json</code> 整包下载。<code>info</code>、<code>search</code>、<code>list</code>、<code>services</code> 不走这 450 秒，只在缓存超过 <strong>7 天</strong>时刷新。</p>
+</li>
+<li class="lvl-2">
+<p><strong>命令前的完整 <code>brew update</code></strong>：<code>HOMEBREW_AUTO_UPDATE_SECS</code>，默认 <strong>86400 秒（24 小时）</strong>。同一批命令真正执行前，还会看上次 <code>brew update</code> 隔了多久。到点就先跑 <code>brew update --auto-update</code>，同时更新 brew 自身和 API JSON。跑过开发者命令（<code>brew edit</code>、<code>brew developer on</code> 等）之后，这个间隔变成 <strong>3600 秒（1 小时）</strong>，用 <code>brew developer</code> 确认，判断方法和前面「如何确认开发者模式是否开启」相同。设置了 <code>HOMEBREW_NO_INSTALL_FROM_API=1</code> 之后变成 <strong>300 秒（5 分钟）</strong>。手动执行 <code>brew update</code> 每次都会检查 API，不受这两个间隔限制。</p>
+</li>
+<li class="lvl-2">
+<p>6.0 起默认改用更小的 <code>internal/packages.&lt;系统&gt;.jws.json</code>，单次体积变小，450 秒的间隔不变。见后面的 6.0.0。</p>
+</li>
+</ul>
+<h5 id="少下载几次">少下载几次</h5>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>只把 API 检查放慢，写入 <code>~/.zshrc</code>：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># API 元数据改为最多每天检查一次（单位：秒）</span></span><br><span class="line"><span class="built_in">export</span> HOMEBREW_API_AUTO_UPDATE_SECS=86400</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>开发者模式下，安装前的自动 <code>brew update</code> 会从 24 小时变成 1 小时。要固定回 24 小时：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HOMEBREW_AUTO_UPDATE_SECS=86400</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>装软件时不希望命令自动更新，用总开关。它同时关掉「安装前的 <code>brew update</code>」和「450 秒的 API 检查」。缓存还在时直接用本地 JSON；没有缓存，或手动 <code>brew update</code>，仍会下载。官方更建议拉长间隔。关掉之后要自己定期 <code>brew update</code>，否则元数据和 brew 自身都会停在旧版本上。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HOMEBREW_NO_AUTO_UPDATE=1</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>关掉自动更新后，如果仍希望 API 自己刷新，再加下面这个。它只恢复 API 检查。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HOMEBREW_FORCE_API_AUTO_UPDATE=1</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>国内网络慢时，频率用上面的变量，下载地址用镜像（和前面的 <code>HOMEBREW_API_DOMAIN</code> 相同）：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HOMEBREW_API_DOMAIN=<span class="string">&quot;https://mirrors.aliyun.com/homebrew-bottles/api&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>HOMEBREW_NO_INSTALL_FROM_API=1</code> 用来改官方 formula / cask 脚本，见前面的编辑说明。它会把安装前自动 <code>brew update</code> 的间隔缩到 5 分钟，日常安装不要靠它来减少 API 下载。</p>
+</li>
+</ul>
 <h3 id="从镜像源的切换来理解brew下载安装包的过程">从镜像源的切换来理解brew下载安装包的过程</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1975,7 +2044,7 @@ if (!window.__postViewReady) {
 <p>第三方 tap 要先信任才会执行里面的 Ruby。官方 <code>homebrew/core</code>、<code>homebrew/cask</code> 默认信任。相关命令是 <code>brew trust</code>。没信任的 tap 不会再因为 <code>brew install user/repo/foo</code> 被自动 clone 后直接运行。</p>
 </li>
 <li class="lvl-2">
-<p>默认改用更小的 internal JSON API，一次下载汇总元数据。5.0 里用来打开它的 <code>HOMEBREW_USE_INTERNAL_API</code> 就此废弃。</p>
+<p>默认改用更小的 internal JSON API，一次下载汇总元数据（<code>internal/packages.&lt;系统&gt;.jws.json</code>）。5.0 里用来打开它的 <code>HOMEBREW_USE_INTERNAL_API</code> 就此废弃。检查间隔仍是 <code>HOMEBREW_API_AUTO_UPDATE_SECS</code>（默认 450 秒），见上面「JSON API 多久会再下载一次」。</p>
 </li>
 <li class="lvl-2">
 <p>Linux 上构建、测试、安装后步骤默认进 Bubblewrap 沙箱，和 macOS 上已有的沙箱对齐。7.0 又换成了不依赖额外组件的 Landlock。</p>
@@ -2186,14 +2255,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">938k</span>
+    <span title="站点总字数">939k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">56:52</span>
+    <span title="站点阅读时长">56:55</span>
   </span>
 </div>
 <div class="busuanzi-count">
