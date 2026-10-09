@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  本机环境 15.8.1-x86_64。 Homebrew 7.0.8 不再为 Intel Mac 提供 cmake 的 bottle，brew upgrade cmake 会从源码执行 .&#x2F;bootstrap。cmake 4.4.4 停在 Cannot find a C++ compiler that supports both C++11。 失败点在 C++ 头文件的搜索路径，不在某一个">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-09T05:40:00.000Z">
-<meta property="article:modified_time" content="2026-10-09T06:09:40.075Z">
+<meta property="article:modified_time" content="2026-10-09T07:16:53.871Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="brew">
 <meta property="article:tag" content="macos">
@@ -1088,10 +1088,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/12/26/redis7-module-RediSearch/" rel="bookmark">
-        <time class="popular-posts-time">2025-12-26</time>
+      <a class="popular-posts-link" href="/2023/03/21/linux-command09-makeinstall-nginx/" rel="bookmark">
+        <time class="popular-posts-time">2023-03-21</time>
         <br>
-      Redis 扩展模块 -- RediSearch 的安装方法
+      Linux常用命令--源代码安装nginx
       </a>
     </li>
   </ul>
@@ -1144,7 +1144,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-10-09 13:40:00 / 修改时间：14:09:40" itemprop="dateCreated datePublished" datetime="2026-10-09T13:40:00+08:00">2026-10-09</time>
+      <time title="创建时间：2026-10-09 13:40:00 / 修改时间：15:16:53" itemprop="dateCreated datePublished" datetime="2026-10-09T13:40:00+08:00">2026-10-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1260,14 +1260,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
+      <span>2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
+      <span>7 分钟</span>
     </span>
 
         </div>
@@ -1282,7 +1282,7 @@ if (!window.__postViewReady) {
 <li class="lvl-2">Homebrew <code>7.0.8</code> 不再为 Intel Mac 提供 <code>cmake</code> 的 bottle，<code>brew upgrade cmake</code> 会从源码执行 <code>./bootstrap</code>。<code>cmake 4.4.4</code> 停在 <code>Cannot find a C++ compiler that supports both C++11</code>。</li>
 <li class="lvl-2">失败点在 C++ 头文件的搜索路径，不在某一个依赖 <code>cmake</code> 的软件包。直接升级或安装 <code>cmake</code>，以及任何要在本机编译 <code>cmake</code> 的 formula，都会停在同一处。这次是升级 <code>wget</code> 时把它作为依赖编出来的。</li>
 <li class="lvl-2"><code>/usr/bin/clang++</code> 是 Apple Clang 17.0.0，<code>clang++ --version</code> 正常，<code>CC</code>、<code>CXX</code>、<code>CXXFLAGS</code> 都没有设置。用一段 C++11 程序编译，报错是 <code>fatal error: 'iostream' file not found</code>。</li>
-<li class="lvl-2"><code>iostream</code> 在各个 SDK 里都有，例如 <code>/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk/usr/include/c++/v1/iostream</code>。编译器实际搜索的是 <code>/Library/Developer/CommandLineTools/usr/include/c++/v1</code>。这个目录还在，里面没有 <code>iostream</code>。目录一旦存在，Apple Clang 就把它当作 libc++ 头文件的位置，不会再去 SDK 里找。</li>
+<li class="lvl-2"><code>iostream</code> 在各个 SDK 里都有，例如 <code>/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk/usr/include/c++/v1/iostream</code>。编译器实际搜索的是 <code>/Library/Developer/CommandLineTools/usr/include/c++/v1</code>。这条路径按编译器自己的位置计算：<code>InstalledDir</code> 是 <code>CommandLineTools/usr/bin</code>，libc++ 头文件放在它的上一级 <code>usr/include/c++/v1</code>。这个目录还在，里面没有 <code>iostream</code>。目录一旦存在，驱动就只用它，不再把 SDK 里的那份加入搜索路径。</li>
 <li class="lvl-2">把这个目录改名为 <code>c++.backup</code> 之后，同一段 C++11 程序可以编译并输出 <code>123</code>，再执行 <code>brew upgrade cmake</code>。</li>
 <li class="lvl-2">日志里的 Intel x86_64、Tier 3 警告说明这次为什么要本地编译。Homebrew 在 Intel 上的支持变化见 <a href="/2024/11/28/brew/" title="MacOS软件包管理器--brew">MacOS软件包管理器--brew</a> 文末「从 4.5 到 7.0」。</li>
 </ul>
@@ -1363,7 +1363,16 @@ if (!window.__postViewReady) {
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk</span><br><span class="line">-internal-isystem /Library/Developer/CommandLineTools/usr/bin/../include/c++/v1</span><br><span class="line"></span><br><span class="line">#include &lt;...&gt; search starts here:</span><br><span class="line"> /usr/local/include</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/bin/../include/c++/v1</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/lib/clang/17/include</span><br><span class="line"> /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/include</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p><code>usr/bin/../include/c++/v1</code> 就是 <code>/Library/Developer/CommandLineTools/usr/include/c++/v1</code>。它出现在搜索列表里，说明编译器认定 C++ 标准库在这里。后面的 <code>MacOSX.sdk/usr/include</code> 用来找 C 头文件，不会补上 <code>usr/include/c++/v1/iostream</code>。</p>
+<p><code>usr/bin/../include/c++/v1</code> 就是 <code>/Library/Developer/CommandLineTools/usr/include/c++/v1</code>。它出现在搜索列表里，是驱动自己加的 <code>-internal-isystem</code>，不是 <code>CPATH</code>、<code>CPLUS_INCLUDE_PATH</code> 或 CMake 传进来的。</p>
+</li>
+<li class="lvl-2">
+<p><code>/usr/bin/clang++</code> 会转到 <code>xcode-select -p</code> 选中的编译器。当时选中的是 <code>/Library/Developer/CommandLineTools</code>，所以 <code>InstalledDir</code> 是 <code>/Library/Developer/CommandLineTools/usr/bin</code>。Apple Clang 把 libc++ 头文件放在编译器旁边，路径按 <code>InstalledDir/../include/c++/v1</code> 计算：从 <code>usr/bin</code> 退回 <code>usr</code>，再进 <code>include/c++/v1</code>。<code>v1</code> 是 libc++ 头文件的目录名。</p>
+</li>
+<li class="lvl-2">
+<p>C 头文件和 C++ 头文件分开找。平台头文件和 C 库走 <code>-isysroot</code> 下的 <code>MacOSX.sdk/usr/include</code>。<code>iostream</code> 属于 libc++，走紧挨着编译器的那条路径。SDK 里的 <code>usr/include/c++/v1/iostream</code> 因此不会自动补进搜索列表。驱动只看工具链这个 <code>c++/v1</code> 目录在不在，不看里面有没有 <code>iostream</code>。目录还在，就固定用它。</p>
+</li>
+<li class="lvl-2">
+<p>把工具链的 <code>c++</code> 目录改名之后，这个位置不存在了，驱动才改用当前 SDK 里的 <code>usr/include/c++/v1</code>。</p>
 </li>
 <li class="lvl-2">
 <p>因此把 <code>SDKROOT</code> 指到已经含有 <code>iostream</code> 的 <code>MacOSX26.2.sdk</code>，结果不变，仍然是 <code>iostream</code> file not found：</p>
@@ -1585,7 +1594,7 @@ if (!window.__postViewReady) {
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">57:02</span>
+    <span title="站点阅读时长">57:03</span>
   </span>
 </div>
 <div class="busuanzi-count">
