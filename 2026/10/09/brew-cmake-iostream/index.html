@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  本机环境 15.8.1-x86_64。 Homebrew 7.0.8 不再为 Intel Mac 提供 cmake 的 bottle，brew upgrade cmake 会从源码执行 .&#x2F;bootstrap。cmake 4.4.4 停在 Cannot find a C++ compiler that supports both C++11。 失败点在 C++ 头文件的搜索路径，不在某一个">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-09T05:40:00.000Z">
-<meta property="article:modified_time" content="2026-10-09T07:16:53.871Z">
+<meta property="article:modified_time" content="2026-10-09T07:59:01.568Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="brew">
 <meta property="article:tag" content="macos">
@@ -988,7 +988,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">314</span>
+          <span class="site-state-item-count">315</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1067,6 +1067,13 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/10/09/brew-cache-manual-download/" rel="bookmark">
+        <time class="popular-posts-time">2026-10-09</time>
+        <br>
+      brew install 或 upgrade 下载缓慢时，手动下载安装包
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2026/09/23/macports/" rel="bookmark">
         <time class="popular-posts-time">2026-09-23</time>
         <br>
@@ -1085,13 +1092,6 @@ i.ban {
         <time class="popular-posts-time">2026-09-21</time>
         <br>
       brew -- 创建自己的 Cask
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/03/21/linux-command09-makeinstall-nginx/" rel="bookmark">
-        <time class="popular-posts-time">2023-03-21</time>
-        <br>
-      Linux常用命令--源代码安装nginx
       </a>
     </li>
   </ul>
@@ -1144,7 +1144,7 @@ i.ban {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-10-09 13:40:00 / 修改时间：15:16:53" itemprop="dateCreated datePublished" datetime="2026-10-09T13:40:00+08:00">2026-10-09</time>
+      <time title="创建时间：2026-10-09 13:40:00 / 修改时间：15:59:01" itemprop="dateCreated datePublished" datetime="2026-10-09T13:40:00+08:00">2026-10-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1293,20 +1293,20 @@ if (!window.__postViewReady) {
 <p>下面的 <code>./bootstrap</code> 是 <code>cmake 4.4.4</code> 自己的配置步骤。当时它出现在 <code>brew upgrade wget</code> 安装依赖的过程中；单独执行 <code>brew upgrade cmake</code> 或 <code>brew install cmake</code>，日志停在同一段：</p>
 </li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">==&gt; Upgrading wget dependency: cmake</span><br><span class="line">==&gt; ./bootstrap --prefix=/usr/local/Cellar/cmake/4.4.4 --no-system-libs --parallel=12</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">==&gt; Upgrading wget dependency: cmake</span><br><span class="line">==&gt; ./bootstrap --prefix=/usr/local/Cellar/cmake/4.4.4 --no-system-libs --parallel=12</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>Bootstrap.cmk/cmake_bootstrap.log</code> 里和编译器相关的几行：</p>
 </li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CMake 4.4.4, Copyright 2000-2026 Kitware, Inc. and Contributors</span><br><span class="line">C compiler on this system is: clang</span><br><span class="line"></span><br><span class="line">Error when bootstrapping CMake:</span><br><span class="line">Cannot find a C++ compiler that supports both C++11 and the specified C++ flags.</span><br><span class="line">Please specify one using environment variable CXX.</span><br><span class="line">The C++ flags are &quot;&quot;.</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CMake 4.4.4, Copyright 2000-2026 Kitware, Inc. and Contributors</span><br><span class="line">C compiler on this system is: clang</span><br><span class="line"></span><br><span class="line">Error when bootstrapping CMake:</span><br><span class="line">Cannot find a C++ compiler that supports both C++11 and the specified C++ flags.</span><br><span class="line">Please specify one using environment variable CXX.</span><br><span class="line">The C++ flags are <span class="string">&quot;&quot;</span>.</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>CMake 这里只说明自己没能用当前环境编过一段 C++11。它不会写出缺的是哪一个头文件。后面要自己用 <code>clang++</code> 编一段最小程序，才能看到 <code>iostream</code>。</p>
 </li>
 </ul>
 <h2 id="本机环境">本机环境</h2>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">uname -m                         x86_64</span><br><span class="line">macOS                            15.8.1-x86_64</span><br><span class="line">clang target                     x86_64-apple-darwin24.6.0</span><br><span class="line">Homebrew                         7.0.8</span><br><span class="line">HOMEBREW_PREFIX                  /usr/local</span><br><span class="line">clang / clang++                  /usr/bin/clang、/usr/bin/clang++</span><br><span class="line">Apple clang                      17.0.0 (clang-1700.6.4.2)</span><br><span class="line">InstalledDir                     /Library/Developer/CommandLineTools/usr/bin</span><br><span class="line">xcode-select -p                  /Library/Developer/CommandLineTools</span><br><span class="line">CLT                              26.3.0.0.1.1771626560</span><br><span class="line">Xcode                            未安装</span><br><span class="line">CPU（brew config）               dodeca-core 64-bit kabylake</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span> -m                         x86_64</span><br><span class="line">macOS                            15.8.1-x86_64</span><br><span class="line">clang target                     x86_64-apple-darwin24.6.0</span><br><span class="line">Homebrew                         7.0.8</span><br><span class="line">HOMEBREW_PREFIX                  /usr/local</span><br><span class="line">clang / clang++                  /usr/bin/clang、/usr/bin/clang++</span><br><span class="line">Apple clang                      17.0.0 (clang-1700.6.4.2)</span><br><span class="line">InstalledDir                     /Library/Developer/CommandLineTools/usr/bin</span><br><span class="line">xcode-select -p                  /Library/Developer/CommandLineTools</span><br><span class="line">CLT                              26.3.0.0.1.1771626560</span><br><span class="line">Xcode                            未安装</span><br><span class="line">CPU（brew config）               dodeca-core 64-bit kabylake</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>六核 Core i7 开超线程之后，Homebrew 报成 12 核。<code>xcrun --find clang++</code> 指向 <code>/Library/Developer/CommandLineTools/usr/bin/clang++</code>。</p>
@@ -1328,26 +1328,26 @@ if (!window.__postViewReady) {
 <p>本机结果：</p>
 </li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/tmp/test-cxx11.cpp:1:10: fatal error: &#x27;iostream&#x27; file not found</span><br><span class="line">    1 | #include &lt;iostream&gt;</span><br><span class="line">      |          ^~~~~~~~~~</span><br><span class="line">1 error generated.</span><br><span class="line">compile exit code: 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/tmp/test-cxx11.cpp:1:10: fatal error: <span class="string">&#x27;iostream&#x27;</span> file not found</span><br><span class="line">    1 | <span class="comment">#include &lt;iostream&gt;</span></span><br><span class="line">      |          ^~~~~~~~~~</span><br><span class="line">1 error generated.</span><br><span class="line">compile <span class="built_in">exit</span> code: 1</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>SDK 本身是存在的：</p>
 </li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xcrun --sdk macosx --show-sdk-path</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xcrun --sdk macosx --show-sdk-path</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk</span><br></pre></td></tr></table></figure>
 <h2 id="头文件在-SDK-里">头文件在 SDK 里</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>在 Command Line Tools 下面按文件名找，<code>iostream</code> 出现在多个历史 SDK 中，当前默认 SDK 里也有：</p>
 </li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX15.4.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk/usr/include/c++/v1/iostream</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX15.4.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/iostream</span><br><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk/usr/include/c++/v1/iostream</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>默认 SDK 是一个指向 <code>MacOSX26.2.sdk</code> 的符号链接。机器上还留着 13.1、14.5、15.2、15.4、15.5，都是历次系统升级剩下的 SDK。</p>
 </li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -&gt; MacOSX26.2.sdk</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -&gt; MacOSX26.2.sdk</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>工具链自己的 C++ 头文件目录也还在，<code>ls -ld</code> 显示日期是 2025-11-19。这个目录里没有 <code>iostream</code>：</p>
@@ -1360,7 +1360,7 @@ if (!window.__postViewReady) {
 <p><code>echo | clang++ -v -E -x c++ -</code> 把实际搜索顺序列出来。本机 C++ 头文件的那一项是工具链目录，系统头文件才走当前 SDK：</p>
 </li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk</span><br><span class="line">-internal-isystem /Library/Developer/CommandLineTools/usr/bin/../include/c++/v1</span><br><span class="line"></span><br><span class="line">#include &lt;...&gt; search starts here:</span><br><span class="line"> /usr/local/include</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/bin/../include/c++/v1</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/lib/clang/17/include</span><br><span class="line"> /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/include</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk</span><br><span class="line">-internal-isystem /Library/Developer/CommandLineTools/usr/bin/../include/c++/v1</span><br><span class="line"></span><br><span class="line"><span class="comment">#include &lt;...&gt; search starts here:</span></span><br><span class="line"> /usr/local/include</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/bin/../include/c++/v1</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/lib/clang/17/include</span><br><span class="line"> /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include</span><br><span class="line"> /Library/Developer/CommandLineTools/usr/include</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>usr/bin/../include/c++/v1</code> 就是 <code>/Library/Developer/CommandLineTools/usr/include/c++/v1</code>。它出现在搜索列表里，是驱动自己加的 <code>-internal-isystem</code>，不是 <code>CPATH</code>、<code>CPLUS_INCLUDE_PATH</code> 或 CMake 传进来的。</p>
@@ -1441,7 +1441,7 @@ if (!window.__postViewReady) {
 <p>同一次升级末尾还有一段：</p>
 </li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Warning: You are using macOS on Intel x86_64.</span><br><span class="line">We do not provide support for this platform (as-of September 2026, announced August 2025).</span><br><span class="line">Homebrew no longer builds bottles for this configuration.</span><br><span class="line">This is a Tier 3 configuration:</span><br><span class="line">  https://docs.brew.sh/Support-Tiers#tier-3</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Warning: You are using macOS on Intel x86_64.</span><br><span class="line">We <span class="keyword">do</span> not provide support <span class="keyword">for</span> this platform (as-of September 2026, announced August 2025).</span><br><span class="line">Homebrew no longer builds bottles <span class="keyword">for</span> this configuration.</span><br><span class="line">This is a Tier 3 configuration:</span><br><span class="line">  https://docs.brew.sh/Support-Tiers#tier-3</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>2026 年 9 月起，Homebrew 不再为 Intel Mac 构建新的 bottle。<code>cmake 4.4.4</code> 因此走 <code>./bootstrap</code> 本地编译，机器上这份残缺的 C++ 头文件目录才被碰到。以前有 bottle 时，Homebrew 直接倒预编译包，不会调用 <code>clang++</code>。</p>
@@ -1553,6 +1553,9 @@ if (!window.__postViewReady) {
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2026/10/09/brew-cache-manual-download/" rel="next" title="brew install 或 upgrade 下载缓慢时，手动下载安装包">
+                  brew install 或 upgrade 下载缓慢时，手动下载安装包 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -1587,14 +1590,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">941k</span>
+    <span title="站点总字数">942k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">57:03</span>
+    <span title="站点阅读时长">57:07</span>
   </span>
 </div>
 <div class="busuanzi-count">
