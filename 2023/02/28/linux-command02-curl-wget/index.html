@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/atelier-seaside-light","dark":"tomorrow-night-bright"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="摘要   curl与wget的基本使用方法   本文基于CentOS8(x86_64)">
+    <meta name="description" content="摘要   curl 与 wget 怎么选，以及两边的常用下载、请求、上传写法   重定向、证书校验、失败重试、耗时统计   源码安装 curl，以及 HTTPie（http 命令）的基本用法   未特别标注的 curl 参数，按 CentOS 8 自带的 curl 7.61.1 来写">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux常用命令--curl与wget">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2023/02/28/linux-command02-curl-wget/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   curl与wget的基本使用方法   本文基于CentOS8(x86_64)">
+<meta property="og:description" content="摘要   curl 与 wget 怎么选，以及两边的常用下载、请求、上传写法   重定向、证书校验、失败重试、耗时统计   源码安装 curl，以及 HTTPie（http 命令）的基本用法   未特别标注的 curl 参数，按 CentOS 8 自带的 curl 7.61.1 来写">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-28T13:40:05.000Z">
-<meta property="article:modified_time" content="2026-03-23T10:05:07.116Z">
+<meta property="article:modified_time" content="2026-10-13T08:18:21.807Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="linux常用命令">
 <meta name="twitter:card" content="summary">
@@ -972,7 +972,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#curl"><span class="nav-number">2.</span> <span class="nav-text">curl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wget"><span class="nav-number">3.</span> <span class="nav-text">wget</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#http-%E5%91%BD%E4%BB%A4%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%88HTTPie-%E7%AE%80%E4%BB%8B%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">http 命令是什么（HTTPie 简介）</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#curl-%E5%92%8C-wget-%E6%80%8E%E4%B9%88%E9%80%89"><span class="nav-number">2.</span> <span class="nav-text">curl 和 wget 怎么选</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#curl"><span class="nav-number">3.</span> <span class="nav-text">curl</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E6%8F%90%E7%A4%BA"><span class="nav-number">3.1.</span> <span class="nav-text">版本提示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%A1%B5%E9%9D%A2%E5%92%8C%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">查看页面和下载文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">3.3.</span> <span class="nav-text">重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E6%96%B9%E6%B3%95%E5%92%8C%E8%AF%B7%E6%B1%82%E4%BD%93"><span class="nav-number">3.4.</span> <span class="nav-text">指定方法和请求体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="nav-number">3.5.</span> <span class="nav-text">上传文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A4%E8%AF%81%E3%80%81Cookie%E3%80%81%E4%BB%A3%E7%90%86%E5%92%8C%E8%B0%83%E8%AF%95"><span class="nav-number">3.6.</span> <span class="nav-text">认证、Cookie、代理和调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E5%AE%9E%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.7.</span> <span class="nav-text">更多实用示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#curl-8-x-%E6%96%B0%E5%8A%9F%E8%83%BD%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.8.</span> <span class="nav-text">curl 8.x 新功能示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FTP"><span class="nav-number">3.9.</span> <span class="nav-text">FTP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E8%84%9A%E6%9C%AC%E9%87%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">3.10.</span> <span class="nav-text">在脚本里使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6%E6%A0%A1%E9%AA%8C%E5%A4%B1%E8%B4%A5"><span class="nav-number">3.11.</span> <span class="nav-text">证书校验失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E7%8A%B6%E6%80%81%E7%A0%81%E5%88%A4%E6%96%AD%E5%A4%B1%E8%B4%A5%EF%BC%8C%E4%BB%A5%E5%8F%8A%E7%BB%9F%E8%AE%A1%E8%80%97%E6%97%B6"><span class="nav-number">3.12.</span> <span class="nav-text">按状态码判断失败，以及统计耗时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85"><span class="nav-number">3.13.</span> <span class="nav-text">源码安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wget"><span class="nav-number">4.</span> <span class="nav-text">wget</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E5%AE%9E%E7%94%A8%E7%A4%BA%E4%BE%8B-2"><span class="nav-number">4.1.</span> <span class="nav-text">更多实用示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#http-%E5%91%BD%E4%BB%A4%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%88HTTPie-%E7%AE%80%E4%BB%8B%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">http 命令是什么（HTTPie 简介）</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1052,23 +1052,6 @@ i.ban {
         </ul>
       </div>
     </div>
-        <div class="sidebar-inner sidebar-post-related">
-          <div class="animated">
-              <div class="links-of-blogroll-title"><i class="fa-solid fa-signs-post fa-fw"></i>
-    相关文章
-  </div>
-  <ul class="popular-posts">
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2024/03/28/ansible-useful-demo/" rel="bookmark">
-        <time class="popular-posts-time">2024-03-28</time>
-        <br>
-      Ansible 一些有用的小Demo
-      </a>
-    </li>
-  </ul>
-
-          </div>
-        </div>
   </aside>
 
 
@@ -1121,7 +1104,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-23 18:05:07" itemprop="dateModified" datetime="2026-03-23T18:05:07+08:00">2026-03-23</time>
+      <time title="修改时间：2026-10-13 16:18:21" itemprop="dateModified" datetime="2026-10-13T16:18:21+08:00">2026-10-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1245,14 +1228,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.5k</span>
+      <span>6.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>13 分钟</span>
+      <span>23 分钟</span>
     </span>
 
         </div>
@@ -1290,162 +1273,304 @@ if (!window.__postViewReady) {
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>curl与wget的基本使用方法</p>
+<p>curl 与 wget 怎么选，以及两边的常用下载、请求、上传写法</p>
 </li>
 <li class="lvl-2">
-<p>本文基于<code>CentOS8(x86_64)</code></p>
+<p>重定向、证书校验、失败重试、耗时统计</p>
+</li>
+<li class="lvl-2">
+<p>源码安装 curl，以及 HTTPie（<code>http</code> 命令）的基本用法</p>
+</li>
+<li class="lvl-2">
+<p>未特别标注的 curl 参数，按 CentOS 8 自带的 curl 7.61.1 来写</p>
 </li>
 </ul>
 <span id="more"></span>
-<h2 id="curl">curl</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看页面内容，默认GET请求</span></span><br><span class="line">curl url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 简单验证的页面登录方法</span></span><br><span class="line">curl -u user:passwd url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载文件要指定下载后的文件名称</span></span><br><span class="line">curl -o fileName url</span><br><span class="line"><span class="comment"># -O 会使用 URL 中的文件名，不能指定目录，因此需要切换目录后执行。</span></span><br><span class="line">curl -O url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 跟随请求重定向 -L</span></span><br><span class="line"><span class="comment"># 指定下载目录，-L：跟随重定向（很多下载链接都有 302/301，强烈建议带上）</span></span><br><span class="line">curl -L --output-dir /path/to/dir -O https://example.com/file.ext</span><br><span class="line"><span class="comment"># 默认情况下加上 -L 会将 Post 请求变更为 Get 请求，解决方法如下</span></span><br><span class="line">curl -L --post301 --post302 -X POST http://example.com</span><br><span class="line"><span class="comment"># 限制最大重定向次数（防止死循环）</span></span><br><span class="line">curl -L --max-redirs 5 http://example.com</span><br><span class="line"><span class="comment"># 获取完整链路</span></span><br><span class="line">curl -IL http://example.com</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示下载进度条,-C - 断点续传，-o 下载后的文件名称</span></span><br><span class="line">curl -C - -o fileName url</span><br><span class="line"></span><br><span class="line"><span class="comment"># -X, --request 指定请求方法</span></span><br><span class="line"><span class="comment"># -d, --data DATA     HTTP POST data</span></span><br><span class="line"><span class="comment"># -X指定请求协议,-H指定请求头，多个请求头就使用多个-H，-d指定请求数据</span></span><br><span class="line">curl url \</span><br><span class="line">  -X POST \</span><br><span class="line">  -d <span class="string">&quot;&#123;\&quot;data\&quot;:\&quot;content\&quot;&#125;&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;content-type: application/json&quot;</span></span><br><span class="line"></span><br><span class="line">curl url \</span><br><span class="line">  -X POST \</span><br><span class="line">  -d <span class="string">&quot;name=zhangsan&amp;age=30&quot;</span></span><br><span class="line">  -H <span class="string">&quot;content-type: application/x-www-form-urlencoded&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --data-urlencode参数等同于-d，发送 POST 请求的数据体，区别在于会自动将发送的数据进行 URL 编码</span></span><br><span class="line">curl --data-urlencode <span class="string">&#x27;name=张三&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># -G, --get  Send the -d data with a HTTP GET</span></span><br><span class="line"><span class="comment"># 发出一个 GET 请求，实际请求的 URL 为url?name=zhangsan&amp;age=30。如果省略-G，会发出一个 POST 请求。</span></span><br><span class="line">curl -G -d <span class="string">&#x27;name=zhangsan&#x27;</span> -d <span class="string">&#x27;age=30&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传文件，注意文件名称前面要加上@，后面跟本地文件路径，不指定type默认会把 MIME 类型设为application/octet-stream，不指定filename默认使用上传文件名称作为服务器端接收到的文件名称</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> -H <span class="string">&quot;Content-Type: multipart/form-data&quot;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 同时传递文件和普通属性，有多少个参数，后面就跟多少个-F指定要上传携带的参数值</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> -F <span class="string">&#x27;name=java&#x27;</span> -H <span class="string">&quot;Content-Type: multipart/form-data&quot;</span> url</span><br><span class="line"><span class="comment"># 同时传递文件和json属性</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> -F <span class="string">&#x27;jsonBody=&#123;&quot;name&quot;:&quot;java&quot;&#125;;type=application/json&#x27;</span> -H <span class="string">&quot;Content-Type: multipart/form-data&quot;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过FTP进行下载，-O 将返回内容输出到当前目录下，和url中文件名相同的文件中（不含目录）</span></span><br><span class="line">curl -O ftp://user:pass@ip:port/file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过FTP进行上传，-T 指定上传文件</span></span><br><span class="line">curl -T file ftp://user:pass@ip:port/path </span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动化下载脚本常用的命令</span></span><br><span class="line">curl -fsSL url</span><br><span class="line">  <span class="comment"># 在自动化脚本中经常使用curl -fsSL，因为它具备以下几个优点：</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 1.简洁性（-s 和 -S）：</span></span><br><span class="line">  <span class="comment"># -s（--silent）使得 curl 在执行过程中不显示任何输出，包括进度信息和错误信息。这样可以清理脚本的输出，避免杂乱的信息干扰主要的脚本逻辑。</span></span><br><span class="line">  <span class="comment"># -S（--show-error）在与-s一起使用时，即使静默模式下如果出现错误依然显示错误信息，这有助于调试和错误跟踪。</span></span><br><span class="line">  <span class="comment"># 2.错误处理（-f）：</span></span><br><span class="line">  <span class="comment"># -f（--fail）参数确保了在 HTTP 请求失败（例如 404 或 500 错误）时，curl 不会输出错误的 HTML 内容而是直接退出并返回错误码。这使得脚本能够更容易地处理错误情况并采取相应的措施，不需要额外处理错误页面的内容。</span></span><br><span class="line">  <span class="comment"># 3.重定向跟踪（-L）：</span></span><br><span class="line">  <span class="comment"># -L（--location）允许 curl 自动跟踪和处理 HTTP 重定向。当目标资源发生重定向时，curl 会自动请求重定向后的 URL，而不需要人工干预。这在下载内容或访问需要重定向的资源时非常有用。</span></span><br><span class="line">  <span class="comment"># 4.简化下载操作：</span></span><br><span class="line">  <span class="comment"># 通过组合这些参数，curl -fsSL可以在一个简洁的命令中完成下载文件等操作，处理常见的错误情况，并简化自动化脚本的编写和维护。</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 这些特性使得curl -fsSL成为自动化脚本中下载文件、处理 HTTP 请求的一个常用且高效的选择</span></span><br></pre></td></tr></table></figure>
+<h2 id="curl-和-wget-怎么选">curl 和 wget 怎么选</h2>
+<p>curl 默认把响应打到标准输出，适合看接口、接管道、写脚本。wget 默认按 URL 里的文件名存到磁盘，适合下载文件和递归镜像。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>curl</th>
+<th>wget</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>默认行为</td>
+<td>响应打到标准输出</td>
+<td>保存为文件</td>
+</tr>
+<tr>
+<td>整站抓取</td>
+<td>不做网站镜像</td>
+<td><code>--mirror</code> / <code>-r</code> 递归下载</td>
+</tr>
+<tr>
+<td>请求构造</td>
+<td>方法、Header、JSON、上传都直接支持</td>
+<td>以 GET 下载为主，也能 POST、加 Header</td>
+</tr>
+<tr>
+<td>失败与重试</td>
+<td><code>--retry</code>、<code>-f</code>、<code>-w</code> 适合写进脚本</td>
+<td><code>-c</code> 断点续传、<code>-t</code> 重试次数</td>
+</tr>
+<tr>
+<td>常见环境</td>
+<td>Linux、macOS 大多自带</td>
+<td>Linux 大多自带，macOS 通常要另装</td>
+</tr>
+</tbody>
+</table>
 <div class="tips">
-<p><em><strong>解决 curl: (60) SSL certificate problem: certificate has expired 的问题</strong></em></p>
-<ul class="lvl-1">
-<li class="lvl-2">
-<p>发生问题的原因：</p>
-<ul class="lvl-3">
-<li class="lvl-4">请求的网站的证书过期，需要更新网站证书</li>
-</ul>
-<blockquote>
-<p>此时若不能更新网站证书，可以使用下面的命令忽略证书验证</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过忽略证书验证的方式解决</span></span><br><span class="line">curl --insecure https://www.example.com</span><br><span class="line"><span class="comment"># 忽略证书校验，但是显示警告</span></span><br><span class="line">curl --insecure --verbose https://www.example.com</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">curl -k https://www.example.com</span><br><span class="line">curl -k -v https://www.example.com</span><br></pre></td></tr></table></figure>
-<ul class="lvl-3">
-<li class="lvl-4">系统的根证书过期，需要更新系统根证书</li>
-</ul>
-<blockquote>
-<p>手动下载最新的根证书进行更新</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示libcurl使用的CA证书捆绑包的内置路径，用于解决 curl: (60) SSL certificate problem: certificate has expired 的问题时，定位证书的位置，然后从  https://curl.se/docs/caextract.html 下载新版进行替换</span></span><br><span class="line">curl-config --ca</span><br><span class="line"><span class="comment"># 如果 curl-config 命令不存在，可以通过如下命令进行安装</span></span><br><span class="line">yum install curl-devel</span><br><span class="line"><span class="comment"># 验证是否安装成功</span></span><br><span class="line">curl-config --version</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>命令行更新根证书(<code>推荐</code>)</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update -y ca-certificates</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
+<p>CentOS Linux 8 已于 2021-12-31 停止维护，默认的 yum 源已经迁入归档。还在用这套系统时，可以临时把系统源换成 <code>https://vault.centos.org</code> 后再执行文中的 <code>yum</code>。</p>
+<p>Vault 只是冻结的历史软件包归档，不再提供安全更新，不能视为恢复了系统维护。生产环境应尽快迁移到仍受支持的 Rocky Linux、AlmaLinux、RHEL 或其他系统。EPEL 8 本身仍跟随 RHEL 8 生命周期维护到 2029-05-31，但它依赖的 CentOS Linux 8 基础仓库仍可能因为系统停止维护而安装失败。</p>
 </div>
+<h2 id="curl">curl</h2>
+<h3 id="版本提示">版本提示</h3>
+<p>本文以 CentOS 8 自带的 curl 7.61.1 为基础，不同版本的常见差异如下：</p>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>实战示例</p>
+<p>7.66.0：增加 <code>--parallel</code> 并行传输</p>
+</li>
+<li class="lvl-2">
+<p>7.67.0：HTTP 429 开始触发 <code>--retry</code></p>
+</li>
+<li class="lvl-2">
+<p>7.73.0：增加 <code>--output-dir</code>，<code>curl --help</code> 改为只显示常用参数，完整参数使用 <code>curl --help all</code></p>
+</li>
+<li class="lvl-2">
+<p>7.76.0：增加 <code>--fail-with-body</code></p>
+</li>
+<li class="lvl-2">
+<p>7.82.0：增加 <code>--json</code></p>
+</li>
+<li class="lvl-2">
+<p>8.2.0：增加 <code>--ca-native</code>、<code>--proxy-ca-native</code>，可以使用操作系统原生 CA 存储</p>
+</li>
+<li class="lvl-2">
+<p>8.3.0：增加命令行变量 <code>--variable</code> 和 <code>--expand-*</code></p>
+</li>
+<li class="lvl-2">
+<p>8.10.0：增加 <code>--skip-existing</code>，并支持用 <code>curl --help 参数名</code> 查看指定参数的帮助</p>
+</li>
+<li class="lvl-2">
+<p>8.13.0：<code>--url @文件</code> 可以从文件读取 URL 列表</p>
+</li>
+<li class="lvl-2">
+<p>8.16.0：增加 <code>--follow</code>、<code>--out-null</code>、<code>--parallel-max-host</code>，重试时间支持小数，并把默认最低 TLS 版本提升到 1.2</p>
+</li>
+<li class="lvl-2">
+<p>8.19.0：<code>--limit-rate</code>、<code>--max-filesize</code> 支持小数</p>
+</li>
+<li class="lvl-2">
+<p>8.20.0：上游构建默认关闭 NTLM，SMB 改成编译时选择启用，并移除 RTMP</p>
+</li>
+<li class="lvl-2">
+<p>8.21.0：URL glob 支持命名，并增加 HTTP/3 代理 CONNECT、MASQUE CONNECT-UDP</p>
+</li>
+<li class="lvl-2">
+<p>8.22.0：增加实验性的 RFC 9421 HTTP Message Signatures；移除 TLS-SRP，并阻止 SPNEGO 自动回退到 NTLM</p>
 </li>
 </ul>
-<blockquote>
-<p>在 curl 命令执行失败或者返回状态码不为 200 时打印信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行 curl 命令</span></span><br><span class="line">curl_output=$(curl --retry 3 -m 10 -I -s -o /dev/null -w <span class="string">&quot;%&#123;http_code&#125;&quot;</span> http://localhost:8080/test.html)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取 curl 命令的退出状态码</span></span><br><span class="line">exit_status=$?</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查命令的退出状态码和返回的状态码</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$exit_status</span> -ne 0 ] || [ <span class="variable">$curl_output</span> -ne 200 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># 打印格式化后的系统时间</span></span><br><span class="line">    current_time=$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;curl 命令执行失败，或者返回的状态码不为 200，当前系统时间为：<span class="variable">$current_time</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>参数解释</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">--retry 3：重试 3 次。</span><br><span class="line"></span><br><span class="line">-m 10：设置单个请求的最大请求时间为 10 秒。如果服务器在 10 秒内没有响应，curl 将中断请求。</span><br><span class="line"></span><br><span class="line">-I：仅请求头。-I 参数告诉 curl 发送 HEAD 请求而不是默认的 GET 请求，这样服务器将只返回 HTTP 头信息而不返回实际内容。</span><br><span class="line"></span><br><span class="line">-s：静默模式。-s 参数告诉 curl 在执行时不显示进度条或错误信息，只输出请求的结果。</span><br><span class="line"></span><br><span class="line">-o /dev/null：将输出重定向到 /dev/null，这个设备是一个特殊的文件，会将所有写入的数据都丢弃。由于我们只关心 HTTP 状态码，而不关心输出内容，因此将其重定向到 /dev/null 是合理的。</span><br><span class="line"></span><br><span class="line">-w <span class="string">&quot;%&#123;http_code&#125;&quot;</span>：自定义输出格式。-w 参数允许您指定 curl 命令输出的格式。在这里，%&#123;http_code&#125; 表示将输出 HTTP 响应的状态码。</span><br><span class="line">  您还可以指定其他内容，例如：</span><br><span class="line">  %&#123;time_total&#125;：总请求时间，包括 DNS 解析、连接、传输和重定向时间。</span><br><span class="line">  %&#123;time_namelookup&#125;：DNS 解析时间。</span><br><span class="line">  %&#123;time_connect&#125;：建立连接时间。</span><br><span class="line">  %&#123;time_starttransfer&#125;：服务器开始响应时间。</span><br><span class="line">  %&#123;size_download&#125;：下载的数据大小。</span><br><span class="line">  %&#123;size_upload&#125;：上传的数据大小。</span><br><span class="line">  %&#123;url_effective&#125;：最终请求的 URL。</span><br><span class="line">  %&#123;content_type&#125;：返回的内容类型。</span><br><span class="line">  %&#123;remote_ip&#125;：远程服务器 IP 地址等。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 统计执行时间</span></span><br><span class="line">curl -o /dev/null -s -w \</span><br><span class="line"><span class="string">&quot;DNS Lookup: %&#123;time_namelookup&#125;s\n\</span></span><br><span class="line"><span class="string">TCP Handshake: %&#123;time_connect&#125;s\n\</span></span><br><span class="line"><span class="string">SSL Handshake: %&#123;time_appconnect&#125;s\n\</span></span><br><span class="line"><span class="string">Send Request: %&#123;time_pretransfer&#125;s\n\</span></span><br><span class="line"><span class="string">Server Processing: %&#123;time_starttransfer&#125;s\n\</span></span><br><span class="line"><span class="string">Total Request: %&#123;time_total&#125;s\n&quot;</span> \</span><br><span class="line">https://example.com</span><br><span class="line"><span class="comment">## 输出结果</span></span><br><span class="line">DNS Lookup: 0.002119s</span><br><span class="line">TCP Handshake: 0.002488s</span><br><span class="line">SSL Handshake: 0.012045s</span><br><span class="line">Send Request: 0.012156s</span><br><span class="line">Server Processing: 0.012175s</span><br><span class="line">Total Request: 2.376437s</span><br></pre></td></tr></table></figure>
+<p>截至 2026-09-02，curl 最新稳定版是 8.22.0。先用 <code>curl --version</code> 查看实际版本和编译特性，再决定是否使用较新的参数；发行版自带的 curl 可能会回移安全补丁，但通常不会增加新参数。</p>
+<h3 id="查看页面和下载文件">查看页面和下载文件</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看页面内容，默认 GET，结果打到标准输出</span></span><br><span class="line">curl url</span><br><span class="line"></span><br><span class="line"><span class="comment"># -o 指定保存路径，可以带目录</span></span><br><span class="line">curl -o /path/to/fileName url</span><br><span class="line"></span><br><span class="line"><span class="comment"># -O 使用 URL 里的文件名，文件出现在当前目录，不能在 -O 后面再写目录</span></span><br><span class="line">curl -O url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 默认是进度表（百分比、速度、剩余时间）。-# 才是一条进度条</span></span><br><span class="line"><span class="comment"># -C - 从本地已有文件的末尾继续下载。服务器必须支持 Range，并返回 206</span></span><br><span class="line">curl -# -C - -o fileName url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 限速 1MB/s。wget 里对应的参数是 --limit-rate</span></span><br><span class="line">curl --limit-rate 1m -o fileName url</span><br></pre></td></tr></table></figure>
+<p><code>--output-dir</code> 从 curl 7.73.0 才有。CentOS 8 的 7.61.1 会报未知参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># curl &gt;= 7.73.0，可以指定目录，同时用 -O 保留 URL 中的文件名</span></span><br><span class="line">curl -L --output-dir /path/to/dir -O https://example.com/file.ext</span><br><span class="line"></span><br><span class="line"><span class="comment"># curl 7.61.1：先进入目录</span></span><br><span class="line"><span class="built_in">cd</span> /path/to/dir &amp;&amp; curl -L -O https://example.com/file.ext</span><br></pre></td></tr></table></figure>
+<h3 id="重定向">重定向</h3>
+<p><code>-L</code> 会跟随 301/302/303/307/308。其中 301、302、303 会把 POST 改成 GET；307 和 308 保持原来的方法。</p>
+<p><code>-d</code> 本身就会发 POST。不要再加 <code>-X POST</code>，否则每一次重定向都会被强制成 POST。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 跟随重定向。很多下载链接会先返回 302/301</span></span><br><span class="line">curl -L -O https://example.com/file.ext</span><br><span class="line"></span><br><span class="line"><span class="comment"># 301/302/303 也继续使用 POST</span></span><br><span class="line">curl -L --post301 --post302 --post303 -d <span class="string">&#x27;name=zhangsan&#x27;</span> http://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最多跟随 5 次，避免重定向循环</span></span><br><span class="line">curl -L --max-redirs 5 http://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># -I 只取响应头，用来看完整跳转链路</span></span><br><span class="line">curl -IL http://example.com</span><br></pre></td></tr></table></figure>
+<h3 id="指定方法和请求体">指定方法和请求体</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># JSON 要自己设置 Content-Type。-d 和 --data-binary 默认都按表单类型发送</span></span><br><span class="line"><span class="comment"># 命令行里直接给 -d 的内容会原样发送；使用 -d @文件 时，文件中的回车、换行和 NUL 会被移除</span></span><br><span class="line"><span class="comment"># --data-binary 按原样发送正文，包括文件中的回车和换行。两者在数据以 @ 开头时，都把后面当成文件名</span></span><br><span class="line">curl url \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  --data-binary <span class="string">&#x27;&#123;&quot;data&quot;:&quot;content&quot;&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># JSON 放在文件里</span></span><br><span class="line">curl url \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  --data-binary @body.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 表单。-d 默认的 Content-Type 就是 application/x-www-form-urlencoded</span></span><br><span class="line">curl url \</span><br><span class="line">  -d <span class="string">&quot;name=zhangsan&amp;age=30&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --data-urlencode 会先做 URL 编码，再放进 POST 请求体。中文和空格要用它</span></span><br><span class="line">curl --data-urlencode <span class="string">&#x27;name=张三&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># -G 把 -d / --data-urlencode 的内容附到 URL 查询串上，方法仍是 GET</span></span><br><span class="line"><span class="comment"># 实际请求：url?name=%E5%BC%A0%E4%B8%89&amp;age=30</span></span><br><span class="line">curl -G --data-urlencode <span class="string">&#x27;name=张三&#x27;</span> -d <span class="string">&#x27;age=30&#x27;</span> url</span><br></pre></td></tr></table></figure>
+<p>curl 7.82.0 起可以用 <code>--json</code>，它会设置 <code>Content-Type: application/json</code>、<code>Accept: application/json</code> 并按 POST 发送。7.61.1 没有这个参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --json <span class="string">&#x27;&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;&#x27;</span> url</span><br></pre></td></tr></table></figure>
+<h3 id="上传文件">上传文件</h3>
+<p><code>-F</code> 会自动加上带 <code>boundary</code> 的 <code>Content-Type: multipart/form-data</code>。再手写一个不带 boundary 的 <code>Content-Type</code>，服务端经常解析失败。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># @ 后面是本地路径。type 是文件的 MIME，filename 是服务端看到的文件名</span></span><br><span class="line"><span class="comment"># 省略 type 时，curl 先根据文件扩展名推断 MIME，无法识别时使用 application/octet-stream</span></span><br><span class="line"><span class="comment"># 省略 filename 时，服务端看到的是本地文件名</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一个字段一个 -F</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> -F <span class="string">&#x27;name=java&#x27;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 同一个 multipart 里再带一段 JSON</span></span><br><span class="line">curl -F <span class="string">&#x27;file=@photo.png;type=image/png;filename=me.png&#x27;</span> \</span><br><span class="line">  -F <span class="string">&#x27;jsonBody=&#123;&quot;name&quot;:&quot;java&quot;&#125;;type=application/json&#x27;</span> url</span><br></pre></td></tr></table></figure>
+<h3 id="认证、Cookie、代理和调试">认证、Cookie、代理和调试</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># HTTP Basic。只写用户名时 curl 会交互式询问密码，避免密码进入 shell 历史</span></span><br><span class="line">curl -u user url</span><br><span class="line"></span><br><span class="line"><span class="comment"># Bearer Token</span></span><br><span class="line">curl -H <span class="string">&quot;Authorization: Bearer token&quot;</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># -c 把服务器返回的 Cookie 存进文件，-b 在下次请求里带上</span></span><br><span class="line">curl -c cookies.txt url</span><br><span class="line">curl -b cookies.txt url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 声明接受压缩响应，并自动解压</span></span><br><span class="line">curl --compressed url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 走代理</span></span><br><span class="line">curl -x http://127.0.0.1:8080 url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印请求头、响应头和 TLS 握手</span></span><br><span class="line">curl -v url</span><br><span class="line"></span><br><span class="line"><span class="comment"># --connect-timeout 只限制建立连接；-m 限制这一次传输的总时间，含下载过程</span></span><br><span class="line">curl --connect-timeout 5 -m 30 url</span><br></pre></td></tr></table></figure>
+<h3 id="更多实用示例">更多实用示例</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把响应头和正文一起输出到标准输出</span></span><br><span class="line"><span class="comment"># 下载二进制文件时不要用 -i，否则响应头也会混进输出</span></span><br><span class="line">curl -i https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># -D 单独保存响应头，-o 单独保存正文</span></span><br><span class="line">curl -D headers.txt -o body.bin https://example.com/file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只请求前 1 MiB。真正的范围下载要求服务器返回 206</span></span><br><span class="line"><span class="comment"># 如果服务器忽略 Range 并返回 200，得到的可能是完整文件</span></span><br><span class="line">curl -r 0-1048575 -o first-1m.bin https://example.com/file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># -O 保存文件，-J 改用 Content-Disposition 中的文件名</span></span><br><span class="line"><span class="comment"># 文件名由服务器决定，只应对可信服务器使用</span></span><br><span class="line">curl -L -OJ https://example.com/download</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不修改系统 DNS，临时把域名和端口解析到指定 IP</span></span><br><span class="line"><span class="comment"># URL 中仍使用原域名，因此 Host 和 TLS SNI 不会改变</span></span><br><span class="line">curl --resolve example.com:443:192.0.2.10 https://example.com/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 PEM 格式的客户端证书和私钥进行双向 TLS 认证</span></span><br><span class="line"><span class="comment"># 私钥文件应限制读取权限</span></span><br><span class="line">curl --cert client.crt --key client.key https://example.com/private</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过 Unix Socket 请求 Docker API。执行用户需要有 socket 访问权限</span></span><br><span class="line">curl --unix-socket /var/run/docker.sock http://localhost/version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制使用 IPv4 或 IPv6</span></span><br><span class="line">curl -4 https://example.com</span><br><span class="line">curl -6 https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 HTTP 协议版本。HTTP/2 还要求当前 curl 的构建包含 HTTP2 特性</span></span><br><span class="line">curl --http1.1 https://example.com</span><br><span class="line">curl --http2 https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># curl &gt;= 7.66.0：并行下载多个文件，并分别使用 URL 中的文件名</span></span><br><span class="line">curl --parallel --remote-name-all \</span><br><span class="line">  https://example.com/a.zip \</span><br><span class="line">  https://example.com/b.zip</span><br></pre></td></tr></table></figure>
+<p>可以通过 <code>curl --version</code> 的 Features 行确认 HTTP/2 等编译特性。CentOS 8 自带的 curl 7.61.1 不支持 <code>--parallel</code>。</p>
+<h3 id="curl-8-x-新功能示例">curl 8.x 新功能示例</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># curl &gt;= 8.2.0：使用操作系统原生 CA 存储</span></span><br><span class="line"><span class="comment"># 是否可用取决于操作系统、TLS 后端和 curl 的编译方式</span></span><br><span class="line">curl --ca-native https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># curl &gt;= 8.3.0：从环境变量导入 Token，再展开到请求头</span></span><br><span class="line"><span class="comment"># 命令行参数中不会直接出现 Token 的值</span></span><br><span class="line">curl --variable <span class="string">&#x27;%API_TOKEN&#x27;</span> \</span><br><span class="line">  --expand-header <span class="string">&#x27;Authorization: Bearer &#123;&#123;API_TOKEN&#125;&#125;&#x27;</span> \</span><br><span class="line">  https://api.example.com/users</span><br><span class="line"></span><br><span class="line"><span class="comment"># 变量展开时可以做 URL 编码</span></span><br><span class="line">curl --variable <span class="string">&#x27;q=中文 空格&#x27;</span> \</span><br><span class="line">  --expand-url <span class="string">&#x27;https://example.com/search?q=&#123;&#123;q:url&#125;&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># curl &gt;= 8.10.0：目标文件已经存在时直接跳过，不覆盖也不重新下载</span></span><br><span class="line">curl --skip-existing -O https://example.com/file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># curl &gt;= 8.13.0：urls.txt 每行一个 URL，空行和以 # 开头的行会被忽略</span></span><br><span class="line"><span class="comment"># 从文件读取 URL 时，每个 URL 都隐含 -O；这里同时并行下载并跳过已有文件</span></span><br><span class="line">curl --url @urls.txt --parallel --skip-existing</span><br><span class="line"></span><br><span class="line"><span class="comment"># curl &gt;= 8.16.0：按 HTTP 规范处理自定义方法的重定向</span></span><br><span class="line"><span class="comment"># 301/302/303 可以改成 GET，307/308 保持 PATCH；这和 -L 强制保留 -X 方法不同</span></span><br><span class="line">curl --follow -X PATCH \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  --data-binary @body.json \</span><br><span class="line">  https://example.com/resource</span><br><span class="line"></span><br><span class="line"><span class="comment"># 丢弃响应正文，比写死 /dev/null 更便于跨平台使用</span></span><br><span class="line">curl --out-null -w <span class="string">&quot;HTTP %&#123;http_code&#125;\n&quot;</span> https://example.com/health</span><br><span class="line"></span><br><span class="line"><span class="comment"># 并行下载，但同一个主机最多同时建立 2 个传输</span></span><br><span class="line">curl --parallel --parallel-max-host 2 --url @urls.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># curl &gt;= 8.16.0：重试延时和重试总时间可以使用小数</span></span><br><span class="line">curl --retry 3 --retry-delay 0.5 --retry-max-time 5.5 https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># curl &gt;= 8.19.0：限速值可以使用小数</span></span><br><span class="line">curl --limit-rate 1.5M -O https://example.com/file.zip</span><br></pre></td></tr></table></figure>
+<p>curl 8.22.0 的 RFC 9421 HTTP Message Signatures 仍是实验功能，必须在编译时显式启用，官方不建议用于生产环境，也不保证实验阶段的参数保持兼容。可以先用 <code>curl --help all</code> 确认当前构建是否包含 <code>--httpsig-*</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># HTTPSIG_KEY 是十六进制编码的 HMAC 共享密钥</span></span><br><span class="line"><span class="built_in">export</span> HTTPSIG_KEY=<span class="string">&#x27;00112233445566778899aabbccddeeff&#x27;</span></span><br><span class="line"></span><br><span class="line">curl --variable <span class="string">&#x27;%HTTPSIG_KEY&#x27;</span> \</span><br><span class="line">  --httpsig-algo hmac-sha256 \</span><br><span class="line">  --expand-httpsig-key <span class="string">&#x27;&#123;&#123;HTTPSIG_KEY&#125;&#125;&#x27;</span> \</span><br><span class="line">  --httpsig-keyid demo-key \</span><br><span class="line">  --httpsig-headers <span class="string">&#x27;method authority path content-type:&#x27;</span> \</span><br><span class="line">  --json <span class="string">&#x27;&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;&#x27;</span> \</span><br><span class="line">  https://example.com/api</span><br><span class="line"></span><br><span class="line"><span class="built_in">unset</span> HTTPSIG_KEY</span><br></pre></td></tr></table></figure>
+<h3 id="FTP">FTP</h3>
+<p>密码写在命令行里时，可能出现在 shell 历史和 <code>ps</code> 输出中。只给用户名，让 curl 交互式询问密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -O 把内容存成 URL 最后一段的文件名</span></span><br><span class="line">curl --user user -O ftp://ip:port/file</span><br><span class="line"></span><br><span class="line"><span class="comment"># -T 上传本地文件</span></span><br><span class="line">curl --user user -T file ftp://ip:port/path/</span><br></pre></td></tr></table></figure>
+<h3 id="在脚本里使用">在脚本里使用</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL url</span><br></pre></td></tr></table></figure>
+<p>这条命令把正文打到标准输出。要落盘时再加上 <code>-o</code>。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>-s</code> 关掉进度和报错，<code>-S</code> 在静默时仍把错误打出来。两个一起用，脚本输出里只留下真正的失败信息。</p>
+</li>
+<li class="lvl-2">
+<p><code>-f</code> 遇到 404、500 这类 HTTP 错误时，不把错误页正文打出来，并且以非 0 状态退出。脚本可以直接看 <code>$?</code>。</p>
+</li>
+<li class="lvl-2">
+<p><code>-L</code> 跟随重定向。</p>
+</li>
+</ul>
+<p><code>-f</code> 并非绝对可靠，认证过程中的 401、407 等状态可能有例外。curl 7.76.0 起，如果既要非 0 退出状态又要保留错误响应正文，可以使用 <code>--fail-with-body</code>。</p>
+<h3 id="证书校验失败">证书校验失败</h3>
+<p><code>curl: (60) SSL certificate problem: certificate has expired</code> 常见有三类原因。</p>
+<div class="tips">
+<p><em><strong>先看本机时间</strong></em></p>
+<p>HTTPS 会检查证书有效期。本机时间快了或慢了，也会报证书过期，或者 <code>certificate is not yet valid</code>。先执行 <code>date</code> 看时间是否正确。</p>
+</div>
+<div class="tips">
+<p><em><strong>网站证书过期或证书链不完整</strong></em></p>
+<p>站点证书需要在服务器上更新。一时改不了、又确认访问目标没有问题时，可以临时跳过校验：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -k https://www.example.com</span><br><span class="line"><span class="comment"># -k 等同于 --insecure。-v 仍会打印告警，便于确认是校验被跳过了</span></span><br><span class="line">curl -k -v https://www.example.com</span><br></pre></td></tr></table></figure>
+<p><code>-k</code> 只适合临时排查。跳过校验之后无法发现中间人替换证书，传输口令或 Token 的脚本里不要加它。</p>
+</div>
+<div class="tips">
+<p><em><strong>系统根证书过期</strong></em></p>
+<p><code>curl -v</code> 输出里的 <code>CAfile:</code> 是这一次实际使用的证书包。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -v https://www.example.com</span><br></pre></td></tr></table></figure>
+<p><code>curl-config --ca</code> 打印的是编译 curl 时写死的默认路径。在 CentOS 8 中，这个命令由 <code>libcurl-devel</code> 软件包提供：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install libcurl-devel</span><br><span class="line">curl-config --ca</span><br><span class="line">curl-config --version</span><br></pre></td></tr></table></figure>
+<p>系统自带的证书包优先用软件源更新。CentOS 8 的源如果已经失效，下面这条会失败，需要先换成 vault 源。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update -y ca-certificates</span><br></pre></td></tr></table></figure>
+<p>不要直接覆盖 <code>CAfile</code> 指向的系统证书包。CentOS 的证书包由 <code>update-ca-trust</code> 生成，手动修改会在下次更新时丢失，也可能影响其他程序。</p>
+<p>源不可用、又必须临时使用新证书包时，可以从 <a target="_blank" rel="noopener" href="https://curl.se/docs/caextract.html">CA Extract</a> 下载 <code>cacert.pem</code>，只对当前命令指定：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --cacert /path/to/cacert.pem https://www.example.com</span><br></pre></td></tr></table></figure>
+<p>也可以临时设置 <code>CURL_CA_BUNDLE=/path/to/cacert.pem</code>。如果是给系统增加自建 CA，应把 CA 证书放进 <code>/etc/pki/ca-trust/source/anchors/</code>，再执行 <code>update-ca-trust extract</code>，而不是修改生成后的 bundle。</p>
+</div>
+<h3 id="按状态码判断失败，以及统计耗时">按状态码判断失败，以及统计耗时</h3>
+<p><code>-I</code> 发的是 HEAD。有的服务对 HEAD 和 GET 返回不同状态码，检查页面是否可用时用 GET，也就是不要加 <code>-I</code>。</p>
+<p><code>--retry</code> 只对超时和部分临时错误重试。curl 7.61.1 支持的 HTTP 状态包括 408、500、502、503、504；HTTP 429 从 7.67.0 起才会触发重试。连接被拒绝要另加 <code>--retry-connrefused</code>。</p>
+<p><code>-m</code> 是单次传输的上限。<code>--retry-max-time</code> 会在开始下一次重试前检查累计时间，但不会中断已经开始的那一次请求，因此它不是严格的整体超时；实际总耗时可能超过设置值。需要严格控制脚本总运行时间时，还应由外层的 <code>timeout</code> 或任务调度器限制。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --retry 3：上述临时错误再试 3 次</span></span><br><span class="line"><span class="comment"># --retry-connrefused：连接被拒绝也重试</span></span><br><span class="line"><span class="comment"># --retry-max-time 30：累计到 30 秒后不再开始下一次重试，但已开始的请求可能继续</span></span><br><span class="line"><span class="comment"># --connect-timeout 5：5 秒内连不上就失败</span></span><br><span class="line"><span class="comment"># -m 10：单次传输最多 10 秒</span></span><br><span class="line"><span class="comment"># -s -S：不显示进度，但保留错误信息</span></span><br><span class="line"><span class="comment"># -o /dev/null：丢掉正文。-w 的结果仍然在标准输出上</span></span><br><span class="line"><span class="comment"># 连接失败时 %&#123;http_code&#125; 是 000</span></span><br><span class="line">curl_output=$(curl --retry 3 --retry-connrefused --retry-max-time 30 \</span><br><span class="line">  --connect-timeout 5 -m 10 -s -S -o /dev/null -w <span class="string">&quot;%&#123;http_code&#125;&quot;</span> \</span><br><span class="line">  http://localhost:8080/test.html)</span><br><span class="line"></span><br><span class="line">exit_status=$?</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$exit_status</span>&quot;</span> -ne 0 ] || [ <span class="string">&quot;<span class="variable">$curl_output</span>&quot;</span> -ne 200 ]; <span class="keyword">then</span></span><br><span class="line">    current_time=$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;curl 失败或状态码不是 200（exit=<span class="variable">$&#123;exit_status&#125;</span>，http=<span class="variable">$&#123;curl_output&#125;</span>），当前时间：<span class="variable">$&#123;current_time&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p><code>-w</code> 还可以输出这些字段：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>%{time_namelookup}</code>、<code>%{time_connect}</code>、<code>%{time_appconnect}</code>、<code>%{time_pretransfer}</code>、<code>%{time_starttransfer}</code>、<code>%{time_total}</code>：见下面的计时说明，都是从请求开始算的累计时间</p>
+</li>
+<li class="lvl-2">
+<p><code>%{size_download}</code>、<code>%{size_upload}</code>：下载、上传的字节数</p>
+</li>
+<li class="lvl-2">
+<p><code>%{url_effective}</code>：跟随重定向之后的最终 URL</p>
+</li>
+<li class="lvl-2">
+<p><code>%{content_type}</code>：响应的 Content-Type</p>
+</li>
+<li class="lvl-2">
+<p><code>%{remote_ip}</code>：连上的服务器 IP</p>
+</li>
+</ul>
+<p>下面这组时间是累计值。<code>time_connect</code> 里已经包含 DNS，<code>time_starttransfer</code> 里已经包含连接、握手和等到首字节的全部时间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">curl -o /dev/null -s -w \</span><br><span class="line"><span class="string">&quot;DNS 解析完成: %&#123;time_namelookup&#125;s\n\</span></span><br><span class="line"><span class="string">TCP 连接完成: %&#123;time_connect&#125;s\n\</span></span><br><span class="line"><span class="string">TLS 握手完成: %&#123;time_appconnect&#125;s\n\</span></span><br><span class="line"><span class="string">即将发送请求: %&#123;time_pretransfer&#125;s\n\</span></span><br><span class="line"><span class="string">收到首字节: %&#123;time_starttransfer&#125;s\n\</span></span><br><span class="line"><span class="string">请求结束: %&#123;time_total&#125;s\n&quot;</span> \</span><br><span class="line">https://example.com</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DNS 解析完成: 0.002119s</span><br><span class="line">TCP 连接完成: 0.002488s</span><br><span class="line">TLS 握手完成: 0.012045s</span><br><span class="line">即将发送请求: 0.012156s</span><br><span class="line">收到首字节: 0.012175s</span><br><span class="line">请求结束: 2.376437s</span><br></pre></td></tr></table></figure>
 <table>
 <thead>
 <tr>
 <th>字段</th>
-<th>含义</th>
+<th>含义（从请求开始累计）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>%{time_namelookup}</code></td>
-<td>DNS 解析时间</td>
+<td>DNS 解析完成</td>
 </tr>
 <tr>
 <td><code>%{time_connect}</code></td>
-<td>TCP 连接时间</td>
+<td>TCP 连接完成，已包含 DNS</td>
 </tr>
 <tr>
 <td><code>%{time_appconnect}</code></td>
-<td>SSL 握手时间（HTTPS 才有）</td>
+<td>TLS 握手完成，已包含 DNS 和 TCP。纯 HTTP 时为 0</td>
 </tr>
 <tr>
 <td><code>%{time_pretransfer}</code></td>
-<td>直到发送请求前的时间</td>
+<td>即将把请求发给服务器</td>
 </tr>
 <tr>
 <td><code>%{time_starttransfer}</code></td>
-<td>等待服务器返回第一个字节的时间</td>
+<td>收到响应的第一个字节</td>
 </tr>
 <tr>
 <td><code>%{time_total}</code></td>
-<td>本次请求总耗时</td>
+<td>本次传输结束</td>
 </tr>
 </tbody>
 </table>
-<div class="tips">
-<p><em><strong>小贴士</strong></em></p>
-<ul class="lvl-1">
-<li class="lvl-2">有些系统没有默认安装curl，可以通过<code>yum install curl -y</code>的方式进行安装，也可以通过源码进行安装，这里给出源码安装的过程</li>
+<p>某一段花了多久，用相邻两项相减：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>DNS = <code>time_namelookup</code></p>
+</li>
+<li class="lvl-2">
+<p>TCP = <code>time_connect - time_namelookup</code></p>
+</li>
+<li class="lvl-2">
+<p>TLS = <code>time_appconnect - time_connect</code>（纯 HTTP 时 <code>time_appconnect</code> 为 0，这一项跳过）</p>
+</li>
+<li class="lvl-2">
+<p>请求发出到首字节 = <code>time_starttransfer - time_pretransfer</code>。有请求体时，这段还包含上传请求体的时间，不能全部视为服务端处理耗时</p>
+</li>
+<li class="lvl-2">
+<p>传输正文 = <code>time_total - time_starttransfer</code></p>
+</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line">yum install gcc cmake openssl openssl-devel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载源码：https://github.com/curl/curl/releases/</span></span><br><span class="line">wget https://github.com/curl/curl/releases/download/curl-8_0_1/curl-8.0.1.tar.gz</span><br><span class="line">tar -zxcf curl-8.0.1.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入curl目录下，创建一个build文件夹，用于存放编译产生的中间文件、动态库、头文件等内容</span></span><br><span class="line"><span class="built_in">cd</span> curl-8.0.1</span><br><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过cmke生成Makefile，注意，cmake的语法是：cmake [路径]，.. 表示上一级目录</span></span><br><span class="line">cmake ..</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译并安装</span></span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新系统的链接库</span></span><br><span class="line">ldconfig -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证是否安装成功</span></span><br><span class="line">curl --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看帮助，有些版本该命令显示的简化信息</span></span><br><span class="line">curl --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 查看帮助，完整信息</span></span><br><span class="line">curl --<span class="built_in">help</span> all</span><br></pre></td></tr></table></figure>
+<p>按上面的样例，正文传输大约是 2.364 秒，等到首字节几乎可以忽略。</p>
+<h3 id="源码安装">源码安装</h3>
+<p>有的系统没装 curl：<code>yum install curl -y</code>。需要较新版本时再从源码装。不要复制旧文章里的固定版本号：旧版 curl 可能包含已经公开的安全漏洞。安装前到 <a target="_blank" rel="noopener" href="https://github.com/curl/curl/releases/">curl releases</a> 选择当前版本，并按 <a target="_blank" rel="noopener" href="https://curl.se/docs/install.html">curl 签名说明</a> 校验下载文件的签名或摘要。</p>
+<p>装到 <code>/usr/local</code> 后，<code>/usr/local/bin/curl</code> 会和系统的 <code>/usr/bin/curl</code> 并存。动态库版本对不上时，会出现 <code>error while loading shared libraries</code>。只是临时试用时，把下面的安装前缀改成 <code>$HOME/.local</code>，避免碰系统自带的 curl。</p>
+<div class="tips">
+<p><em><strong>编译并安装到 /usr/local</strong></em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gcc/make 用于编译，openssl-devel 提供 TLS，zlib-devel 提供压缩</span></span><br><span class="line">yum install gcc make cmake openssl openssl-devel zlib-devel pkgconfig</span><br><span class="line"></span><br><span class="line"><span class="comment"># 截至 2026-09-02 的最新稳定版；安装时仍应到 releases 页面确认</span></span><br><span class="line">CURL_VERSION=<span class="string">&#x27;8.22.0&#x27;</span></span><br><span class="line">CURL_TAG=<span class="string">&quot;curl-<span class="variable">$&#123;CURL_VERSION//./_&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">wget <span class="string">&quot;https://github.com/curl/curl/releases/download/<span class="variable">$&#123;CURL_TAG&#125;</span>/curl-<span class="variable">$&#123;CURL_VERSION&#125;</span>.tar.gz&quot;</span></span><br><span class="line"><span class="comment"># 解压前，按 curl 官方签名说明校验这个文件</span></span><br><span class="line">tar -zxf <span class="string">&quot;curl-<span class="variable">$&#123;CURL_VERSION&#125;</span>.tar.gz&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;curl-<span class="variable">$&#123;CURL_VERSION&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 Makefile，并安装到 /usr/local</span></span><br><span class="line">cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># /usr/local/lib 或 /usr/local/lib64 需要已经写在 /etc/ld.so.conf.d/ 里</span></span><br><span class="line">ldconfig</span><br><span class="line"><span class="built_in">hash</span> -r</span><br><span class="line"><span class="built_in">which</span> curl</span><br><span class="line">curl --version</span><br></pre></td></tr></table></figure>
+<p>7.73.0 起，<code>curl --help</code> 只列出常用参数，完整列表是 <code>curl --help all</code>。CentOS 8 自带的 7.61.1 没有分类帮助，<code>curl --help</code> 就是完整列表；在这个版本上执行 <code>curl --help all</code> 会把 <code>all</code> 当成 URL。完整说明用 <code>man curl</code>。</p>
 </div>
 <h2 id="wget">wget</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载到当前目录</span></span><br><span class="line">wget url</span><br><span class="line"><span class="comment"># 下载到指定文件中</span></span><br><span class="line">wget -O saveFile url</span><br><span class="line"><span class="comment"># 下载到指定目录</span></span><br><span class="line">wget -P saveDir url</span><br><span class="line"><span class="comment"># 下载file.txt中的所有链接</span></span><br><span class="line">wget -i file.txt</span><br><span class="line"><span class="comment"># 断点续传，最多重试5次</span></span><br><span class="line">wget -c -t 5 url</span><br><span class="line"><span class="comment"># 递归下载整个网站,递归深度为5</span></span><br><span class="line">wget -r -l 5 url</span><br><span class="line"><span class="comment"># 不下载已经存在的文件,设置超时时间5s</span></span><br><span class="line">wget -nc -T 5 url</span><br><span class="line"><span class="comment"># 下载速度限制为1m/s，默认全速下载</span></span><br><span class="line">wget --limit-rate=1m url</span><br><span class="line"><span class="comment"># 使用需要用户名和密码认证的ftp下载</span></span><br><span class="line">wget --ftp-user=USERNAME --ftp-password=PASSWORD ftp://url</span><br><span class="line"><span class="comment"># 访问https连接提示证书过期时，如果确认可以安全访问，可以加上--no-check-certificate</span></span><br><span class="line">wget --no-check-certificate https://xxxxx</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载到当前目录，文件名取 URL 的最后一段。curl 默认打到标准输出，wget 默认存文件</span></span><br><span class="line">wget url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存为指定文件名</span></span><br><span class="line">wget -O saveFile url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存到指定目录，文件名仍取自 URL</span></span><br><span class="line">wget -P saveDir url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 file.txt 里的每一行当成一个 URL 来下载</span></span><br><span class="line">wget -i file.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 断点续传，最多尝试 5 次（包含第一次请求，不是额外重试 5 次）</span></span><br><span class="line"><span class="comment"># 真正续传要求服务器支持 Range 并返回 206；不支持时，wget 可能从头下载并覆盖已有文件</span></span><br><span class="line">wget -c -t 5 url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归下载，深度最多 5 层</span></span><br><span class="line">wget -r -l 5 url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地已有同名文件就跳过；各阶段超时 5 秒</span></span><br><span class="line">wget -nc -T 5 url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 限速 1MB/s。curl 对应参数是 --limit-rate</span></span><br><span class="line">wget --limit-rate=1m url</span><br><span class="line"></span><br><span class="line"><span class="comment"># FTP。下面只适合演示，密码可能出现在 shell 历史和进程列表里</span></span><br><span class="line"><span class="comment"># 自动化脚本更适合使用权限设为 600 的 .netrc</span></span><br><span class="line">wget --ftp-user=USERNAME --ftp-password=PASSWORD ftp://ip/file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 确认目标可信、只是证书校验过不去时，临时跳过校验。不要用在会传输口令的脚本里</span></span><br><span class="line">wget --no-check-certificate https://example.com</span><br></pre></td></tr></table></figure>
+<h3 id="更多实用示例-2">更多实用示例</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -O - 把正文输出到标准输出，-q 关闭 wget 自身的日志，适合接管道</span></span><br><span class="line"><span class="comment"># 脚本需要同时检查 wget 和 jq 是否成功时，应先启用 set -o pipefail</span></span><br><span class="line">wget -qO- https://example.com/api | jq .</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查资源是否存在，不保存正文；-S 同时打印服务器响应头</span></span><br><span class="line">wget --spider -S https://example.com/file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据服务器的 Last-Modified 和本地文件时间决定是否重新下载</span></span><br><span class="line"><span class="comment"># -N 不要和 -O 一起使用，否则无法正常按本地文件时间判断</span></span><br><span class="line">wget -N https://example.com/file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转入后台下载，并把日志写入 download.log</span></span><br><span class="line">wget -b -o download.log https://example.com/big-file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTTP Basic 认证。只写用户名，密码由终端交互式读取</span></span><br><span class="line">wget --user=username --ask-password https://example.com/private/file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅对这一条命令使用 HTTPS 代理</span></span><br><span class="line">https_proxy=http://127.0.0.1:8080 \</span><br><span class="line">  wget https://example.com/file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 正常下载文件，同时打印服务器响应头，适合排查重定向和缓存问题</span></span><br><span class="line">wget -S https://example.com/file.zip</span><br></pre></td></tr></table></figure>
 <div class="tips">
-<p><em><strong>小贴士</strong></em></p>
-<blockquote>
-<p>一般情况下我们都是在比较简单的<code>GET</code>请求下使用<code>wget</code>，实际上<code>wget</code>也支持一些复杂的场景</p>
-</blockquote>
-<ul class="lvl-1">
-<li class="lvl-2">POST请求</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># &#x27;key1=value1&amp;key2=value2&#x27;这部分会被作为POST请求的数据体</span></span><br><span class="line">wget --post-data <span class="string">&#x27;key1=value1&amp;key2=value2&#x27;</span> http://example.com/resource</span><br></pre></td></tr></table></figure>
+<p><em><strong>POST、Header 和 Cookie</strong></em></p>
+<p>wget 多数时候用来做 GET 下载，也可以带请求体和 Header。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这部分作为 POST 请求体</span></span><br><span class="line">wget --post-data <span class="string">&#x27;key1=value1&amp;key2=value2&#x27;</span> http://example.com/resource</span><br><span class="line"></span><br><span class="line">wget --header=<span class="string">&quot;Accept-Encoding: gzip&quot;</span> --header=<span class="string">&quot;User-Agent: My-App-Name/0.0.1&quot;</span> http://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多个 Cookie 写在同一个头里，用分号隔开</span></span><br><span class="line">wget --header=<span class="string">&quot;Cookie: name1=value1; name2=value2&quot;</span> http://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># cookies.txt 使用 Netscape/Mozilla cookie 文件格式</span></span><br><span class="line"><span class="comment"># Chrome 插件 Get cookies.txt LOCALLY 可以导出这种文件</span></span><br><span class="line">wget --load-cookies cookies.txt http://example.com</span><br></pre></td></tr></table></figure>
+<p><em><strong>镜像整个网站</strong></em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --mirror --convert-links --adjust-extension --page-requisites --no-parent http://example.com</span><br></pre></td></tr></table></figure>
 <ul class="lvl-1">
 <li class="lvl-2">
-<p>携带Header</p>
+<p><code>--mirror</code>：等同于 <code>-r -N -l inf --no-remove-listing</code>。也就是递归下载、按时间戳跳过没有更新的文件、不限制深度，并保留 FTP 目录列表生成的 <code>.listing</code> 文件。<code>-l inf</code> 表示深度没有上限。</p>
 </li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=<span class="string">&quot;Accept-Encoding: gzip&quot;</span> --header=<span class="string">&quot;User-Agent: My-App-Name/0.0.1&quot;</span> http://example.com</span><br></pre></td></tr></table></figure>
-<ul class="lvl-1">
 <li class="lvl-2">
-<p>携带Cookie</p>
+<p><code>--convert-links</code>：下载完成后，把页面里的链接改成本地相对路径，方便离线打开。</p>
 </li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget --header=<span class="string">&quot;Cookie: name=value&quot;</span> http://example.com</span><br><span class="line"><span class="comment"># 如果你有多个Cookie需要设置，可以分别为它们添加--header选项</span></span><br><span class="line">wget --header=<span class="string">&quot;Cookie: name1=value1&quot;</span> --header=<span class="string">&quot;Cookie: name2=value2&quot;</span> http://example.com</span><br><span class="line"><span class="comment"># 你也可以将所有的cookie放在一个文件中，然后使用--load-cookies选项来读取</span></span><br><span class="line">wget --load-cookies cookies.txt http://example.com</span><br><span class="line"><span class="comment"># 这里cookies.txt文件应该是 Netscape/Mozilla cookie file 格式，可以由 Chrome 浏览器插件 (Get cookies.txt LOCALLY</span></span><br><span class="line">0) 自动导出。</span><br></pre></td></tr></table></figure>
-<ul class="lvl-1">
 <li class="lvl-2">
-<p>克隆整个网站</p>
+<p><code>--adjust-extension</code>：服务器返回的是 HTML，但 URL 没有 <code>.html</code> 时，补上合适的扩展名。</p>
+</li>
+<li class="lvl-2">
+<p><code>--page-requisites</code>：下载页面显示要用到的图片、CSS 等。默认不跨主机，其他域名上的资源要再加 <code>-H</code>（<code>--span-hosts</code>）。</p>
+</li>
+<li class="lvl-2">
+<p><code>--no-parent</code>：不访问起始 URL 所在目录的上级目录。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wget --mirror --convert-links --adjust-extension --page-requisites --no-parent http://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个 wget 命令用来创建一个网站的镜像，即抓取整个网站的内容。下面我们逐一解释这些参数的含义：</span></span><br><span class="line"><span class="comment"># --mirror：这个选项让 wget 具有镜像（即抓取整个网站）的功能，它等同于 -r -N -l inf --no-remove-listing，即递归下载、只下载新的文件、无限制递归深度，保持服务器上的文件列表。</span></span><br><span class="line"><span class="comment"># --convert-links：下载完成后，将文档中的链接转换为本地链接。例如，如果初始文档中链接为 /dir/foo.html，在下载后，这个链接会被替换为 file:/dir/foo.html，这样你就可以在离线浏览时能正常访问其他页面。</span></span><br><span class="line"><span class="comment"># --adjust-extension : 如果文件（服务器上）没有扩展名，这个参数可以添加合适的扩展名（比如，服务器那边是 text/html 的内容，但 URL 中没有 .html 结尾，这个参数则会添加 .html 扩展名）。</span></span><br><span class="line"><span class="comment"># --page-requisites：这个选项使 wget 下载所有页面需要的元素，比如图片、CSS样式等，即使这些内容没有在同一台服务器上。这样就能确保在离线的情况下，网页依然能完全显示。</span></span><br><span class="line"><span class="comment"># --no-parent：这个选项限制了目录的链接到父目录之外的链接，反正换句话说，wget 只会下载子目录，而不会返回到父目录。这对镜像站点来说是有用的。</span></span><br><span class="line"><span class="comment"># 总的来看，这个命令将会创建一个完整的网站复制，包括所有链接，图片和文件，并且可以在本地完全离线查看。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 只下载rar格式的文件</span></span><br><span class="line">wget -m --accept=rar url</span><br><span class="line"><span class="comment"># 不下载gif格式的文件</span></span><br><span class="line">wget -m --reject=gif url</span><br></pre></td></tr></table></figure>
+<p>递归会连续请求。wget 默认遵守 <code>robots.txt</code>。加上请求间隔，避免把对方站点打满：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget --mirror --<span class="built_in">wait</span>=1 --random-wait --convert-links --adjust-extension \</span><br><span class="line">  --page-requisites --no-parent http://example.com</span><br></pre></td></tr></table></figure>
+<p><code>--accept</code> / <code>--reject</code> 只决定哪些文件被保存。<code>-m</code> 仍然会遍历站点：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只保存 rar</span></span><br><span class="line">wget -m --accept=rar url</span><br><span class="line"><span class="comment"># 不保存 gif</span></span><br><span class="line">wget -m --reject=gif url</span><br></pre></td></tr></table></figure>
+<p>还可以限制递归范围和本地目录结构：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只跟随 example.com 域名内的链接，并且不访问 /docs/ 的上级目录</span></span><br><span class="line">wget -r --domains=example.com --no-parent https://example.com/docs/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不创建目录层级，所有文件都保存到当前目录</span></span><br><span class="line"><span class="comment"># 不同目录下的同名文件可能发生文件名冲突</span></span><br><span class="line">wget -r -nd https://example.com/files/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 正则表达式针对完整 URL，只接受指定路径下的 png 和 jpg</span></span><br><span class="line">wget -r --accept-regex=<span class="string">&#x27;/images/.*\.(png|jpg)$&#x27;</span> https://example.com/</span><br></pre></td></tr></table></figure>
+<p><code>--accept-regex</code> / <code>--reject-regex</code> 依赖 wget 的正则支持，可以先执行 <code>wget --help</code> 确认当前版本是否提供这些参数。</p>
 </div>
 <h2 id="http-命令是什么（HTTPie-简介）">http 命令是什么（HTTPie 简介）</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>HTTPie 是一个现代化的 CLI HTTP 客户端工具，旨在让 HTTP 调试、API 请求变得更简单、更人性化。</p>
-</li>
-<li class="lvl-2">
-<p>安装后，会得到两个命令：</p>
-<ul class="lvl-2">
-<li class="lvl-4">http：发送 HTTP 请求（命令行友好）</li>
-<li class="lvl-4">https：强制通过 HTTPS 发送请求</li>
-</ul>
-</li>
-<li class="lvl-2">
-<p>其特点包括：</p>
-<ul class="lvl-2">
-<li class="lvl-4">默认采用更易读的输出格式（带颜色）</li>
-<li class="lvl-4">请求语法接近自然语言，而不是 curl 的参数风格</li>
-<li class="lvl-4">内置 JSON 支持，自动设置 Content-Type 和格式化输出</li>
-<li class="lvl-4">支持 RESTful API 调试非常方便</li>
-</ul>
-</li>
-<li class="lvl-2">
-<p>安装 http（HTTPie）</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># RHEL 系列通常先启用 EPEL</span></span><br><span class="line"><span class="built_in">sudo</span> yum install epel-release -y</span><br><span class="line"><span class="comment"># 安装 httpie</span></span><br><span class="line"><span class="built_in">sudo</span> yum install httpie -y</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>示例</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 发送 GET 请求</span></span><br><span class="line">http GET https://api.github.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发送 POST 请求（自动 JSON）</span></span><br><span class="line">http POST https://httpbin.org/post name=han age=18</span><br><span class="line"><span class="comment"># = 表示json，可添加 -f 来指定是表单请求</span></span><br><span class="line"><span class="comment"># name=han 表示字符串</span></span><br><span class="line"><span class="comment"># age:=18 表示数字（: 表示保持类型）</span></span><br><span class="line"><span class="comment"># HTTPie 自动加 Content-Type: application/json 并序列化为 JSON</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># POST 请求，到参数就是POST，此时若为GET，需显示指定</span></span><br><span class="line">http https://api.example.com/users page==2 size==10</span><br><span class="line"><span class="comment"># == 用于 URL 查询参数（区分 JSON 字段）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 发送表单数据（类似 curl -d）</span></span><br><span class="line">http -f POST https://example.com/login username=admin password=123456</span><br><span class="line"><span class="comment"># 上传文件</span></span><br><span class="line">http -f POST https://example.com/upload file@/path/to/file.txt</span><br><span class="line"><span class="comment"># -f|--form 表示表单数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加请求头</span></span><br><span class="line">http Authorization:<span class="string">&quot;Bearer 123456&quot;</span> https://example.com</span><br><span class="line"><span class="comment"># : 表示请求头</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载文件</span></span><br><span class="line">http -d https://example.com/file.zip &gt; file.zip</span><br><span class="line"><span class="comment"># -d 表示不要格式化输出，输出原始数据。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅查看响应头</span></span><br><span class="line">http -h GET https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看帮助</span></span><br><span class="line">http --<span class="built_in">help</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>http 与 curl 的对比（为什么用 http）</p>
-</li>
-</ul>
+<p>HTTPie 是一个面向人的命令行 HTTP 客户端，用来调试 API。安装后有两个命令：<code>http</code> 发请求，<code>https</code> 强制走 HTTPS。</p>
+<p>和 curl 相比，它的输出带颜色、语法更接近自然语言，并且会自动处理 JSON 的 <code>Content-Type</code> 和格式化。curl 仍然更适合写进脚本，也更常见于服务器上。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CentOS 上通常先启用 EPEL。EPEL 8 仍跟随 RHEL 8 生命周期维护，</span></span><br><span class="line"><span class="comment"># 但 CentOS Linux 8 的基础系统源已经归档，安装失败时见上文的 vault 说明</span></span><br><span class="line"><span class="built_in">sudo</span> yum install epel-release -y</span><br><span class="line"><span class="built_in">sudo</span> yum install httpie -y</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">http GET https://api.github.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 有请求体时默认 POST。= 是字符串，:= 保留 JSON 类型</span></span><br><span class="line"><span class="comment"># 这条请求的正文是 &#123;&quot;name&quot;: &quot;han&quot;, &quot;age&quot;: 18&#125;，age 是数字</span></span><br><span class="line"><span class="comment"># HTTPie 会自动加上 Content-Type: application/json</span></span><br><span class="line">http POST https://httpbin.org/post name=han age:=18</span><br><span class="line"></span><br><span class="line"><span class="comment"># 没有请求体时默认 GET。需要 POST 时把方法写出来</span></span><br><span class="line"><span class="comment"># == 是 URL 查询参数，和 JSON 字段的 = 不是一回事</span></span><br><span class="line">http https://api.example.com/users page==2 size==10</span><br><span class="line"></span><br><span class="line"><span class="comment"># -f 发送表单。真实密码不要直接写进会保存的 shell 历史</span></span><br><span class="line">http -f POST https://example.com/login username=admin password=PASSWORD</span><br><span class="line">http -f POST https://example.com/upload file@/path/to/file.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># Header 写成 名字:值</span></span><br><span class="line">http Authorization:<span class="string">&quot;Bearer 123456&quot;</span> https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重定向到文件时，默认只输出原始 body，不做着色和格式化</span></span><br><span class="line">http https://example.com/file.zip &gt; file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># -d 是下载模式：body 存成文件，终端上显示响应头和进度</span></span><br><span class="line"><span class="comment"># 用 -o 指定文件名。-d 的标准输出不是文件内容，不要再重定向到 zip</span></span><br><span class="line">http -d -o file.zip https://example.com/file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 断点续传。file.zip 必须是上一次未下载完的文件</span></span><br><span class="line"><span class="comment"># -c 必须和 -d、-o 一起使用；服务器需要支持 Range 并返回 206</span></span><br><span class="line"><span class="comment"># 如果服务器不支持续传，HTTPie 会重新下载整个文件</span></span><br><span class="line">http -d -c -o file.zip https://example.com/file.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 跟随重定向。下载模式 -d 已经隐含 --follow</span></span><br><span class="line">http --follow https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印完整的请求和响应，适合调试</span></span><br><span class="line">http -v https://example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTTP Basic 认证。只写用户名时，会安全地交互式询问密码</span></span><br><span class="line">http -a username https://example.com/private</span><br><span class="line"></span><br><span class="line"><span class="comment"># 会话会在同一主机的后续请求中保留 Cookie、认证信息和自定义 Header</span></span><br><span class="line">http --session=my-session POST https://example.com/login name=user</span><br><span class="line">http --session=my-session https://example.com/profile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从文件读取原始 JSON 请求体，内容不会按字段语法重新处理</span></span><br><span class="line">http POST https://example.com/api \</span><br><span class="line">  Content-Type:application/json &lt; body.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只输出响应正文，适合脚本和管道</span></span><br><span class="line">http -b https://example.com/api</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只看响应头。-h 在这里是 --headers，不是帮助</span></span><br><span class="line">http -h GET https://example.com</span><br><span class="line"></span><br><span class="line">http --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<p>HTTPie 的会话文件会以明文保存认证信息、Cookie 和自定义 Header。不要在会话中保存敏感信息；确实需要时，应保护好 HTTPie 配置目录及会话文件的读取权限。</p>
 <table>
 <thead>
 <tr>
@@ -1457,28 +1582,28 @@ if (!window.__postViewReady) {
 <tbody>
 <tr>
 <td>可读性</td>
-<td>输出友好、彩色、美观</td>
-<td>更偏向底层</td>
+<td>输出带颜色，默认排版友好</td>
+<td>更接近协议本身</td>
 </tr>
 <tr>
-<td>JSON 支持</td>
-<td>自动 JSON</td>
-<td>需手动设置</td>
+<td>JSON</td>
+<td>自动设置 Content-Type 并格式化输出</td>
+<td>自己设置 Header，并用 <code>--data-binary</code> 发送</td>
 </tr>
 <tr>
-<td>请求构造</td>
-<td>类似自然语言</td>
-<td>大量参数</td>
+<td>请求怎么写</td>
+<td>接近 <code>方法 URL 字段=值</code></td>
+<td>由 <code>-H</code>、<code>-d</code>、<code>--data-binary</code> 这些参数拼出来</td>
 </tr>
 <tr>
-<td>用于 REST API 调试</td>
-<td>很方便</td>
-<td>需要更多参数配置</td>
+<td>调试 REST API</td>
+<td>交互时少打很多参数</td>
+<td>同样能做，命令更长</td>
 </tr>
 <tr>
-<td>稳定性与兼容性</td>
-<td>较高</td>
-<td>非常高</td>
+<td>脚本和服务器</td>
+<td>需要单独安装，CentOS 上一般走 EPEL</td>
+<td>多数系统已经带有，退出码和 <code>-w</code> 更适合脚本</td>
 </tr>
 </tbody>
 </table>
@@ -1621,14 +1746,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">943k</span>
+    <span title="站点总字数">946k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">57:08</span>
+    <span title="站点阅读时长">57:19</span>
   </span>
 </div>
 <div class="busuanzi-count">
