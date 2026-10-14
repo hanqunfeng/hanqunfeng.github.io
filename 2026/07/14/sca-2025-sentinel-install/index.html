@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   依据 Spring Cloud Alibaba 版本发布说明，搭建与 Spring Cloud Alibaba 2025.0.0.0 对应的 Sentinel Dashboard 1.8.9。   本文侧重 Dashboard 单机搭建（JAR &#x2F; Docker &#x2F; systemd），并补充应用侧接入、OpenFeign &#x2F; RestTemplate &#x2F; Gateway 适配，以及 N">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-14T08:44:58.000Z">
-<meta property="article:modified_time" content="2026-07-17T09:10:00.842Z">
+<meta property="article:modified_time" content="2026-10-14T02:37:59.358Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="sentinel">
 <meta property="article:tag" content="spring-cloud-alibaba">
@@ -1150,7 +1150,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-07-17 17:10:00" itemprop="dateModified" datetime="2026-07-17T17:10:00+08:00">2026-07-17</time>
+      <time title="修改时间：2026-10-14 10:37:59" itemprop="dateModified" datetime="2026-10-14T10:37:59+08:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1311,9 +1311,9 @@ if (!window.__postViewReady) {
 这里是容器内的内容
 :::
 
-% note info % success warning danger
+% note info % success warning danger，两端要加上大括号
 这里是容器内的内容
-% endnote %
+% endnote %，两端要加上大括号
 
 引用本地其它文章连接{}
  大括号开始% post_link 文件名称(不包含.md) %大括号结束
@@ -1629,9 +1629,8 @@ Nacos 改了会自动到应用，控制台打开规则页时通常也能查到�
 </li>
 </ul>
 <p>Dashboard 只是<strong>可选运维面板</strong>（实时 QPS、机器列表、簇点链路等）。需要临时看监控时再启一台，把 <code>transport.dashboard</code> 指过去即可；<strong>规则仍以 Nacos 为准</strong>。</p>
-<p>% note tip %<br>
-若强依赖「控制台点几下就落库」，需二次开发 Dashboard（源码自带 Nacos 推拉示例，社区亦有改版包），本文不展开，优先 Nacos 直配。<br>
-% endnote %</p>
+<div class="note info"><p>若强依赖「控制台点几下就落库」，需二次开发 Dashboard（源码自带 Nacos 推拉示例，社区亦有改版包），本文不展开，优先 Nacos 直配。</p>
+</div>
 <h3 id="2-应用依赖">2. 应用依赖</h3>
 <p>在已有 <code>spring-cloud-starter-alibaba-sentinel</code> 之外，再引入 Nacos 数据源（版本由 SCA BOM 管理）：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.csp<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sentinel-datasource-nacos<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -1820,9 +1819,8 @@ Nacos 改了会自动到应用，控制台打开规则页时通常也能查到�
 </tr>
 </tbody>
 </table>
-<p>% note tip %<br>
-授权规则依赖请求「来源」标识。Web 场景需实现 <code>RequestOriginParser</code>（解析 Header / 参数等为 origin），否则 <code>limitApp</code> 对不上，规则不按预期生效。<br>
-% endnote %</p>
+<div class="note info"><p>授权规则依赖请求「来源」标识。Web 场景需实现 <code>RequestOriginParser</code>（解析 Header / 参数等为 origin），否则 <code>limitApp</code> 对不上，规则不按预期生效。</p>
+</div>
 <h4 id="4-4-系统保护-system（demo-provider-system-rules）">4.4 系统保护 <code>system</code>（<code>demo-provider-system-rules</code>）</h4>
 <p>入口级自适应保护（对全部入口生效，无单独 <code>resource</code>；未用到的指标保持 <code>-1</code> 表示不启用）：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;highestSystemLoad&quot;</span><span class="punctuation">:</span> <span class="number">5.0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;highestCpuUsage&quot;</span><span class="punctuation">:</span> <span class="number">0.8</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;avgRt&quot;</span><span class="punctuation">:</span> <span class="number">200</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;maxThread&quot;</span><span class="punctuation">:</span> <span class="number">100</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;qps&quot;</span><span class="punctuation">:</span> <span class="number">1000</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
@@ -1889,9 +1887,8 @@ Nacos 改了会自动到应用，控制台打开规则页时通常也能查到�
 </tr>
 </tbody>
 </table>
-<p>% note tip %<br>
-热点规则必须把参数传入 Sentinel 埋点，例如 <code>SphU.entry(&quot;hello&quot;, EntryType.IN, 1, userId)</code>，<code>paramIdx: 0</code> 即对应第一个 <code>args</code>。仅写 <code>@SentinelResource(&quot;hello&quot;)</code>、调用时不传参，热点规则不会按参数生效。<br>
-% endnote %</p>
+<div class="note info"><p>热点规则必须把参数传入 Sentinel 埋点，例如 <code>SphU.entry(&quot;hello&quot;, EntryType.IN, 1, userId)</code>，<code>paramIdx: 0</code> 即对应第一个 <code>args</code>。仅写 <code>@SentinelResource(&quot;hello&quot;)</code>、调用时不传参，热点规则不会按参数生效。</p>
+</div>
 <h3 id="5-验证步骤">5. 验证步骤</h3>
 <table>
 <thead>
