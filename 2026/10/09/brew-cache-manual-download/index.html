@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  brew install、brew upgrade 下载很慢或中途断开时，可以自己把同一个安装包下完，放到 Homebrew 这次要读的缓存文件上，再重新执行原来的命令。下面用本机升级 gh 2.102.0 作例子。Homebrew 7.0.8，缓存目录是 ~&#x2F;Library&#x2F;Caches&#x2F;Homebrew。这次 GitHub 上的源码包下到一半就断了：curl: (18) Transfe">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-09T08:05:00.000Z">
-<meta property="article:modified_time" content="2026-10-09T08:15:47.574Z">
+<meta property="article:modified_time" content="2026-10-15T02:45:41.667Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="brew">
 <meta property="article:tag" content="macos">
@@ -973,7 +973,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%B1%E8%B4%A5%E6%97%B6%E7%9A%84%E6%97%A5%E5%BF%97"><span class="nav-number">2.</span> <span class="nav-text">失败时的日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%96%87%E4%BB%B6%E5%90%8D%E4%BB%8E%E5%93%AA%E6%9D%A5"><span class="nav-number">3.</span> <span class="nav-text">缓存文件名从哪来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%B7%B1%E4%B8%8B%E8%BD%BD"><span class="nav-number">4.</span> <span class="nav-text">自己下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BE%E8%BF%9B%E7%BC%93%E5%AD%98%E5%B9%B6%E6%A0%B8%E5%AF%B9%E6%A0%A1%E9%AA%8C%E5%92%8C"><span class="nav-number">5.</span> <span class="nav-text">放进缓存并核对校验和</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%A7%E7%BB%AD%E5%AE%89%E8%A3%85"><span class="nav-number">6.</span> <span class="nav-text">继续安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96-formula"><span class="nav-number">7.</span> <span class="nav-text">其他 formula</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%B1%E8%B4%A5%E6%97%B6%E7%9A%84%E6%97%A5%E5%BF%97"><span class="nav-number">2.</span> <span class="nav-text">失败时的日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%96%87%E4%BB%B6%E5%90%8D%E4%BB%8E%E5%93%AA%E6%9D%A5"><span class="nav-number">3.</span> <span class="nav-text">缓存文件名从哪来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%B7%B1%E4%B8%8B%E8%BD%BD"><span class="nav-number">4.</span> <span class="nav-text">自己下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BE%E8%BF%9B%E7%BC%93%E5%AD%98%E5%B9%B6%E6%A0%B8%E5%AF%B9%E6%A0%A1%E9%AA%8C%E5%92%8C"><span class="nav-number">5.</span> <span class="nav-text">放进缓存并核对校验和</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%A7%E7%BB%AD%E5%AE%89%E8%A3%85"><span class="nav-number">6.</span> <span class="nav-text">继续安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96-formula"><span class="nav-number">7.</span> <span class="nav-text">其他 formula</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cask"><span class="nav-number">8.</span> <span class="nav-text">Cask</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -1142,9 +1142,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-10-09 16:05:00 / 修改时间：16:15:47" itemprop="dateCreated datePublished" datetime="2026-10-09T16:05:00+08:00">2026-10-09</time>
+      <time title="创建时间：2026-10-09 16:05:00" itemprop="dateCreated datePublished" datetime="2026-10-09T16:05:00+08:00">2026-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-15 10:45:41" itemprop="dateModified" datetime="2026-10-15T10:45:41+08:00">2026-10-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1260,14 +1266,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.3k</span>
+      <span>2.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
+      <span>8 分钟</span>
     </span>
 
         </div>
@@ -1282,6 +1288,7 @@ if (!window.__postViewReady) {
 <li class="lvl-2">可以自己把同一个压缩包下完，再放到 Homebrew 这次要读的缓存文件上。放进去的必须是 formula 里那个 URL 的文件，SHA-256 也要一致。文件名以 <code>brew --cache --build-from-source gh</code> 的输出为准，不能自己编哈希，也不能拷进 <code>$(brew --cellar)/gh</code>。</li>
 <li class="lvl-2"><code>gh</code> 2.102.0 在当前 API 里没有 bottle，所以这次下的就是源码包 <code>https://github.com/cli/cli/archive/refs/tags/v2.102.0.tar.gz</code>，校验和是 <code>08bf0ef8b4409893889175e0f5279d30d6edd96465816042c0d7c72eac598158</code>。本机缓存文件名是 <code>downloads/838ae966d01d820dbc2c41ab1f82d72064fe030ca19254fb2ff3aa993768b18d--cli-2.102.0.tar.gz</code>。前半段是这条 URL 的 SHA-256，后半段来自下载响应里的文件名。</li>
 <li class="lvl-2">校验通过后再执行原来的 <code>brew upgrade gh</code> 或 <code>brew install gh</code>。Homebrew 会接着做自己的校验和编译。缓存和 Cellar 的差别见 <a href="/2024/11/28/brew/" title="MacOS软件包管理器--brew">MacOS软件包管理器--brew</a>。</li>
+<li class="lvl-2">Cask 用同一套缓存目录。路径改成 <code>brew --cache --cask &lt;token&gt;</code>，放进去的是这个 cask 的 <code>url</code> 指向的那个文件。本机 Firefox 是 dmg，<code>codex</code> 是 tar.gz，<code>claude-code</code> 没有后缀。例子在文末。</li>
 </ul>
 <span id="more"></span>
 <h2 id="失败时的日志">失败时的日志</h2>
@@ -1399,6 +1406,114 @@ if (!window.__postViewReady) {
 </li>
 <li class="lvl-2">
 <p>想先看 Homebrew 准备下的地址，可以执行 <code>brew fetch --build-from-source gh</code>。它下成功时会打出 SHA-256。下不完时，仍用上一节的 <code>brew info --json=v2</code> 读校验和，自己下完再放进缓存。</p>
+</li>
+</ul>
+<h2 id="Cask">Cask</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>缓存目录仍是 <code>$(brew --cache)/downloads</code>。文件名还是两段，中间是 <code>--</code>。前半段是 cask 里那条 URL 的 SHA-256，后半段是安装包文件名。路径用下面这条。<code>--cask</code> 与 <code>--build-from-source</code>、<code>--force-bottle</code> 互斥，formula 那两个参数在这里不能用：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew --cache --cask firefox</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本机结果：</p>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/hanqf/Library/Caches/Homebrew/downloads/474e2ff1fe5964341f94193795bc51e051af0d70d4098fe5990dbef7e2adfcc2--Firefox 158.0.dmg</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>474e2ff1fe5964341f94193795bc51e051af0d70d4098fe5990dbef7e2adfcc2</code> 是 URL 字符串 <code>https://download-installer.cdn.mozilla.net/pub/firefox/releases/158.0/mac/zh-CN/Firefox%20158.0.dmg</code> 的 SHA-256。跳转后的地址不参与这段哈希。<code>Firefox 158.0.dmg</code> 来自 URL 路径，其中的 <code>%20</code> 在文件名里是空格。</p>
+</li>
+<li class="lvl-2">
+<p>后缀跟 URL 路径最后一段走。本机 <code>codex</code> 0.162.1 是 tar.gz：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew --cache --cask codex</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本机结果：</p>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/hanqf/Library/Caches/Homebrew/downloads/9be8bf161f612c15e0003d4c5b13944e869bbb3992e85437a43e38f1cd61d5c9--codex-package-x86_64-apple-darwin.tar.gz</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>URL 是 <code>https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-package-x86_64-apple-darwin.tar.gz</code>。前半段 <code>9be8bf161f612c15e0003d4c5b13944e869bbb3992e85437a43e38f1cd61d5c9</code> 是这条 URL 的 SHA-256。内容校验和是 <code>894ac20afe819d4fa2a4be8cd27c54fd606338b86036e8ed9b6c9978c2dc7aed</code>。这台是 Intel，包名里是 <code>x86_64</code>。缓存里的这份文件已对上该校验和。</p>
+</li>
+<li class="lvl-2">
+<p>本机 <code>claude-code</code> 2.1.292 的 URL 末尾没有扩展名，缓存文件也没有后缀：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew --cache --cask claude-code</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本机结果：</p>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/hanqf/Library/Caches/Homebrew/downloads/6cbbd982529e2b9557970f25aa883d5a16ee85318b6e298d3d2ab41983eb3984--claude</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>URL 是 <code>https://downloads.claude.ai/claude-code-releases/2.1.292/darwin-x64/claude</code>。前半段 <code>6cbbd982529e2b9557970f25aa883d5a16ee85318b6e298d3d2ab41983eb3984</code> 是这条 URL 的 SHA-256。内容校验和是 <code>a9739a215728ce72435885fedb19d1317ee1ccec61e246fbfb3acaf01689c473</code>。缓存里的这份文件已对上该校验和，文件类型是 Mach-O 可执行文件。文件名就叫 <code>claude</code>，不要另加 <code>.zip</code>、<code>.dmg</code> 或 <code>.tar.gz</code>。</p>
+</li>
+<li class="lvl-2">
+<p>地址和内容校验和从当前 API 读。语言和 CPU 已经按本机选好：系统语言是 <code>zh-Hans-CN</code>，所以 URL 里是 <code>zh-CN</code>；这台是 Intel，Firefox 用的是 <code>mac</code> 目录下的包。换语言或换架构后，URL、SHA-256 和缓存路径都会变。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew info --json=v2 --cask firefox | python3 -c <span class="string">&#x27;import json,sys; c=json.load(sys.stdin)[&quot;casks&quot;][0]; print(c[&quot;url&quot;]); print(c[&quot;sha256&quot;])&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本机输出：</p>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://download-installer.cdn.mozilla.net/pub/firefox/releases/158.0/mac/zh-CN/Firefox%20158.0.dmg</span><br><span class="line">d0daa923ac5962e1ef0f3f94700e52f2d4ccbba79ae42faa3d76e5bfe5b74370</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>brew cat firefox</code> 若还停在旧版本，里面的 <code>sha256</code> 对不上这次的包。安装走的是 API 里的 158.0。</p>
+</li>
+<li class="lvl-2">
+<p>自己下载。<code>~/Downloads</code> 里的文件名可以自定，下一步 <code>mv</code> 会按缓存路径改名：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/Downloads</span><br><span class="line">curl -fL --retry 5 --retry-all-errors \</span><br><span class="line">  -C - \</span><br><span class="line">  -o ~/Downloads/Firefox-158.0.dmg \</span><br><span class="line">  <span class="string">&#x27;https://download-installer.cdn.mozilla.net/pub/firefox/releases/158.0/mac/zh-CN/Firefox%20158.0.dmg&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>放进缓存并核对。路径里有空格，引用时要加引号。中断留下的半截文件仍是同一路径加上 <code>.incomplete</code>：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CACHE_PATH=<span class="string">&quot;<span class="subst">$(brew --cache --cask firefox)</span>&quot;</span></span><br><span class="line"><span class="built_in">rm</span> -f <span class="string">&quot;<span class="variable">$&#123;CACHE_PATH&#125;</span>.incomplete&quot;</span></span><br><span class="line"><span class="built_in">mv</span> ~/Downloads/Firefox-158.0.dmg <span class="string">&quot;<span class="variable">$CACHE_PATH</span>&quot;</span></span><br><span class="line">shasum -a 256 <span class="string">&quot;<span class="variable">$CACHE_PATH</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>shasum</code> 的结果要和 <code>d0daa923ac5962e1ef0f3f94700e52f2d4ccbba79ae42faa3d76e5bfe5b74370</code> 一致。不一致就删掉 <code>$CACHE_PATH</code>，重新下载。</p>
+</li>
+<li class="lvl-2">
+<p>还没装过：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install --cask firefox</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>已安装、这次是升级：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew upgrade --cask firefox</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>校验通过后，Homebrew 不再去下这个 dmg，接着挂载并装进 Caskroom，应用放到 <code>/Applications</code>。Firefox 的 <code>auto_updates</code> 为 true，装好之后由应用自己更新，<code>brew upgrade</code> 默认不会再下新的 dmg。缓存和 Caskroom 的差别见 <a href="/2024/11/28/brew/" title="MacOS软件包管理器--brew">MacOS软件包管理器--brew</a>。</p>
+</li>
+<li class="lvl-2">
+<p>放进去的是 cask <code>url</code> 指向的那一个文件。Firefox 是 dmg，<code>codex</code> 是 tar.gz，<code>claude-code</code> 是没有后缀的可执行文件。解压或安装之后的 <code>.app</code>、以及已经链到 <code>$(brew --prefix)/bin</code> 的二进制，对不上这个缓存文件，也不要拷进 <code>$(brew --caskroom)</code>。</p>
+</li>
+<li class="lvl-2">
+<p>JSON 里的 <code>sha256</code> 若是 <code>no_check</code>，这个 cask 没有内容校验和。官方 cask 会跳过校验。本机 <code>steam</code> 就是这样，缓存路径仍以 <code>brew --cache --cask steam</code> 为准。</p>
+</li>
+<li class="lvl-2">
+<p>第三方 tap 的 cask 同样先跑 <code>brew --cache --cask &lt;token&gt;</code>。本机已装的 <code>redis</code> 8.10.2 缓存文件是 <code>downloads/54bde208450678f731ccfb0d806ece50048b1cd3c3d416a648a14a359fc8f37b--redis-oss-8.10.2-x86_64.zip</code>，内容 SHA-256 为 <code>08334ca85583bc81323be65d22455b0d36d21c3e149c588c911f80284cd8c6b4</code>，与 <code>brew info --json=v2 --cask redis</code> 里的一致。</p>
+</li>
+<li class="lvl-2">
+<p><code>url_specs</code> 里若有 cookie、referer 或 header，自己下载时要带上同样的字段，否则拿到的可能是另一份内容。Firefox 这份 <code>url_specs</code> 是空的。</p>
+</li>
+<li class="lvl-2">
+<p>想让 Homebrew 自己下载并打印 SHA-256，可以执行 <code>brew fetch --cask firefox</code>。下不完时，仍用上面的 <code>brew info --json=v2 --cask</code> 读校验和，自己下完再放进缓存。</p>
 </li>
 </ul>
 
@@ -1538,14 +1653,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">946k</span>
+    <span title="站点总字数">948k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">57:19</span>
+    <span title="站点阅读时长">57:28</span>
   </span>
 </div>
 <div class="busuanzi-count">
