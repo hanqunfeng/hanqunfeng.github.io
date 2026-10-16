@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要  MacPorts 是 macOS 上的软件包管理器，用来安装命令行工具和库，例如 git、wget、nginx。角色和 MacOS软件包管理器--brew 相同，默认目录是 &#x2F;opt&#x2F;local，可以和 Homebrew 装在同一台机器上。 安装脚本叫 Portfile，对应 Homebrew 的 formula。可选功能做成变体，安装时用 + &#x2F; - 选择。日常命令是 port，改动系统">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-23T09:10:00.000Z">
-<meta property="article:modified_time" content="2026-10-16T02:58:11.449Z">
+<meta property="article:modified_time" content="2026-10-16T03:29:20.866Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="macos">
 <meta property="article:tag" content="macports">
@@ -1150,7 +1150,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-16 10:58:11" itemprop="dateModified" datetime="2026-10-16T10:58:11+08:00">2026-10-16</time>
+      <time title="修改时间：2026-10-16 11:29:20" itemprop="dateModified" datetime="2026-10-16T11:29:20+08:00">2026-10-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1322,7 +1322,7 @@ if (!window.__postViewReady) {
 <p>登录 shell 先读 <code>~/.zprofile</code>，再读 <code>~/.zshrc</code>。<code>~/.zshrc</code> 里如果还有 <code>PATH=目录:$PATH</code>，那些目录会插到 MacPorts 前面，同名命令就不再先用 <code>/opt/local/bin</code>。最稳妥的做法是在 <code>~/.zshrc</code> 里所有 PATH 赋值之后再声明一次。<code>typeset -U path</code> 按第一次出现去重，<code>.zprofile</code> 里留下的那一份不会重复出现：</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 放在 ~/.zshrc 最后，所有 PATH=目录:$PATH 之后</span></span><br><span class="line">path=(/opt/local/bin /opt/local/sbin <span class="variable">$path</span>)</span><br><span class="line"><span class="built_in">typeset</span> -U path</span><br><span class="line"><span class="built_in">export</span> PATH</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 放在 ~/.zshrc 最后，所有 PATH=目录:$PATH 之后</span></span><br><span class="line">path=(/opt/local/bin /opt/local/sbin <span class="variable">$path</span>)  <span class="comment"># 把 MacPorts 目录插到 path 最前</span></span><br><span class="line"><span class="built_in">typeset</span> -U path                              <span class="comment"># 按第一次出现去重，避免重复条目</span></span><br><span class="line"><span class="built_in">export</span> PATH                                  <span class="comment"># 同步导出 PATH 环境变量</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>新开一个终端后用 <code>which git</code> 看当前是哪一份。以后再往 <code>~/.zshrc</code> 里加 <code>PATH=目录:$PATH</code>，写在这三行上面。bash 里 <code>~/.bash_profile</code> 先于 <code>~/.bashrc</code>，同样把上面的 <code>export PATH=...</code> 再写进 <code>~/.bashrc</code> 末尾。</p>
@@ -1343,7 +1343,7 @@ if (!window.__postViewReady) {
 <p>补全文件在 <code>/opt/local/share/zsh/site-functions</code>，<code>port</code> 对应 <code>_port</code>。zsh 只在执行 <code>compinit</code> 时扫描 <code>fpath</code>。本机用 oh-my-zsh，<code>source $ZSH/oh-my-zsh.sh</code> 时已经扫过一遍，所以这行写在它后面，并再执行一次 <code>compinit</code>：</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fpath=(/opt/local/share/zsh/site-functions <span class="variable">$fpath</span>)</span><br><span class="line"><span class="built_in">autoload</span> -Uz compinit</span><br><span class="line">compinit</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fpath=(/opt/local/share/zsh/site-functions <span class="variable">$fpath</span>)  <span class="comment"># 把 MacPorts 补全目录插到 fpath 最前</span></span><br><span class="line"><span class="built_in">autoload</span> -Uz compinit                               <span class="comment"># 加载 zsh 的补全初始化函数</span></span><br><span class="line">compinit                                            <span class="comment"># 扫描 fpath 并启用补全</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>新开一个终端，输入 <code>port </code> 后按 Tab，会补出 <code>install</code>、<code>search</code>、<code>selfupdate</code> 这些子命令。写在 <code>source $ZSH/oh-my-zsh.sh</code> 前面也可以，那样不用再跑一次 <code>compinit</code>。</p>
@@ -1545,7 +1545,7 @@ if (!window.__postViewReady) {
 <p>按名字和描述搜索。<code>port list</code> 会把索引里所有包都打出来，又长又慢。查某个软件用 <code>port search</code>，查已安装的包用「查看已安装」里的 <code>port installed</code>。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">port search wget              <span class="comment"># 按名字和描述搜索</span></span><br><span class="line">port search --name --line <span class="string">&#x27;php*&#x27;</span></span><br><span class="line">port info wget                <span class="comment"># 版本、描述、依赖、homepage、variants</span></span><br><span class="line">port variants vim             <span class="comment"># 安装前可勾选的编译选项</span></span><br><span class="line">port deps wget</span><br><span class="line">port rdeps wget               <span class="comment"># 递归依赖</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">port search wget              <span class="comment"># 按名字和描述搜索</span></span><br><span class="line">port search --name --line <span class="string">&#x27;php*&#x27;</span>  <span class="comment"># 按名字匹配，一行一条；可用通配符</span></span><br><span class="line">port info wget                <span class="comment"># 版本、描述、依赖、homepage、variants</span></span><br><span class="line">port variants vim             <span class="comment"># 安装前可勾选的编译选项</span></span><br><span class="line">port deps wget                <span class="comment"># 直接依赖</span></span><br><span class="line">port rdeps wget               <span class="comment"># 递归依赖</span></span><br></pre></td></tr></table></figure>
 <h3 id="安装软件">安装软件</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
