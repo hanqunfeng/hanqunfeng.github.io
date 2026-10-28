@@ -984,7 +984,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">321</span>
+          <span class="site-state-item-count">328</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1055,6 +1055,1456 @@ i.ban {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2020/04/17/spring-boot-ExternalPropertiesRefresh/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/04/17/spring-boot-ExternalPropertiesRefresh/" class="post-title-link" itemprop="url">SpringBoot动态更新外部属性文件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-17 23:30:05" itemprop="dateCreated datePublished" datetime="2020-04-17T23:30:05+08:00">2020-04-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot2/" itemprop="url" rel="index"><span itemprop="name">springboot2</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2020/04/17/spring-boot-ExternalPropertiesRefresh/"
+          data-title="SpringBoot动态更新外部属性文件">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">本文内容基于springboot2.2.6</li>
+<li class="lvl-2">SpringBoot可以通过<code>@PropertySource(value = &quot;file:demo.properties&quot;)</code>的方式加载外部配置文件，这样打好jar包后只要将这个属性文件放到相同路径即可</li>
+<li class="lvl-2">如果能够在不重启服务的情况下就可以重新加载这个属性文件，就可以很方便的实现动态更新，那么要怎么做呢？</li>
+<li class="lvl-2">github：<a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/springbootchapter/tree/master/chapter27">https://github.com/hanqunfeng/springbootchapter/tree/master/chapter27</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/17/spring-boot-ExternalPropertiesRefresh/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2022/05/19/thymeleaf_study/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/05/19/thymeleaf_study/" class="post-title-link" itemprop="url">Spring Boot2学习笔记--thymeleaf</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-05-19 14:24:04" itemprop="dateCreated datePublished" datetime="2022-05-19T14:24:04+08:00">2022-05-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot2/" itemprop="url" rel="index"><span itemprop="name">springboot2</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2022/05/19/thymeleaf_study/"
+          data-title="Spring Boot2学习笔记--thymeleaf">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<p>看完本文你将掌握如下知识点：</p>
+<ul class="lvl-0">
+<li class="lvl-2">Spring Boot(2.4.4)中使用<a target="_blank" rel="noopener" href="https://www.thymeleaf.org">thymeleaf(3.0.12)</a>的常用语法</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/05/19/thymeleaf_study/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2020/04/18/http-utils/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/04/18/http-utils/" class="post-title-link" itemprop="url">HttpClient、OkHttp、RestTemplate、WebClient的基本使用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-18 23:20:15" itemprop="dateCreated datePublished" datetime="2020-04-18T23:20:15+08:00">2020-04-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2020/04/18/http-utils/"
+          data-title="HttpClient、OkHttp、RestTemplate、WebClient的基本使用">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>23 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">本文内容基于org.apache.httpcomponents:httpclient:4.5.12，com.squareup.okhttp3:okhttp:4.5.0，springboot:2.2.6.RELEASE，spring-boot-starter-webflux:2.2.6.RELEASE</li>
+<li class="lvl-2">工具类，实现get/post[参数，json，输入流，文件，gzip]等方法</li>
+<li class="lvl-2">提供了测试用例及服务端demo</li>
+<li class="lvl-2">github：<a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/springbootchapter/tree/master/chapter26">https://github.com/hanqunfeng/springbootchapter/tree/master/chapter26</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/18/http-utils/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2020/03/19/mongodb-mongos/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/03/19/mongodb-mongos/" class="post-title-link" itemprop="url">MongoDB 分片集群搭建</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-19 16:30:05" itemprop="dateCreated datePublished" datetime="2020-03-19T16:30:05+08:00">2020-03-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2020/03/19/mongodb-mongos/"
+          data-title="MongoDB 分片集群搭建">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">本文内容基于mongodb4.2.3</li>
+<li class="lvl-2">本文基于本地安装，也就是ip相同，端口不同</li>
+<li class="lvl-2">3个shard复制集(3台)，1个config复制集(3台)，2个router</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/19/mongodb-mongos/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2018/12/27/redis-cluster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2018/12/27/redis-cluster/" class="post-title-link" itemprop="url">Redis集群</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-27 18:24:04" itemprop="dateCreated datePublished" datetime="2018-12-27T18:24:04+08:00">2018-12-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-12-09 10:59:57" itemprop="dateModified" datetime="2025-12-09T10:59:57+08:00">2025-12-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2018/12/27/redis-cluster/"
+          data-title="Redis集群">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="一、摘要">一、摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">看完本文你将掌握如下知识点：
+<ul class="lvl-2">
+<li class="lvl-4">redis集群的构建方法【redis-5.0.2】</li>
+<li class="lvl-4">redis早期的版本中使用基于ruby的<code>redis-trib.rb</code>命令进行集群创建，新版本推荐使用 <code>redis-cli --cluster</code>，本文就是通过<code>redis-cli --cluster</code>命令实现集群构建。</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/12/27/redis-cluster/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2018/12/12/activemq-springboot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2018/12/12/activemq-springboot/" class="post-title-link" itemprop="url">Spring Boot2学习笔记--activemq</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-12 17:24:04" itemprop="dateCreated datePublished" datetime="2018-12-12T17:24:04+08:00">2018-12-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot2/" itemprop="url" rel="index"><span itemprop="name">springboot2</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2018/12/12/activemq-springboot/"
+          data-title="Spring Boot2学习笔记--activemq">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>558</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<p>看完本文你将掌握如下知识点：</p>
+<ul class="lvl-0">
+<li class="lvl-2">Spring Boot(2.1.1.RELEASE)中使用<a target="_blank" rel="noopener" href="http://activemq.apache.org">activemq(5.15.8)</a>的方法</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/12/12/activemq-springboot/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2018/04/28/django2_study/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2018/04/28/django2_study/" class="post-title-link" itemprop="url">Django2学习笔记</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-04-28 23:33:15" itemprop="dateCreated datePublished" datetime="2018-04-28T23:33:15+08:00">2018-04-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2018/04/28/django2_study/"
+          data-title="Django2学习笔记">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>21 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>版本：python3.6.4+django2.0.3<br>
+Demo：<a target="_blank" rel="noopener" href="https://github.com/hanqunfeng/DjangoHelloWorld">https://github.com/hanqunfeng/DjangoHelloWorld</a></p>
+</li>
+<li class="lvl-2">
+<p>参考资料：<br>
+<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/2.0/">官方资料</a><br>
+<a target="_blank" rel="noopener" href="https://yiyibooks.cn/xx/django_182/index.html">Django 1.8.2 文档</a><br>
+<a target="_blank" rel="noopener" href="https://yiyibooks.cn/xx/Django_1.11.6/index.html">Django 1.11.6 文档</a><br>
+<a target="_blank" rel="noopener" href="https://yiyibooks.cn/qy/django2/index.html">Django 2.0.2文档</a><br>
+<a target="_blank" rel="noopener" href="https://code.ziqiangxuetang.com/django/django-internationalization.html">Django中文教程</a></p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/04/28/django2_study/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1650,1436 +3100,6 @@ if (!window.__postViewReady) {
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2018/03/09/java_nodejs_aes/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/03/09/java_nodejs_aes/" class="post-title-link" itemprop="url">JAVA与NodeJS实现AES加密</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-03-09 18:33:15" itemprop="dateCreated datePublished" datetime="2018-03-09T18:33:15+08:00">2018-03-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 11:45:37" itemprop="dateModified" datetime="2024-04-03T11:45:37+08:00">2024-04-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2018/03/09/java_nodejs_aes/"
-          data-title="JAVA与NodeJS实现AES加密">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="内容要点">内容要点</h2>
-<p>本文实现java与nodejs的AES加密方式如下，并可实现java加密，nodejs解密或者nodejs加密，java解密</p>
-<ul class="lvl-0">
-<li class="lvl-2">aes-128-ecb</li>
-<li class="lvl-2">aes-256-ecb</li>
-<li class="lvl-2">aes-128-cbc</li>
-<li class="lvl-2">aes-256-cbc</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2018/03/09/java_nodejs_aes/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2018/02/26/protocol-buffer-study/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/02/26/protocol-buffer-study/" class="post-title-link" itemprop="url">Protocol Buffer学习笔记(Java&NodeJS)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-02-26 16:30:05" itemprop="dateCreated datePublished" datetime="2018-02-26T16:30:05+08:00">2018-02-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2018/02/26/protocol-buffer-study/"
-          data-title="Protocol Buffer学习笔记(Java&NodeJS)">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.5k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="什么是Protocol-Buffer">什么是Protocol Buffer</h2>
-<p>Protocol Buffers(也称protobuf)是Google公司出品的一种独立于开发语言，独立于平台的可扩展的结构化数据序列机制。通俗点来讲它跟xml和json是一类。是一种数据交互格式协议。<br>
-主要优点是它是基于二进制的，所以比起结构化的xml协议来说，它的体积很少，数据在传输过程中会更快。另外它也支持c++、java、python、php、javascript等主流开发语言。</p>
-<p><a target="_blank" rel="noopener" href="https://developers.google.com/protocol-buffers/">官网地址：https://developers.google.com/protocol-buffers/</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2018/02/26/protocol-buffer-study/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2016/12/30/spring-boot-study-nosql/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2016/12/30/spring-boot-study-nosql/" class="post-title-link" itemprop="url">Spring Boot学习笔记08--NoSql之MongoDB&Redis</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2016-12-30 23:33:15" itemprop="dateCreated datePublished" datetime="2016-12-30T23:33:15+08:00">2016-12-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot/" itemprop="url" rel="index"><span itemprop="name">springboot</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2016/12/30/spring-boot-study-nosql/"
-          data-title="Spring Boot学习笔记08--NoSql之MongoDB&Redis">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>753</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>看完本文你将掌握如下知识点：</p>
-<ol>
-<li class="lvl-3">Spring Boot对MongoDB的支持</li>
-<li class="lvl-3">Spring Boot对Redis的支持</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/30/spring-boot-study-nosql/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2016/12/22/spring-boot-study-datasource/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2016/12/22/spring-boot-study-datasource/" class="post-title-link" itemprop="url">Spring Boot学习笔记07--DataSource的创建方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2016-12-22 23:33:15" itemprop="dateCreated datePublished" datetime="2016-12-22T23:33:15+08:00">2016-12-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot/" itemprop="url" rel="index"><span itemprop="name">springboot</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2016/12/22/spring-boot-study-datasource/"
-          data-title="Spring Boot学习笔记07--DataSource的创建方法">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>365</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>看完本文你将掌握如下知识点：</p>
-<ol>
-<li class="lvl-3">Spring Boot项目中DataSource的创建方法</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/22/spring-boot-study-datasource/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2016/12/21/spring-boot-study-jpa/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2016/12/21/spring-boot-study-jpa/" class="post-title-link" itemprop="url">Spring Boot学习笔记06--JPA</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2016-12-21 23:33:15" itemprop="dateCreated datePublished" datetime="2016-12-21T23:33:15+08:00">2016-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot/" itemprop="url" rel="index"><span itemprop="name">springboot</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2016/12/21/spring-boot-study-jpa/"
-          data-title="Spring Boot学习笔记06--JPA">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>15 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>看完本文你将掌握如下知识点：</p>
-<ol>
-<li class="lvl-3">Spring Boot项目中JPA的配置及使用方法</li>
-<li class="lvl-3">Spring Boot项目配置Spring Data JPA的方法</li>
-<li class="lvl-3">Spring Data JPA与Atomikos整合实现多数据源事务管理</li>
-<li class="lvl-3">扩展JPA的方法</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/21/spring-boot-study-jpa/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2016/12/20/spring-boot-study-mybatis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2016/12/20/spring-boot-study-mybatis/" class="post-title-link" itemprop="url">Spring Boot学习笔记05--Mybatis+通用Mapper+分页插件</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2016-12-20 23:33:15" itemprop="dateCreated datePublished" datetime="2016-12-20T23:33:15+08:00">2016-12-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot/" itemprop="url" rel="index"><span itemprop="name">springboot</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2016/12/20/spring-boot-study-mybatis/"
-          data-title="Spring Boot学习笔记05--Mybatis+通用Mapper+分页插件">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>看完本文你将掌握如下知识点：</p>
-<ol>
-<li class="lvl-3">Spring Boot项目中，Mybatis+通用Mapper+分页插件的配置方法</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/20/spring-boot-study-mybatis/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2016/12/17/spring-boot-study-data/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2016/12/17/spring-boot-study-data/" class="post-title-link" itemprop="url">Spring Boot学习笔记04--数据访问</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2016-12-17 23:33:15" itemprop="dateCreated datePublished" datetime="2016-12-17T23:33:15+08:00">2016-12-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/springboot/" itemprop="url" rel="index"><span itemprop="name">springboot</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2016/12/17/spring-boot-study-data/"
-          data-title="Spring Boot学习笔记04--数据访问">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4.9k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>18 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>看完本文你将掌握如下知识点：</p>
-<ol>
-<li class="lvl-3">Spring Boot对JDBC的支持</li>
-<li class="lvl-3">Spring Boot项目多数据源的配置</li>
-<li class="lvl-3">Spring Boot的事务管理</li>
-<li class="lvl-3">Spring Boot项目多数据源的事务管理</li>
-<li class="lvl-3">Spring Boot项目中使用Hibernate4的方法</li>
-<li class="lvl-3">Spring Boot项目中使用Mybatis的方法</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/17/spring-boot-study-data/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/30/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><span class="page-number current">31</span><a class="page-number" href="/page/32/">32</a><a class="page-number" href="/page/33/">33</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/32/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -3106,14 +3126,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">974k</span>
+    <span title="站点总字数">990k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">59:04</span>
+    <span title="站点阅读时长">59:59</span>
   </span>
 </div>
 <div class="busuanzi-count">

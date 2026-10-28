@@ -984,7 +984,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">321</span>
+          <span class="site-state-item-count">328</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1055,6 +1055,1583 @@ i.ban {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/09/15/mysql8.4-innodb-cluster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/15/mysql8.4-innodb-cluster/" class="post-title-link" itemprop="url">MySQL 8.4 InnoDB Cluster 的构建方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-15 22:30:05" itemprop="dateCreated datePublished" datetime="2026-09-15T22:30:05+08:00">2026-09-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/09/15/mysql8.4-innodb-cluster/"
+          data-title="MySQL 8.4 InnoDB Cluster 的构建方法">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>15k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>53 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">MySQL 官方高可用方案 InnoDB Cluster 的搭建、故障转移演练与日常运维</li>
+<li class="lvl-2">本文基于<code>mysql-8.4.11 LTS</code>、<code>mysql-shell-8.4.10</code>、<code>mysql-router-8.4.10</code></li>
+<li class="lvl-2">操作系统使用 <strong>Amazon Linux 2023（x86_64）</strong>；其它发行版的用户、服务、软件包和配置文件路径可能不同</li>
+<li class="lvl-2">组成：<strong>Group Replication</strong>（数据复制与选主）+ <strong>MySQL Shell(AdminAPI)</strong>（搭建与管理）+ <strong>MySQL Router</strong>（把写流量路由到当前 Primary）</li>
+<li class="lvl-2"><strong>同步原理不同于普通主从</strong>：多数派确认的是提交与顺序；落到 Secondary 表里仍靠组内分发后的 applier 应用（见第 0 节对比）</li>
+<li class="lvl-2"><strong>不需要自建证书也能建集群</strong>：内网实验沿用 MySQL/Router 自动证书和默认 <code>AUTO</code> / <code>PREFERRED</code>，通常仍会加密，但不验证对端身份；生产环境应为成员间、Router 与客户端启用身份校验</li>
+<li class="lvl-2">单节点/主从/双主的搭法见 <a href="/2026/09/15/mysql8.4-config/" title="MySql8.4单节点、主从、双主的构建方法">MySql8.4单节点、主从、双主的构建方法</a>；为什么不用 MHA 见 <a href="/2022/09/15/mysql8-mha/" title="MySql-MHA的构建方法">MySql-MHA的构建方法</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/09/15/mysql8.4-innodb-cluster/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/09/15/mysql8.4-config/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/15/mysql8.4-config/" class="post-title-link" itemprop="url">MySql8.4单节点、主从、双主的构建方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-15 21:30:05" itemprop="dateCreated datePublished" datetime="2026-09-15T21:30:05+08:00">2026-09-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:54:42" itemprop="dateModified" datetime="2026-10-26T14:54:42+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/09/15/mysql8.4-config/"
+          data-title="MySql8.4单节点、主从、双主的构建方法">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>27 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">MySql单节点、主从、双主的构建过程，及其配置文件的说明</li>
+<li class="lvl-2">本文基于<code>mysql-8.4.11 LTS</code>，下载地址 <a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/8.4.html">https://dev.mysql.com/downloads/mysql/8.4.html</a></li>
+<li class="lvl-2">操作系统使用 <strong>Amazon Linux 2023（x86_64）</strong>；其它发行版的用户、服务、软件包和配置文件路径可能不同</li>
+<li class="lvl-2">8.0 版本的做法见 <a href="/2022/09/14/mysql8-config/" title="MySql单节点、主从、双主的构建方法">MySql单节点、主从、双主的构建方法</a>，<strong>两篇的命令不通用</strong>，8.4 删除了一批主从语句和配置项，下面第 0 节先讲差异</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/09/15/mysql8.4-config/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/09/10/linux-command17-ldd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/10/linux-command17-ldd/" class="post-title-link" itemprop="url">Linux常用命令--ldd</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-10 10:10:05" itemprop="dateCreated datePublished" datetime="2026-09-10T10:10:05+08:00">2026-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:54:41" itemprop="dateModified" datetime="2026-10-26T14:54:41+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" itemprop="url" rel="index"><span itemprop="name">linux常用命令</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/09/10/linux-command17-ldd/"
+          data-title="Linux常用命令--ldd">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+    20| ++下划线++
+ ~下标~
+ ^上标^
+ 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
+ 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
+
+ +++ **点击折叠**
+ 这是被隐藏的内容
+ +++
+
+::: tips success warning danger
+这里是容器内的内容
+:::
+
+% note info % success warning danger
+这里是容器内的内容
+% endnote %
+
+引用本地其它文章连接{}
+ 大括号开始% post_link 文件名称(不包含.md) %大括号结束
+ -->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>本文介绍 <code>ldd</code> 命令的使用方法，以及动态链接库依赖的排查思路。</p>
+</li>
+<li class="lvl-2">
+<p>本文基于<code>CentOS8(x86_64)</code></p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/09/10/linux-command17-ldd/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/09/03/chinese-sentence-skills/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/03/chinese-sentence-skills/" class="post-title-link" itemprop="url">小学语文常考句子技巧与练习</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-03 11:00:00 / 修改时间：14:47:51" itemprop="dateCreated datePublished" datetime="2026-09-03T11:00:00+08:00">2026-09-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/%E8%AF%AD%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">语文</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/%E8%AF%AD%E6%96%87/%E5%B0%8F%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">小学</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/09/03/chinese-sentence-skills/"
+          data-title="小学语文常考句子技巧与练习">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>23 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">小学语文句子题，本质是 <code>抓住主干、理清人称、改标点、换语气</code>，掌握方法比刷题更重要。</li>
+<li class="lvl-2">本文覆盖 <code>扩句 / 缩句</code>、<code>直述 ↔ 转述</code>、<code>陈述 ↔ 反问</code>、<code>肯定 ↔ 双重否定</code>、<code>提示语标点</code>、<code>把字句 ↔ 被字句</code>、<code>修改病句</code>、<code>比喻 / 拟人</code>。</li>
+<li class="lvl-2">每类按「定义 → 方法 → 口诀 → 例题」组织，例题均给出参考答案，方便自学和家长辅导。</li>
+<li class="lvl-2">做题时始终抓住一条底线：<code>句意不能变</code>。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/09/03/chinese-sentence-skills/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/09/02/english-ipa-quick-reference/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/02/english-ipa-quick-reference/" class="post-title-link" itemprop="url">英语48个国际音标完整速查表：中文联想、记忆口诀与例词</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-02 14:25:00" itemprop="dateCreated datePublished" datetime="2026-09-02T14:25:00+08:00">2026-09-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/%E8%8B%B1%E8%AF%AD/" itemprop="url" rel="index"><span itemprop="name">英语</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/%E8%8B%B1%E8%AF%AD/%E9%9F%B3%E6%A0%87/" itemprop="url" rel="index"><span itemprop="name">音标</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/09/02/english-ipa-quick-reference/"
+          data-title="英语48个国际音标完整速查表：中文联想、记忆口诀与例词">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">国内教材常说的「48 个音标」包括 <code>20 个元音 + 28 个辅音</code>。</li>
+<li class="lvl-2">本文把全部符号集中在一起，每个音标配有 <code>中文联想、记忆口诀和 3 个例词</code>，适合随时查阅。</li>
+<li class="lvl-2">中文近似音只能帮助记忆符号，<code>不能代替英语的真实口型、舌位、清浊和送气</code>。</li>
+<li class="lvl-2">本文主要采用传统宽式英音；美音和不同词典的转写可能有所不同。</li>
+<li class="lvl-2">需要学习具体口型、相近音对比和英美差异，请阅读 <a href="/2026/09/01/english-ipa/" title="英语48个国际音标学习笔记：分类速查与相近音对比">英语48个国际音标学习笔记：分类速查与相近音对比</a>。</li>
+</ul>
+<p>学完音标后，可继续学习拼写与发音之间的规律：<a href="/2026/09/01/english-phonics/" title="英语自然拼读学习笔记：字母组合、音节、重音与常见发音规则">英语自然拼读学习笔记：字母组合、音节、重音与常见发音规则</a>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/09/02/english-ipa-quick-reference/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/09/01/english-phonics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/01/english-phonics/" class="post-title-link" itemprop="url">英语自然拼读学习笔记：字母组合、音节、重音与常见发音规则</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-01 16:40:00" itemprop="dateCreated datePublished" datetime="2026-09-01T16:40:00+08:00">2026-09-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/%E8%8B%B1%E8%AF%AD/" itemprop="url" rel="index"><span itemprop="name">英语</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/%E8%8B%B1%E8%AF%AD/%E8%87%AA%E7%84%B6%E6%8B%BC%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">自然拼读</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/09/01/english-phonics/"
+          data-title="英语自然拼读学习笔记：字母组合、音节、重音与常见发音规则">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>24 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<blockquote>
+<p>自然拼读是连接拼写与发音的规律系统，能够帮助解码、拼写和记忆，但不能代替音标与真人发音。对中国学习者而言，以音标为基础、以自然拼读为辅助，通常更可靠。</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>自然拼读（Phonics）连接拼写和声音：看到拼写可以推测读音；听到读音可以拆分音素并得到候选拼法，但通常不能唯一确定拼写。</p>
+</li>
+<li class="lvl-2">
+<p>英语拼写有规律，但不是严格的一字母一音；规则用于缩小范围，最终仍要用词典确认。</p>
+</li>
+<li class="lvl-2">
+<p>最值得先掌握的是：<code>短元音 → 静音 e → 常见元音组合 → 辅音组合 → 不发音字母 → 音节 → 重音与弱读</code>。</p>
+</li>
+<li class="lvl-2">
+<p>英语教学里的 long a / long i 指「字母名称音」<code>/eɪ/ /aɪ/</code>，不等于音标里的“长元音”。</p>
+</li>
+<li class="lvl-2">
+<p>多音节词不能只按字母硬拼：先找元音和组合、识别词素并试分音节，再判断重音、处理弱读。</p>
+</li>
+</ul>
+<p>前置知识见 <a href="/2026/09/01/english-ipa/" title="英语48个国际音标学习笔记：分类速查与相近音对比">英语48个国际音标学习笔记：分类速查与相近音对比</a>；句子结构见 <a href="/2026/08/27/english-syntax/" title="英语句法学习笔记：词性、句子成分、基本句型与时态">英语句法学习笔记：词性、句子成分、基本句型与时态</a>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/09/01/english-phonics/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/09/01/english-ipa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/01/english-ipa/" class="post-title-link" itemprop="url">英语48个国际音标学习笔记：分类速查与相近音对比</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-01 14:30:00" itemprop="dateCreated datePublished" datetime="2026-09-01T14:30:00+08:00">2026-09-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/%E8%8B%B1%E8%AF%AD/" itemprop="url" rel="index"><span itemprop="name">英语</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/%E8%8B%B1%E8%AF%AD/%E9%9F%B3%E6%A0%87/" itemprop="url" rel="index"><span itemprop="name">音标</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/09/01/english-ipa/"
+          data-title="英语48个国际音标学习笔记：分类速查与相近音对比">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>31 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <!--
+ **加粗**
+ *斜体*
+ ***加粗并斜体***
+ ~~删除线~~
+ ==突出显示==
+ `突出显示(推荐)`
+ ++下划线++
+-->
+<h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>国内教材的「48 音标表」= <code>20 个元音</code>（12 单元音 + 8 双元音）+ <code>28 个辅音</code>（传统教学分为 11 个清辅音 + 17 个浊辅音）。</p>
+</li>
+<li class="lvl-2">
+<p>元音看 <code>舌位高低 / 前后</code> 和 <code>唇形圆不圆</code>；辅音看 <code>清浊、成阻部位、成阻方式</code>。</p>
+</li>
+<li class="lvl-2">
+<p>中国学习者最吃亏的不是「不会读」，而是 <code>把相近音读成同一个音</code>：<code>/iː/ ≠ /ɪ/</code>，<code>/æ/ ≠ /e/</code>，<code>/θ/ ≠ /s/</code>，<code>/v/ ≠ /w/</code>。</p>
+</li>
+<li class="lvl-2">
+<p>先攻 10 组最小对立（minimal pair），比把 48 个音各读一遍更有效。音标是工具，不是把 48 个符号背完就结束。</p>
+</li>
+<li class="lvl-2">
+<p>本文采用传统宽式 RP / 英式学习词典体系，美式差异在对应小节标出。音标解决「单词怎么读」；自然口语还要重音、弱读和连读。</p>
+</li>
+</ul>
+<p>学完音标后，可继续学习 <a href="/2026/09/01/english-phonics/" title="英语自然拼读学习笔记：字母组合、音节、重音与常见发音规则">英语自然拼读学习笔记：字母组合、音节、重音与常见发音规则</a>；句法部分见 <a href="/2026/08/27/english-syntax/" title="英语句法学习笔记：词性、句子成分、基本句型与时态">英语句法学习笔记：词性、句子成分、基本句型与时态</a>。</p>
+<p>跟读示范：<a target="_blank" rel="noopener" href="https://www.douyin.com/video/7661217724127410619">48 个音标发音小视频</a>（抖音）。对照本文口型表听一遍，比只看符号更快建立音感。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/09/01/english-ipa/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1757,1522 +3334,6 @@ if (!window.__postViewReady) {
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/14/sca-2025-nacos-install/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/14/sca-2025-nacos-install/" class="post-title-link" itemprop="url">Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-07-14 16:43:58" itemprop="dateCreated datePublished" datetime="2026-07-14T16:43:58+08:00">2026-07-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/%E5%BE%AE%E6%9C%8D%E5%8A%A1/spring-cloud-alibaba/" itemprop="url" rel="index"><span itemprop="name">spring-cloud-alibaba</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/07/14/sca-2025-nacos-install/"
-          data-title="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Nacos 3.0.3">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>6k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>22 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <!--
- **加粗**
- *斜体*
- ***加粗并斜体***
- ~~删除线~~
- ==突出显示==
- `突出显示(推荐)`
- ++下划线++
- ~下标~
- ^上标^
- 脚注，参考文献[^1]，然后在文档最下方要添加这个1对应的内容，如：[^1]: My reference.
- 图片设置宽度和高度(通过uPic上传后，需要将upic修改过为blog，用于添加水印) ![](https://upic-oss.oss-cn-beijing.aliyuncs.com/blog/innodb_buffer_pool.png =900x600)
-
- +++ **点击折叠**
- 这是被隐藏的内容
- +++
-
-::: tips success warning danger
-这里是容器内的内容
-:::
-
-% note info % success warning danger
-这里是容器内的内容
-% endnote %
-
-引用本地其它文章连接{}
- 大括号开始% post_link 文件名称(不包含.md) %大括号结束
- -->
-<h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>依据 <a target="_blank" rel="noopener" href="https://sca.aliyun.com/docs/2025.x/overview/version-explain/">Spring Cloud Alibaba 版本发布说明</a>，搭建与 <strong>Spring Cloud Alibaba 2025.0.0.0</strong> 对应的 <strong>Nacos Server 3.0.3</strong>。</p>
-</li>
-<li class="lvl-2">
-<p>覆盖服务端单机搭建（二进制包 + Docker）、<strong>MySQL 外置持久化</strong>、<strong>多节点集群</strong>，并补充 Spring Boot 应用侧的最小接入配置。</p>
-</li>
-<li class="lvl-2">
-<p>同版本配套的 Sentinel Dashboard 见 <a href="/2026/07/14/sca-2025-sentinel-install/" title="Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9">Spring Cloud Alibaba 2025.0.0.0 配套搭建 Sentinel Dashboard 1.8.9</a>。</p>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/07/14/sca-2025-nacos-install/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/11/npm-oidc-trusted-publishing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/11/npm-oidc-trusted-publishing/" class="post-title-link" itemprop="url">使用 GitHub Actions 和 OIDC 安全发布 npm 包</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-07-11 22:51:00" itemprop="dateCreated datePublished" datetime="2026-07-11T22:51:00+08:00">2026-07-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/npm/" itemprop="url" rel="index"><span itemprop="name">npm</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/npm/nodejs/" itemprop="url" rel="index"><span itemprop="name">nodejs</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/07/11/npm-oidc-trusted-publishing/"
-          data-title="使用 GitHub Actions 和 OIDC 安全发布 npm 包">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>18 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>本文介绍如何使用 npm Trusted Publishing，在 GitHub Actions 中通过 OpenID Connect（OIDC）发布 npm 包。整个发布过程不需要创建或保存长期有效的 <code>NPM_TOKEN</code>，并可通过指定仓库、Workflow 和 GitHub Environment 限制发布来源。</p>
-<p>本文将依次完成以下工作：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>解释为什么 npm 自动发布应从长期 Token 迁移到 OIDC。</p>
-</li>
-<li class="lvl-2">
-<p>介绍 OIDC 和 npm Trusted Publishing 的工作原理。</p>
-</li>
-<li class="lvl-2">
-<p>在 <a target="_blank" rel="noopener" href="http://npmjs.com">npmjs.com</a> 中为包添加 GitHub Actions Trusted Publisher。</p>
-</li>
-<li class="lvl-2">
-<p>在 GitHub 中配置 Environment、审批规则和最小权限。</p>
-</li>
-<li class="lvl-2">
-<p>编写一个完整、安全且不依赖 <code>NPM_TOKEN</code> 的发布 Workflow。</p>
-</li>
-<li class="lvl-2">
-<p>介绍私有依赖、首次发布、npm v12、Provenance 和常见错误。</p>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/07/11/npm-oidc-trusted-publishing/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/11/github-action/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/11/github-action/" class="post-title-link" itemprop="url">GitHub Actions Workflow 详细指南</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-07-11 21:30:05" itemprop="dateCreated datePublished" datetime="2026-07-11T21:30:05+08:00">2026-07-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-07-13 12:25:15" itemprop="dateModified" datetime="2026-07-13T12:25:15+08:00">2026-07-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/07/11/github-action/"
-          data-title="GitHub Actions Workflow 详细指南">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>8.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>30 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<p>本文面向第一次接触 GitHub Actions 的开发者，从基本概念、YAML 语法和变量表达式开始，逐步介绍 CI、测试矩阵、缓存、构建产物、发布、OIDC、安全和排错。</p>
-<blockquote>
-<p>文档中的示例需要放在仓库的 <code>.github/workflows/</code> 目录中，例如 <code>.github/workflows/ci.yml</code>。<br>
-GitHub Actions 会执行代码和第三方 Action，复制示例前应根据项目实际情况调整权限、Node.js 版本和命令。</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/07/11/github-action/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/09/gitlab-api/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/09/gitlab-api/" class="post-title-link" itemprop="url">GitLab API 指南（v3 与 v4 对比）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-07-09 21:30:05" itemprop="dateCreated datePublished" datetime="2026-07-09T21:30:05+08:00">2026-07-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/07/09/gitlab-api/"
-          data-title="GitLab API 指南（v3 与 v4 对比）">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>14 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">本文档介绍 GitLab REST API 的 <strong>v3</strong> 与 <strong>v4</strong> 差异，并结合本仓库迁移工具的实际调用场景说明：如何判断版本、常见接口对比、v4 独有能力，以及排障要点。</li>
-<li class="lvl-2">官方背景：GitLab 自 <strong>9.0</strong> 起引入并推荐 <strong>API v4</strong>；<strong>9.5</strong> 起 v3 停止支持；<strong>11.0</strong> 起 v3 被完全移除。现代实例（11.0+）只能使用 v4。</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/07/09/gitlab-api/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/07/03/gitlab-migrate/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/03/gitlab-migrate/" class="post-title-link" itemprop="url">【开源工具】GitLab 跨大版本迁移实战：告别逐级升级，一键迁移仓库与用户权限</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-07-03 21:30:05" itemprop="dateCreated datePublished" datetime="2026-07-03T21:30:05+08:00">2026-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/07/03/gitlab-migrate/"
-          data-title="【开源工具】GitLab 跨大版本迁移实战：告别逐级升级，一键迁移仓库与用户权限">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.6k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">当 GitLab 实例版本过旧（如 7.x / 8.x / 9.x），官方要求按版本逐级升级，路径长、风险高。本文介绍我开源的 Shell 工具 <code>gitlab-migrate</code>——通过「新装 GitLab + 数据迁移」的方式，自动化完成仓库 mirror 迁移、Group/个人项目区分处理、用户权限同步，支持断点续传与并行推送。</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/07/03/gitlab-migrate/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/06/25/git-command2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/06/25/git-command2/" class="post-title-link" itemprop="url">Git常用命令(快查手册)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-06-25 21:30:05" itemprop="dateCreated datePublished" datetime="2026-06-25T21:30:05+08:00">2026-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:29" itemprop="dateModified" datetime="2026-10-26T14:59:29+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/06/25/git-command2/"
-          data-title="Git常用命令(快查手册)">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>887</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">Git常用命令(快查手册)</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/06/25/git-command2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/06/24/git-svn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/06/24/git-svn/" class="post-title-link" itemprop="url">SVN 迁移到 Git</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-06-24 21:30:05" itemprop="dateCreated datePublished" datetime="2026-06-24T21:30:05+08:00">2026-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:29" itemprop="dateModified" datetime="2026-10-26T14:59:29+08:00">2026-10-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/06/24/git-svn/"
-          data-title="SVN 迁移到 Git">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.9k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">本文介绍如何使用<code>git-svn</code>将 SVN 中的项目迁移到 Git</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/06/24/git-svn/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -3299,14 +3360,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">974k</span>
+    <span title="站点总字数">990k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">59:04</span>
+    <span title="站点阅读时长">59:59</span>
   </span>
 </div>
 <div class="busuanzi-count">

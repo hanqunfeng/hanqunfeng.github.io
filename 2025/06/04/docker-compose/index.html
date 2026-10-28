@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/atelier-seaside-light","dark":"tomorrow-night-bright"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="摘要   本文介绍 Docker 命令 中 docker compose 的使用方法   Docker官方文档   docker compose   Compose file reference">
+    <meta name="description" content="摘要   本文介绍 Docker 命令 中 docker compose 的使用方法   安装见 Linux 安装 Docker。Dockerfile 见 Docker 命令 之 Dockerfile。   同一份文件在 Swarm 里由 docker stack deploy 读取，字段分工见 Docker Swarm 之 栈(Stack)。   Docker官方文档   docker com">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker 命令 之 docker compose">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/06/04/docker-compose/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍 Docker 命令 中 docker compose 的使用方法   Docker官方文档   docker compose   Compose file reference">
+<meta property="og:description" content="摘要   本文介绍 Docker 命令 中 docker compose 的使用方法   安装见 Linux 安装 Docker。Dockerfile 见 Docker 命令 之 Dockerfile。   同一份文件在 Swarm 里由 docker stack deploy 读取，字段分工见 Docker Swarm 之 栈(Stack)。   Docker官方文档   docker com">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-04T13:30:05.000Z">
-<meta property="article:modified_time" content="2026-10-26T06:54:41.838Z">
+<meta property="article:modified_time" content="2026-10-28T06:19:23.034Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -972,7 +972,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">docker compose 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">docker compose 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">docker compose 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-compose-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.1.</span> <span class="nav-text">docker compose 常用命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B6%E5%90%8D"><span class="nav-number">5.</span> <span class="nav-text">docker compose 默认文件名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-yml-%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">docker-compose.yml 的语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#volumes"><span class="nav-number">6.1.</span> <span class="nav-text">volumes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#volumes-%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">6.1.1.</span> <span class="nav-text">volumes 的属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#networks"><span class="nav-number">6.2.</span> <span class="nav-text">networks</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#networks-%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">6.2.1.</span> <span class="nav-text">networks 的属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#services"><span class="nav-number">6.3.</span> <span class="nav-text">services</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-run-%E8%BD%AC-docker-compose"><span class="nav-number">7.</span> <span class="nav-text">docker run 转 docker compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E7%BC%96%E6%8E%92%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-Dockge"><span class="nav-number">8.</span> <span class="nav-text">docker compose 编排管理工具 Dockge</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">docker compose 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">docker compose 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">docker compose 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-compose-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.1.</span> <span class="nav-text">docker compose 常用命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B6%E5%90%8D"><span class="nav-number">5.</span> <span class="nav-text">docker compose 默认文件名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-yml-%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">docker-compose.yml 的语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#volumes"><span class="nav-number">6.1.</span> <span class="nav-text">volumes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#driver"><span class="nav-number">6.1.1.</span> <span class="nav-text">driver</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#driver-opts"><span class="nav-number">6.1.2.</span> <span class="nav-text">driver_opts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#external"><span class="nav-number">6.1.3.</span> <span class="nav-text">external</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#name"><span class="nav-number">6.1.4.</span> <span class="nav-text">name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#labels"><span class="nav-number">6.1.5.</span> <span class="nav-text">labels</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#networks"><span class="nav-number">6.2.</span> <span class="nav-text">networks</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#driver-2"><span class="nav-number">6.2.1.</span> <span class="nav-text">driver</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#driver-opts-2"><span class="nav-number">6.2.2.</span> <span class="nav-text">driver_opts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#attachable"><span class="nav-number">6.2.3.</span> <span class="nav-text">attachable</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#external-2"><span class="nav-number">6.2.4.</span> <span class="nav-text">external</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#name-2"><span class="nav-number">6.2.5.</span> <span class="nav-text">name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#labels-2"><span class="nav-number">6.2.6.</span> <span class="nav-text">labels</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#internal"><span class="nav-number">6.2.7.</span> <span class="nav-text">internal</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#services"><span class="nav-number">6.3.</span> <span class="nav-text">services</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#build"><span class="nav-number">6.3.1.</span> <span class="nav-text">build</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#image"><span class="nav-number">6.3.2.</span> <span class="nav-text">image</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#container-name"><span class="nav-number">6.3.3.</span> <span class="nav-text">container_name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#command"><span class="nav-number">6.3.4.</span> <span class="nav-text">command</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#entrypoint"><span class="nav-number">6.3.5.</span> <span class="nav-text">entrypoint</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#depends-on"><span class="nav-number">6.3.6.</span> <span class="nav-text">depends_on</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#environment"><span class="nav-number">6.3.7.</span> <span class="nav-text">environment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#env-file"><span class="nav-number">6.3.8.</span> <span class="nav-text">env_file</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#restart"><span class="nav-number">6.3.9.</span> <span class="nav-text">restart</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#healthcheck"><span class="nav-number">6.3.10.</span> <span class="nav-text">healthcheck</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#volumes-2"><span class="nav-number">6.3.11.</span> <span class="nav-text">volumes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#networks-2"><span class="nav-number">6.3.12.</span> <span class="nav-text">networks</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ports"><span class="nav-number">6.3.13.</span> <span class="nav-text">ports</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#expose"><span class="nav-number">6.3.14.</span> <span class="nav-text">expose</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cpus%E3%80%81mem-limit"><span class="nav-number">6.3.15.</span> <span class="nav-text">cpus、mem_limit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#user%E3%80%81working-dir%E3%80%81hostname%E3%80%81init"><span class="nav-number">6.3.16.</span> <span class="nav-text">user、working_dir、hostname、init</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stdin-open%E3%80%81tty"><span class="nav-number">6.3.17.</span> <span class="nav-text">stdin_open、tty</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stop-signal%E3%80%81stop-grace-period"><span class="nav-number">6.3.18.</span> <span class="nav-text">stop_signal、stop_grace_period</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#network-mode"><span class="nav-number">6.3.19.</span> <span class="nav-text">network_mode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#extra-hosts"><span class="nav-number">6.3.20.</span> <span class="nav-text">extra_hosts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dns%E3%80%81dns-search%E3%80%81dns-opt"><span class="nav-number">6.3.21.</span> <span class="nav-text">dns、dns_search、dns_opt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mac-address"><span class="nav-number">6.3.22.</span> <span class="nav-text">mac_address</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#privileged"><span class="nav-number">6.3.23.</span> <span class="nav-text">privileged</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cap-add%E3%80%81cap-drop"><span class="nav-number">6.3.24.</span> <span class="nav-text">cap_add、cap_drop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#security-opt"><span class="nav-number">6.3.25.</span> <span class="nav-text">security_opt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#devices"><span class="nav-number">6.3.26.</span> <span class="nav-text">devices</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#group-add"><span class="nav-number">6.3.27.</span> <span class="nav-text">group_add</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gpus"><span class="nav-number">6.3.28.</span> <span class="nav-text">gpus</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#read-only%E3%80%81tmpfs"><span class="nav-number">6.3.29.</span> <span class="nav-text">read_only、tmpfs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pull-policy%E3%80%81platform"><span class="nav-number">6.3.30.</span> <span class="nav-text">pull_policy、platform</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#profiles"><span class="nav-number">6.3.31.</span> <span class="nav-text">profiles</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scale"><span class="nav-number">6.3.32.</span> <span class="nav-text">scale</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#extends"><span class="nav-number">6.3.33.</span> <span class="nav-text">extends</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shm-size"><span class="nav-number">6.3.34.</span> <span class="nav-text">shm_size</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ulimits"><span class="nav-number">6.3.35.</span> <span class="nav-text">ulimits</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pids-limit"><span class="nav-number">6.3.36.</span> <span class="nav-text">pids_limit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sysctls"><span class="nav-number">6.3.37.</span> <span class="nav-text">sysctls</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pid"><span class="nav-number">6.3.38.</span> <span class="nav-text">pid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#labels-3"><span class="nav-number">6.3.39.</span> <span class="nav-text">labels</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#logging"><span class="nav-number">6.3.40.</span> <span class="nav-text">logging</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#secrets"><span class="nav-number">6.3.41.</span> <span class="nav-text">secrets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#configs"><span class="nav-number">6.3.42.</span> <span class="nav-text">configs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pre-start"><span class="nav-number">6.3.43.</span> <span class="nav-text">pre_start</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#post-start"><span class="nav-number">6.3.44.</span> <span class="nav-text">post_start</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pre-stop"><span class="nav-number">6.3.45.</span> <span class="nav-text">pre_stop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#develop"><span class="nav-number">6.3.46.</span> <span class="nav-text">develop</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-run-%E8%BD%AC-docker-compose"><span class="nav-number">7.</span> <span class="nav-text">docker run 转 docker compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-%E7%BC%96%E6%8E%92%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-Dockge"><span class="nav-number">8.</span> <span class="nav-text">docker compose 编排管理工具 Dockge</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -987,7 +987,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">321</span>
+          <span class="site-state-item-count">328</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1059,17 +1059,17 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/05/22/docker-command-image/" rel="bookmark">
-        <time class="popular-posts-time">2025-05-22</time>
-        <br>
-      Docker 命令 之 镜像(Image)
-      </a>
-    </li>
-    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/06/11/docker-swarm-stack/" rel="bookmark">
         <time class="popular-posts-time">2025-06-11</time>
         <br>
       Docker Swarm 之 栈(Stack)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/22/docker-command-image/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-22</time>
+        <br>
+      Docker 命令 之 镜像(Image)
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1087,10 +1087,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2025/05/27/docker-command-container/" rel="bookmark">
-        <time class="popular-posts-time">2025-05-27</time>
+      <a class="popular-posts-link" href="/2025/06/12/docker-swarm-config-secret/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-12</time>
         <br>
-      Docker 命令 之 容器(Container)
+      Docker Swarm 之 Config 与  Secret
       </a>
     </li>
   </ul>
@@ -1149,7 +1149,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:54:41" itemprop="dateModified" datetime="2026-10-26T14:54:41+08:00">2026-10-26</time>
+      <time title="修改时间：2026-10-28 14:19:23" itemprop="dateModified" datetime="2026-10-28T14:19:23+08:00">2026-10-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1269,14 +1269,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>6.4k</span>
+      <span>10k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>23 分钟</span>
+      <span>38 分钟</span>
     </span>
 
         </div>
@@ -1387,6 +1387,12 @@ if (!window.__postViewReady) {
 <p>本文介绍 Docker 命令 中 <code>docker compose</code> 的使用方法</p>
 </li>
 <li class="lvl-2">
+<p>安装见 <a href="/2025/05/20/docker-install/" title="Linux 安装 Docker">Linux 安装 Docker</a>。Dockerfile 见 <a href="/2025/05/26/docker-dockerfile/" title="Docker 命令 之 Dockerfile">Docker 命令 之 Dockerfile</a>。</p>
+</li>
+<li class="lvl-2">
+<p>同一份文件在 Swarm 里由 <code>docker stack deploy</code> 读取，字段分工见 <a href="/2025/06/11/docker-swarm-stack/" title="Docker Swarm 之 栈(Stack)">Docker Swarm 之 栈(Stack)</a>。</p>
+</li>
+<li class="lvl-2">
 <p><a target="_blank" rel="noopener" href="https://docs.docker.com">Docker官方文档</a></p>
 </li>
 <li class="lvl-2">
@@ -1400,68 +1406,25 @@ if (!window.__postViewReady) {
 <h2 id="docker-compose-是什么？"><code>docker compose</code> 是什么？</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>Docker Compose是一个用于定义和运行多容器应用程序的工具。</p>
+<p>Docker Compose 用一份 YAML 描述多个服务、网络和卷。<code>docker compose up</code> 按这份文件创建并启动它们。同一网络里的服务用服务名互相访问。</p>
 </li>
 <li class="lvl-2">
-<p>Compose简化了对整个应用程序堆栈的控制，便于在单个YAML配置文件中管理服务、网络和卷。然后，通过一个命令，您从配置文件中创建并启动所有服务。</p>
+<p>换环境时改文件里的变量或换一份 <code>env_file</code>，服务定义可以保持不动。</p>
 </li>
 <li class="lvl-2">
-<p>Docker Compose 的优势：</p>
+<p>把同一份文件交给 Swarm 时，<code>build</code>、<code>depends_on</code> 由 <code>docker compose up</code> 使用，<code>deploy</code> 由 <code>docker stack deploy</code> 使用。对照表见 <a href="/2025/06/11/docker-swarm-stack/" title="Docker Swarm 之 栈(Stack)">Docker Swarm 之 栈(Stack)</a>。</p>
 </li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>优点</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>简化控制</td>
-<td>Docker Compose 允许在单个 YAML 文件中定义和管理多容器应用程序，简化了服务编排与协调，使环境管理和复制更容易。</td>
-</tr>
-<tr>
-<td>高效的协作</td>
-<td>配置文件易于共享，促进开发人员、运营团队和其他利益相关者之间的协作，从而提升工作流程效率和问题解决速度。</td>
-</tr>
-<tr>
-<td>快速应用程序开发</td>
-<td>Compose 利用缓存重复使用未更改服务的容器，加快环境变更速度，提高开发效率。</td>
-</tr>
-<tr>
-<td>跨环境的可移植性</td>
-<td>支持在 Compose 文件中使用变量，使配置能根据不同环境或用户进行自定义，增强了可移植性。</td>
-</tr>
-<tr>
-<td>广泛的社区和支持</td>
-<td>拥有活跃的社区，提供丰富的资源、教程和技术支持，有助于持续改进与高效排障。</td>
-</tr>
-</tbody>
-</table>
 <h2 id="docker-compose-安装"><code>docker compose</code> 安装</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>同docker一起安装</p>
+<p>Docker Engine 的安装见 <a href="/2025/05/20/docker-install/" title="Linux 安装 Docker">Linux 安装 Docker</a>，其中已经包含 <code>docker-compose-plugin</code>。命令是 <code>docker compose</code>。</p>
 </li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装docker同时安装docker compose，这里 docker-compose-plugin 就是docker compose</span></span><br><span class="line"><span class="built_in">sudo</span> dnf install docker-ce-3:26.1.3-1.el8 docker-ce-cli-3:26.1.3-1.el8 containerd.io docker-buildx-plugin docker-compose-plugin -y</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
 <li class="lvl-2">
-<p>单独安装</p>
+<p>引擎已经在、插件不在时，单独安装插件后看版本：</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 若安装docker时没有安装 docker-compose-plugin ，则需要单独安装</span></span><br><span class="line"><span class="built_in">sudo</span> dnf install docker-compose-plugin -y</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>查看版本</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose version</span><br></pre></td></tr></table></figure>
-<div class="tips">
-<p><em><strong>直接下载docker-compose的命令文件</strong></em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install Docker Compose，注意通过这种方式安装的compose的使用方式为 `docker-compose`，而非标准的 `docker compose`</span></span><br><span class="line"><span class="built_in">sudo</span> curl -L <span class="string">&quot;https://github.com/docker/compose/releases/latest/download/docker-compose-<span class="subst">$(uname -s)</span>-<span class="subst">$(uname -m)</span>&quot;</span> -o /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># Make the docker-compose command available</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> +x /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># Check Docker Compose version</span></span><br><span class="line">docker-compose version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这种方式需要单独安装命令补全，目前仅有1.29.2及之前的版本存在补全命令的下载地址，2.0.0及之后的版本没有提供，但是实测1.29.2的补全命令在2.0.0及之后的版本中依旧可用</span></span><br><span class="line"><span class="built_in">sudo</span> curl -L https://raw.githubusercontent.com/docker/compose/1.29.2/contrib/completion/bash/docker-compose &gt; /etc/bash_completion.d/docker-compose</span><br><span class="line"><span class="comment"># 立刻生效</span></span><br><span class="line"><span class="built_in">source</span> /etc/bash_completion.d/docker-compose</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dnf install docker-compose-plugin -y</span><br><span class="line">docker compose version</span><br></pre></td></tr></table></figure>
 <h2 id="docker-compose-命令"><code>docker compose</code> 命令</h2>
 <table>
 <thead>
@@ -1653,10 +1616,15 @@ if (!window.__postViewReady) {
 <h2 id="docker-compose-yml-的语法"><code>docker-compose.yml</code> 的语法</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>常用指令</p>
+<p>一份文件里常用到的键。每个键的说明在后面的同名标题下。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&quot;3.8&quot;</span> <span class="comment"># 定义版本，表示当前使用的 docker compose 语法的版本，已过时 ，新版 Docker 会使用最新的 Compose Specification 自动解析</span></span><br><span class="line">name: <span class="string">&quot;project_name&quot;</span> <span class="comment">#  项目名，默认 docker-compose.yml 文件所在的目录名，不推荐设置</span></span><br><span class="line">services: <span class="comment"># 服务列表</span></span><br><span class="line">  servicename: <span class="comment"># 服务名字，只能包含小写字母、数字、下划线、中划线，必须以字母或数字开头</span></span><br><span class="line">    build: <span class="comment"># 基于Dockerfile构建目录，如果同时设置了 image 选项，则image指定的就是构建后的镜像名称</span></span><br><span class="line">    image: <span class="comment"># 镜像的名字，默认从远程仓库拉取，如果配置了 build 选项，则image指定的就是构建后的镜像名称</span></span><br><span class="line">    <span class="built_in">command</span>: <span class="comment"># 可选，如果设置，则会覆盖默认镜像里的 CMD 命令</span></span><br><span class="line">    environment: <span class="comment"># 可选，等价于 docker container run 里的 --env 选项设置环境变量</span></span><br><span class="line">    volumes: <span class="comment"># 可选，等价于 docker container run 里的 -v 选项 绑定数据卷</span></span><br><span class="line">    networks: <span class="comment"># 可选，等价于 docker container run 里的 --network 选项指定网络</span></span><br><span class="line">    ports: <span class="comment"># 可选，等价于 docker container run 里的 -p 选项指定端口映射</span></span><br><span class="line">    expose: <span class="comment"># 可选，指定容器暴露的端口</span></span><br><span class="line">    depends_on: <span class="comment"># 服务依赖的其它服务</span></span><br><span class="line">    env_file: <span class="comment"># 环境变量文件，生产环境更推荐这种方式</span></span><br><span class="line">  servicename2:</span><br><span class="line">    image:</span><br><span class="line">    <span class="built_in">command</span>:</span><br><span class="line">    networks:</span><br><span class="line">    ports:</span><br><span class="line">  servicename3:</span><br><span class="line">    <span class="comment">#...</span></span><br><span class="line"></span><br><span class="line">volumes: <span class="comment"># 可选，等价于 docker volume create</span></span><br><span class="line">networks: <span class="comment"># 可选，等价于 docker network create</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># version 已过时。新版 Docker 按 Compose Specification 解析，写上只会告警</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">project_name</span> <span class="comment"># 项目名，默认是本文件所在目录名</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">servicename:</span> <span class="comment"># 服务名：小写字母、数字、下划线和中划线，以字母或数字开头</span></span><br><span class="line">    <span class="attr">image:</span> <span class="comment"># 镜像。同时写了 build 时，这也是构建结果的名字</span></span><br><span class="line">    <span class="attr">build:</span> <span class="comment"># 用 Dockerfile 构建。指令见 Dockerfile 一篇</span></span><br><span class="line">    <span class="attr">pull_policy:</span> <span class="comment"># 启动时拉镜像、用本地镜像，还是重新构建</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="comment"># 固定容器名。写了就不能把副本数扩成多个</span></span><br><span class="line">    <span class="attr">command:</span> <span class="comment"># 覆盖镜像的 CMD。只写参数时，交给镜像的 ENTRYPOINT</span></span><br><span class="line">    <span class="attr">entrypoint:</span> <span class="comment"># 覆盖镜像的 ENTRYPOINT</span></span><br><span class="line">    <span class="attr">user:</span> <span class="comment"># 用户，或 用户:组</span></span><br><span class="line">    <span class="attr">working_dir:</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">    <span class="attr">env_file:</span></span><br><span class="line">    <span class="attr">ports:</span> <span class="comment"># 映射到宿主机</span></span><br><span class="line">    <span class="attr">expose:</span> <span class="comment"># 只在 Compose 网络内声明</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="comment"># 写了它就不能再写 networks</span></span><br><span class="line">    <span class="attr">extra_hosts:</span></span><br><span class="line">    <span class="attr">dns:</span></span><br><span class="line">    <span class="attr">depends_on:</span> <span class="comment"># docker compose up 用来安排启动顺序。docker stack deploy 忽略它</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="comment"># 容器自己退出后的策略。Stack 改用 deploy.restart_policy</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">    <span class="attr">cpus:</span></span><br><span class="line">    <span class="attr">mem_limit:</span></span><br><span class="line">    <span class="attr">read_only:</span></span><br><span class="line">    <span class="attr">tmpfs:</span></span><br><span class="line">    <span class="attr">cap_drop:</span></span><br><span class="line">    <span class="attr">security_opt:</span></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">    <span class="attr">profiles:</span> <span class="comment"># 只有命令行带上同名 --profile 才启动</span></span><br><span class="line">    <span class="attr">develop:</span> <span class="comment"># 配合 docker compose watch</span></span><br><span class="line"><span class="attr">volumes:</span> <span class="comment"># 命名卷，供上面的 services.*.volumes 引用</span></span><br><span class="line"><span class="attr">networks:</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>deploy</code> 不在这份清单里。它由 <code>docker stack deploy</code> 读取，说明见 <a href="/2025/06/11/docker-swarm-stack/" title="Docker Swarm 之 栈(Stack)">Docker Swarm 之 栈(Stack)</a>。</p>
+</li>
+</ul>
 <h3 id="volumes">volumes</h3>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -1664,31 +1632,35 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">backend:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/database</span></span><br><span class="line">    <span class="attr">volumes:</span> <span class="comment"># 挂载卷映射</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db-data:/etc/data</span> <span class="comment"># 挂载到容器的/etc/data目录</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">backup:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">backup-service</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db-data:/var/lib/backup/data</span> <span class="comment"># 一个卷可以被多个服务使用</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span> <span class="comment"># 存储卷配置</span></span><br><span class="line">  <span class="attr">db-data:</span>  <span class="comment"># 创建一个名为db-data的卷，实际的网络名称是 容器组名称_这里的名称</span></span><br></pre></td></tr></table></figure>
-<h4 id="volumes-的属性">volumes 的属性</h4>
+<h4 id="driver"><code>driver</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>driver: 卷类型，默认为local，指定应使用哪个卷驱动程序。如果该驱动程序不可用，Compose 将返回错误并且不会部署该应用程序。</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">db-data:</span> <span class="comment"># 声明一个名为db-data的卷</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">local</span> <span class="comment"># 指定卷类型，这个是默认值，可以不配置</span></span><br><span class="line">  <span class="attr">db-data2:</span> <span class="comment"># 声明一个名为db-data2的卷，这是最简单的 volumes 配置</span></span><br></pre></td></tr></table></figure>
+<h4 id="driver-opts"><code>driver_opts</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>driver_opts: 卷类型参数，指定要传递给此卷驱动程序的选项列表（以键值对的形式）。这些选项与驱动程序相关。</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">db-data:</span></span><br><span class="line">    <span class="attr">driver_opts:</span> <span class="comment"># 卷类型参数，指定要传递给此卷驱动程序的选项列表（以键值对的形式）</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">&quot;nfs&quot;</span> <span class="comment"># 卷类型，指定应使用哪个卷驱动程序，这里是nfs</span></span><br><span class="line">      <span class="attr">o:</span> <span class="string">&quot;addr=10.40.0.199,nolock,soft,rw&quot;</span> <span class="comment"># nfs参数，addr为nfs服务器地址，nolock为不锁定文件，soft为软链接，rw为读写权限</span></span><br><span class="line">      <span class="attr">device:</span> <span class="string">&quot;:/docker/example&quot;</span> <span class="comment"># nfs挂载路径</span></span><br></pre></td></tr></table></figure>
+<h4 id="external"><code>external</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>external: 卷是否为外部卷，默认为false</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">db-data:</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">true</span> <span class="comment"># true 表示不会创建，而是使用已存在的，即会去volumes中查找(docker volume ls) 容器组名称_da-data ，默认为false</span></span><br></pre></td></tr></table></figure>
+<h4 id="name"><code>name</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>name: 卷的名称，默认为 容器组名称_声明的名称</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">db-data:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">db-data</span> <span class="comment"># 创建一个名为db-data的卷，实际的卷名称就是 db-data，不会再加上容器组名称前缀</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">true</span> <span class="comment"># name 属性经常与  external: true 一起使用</span></span><br></pre></td></tr></table></figure>
+<h4 id="labels"><code>labels</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>labels: 用于向卷添加元数据，可以添加任意的键值对</p>
@@ -1708,13 +1680,14 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">some-service:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">foo</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个例子实际上等同于：</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">some-service:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">foo</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="attr">default:</span> &#123;&#125;</span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">default:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="networks-的属性">networks 的属性</h4>
+<h4 id="driver-2"><code>driver</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>driver: 网络类型，默认为bridge</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">gitea:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br></pre></td></tr></table></figure>
+<h4 id="driver-opts-2"><code>driver_opts</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>driver_opts: 网络类型参数，指定要传递给此网络驱动程序的选项列表（以键值对的形式）。这些选项与驱动程序相关。</p>
@@ -1762,30 +1735,35 @@ if (!window.__postViewReady) {
 </tr>
 </tbody>
 </table>
+<h4 id="attachable"><code>attachable</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>attachable: 如果为true，则允许将其它独立容器也加入到此网络。默认值为false。如果独立容器连接到此网络，它可以与同样连接到此网络的服务和其他独立容器进行通信。</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">gitea:</span></span><br><span class="line">    <span class="attr">attachable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h4 id="external-2"><code>external</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>external: true 表示不会创建新的网络，回去networks中查找（docker network ls），默认为false</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">gitea:</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h4 id="name-2"><code>name</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>name: 网络名称，不会再加上容器组名称前缀</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">gitea:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">gitea</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">true</span> <span class="comment"># name 属性经常与  external: true 一起使用</span></span><br></pre></td></tr></table></figure>
+<h4 id="labels-2"><code>labels</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>labels: 用于向网络添加元数据，可以添加任意的键值对</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">mynet1:</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="attr">com.example.description:</span> <span class="string">&quot;Financial transaction network&quot;</span></span><br><span class="line">      <span class="attr">com.example.department:</span> <span class="string">&quot;Finance&quot;</span></span><br><span class="line">      <span class="attr">com.example.label-with-empty-value:</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="internal"><code>internal</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>internal: 默认情况下，Compose 提供网络的外部连接。internal当设置为 时true，可让您创建与外部隔离的网络。</p>
@@ -1808,6 +1786,7 @@ if (!window.__postViewReady) {
 <p>Gitea 是一种轻松、自托管的一体化软件开发服务。它包括 Git 托管、代码审查、团队协作、包注册表和 CI/CD。它类似于 GitHub、Bitbucket 和 GitLab。</p>
 </blockquote>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># version: &#x27;3.8&#x27; # 配置文件版本，已过时，配置上会告警但不会报错</span></span><br><span class="line"><span class="comment"># name: gitea # 容器组名称，默认使用所在目录的名称，不推荐使用</span></span><br><span class="line"><span class="attr">networks:</span> <span class="comment"># 网络配置</span></span><br><span class="line">  <span class="attr">gitea:</span> <span class="comment"># 创建一个名为gitea的网络，实际的网络名称是 gitea_gitea，即 容器组名称_这里的名称</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">false</span> <span class="comment"># 如果为true，则表示此网络不会由compose创建，而是使用已有的网络，默认为false</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span>  <span class="comment"># 网络类型，默认为bridge</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span> <span class="comment"># 存储卷配置</span></span><br><span class="line">  <span class="attr">gitea:</span> <span class="comment"># 创建一个名为gitea的存储卷，实际的卷名称是 gitea_gitea，即 容器组名称_这里的名称</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">local</span> <span class="comment"># 存储卷类型，默认为local</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span> <span class="comment"># 服务配置，这里可以定义一组容器</span></span><br><span class="line">  <span class="attr">server:</span> <span class="comment"># 定义一个名为server的服务，注意这个不是容器名称</span></span><br><span class="line">    <span class="comment"># build: . # 构建镜像，使用当前目录下的Dockerfile</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">gitea/gitea:latest</span> <span class="comment"># 镜像名称</span></span><br><span class="line">    <span class="comment"># container_name: gitea #  容器名称，默认为 “容器组名称-服务名称-索引”，不推荐配置，因为 水平扩展(--scale) 时,容器名称不能重复</span></span><br><span class="line">    <span class="attr">environment:</span> <span class="comment"># 定义环境变量</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">USER_UID=1000</span> <span class="comment"># key=value</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">USER_GID=1000</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_TYPE=mysql</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_HOST=db:3306</span> <span class="comment"># 这里配置的 db 就是 下面的服务名称，相同 network 下的服务名称，docker compose会自动解析为容器的ip地址</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_NAME=gitea</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_USER=gitea</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_PASSWD=gitea</span></span><br><span class="line">    <span class="comment"># env_file: .gitea.env # 从 .gitea.env 文件读取环境变量，生产环境更推荐</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span> <span class="comment"># 容器启动时，自动重启</span></span><br><span class="line">    <span class="attr">networks:</span> <span class="comment"># 网络关联</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gitea</span> <span class="comment"># 网络名称，就是上面创建的gitea网络</span></span><br><span class="line">    <span class="attr">volumes:</span> <span class="comment">#  数据卷关联</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gitea:/data</span> <span class="comment"># volume映射，数据卷名称:/容器路径</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/etc/timezone:/etc/timezone:ro</span> <span class="comment"># 路径映射，宿主机路径:/容器路径:读写权限</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/etc/localtime:/etc/localtime:ro</span></span><br><span class="line">    <span class="attr">ports:</span> <span class="comment"># 端口映射</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3000:3000&quot;</span> <span class="comment"># 宿主机端口:容器端口</span></span><br><span class="line">    <span class="attr">depends_on:</span> <span class="comment"># 启动依赖，就是依赖的服务启动后才能启动本服务</span></span><br><span class="line">      <span class="attr">db:</span> <span class="comment"># 启动db服务</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_healthy</span> <span class="comment"># 服务通过健康检查，也可以配置为 service_started：服务启动，这个是默认值</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">db:</span> <span class="comment"># 数据库服务</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:8</span> <span class="comment"># 镜像</span></span><br><span class="line">    <span class="attr">environment:</span> <span class="comment"># 环境变量</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_ROOT_PASSWORD=gitea</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_USER=gitea</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_PASSWORD=gitea</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_DATABASE=gitea</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span> <span class="comment"># 启动策略</span></span><br><span class="line">    <span class="attr">networks:</span> <span class="comment"># 网络映射</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gitea</span> <span class="comment"># 映射到gitea网络</span></span><br><span class="line">    <span class="attr">volumes:</span> <span class="comment"># 卷映射</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./mysql:/var/lib/mysql</span> <span class="comment"># 宿主机路径:/容器路径，这里宿主机支持相对路径</span></span><br><span class="line">    <span class="attr">healthcheck:</span> <span class="comment"># 健康检查</span></span><br><span class="line">      <span class="attr">test:</span> [<span class="string">&quot;CMD-SHELL&quot;</span>, <span class="string">&quot;mysql -u root -pgitea&quot;</span>, <span class="string">&quot;-e &#x27;SELECT 1;&#x27;&quot;</span>] <span class="comment"># 执行命令，如果返回0，则健康检查通过，这里不支持上面的环境变量，test只支持  CMD-SHELL 和 CMD</span></span><br><span class="line">      <span class="attr">interval:</span> <span class="string">10s</span> <span class="comment"># 健康检查间隔</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">5s</span> <span class="comment"># 健康检查超时时间</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">3</span> <span class="comment"># 健康检查重试次数</span></span><br></pre></td></tr></table></figure>
+<h4 id="build"><code>build</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>build</code>: 构建镜像</p>
@@ -1817,42 +1796,84 @@ if (!window.__postViewReady) {
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">build:</span></span><br><span class="line">      <span class="attr">context:</span> <span class="string">./webapp</span> <span class="comment"># Dockerfile的目录，默认是当前目录</span></span><br><span class="line">      <span class="attr">dockerfile:</span> <span class="string">Dockerfile</span> <span class="comment"># 构建镜像的Dockerfile名称，默认是Dockerfile</span></span><br><span class="line">      <span class="attr">platforms:</span> <span class="comment"># 构建镜像的架构</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">linux/amd64</span> <span class="comment"># 构建镜像的架构，默认是当前架构</span></span><br><span class="line">      <span class="attr">args:</span> <span class="comment"># 构建镜像的参数</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">FOO=bar</span></span><br><span class="line">      <span class="attr">labels:</span> <span class="comment"># 构建镜像的标签</span></span><br><span class="line">        <span class="attr">com.example.description:</span> <span class="string">&quot;Accounting webapp&quot;</span></span><br><span class="line">        <span class="attr">com.example.department:</span> <span class="string">&quot;Finance&quot;</span></span><br><span class="line">        <span class="attr">com.example.label-with-empty-value:</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
+<p><code>build</code> 里还常用这些字段：</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">build:</span></span><br><span class="line">      <span class="attr">context:</span> <span class="string">./webapp</span></span><br><span class="line">      <span class="attr">dockerfile:</span> <span class="string">Dockerfile</span></span><br><span class="line">      <span class="attr">target:</span> <span class="string">prod</span> <span class="comment"># 多阶段 Dockerfile 里要构建的阶段名</span></span><br><span class="line">      <span class="attr">pull:</span> <span class="literal">true</span> <span class="comment"># 重新拉取 Dockerfile 中 FROM 的基础镜像，本机已经有也拉</span></span><br><span class="line">      <span class="attr">no_cache:</span> <span class="literal">true</span> <span class="comment"># 不使用构建缓存，Dockerfile 里的每一层都重新执行</span></span><br><span class="line">      <span class="attr">network:</span> <span class="string">host</span> <span class="comment"># 构建阶段 RUN 使用的网络：default、host、none。这是 docker build 的网络，不是顶层 networks 里的名字</span></span><br><span class="line">      <span class="attr">ssh:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">default</span> <span class="comment"># 把本机 SSH agent 提供给构建，Dockerfile 里用 RUN --mount=type=ssh</span></span><br><span class="line">      <span class="attr">cache_from:</span> <span class="comment"># 从这些位置读取构建缓存。构建器不认识的类型会被忽略</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">type=registry,ref=example/webapp:cache</span></span><br><span class="line">      <span class="attr">cache_to:</span> <span class="comment"># 把本次构建缓存导出到这些位置</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">type=local,dest=./cache</span></span><br><span class="line">      <span class="attr">additional_contexts:</span> <span class="comment"># 额外的命名构建上下文</span></span><br><span class="line">        <span class="attr">resources:</span> <span class="string">./resources</span></span><br><span class="line">      <span class="attr">tags:</span> <span class="comment"># 除服务的 image 之外，再给构建结果打的标签</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">example/webapp:prod</span></span><br><span class="line">      <span class="attr">secrets:</span> <span class="comment"># 只有构建过程能读到，对应下面的顶层 secrets</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">server-certificate</span></span><br><span class="line"><span class="attr">secrets:</span></span><br><span class="line">  <span class="attr">server-certificate:</span></span><br><span class="line">    <span class="attr">file:</span> <span class="string">./server.cert</span></span><br></pre></td></tr></table></figure>
+<h4 id="image"><code>image</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>image</code>: 容器使用的镜像。写法是 <code>[仓库地址/][命名空间/]名字[:标签|@摘要]</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span> <span class="comment"># 官方库，标签省略时是 latest</span></span><br><span class="line">    <span class="comment"># image: redis:5</span></span><br><span class="line">    <span class="comment"># image: redis@sha256:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7</span></span><br><span class="line">    <span class="comment"># image: my_private.registry:5000/redis # 私有仓库要带地址和端口</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>只写 <code>build</code>、不写 <code>image</code> 时，Compose 会构建镜像，但 <code>docker compose push</code> 会跳过这个服务并给出警告。两个都写、又没有 <code>pull_policy</code> 时，Compose 先按 <code>image</code> 拉取；仓库和本机缓存都没有，再按 <code>build</code> 构建，构建结果使用 <code>image</code> 这个名字。拉取策略见后面的 <code>pull_policy</code>。</p>
+</li>
+</ul>
+<h4 id="container-name"><code>container_name</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>container_name</code>: 固定容器名。不写时名字是「项目名-服务名-序号」。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">gitea</span> <span class="comment"># 须匹配 [a-zA-Z0-9][a-zA-Z0-9_.-]+</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>写了 <code>container_name</code> 的服务只能有一个容器。再执行 <code>--scale</code>，或把后面的 <code>scale</code> 设成大于 1，Compose 会报错。</p>
+</li>
+</ul>
+<h4 id="command"><code>command</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p><code>command</code>: 覆盖容器映像声明的默认命令</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;python&quot;</span>, <span class="string">&quot;app.py&quot;</span>]</span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br></pre></td></tr></table></figure>
+<h4 id="entrypoint"><code>entrypoint</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>entrypoint</code>: 声明服务容器的默认入口点，这覆盖了服务Dockerfile中的ENTRYPOINT指令。</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">entrypoint:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">php</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">-d</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20100525/xdebug.so</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">-d</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">memory_limit=-1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">vendor/bin/phpunit</span></span><br><span class="line">      <span class="comment"># 如果值为null，则使用图像的默认入口点。 entrypoint: null</span></span><br><span class="line">      <span class="comment"># 如果值是 []（空列表）或 &#x27;&#x27;（空字符串），图像声明的默认入口点被忽略，或者换句话说，被覆盖为空。 entrypoint: []</span></span><br></pre></td></tr></table></figure>
+<h4 id="depends-on"><code>depends_on</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>depends_on</code>: 服务启动依赖，就是依赖的服务启动后才能启动本服务</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span> <span class="comment"># 短语法</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">redis</span></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="attr">db:</span>  <span class="comment"># 长语法</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_healthy</span> <span class="comment"># 满足的条件</span></span><br><span class="line">        <span class="attr">restart:</span> <span class="literal">true</span>      <span class="comment"># 当设置为true，Compose在更新依赖服务后重新启动此服务。</span></span><br><span class="line">      <span class="attr">redis:</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_started</span></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## condition：设置依赖性被视为满足的条件</span></span><br><span class="line"><span class="comment">#   service_started：相当于之前描述的简短语法</span></span><br><span class="line"><span class="comment">#   service_healthy：指定在启动依赖服务之前，依赖预期为“健康”（如healthcheck所示）。</span></span><br><span class="line"><span class="comment">#   service_completed_successfully：指定在启动依赖服务之前，依赖项预计将运行到成功完成。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="attr">db:</span>  <span class="comment"># 长语法</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_healthy</span> <span class="comment"># 满足的条件</span></span><br><span class="line">        <span class="attr">restart:</span> <span class="literal">true</span>      <span class="comment"># 当设置为true，Compose在更新依赖服务后重新启动此服务。</span></span><br><span class="line">      <span class="attr">redis:</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_started</span></span><br><span class="line">        <span class="attr">required:</span> <span class="literal">false</span> <span class="comment"># Compose 2.20.0 起。false 时这个依赖没起来只警告，默认 true</span></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## condition：设置依赖性被视为满足的条件</span></span><br><span class="line"><span class="comment">#   service_started：相当于之前描述的简短语法</span></span><br><span class="line"><span class="comment">#   service_healthy：指定在启动依赖服务之前，依赖预期为“健康”（如healthcheck所示）。</span></span><br><span class="line"><span class="comment">#   service_completed_successfully：指定在启动依赖服务之前，依赖项预计将运行到成功完成。</span></span><br><span class="line"><span class="comment">#   required：false 时依赖服务没启动只给出警告，默认 true。Compose 2.20.0 起。</span></span><br><span class="line"><span class="comment">#   restart：true 时，Compose 更新了依赖服务之后，会重启当前服务。只针对 Compose 发起的更新，容器自己退出后的重启仍由 restart 策略决定。Compose 2.17.0 起。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="environment"><code>environment</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>environment</code>: 定义环境变量</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">FOO=bar</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">BAZ=qux</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">FOO:</span> <span class="string">bar</span></span><br><span class="line">      <span class="attr">BAZ:</span> <span class="string">qux</span></span><br></pre></td></tr></table></figure>
+<h4 id="env-file"><code>env_file</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>env_file</code>: 用于指定一个或多个包含要传递到容器的环境变量的文件。</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">env_file:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./a.env</span> <span class="comment"># 列表中的文件是从上到下处理的。对于两个环境文件中指定的相同变量，列表中最后一个文件的值是有效的。</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./b.env</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">env_file:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">./default.env</span></span><br><span class="line">        <span class="attr">required:</span> <span class="literal">true</span> <span class="comment"># default</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">./override.env</span></span><br><span class="line">        <span class="attr">required:</span> <span class="literal">false</span> <span class="comment"># 当required设置为false且.env文件缺失时，Compose会忽略</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">env_file:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">./default.env</span></span><br><span class="line">        <span class="attr">required:</span> <span class="literal">true</span> <span class="comment"># default</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">./override.env</span></span><br><span class="line">        <span class="attr">required:</span> <span class="literal">false</span> <span class="comment"># 当required设置为false且.env文件缺失时，Compose会忽略</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">./raw.env</span></span><br><span class="line">        <span class="attr">format:</span> <span class="string">raw</span> <span class="comment"># 按原文传入。值里的 $ 和引号不再做变量替换</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>同一个变量同时出现在 <code>env_file</code> 和 <code>environment</code> 里时，用 <code>environment</code> 的值。<code>environment</code> 里只写键、不写值，表示从当前执行 Compose 的环境里取；那里也没有这个变量时，容器里不会留下它。</p>
+</li>
+</ul>
+<h4 id="restart"><code>restart</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>restart</code>: 定义平台在容器终止时适用的策略</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">&quot;no&quot;</span>            <span class="comment"># 默认重启策略。在任何情况下，它都不会重新启动容器。</span></span><br><span class="line">    <span class="comment"># restart: always        # 策略总是重新启动容器，直到它被移除。</span></span><br><span class="line">    <span class="comment"># restart: on-failure    # 如果退出代码表明错误，策略将重新启动容器。</span></span><br><span class="line">    <span class="comment"># restart: on-failure:3  # 如果退出代码表明错误，策略将重新启动容器。但仅尝试重启3次。</span></span><br><span class="line">    <span class="comment"># restart: unless-stopped # 无论退出代码如何，策略都会重新启动容器，但当服务停止或删除时，策略会停止重新启动。</span></span><br></pre></td></tr></table></figure>
+<h4 id="healthcheck"><code>healthcheck</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>healthcheck</code>: 健康检查。</p>
@@ -1919,10 +1940,97 @@ if (!window.__postViewReady) {
 </table>
 <ul class="lvl-0">
 <li class="lvl-2">
+<p>关掉镜像自带的健康检查，用 <code>disable: true</code>，或把 <code>test</code> 设为 <code>NONE</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">disable:</span> <span class="literal">true</span></span><br><span class="line">      <span class="comment"># test: [&quot;NONE&quot;]</span></span><br></pre></td></tr></table></figure>
+<h4 id="volumes-2"><code>volumes</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
 <p><code>volumes</code>: 挂载数据卷。</p>
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 长语法格式</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">backend:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/backend</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">volume</span>   <span class="comment"># 安装类型。可以是是volume、bind、tmpfs、image、npipe、cluster</span></span><br><span class="line">        <span class="attr">source:</span> <span class="string">db-data</span> <span class="comment"># 挂载的源、绑定挂载的主机上的路径、映像挂载的Docker映像引用或顶层volumes键中定义的卷名称。不适用于tmpfs支架。</span></span><br><span class="line">        <span class="attr">target:</span> <span class="string">/data</span> <span class="comment"># 容器中装载卷的路径。</span></span><br><span class="line">        <span class="attr">volume:</span>  <span class="comment"># 配置其他卷选项</span></span><br><span class="line">          <span class="attr">nocopy:</span> <span class="literal">true</span> <span class="comment"># 在创建卷时禁用从容器复制数据的标志，默认值为false。</span></span><br><span class="line">          <span class="attr">subpath:</span> <span class="string">sub</span> <span class="comment"># 挂载卷的子目录。即 db-data/sub</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">bind</span> <span class="comment"># bind 表示挂载主机上的路径</span></span><br><span class="line">        <span class="attr">source:</span> <span class="string">/var/run/postgres/postgres.sock</span></span><br><span class="line">        <span class="attr">target:</span> <span class="string">/var/run/postgres/postgres.sock</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span> <span class="comment"># 声明数据卷</span></span><br><span class="line">  <span class="attr">db-data:</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################################################################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 短语法格式</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">backend:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/backend</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db-data:/data</span> <span class="comment"># 这种语法不支持 subpath 和 nocopy</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/var/run/postgres/postgres.sock:/var/run/postgres/postgres.sock</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">db-data:</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>短语法是 <code>源:容器路径</code> 或 <code>源:容器路径:访问模式</code>。访问模式用逗号分隔。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">访问模式</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rw</code></td>
+<td style="text-align:left">读写，省略时就是这个</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>ro</code></td>
+<td style="text-align:left">只读。Gitea 示例里的 <code>/etc/timezone:/etc/timezone:ro</code> 就是这种写法</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>z</code></td>
+<td style="text-align:left">SELinux 标记为多个容器共享。没有 SELinux 的系统会忽略</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Z</code></td>
+<td style="text-align:left">SELinux 标记为仅当前容器使用</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>相对路径从 Compose 文件所在目录计算，并且以 <code>.</code> 或 <code>..</code> 开头，这样才不会和命名卷重名。短语法的绑定挂载在宿主机路径不存在时会创建目录。要阻止创建，改用长语法，把 <code>bind.create_host_path</code> 设为 <code>false</code>。</p>
+</li>
+<li class="lvl-2">
+<p>长语法里 <code>type</code> 决定 <code>source</code> 怎么写。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><code>type</code></th>
+<th style="text-align:left"><code>source</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>volume</code></td>
+<td style="text-align:left">顶层 <code>volumes</code> 里的名字</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>bind</code></td>
+<td style="text-align:left">宿主机路径</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>tmpfs</code></td>
+<td style="text-align:left">不写 <code>source</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>image</code></td>
+<td style="text-align:left">镜像引用。子目录用 <code>image.subpath</code>，Compose 2.35.0 起</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>npipe</code></td>
+<td style="text-align:left">Windows 命名管道的路径</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cluster</code></td>
+<td style="text-align:left">Swarm 集群卷的名字</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">backend:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/backend</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">bind</span></span><br><span class="line">        <span class="attr">source:</span> <span class="string">./config</span> <span class="comment"># 宿主机路径</span></span><br><span class="line">        <span class="attr">target:</span> <span class="string">/config</span></span><br><span class="line">        <span class="attr">read_only:</span> <span class="literal">true</span> <span class="comment"># 对应短语法的 :ro</span></span><br><span class="line">        <span class="attr">bind:</span></span><br><span class="line">          <span class="attr">create_host_path:</span> <span class="literal">false</span> <span class="comment"># 宿主机路径不存在时不要创建，默认 true</span></span><br><span class="line">          <span class="attr">propagation:</span> <span class="string">rprivate</span> <span class="comment"># 默认。还可写 private、shared、slave、rshared、rslave</span></span><br><span class="line">          <span class="attr">selinux:</span> <span class="string">Z</span> <span class="comment"># 对应短语法的 Z，另一个值是 z</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">tmpfs</span></span><br><span class="line">        <span class="attr">target:</span> <span class="string">/run</span></span><br><span class="line">        <span class="attr">tmpfs:</span></span><br><span class="line">          <span class="attr">size:</span> <span class="string">64m</span> <span class="comment"># 字节数或带单位的字符串</span></span><br><span class="line">          <span class="attr">mode:</span> <span class="string">0o755</span> <span class="comment"># 目录权限，Compose 2.14.0 起</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">image</span></span><br><span class="line">        <span class="attr">source:</span> <span class="string">example/assets:1.0</span></span><br><span class="line">        <span class="attr">target:</span> <span class="string">/assets</span></span><br><span class="line">        <span class="attr">image:</span></span><br><span class="line">          <span class="attr">subpath:</span> <span class="string">static</span> <span class="comment"># 只挂镜像里的这个子目录</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>consistency</code> 表示挂载一致性要求，取值由运行平台决定。Docker Desktop 上用过 <code>consistent</code>、<code>cached</code>、<code>delegated</code>。</p>
+</li>
+</ul>
+<h4 id="networks-2"><code>networks</code></h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p><code>networks</code>: 配置网络。</p>
@@ -1931,48 +2039,185 @@ if (!window.__postViewReady) {
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">some-service:</span></span><br><span class="line">    <span class="attr">networks:</span>  <span class="comment"># 配置网络</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">some-network</span> <span class="comment"># 关联网络</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">other-network</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span> <span class="comment"># 声明网络</span></span><br><span class="line">  <span class="attr">some-network:</span></span><br><span class="line">  <span class="attr">other-network:</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>cpu 和 内存限制</p>
+<p>长语法可以给这个服务在某一张网络上单独设置别名和地址。静态地址所在的网段写在顶层 <code>networks</code> 的 <code>ipam</code> 里。</p>
 </li>
 </ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">backend:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">myapp:latest</span></span><br><span class="line">    <span class="attr">mem_limit:</span> <span class="string">1g</span>           <span class="comment"># 限制最多使用1GB内存</span></span><br><span class="line">    <span class="attr">mem_reservation:</span> <span class="string">512m</span>   <span class="comment"># 建议预留512MB内存</span></span><br><span class="line">    <span class="attr">cpus:</span> <span class="number">2.0</span>               <span class="comment"># 限制最多使用2个CPU核</span></span><br><span class="line">    <span class="attr">cpu_shares:</span> <span class="number">1024</span>        <span class="comment"># 默认值，表示标准优先级</span></span><br><span class="line">    <span class="attr">cpu_quota:</span> <span class="number">100000</span>       <span class="comment"># 每 100ms 容器最多可运行 100ms（=1核）, 与 cpus 不能同时设置</span></span><br><span class="line">    <span class="attr">cpu_period:</span> <span class="number">100000</span>      <span class="comment"># 调度周期为100ms, 与 cpus 不能同时设置</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">backend:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/backend</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="attr">back-tier:</span></span><br><span class="line">        <span class="attr">aliases:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">database</span> <span class="comment"># 同一网络上的其他容器可以用 database 这个名字访问它</span></span><br><span class="line">        <span class="attr">ipv4_address:</span> <span class="number">172.16</span><span class="number">.238</span><span class="number">.10</span></span><br><span class="line">        <span class="attr">ipv6_address:</span> <span class="number">2001</span><span class="string">:3984:3989::10</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">back-tier:</span></span><br><span class="line">    <span class="attr">ipam:</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">subnet:</span> <span class="number">172.16</span><span class="number">.238</span><span class="number">.0</span><span class="string">/24</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">subnet:</span> <span class="number">2001</span><span class="string">:3984:3989::/64</span></span><br></pre></td></tr></table></figure>
 <table>
 <thead>
 <tr>
-<th>字段名</th>
-<th>类型</th>
-<th>说明</th>
+<th style="text-align:left">字段</th>
+<th style="text-align:left">作用</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>cpus</code></td>
-<td>float</td>
-<td>限制容器最多使用多少 CPU（逻辑核数）；例如 <code>0.5</code> = 一半 CPU</td>
+<td style="text-align:left"><code>aliases</code></td>
+<td style="text-align:left">该网络上的额外主机名。同一个别名可以同时给多个容器，解析到哪一个并不固定</td>
 </tr>
 <tr>
-<td><code>mem_limit</code></td>
-<td>string</td>
-<td>容器最大内存限制，支持单位：<code>b</code>、<code>k</code>、<code>m</code>、<code>g</code>（如 <code>256m</code>, <code>1g</code>）</td>
+<td style="text-align:left"><code>ipv4_address</code>、<code>ipv6_address</code></td>
+<td style="text-align:left">加入该网络时使用的静态地址</td>
 </tr>
 <tr>
-<td><code>mem_reservation</code></td>
-<td>string</td>
-<td>容器启动时预留的内存，超过这个值不被限制（仅提示调度器）</td>
+<td style="text-align:left"><code>mac_address</code></td>
+<td style="text-align:left">这张网卡的 MAC 地址</td>
 </tr>
 <tr>
-<td><code>cpu_shares</code></td>
-<td>int</td>
-<td>CPU 权重（默认 1024），用于多个容器抢占 CPU 的优先级（仅在竞争时生效）</td>
+<td style="text-align:left"><code>link_local_ips</code></td>
+<td style="text-align:left">链路本地地址列表</td>
 </tr>
 <tr>
-<td><code>cpu_quota</code></td>
-<td>int</td>
-<td>每个周期内允许使用的 CPU 时间（单位：微秒）, 与 cpus 不能同时设置</td>
+<td style="text-align:left"><code>interface_name</code></td>
+<td style="text-align:left">容器里这张网卡的接口名，例如 <code>eth0</code></td>
 </tr>
 <tr>
-<td><code>cpu_period</code></td>
-<td>int</td>
-<td>CPU 调度周期（单位：微秒，默认 <code>100000</code>）, 与 cpus 不能同时设置</td>
+<td style="text-align:left"><code>driver_opts</code></td>
+<td style="text-align:left">传给该网络驱动的键值对</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>priority</code></td>
+<td style="text-align:left">连接优先级，默认 <code>0</code>。服务级 <code>mac_address</code> 落在数值最大的那张网卡上</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>gw_priority</code></td>
+<td style="text-align:left">默认网关选数值最大的那张网卡，默认 <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="ports"><code>ports</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ports</code>: 把容器端口映射到宿主机。短语法写成带引号的字符串，避免 YAML 把 <code>80:80</code> 解析成 60 进制数。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:80&quot;</span> <span class="comment"># 宿主机端口:容器端口，协议默认 tcp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;127.0.0.1:8081:80&quot;</span> <span class="comment"># 只绑定宿主机的这个地址。不写地址时绑定 0.0.0.0</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9090-9091:8080-8081&quot;</span> <span class="comment"># 两边都是范围时，端口个数要相同</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;6060:6060/udp&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3000&quot;</span> <span class="comment"># 只写容器端口时，宿主机端口由引擎分配</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">片段</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">宿主机地址</td>
+<td style="text-align:left">可省略。省略时绑定 <code>0.0.0.0</code>。IPv6 地址放在方括号里，如 <code>[::1]:6001:6001</code></td>
+</tr>
+<tr>
+<td style="text-align:left">宿主机端口</td>
+<td style="text-align:left">可省略，或写成范围。省略时由引擎分配空闲端口</td>
+</tr>
+<tr>
+<td style="text-align:left">容器端口</td>
+<td style="text-align:left">必填，可以是单个端口或范围</td>
+</tr>
+<tr>
+<td style="text-align:left">协议</td>
+<td style="text-align:left"><code>tcp</code> 或 <code>udp</code>，默认 <code>tcp</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>长语法能写短语法里没有的名字和 Swarm 发布方式。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">web</span> <span class="comment"># 给人看的名字</span></span><br><span class="line">        <span class="attr">target:</span> <span class="number">80</span> <span class="comment"># 容器端口</span></span><br><span class="line">        <span class="attr">published:</span> <span class="string">&quot;8080&quot;</span> <span class="comment"># 宿主机端口，也可以写成 &quot;8083-9000&quot;</span></span><br><span class="line">        <span class="attr">host_ip:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">tcp</span></span><br><span class="line">        <span class="attr">app_protocol:</span> <span class="string">http</span> <span class="comment"># Compose 2.26.0 起，给 Compose 的应用协议提示</span></span><br><span class="line">        <span class="attr">mode:</span> <span class="string">host</span> <span class="comment"># Swarm 使用。host 在每个节点发布端口，ingress 做节点间负载均衡，默认 ingress</span></span><br></pre></td></tr></table></figure>
+<div class="note warning"><p><code>network_mode: host</code> 的容器直接使用宿主机网络栈。这种服务再写 <code>ports</code>，运行时会报错。</p>
+</div>
+<h4 id="expose"><code>expose</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>expose</code>: 声明容器向同一 Compose 网络中的其他服务开放的端口。宿主机上不会出现对应的监听端口。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">expose:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;80&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080-8085/tcp&quot;</span> <span class="comment"># 协议可以省略，默认 tcp</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>镜像的 Dockerfile 里已经写了 <code>EXPOSE</code> 时，同一网络中的其他容器也能访问这些端口。</p>
+</li>
+</ul>
+<h4 id="cpus、mem-limit"><code>cpus</code>、<code>mem_limit</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>cpu 和 内存限制</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">backend:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">myapp:latest</span></span><br><span class="line">    <span class="attr">mem_limit:</span> <span class="string">1g</span>           <span class="comment"># 限制最多使用1GB内存</span></span><br><span class="line">    <span class="attr">mem_reservation:</span> <span class="string">512m</span>   <span class="comment"># 建议预留512MB内存</span></span><br><span class="line">    <span class="attr">cpus:</span> <span class="number">2.0</span>               <span class="comment"># 限制最多使用2个CPU核</span></span><br><span class="line">    <span class="attr">cpu_shares:</span> <span class="number">1024</span>        <span class="comment"># 默认值，表示标准优先级</span></span><br><span class="line">    <span class="attr">cpu_quota:</span> <span class="number">100000</span>       <span class="comment"># 每 100ms 容器最多可运行 100ms（=1核）, 与 cpus 不能同时设置</span></span><br><span class="line">    <span class="attr">cpu_period:</span> <span class="number">100000</span>      <span class="comment"># 调度周期为100ms, 与 cpus 不能同时设置</span></span><br><span class="line">    <span class="comment"># cpuset: &quot;0-1&quot;         # 只允许跑在这些逻辑 CPU 上，可以写成范围 0-3 或列表 0,1</span></span><br><span class="line">    <span class="comment"># cpu_count: 2          # 可用 CPU 个数</span></span><br><span class="line">    <span class="comment"># cpu_percent: 50       # 可用 CPU 占本机的百分比</span></span><br><span class="line">    <span class="comment"># cpu_rt_runtime: 400ms # 实时调度下，一个周期内允许运行的时间。需要内核支持实时调度</span></span><br><span class="line">    <span class="comment"># cpu_rt_period: 1400us # 实时调度周期</span></span><br><span class="line">    <span class="comment"># mem_swappiness: 0     # 0 到 100。0 关闭匿名页换出，100 允许全部换出</span></span><br><span class="line">    <span class="comment"># memswap_limit: 1g     # 内存加交换分区的总上限，要和 mem_limit 一起写</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">字段名</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>cpus</code></td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">限制容器最多使用多少 CPU（逻辑核数）；例如 <code>0.5</code> = 一半 CPU。<code>0.000</code> 表示不限制</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>mem_limit</code></td>
+<td style="text-align:left">string</td>
+<td style="text-align:left">容器最大内存限制，支持单位：<code>b</code>、<code>k</code>、<code>m</code>、<code>g</code>（如 <code>256m</code>、<code>1g</code>）</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>mem_reservation</code></td>
+<td style="text-align:left">string</td>
+<td style="text-align:left">容器启动时预留的内存，超过这个值不被硬性截断（只提示调度器）</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cpu_shares</code></td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">CPU 权重（默认 1024），多个容器抢 CPU 时才比较这个值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cpu_quota</code></td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">每个周期内允许使用的 CPU 时间（单位：微秒）。和 <code>cpus</code> 不要同时写</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cpu_period</code></td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">CPU 调度周期（单位：微秒，默认 <code>100000</code>）。和 <code>cpus</code> 不要同时写</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cpuset</code></td>
+<td style="text-align:left">string</td>
+<td style="text-align:left">允许运行的逻辑 CPU，如 <code>0-3</code> 或 <code>0,1</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cpu_count</code></td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">可用 CPU 个数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cpu_percent</code></td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">可用 CPU 占本机的百分比</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cpu_rt_runtime</code></td>
+<td style="text-align:left">时长或微秒</td>
+<td style="text-align:left">实时调度下，一个周期内允许运行的时间</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cpu_rt_period</code></td>
+<td style="text-align:left">时长或微秒</td>
+<td style="text-align:left">实时调度周期</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>mem_swappiness</code></td>
+<td style="text-align:left">int</td>
+<td style="text-align:left"><code>0</code> 到 <code>100</code>，容器匿名页换出到交换分区的倾向</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>memswap_limit</code></td>
+<td style="text-align:left">string</td>
+<td style="text-align:left">内存和交换分区加在一起的上限。<code>mem_limit: 300m</code> 且 <code>memswap_limit: 1g</code> 时，内存最多 300m，交换分区最多 700m。两者相等时容器不能使用交换分区。设为 <code>-1</code> 时交换分区只受宿主机剩余空间限制</td>
 </tr>
 </tbody>
 </table>
@@ -1980,6 +2225,393 @@ if (!window.__postViewReady) {
 <p>查看容器的 cpu 和 内存配置情况</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取容器的 cpu_quota 和 cpu_period</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;json .HostConfig.CpuQuota&#125;&#125; &#123;&#123;json .HostConfig.CpuPeriod&#125;&#125;&#x27;</span> &lt;container_id&gt;</span><br><span class="line"><span class="comment"># 获取容器的 memory_limit</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;json .HostConfig.Memory&#125;&#125;&#x27;</span> &lt;container_id&gt;</span><br><span class="line"><span class="comment"># 获取容器的 cpu_shares</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;json .HostConfig.CpuShares&#125;&#125;&#x27;</span> &lt;container_id&gt;</span><br><span class="line"><span class="comment"># 获取容器的 cpus</span></span><br><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;json .HostConfig.NanoCpus&#125;&#125;&#x27;</span> &lt;container_id&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 组合为一个json输出</span></span><br><span class="line">docker inspect &lt;container_id&gt; | jq <span class="string">&#x27;.[0].HostConfig | &#123;</span></span><br><span class="line"><span class="string">  cpus: (.NanoCpus / 1000000000),</span></span><br><span class="line"><span class="string">  cpu_shares: .CpuShares,</span></span><br><span class="line"><span class="string">  mem_limit: (.Memory / 1024 / 1024 | tostring + &quot; MB&quot;),</span></span><br><span class="line"><span class="string">  mem_reservation: (.MemoryReservation / 1024 / 1024 | tostring + &quot; MB&quot;),</span></span><br><span class="line"><span class="string">  cpu_quota: .CpuQuota,</span></span><br><span class="line"><span class="string">  cpu_period: .CpuPeriod</span></span><br><span class="line"><span class="string">&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+<h4 id="user、working-dir、hostname、init"><code>user</code>、<code>working_dir</code>、<code>hostname</code>、<code>init</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>user</code>: 覆盖镜像里的 <code>USER</code>。镜像没写时，进程以 <code>root</code> 运行。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">&quot;1000:1000&quot;</span> <span class="comment"># 用户，或 用户:组。可以写名字，也可以写数字 id</span></span><br><span class="line">    <span class="attr">working_dir:</span> <span class="string">/app</span> <span class="comment"># 覆盖镜像里的 WORKDIR</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">web</span> <span class="comment"># 容器主机名，须是合法的 RFC 1123 主机名</span></span><br><span class="line">    <span class="attr">init:</span> <span class="literal">true</span> <span class="comment"># 在容器里放一个 PID 1，负责转发信号、回收僵尸进程</span></span><br></pre></td></tr></table></figure>
+<h4 id="stdin-open、tty"><code>stdin_open</code>、<code>tty</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>stdin_open</code> 保持标准输入打开，对应 <code>docker run -i</code>。<code>tty</code> 分配一个伪终端，对应 <code>docker run -t</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">stdin_open:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">tty:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h4 id="stop-signal、stop-grace-period"><code>stop_signal</code>、<code>stop_grace_period</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>stop_signal</code> 是 Compose 停止容器时发送的信号，默认 <code>SIGTERM</code>。<code>stop_grace_period</code> 是发出该信号后、改发 <code>SIGKILL</code> 之前的等待时间，默认 <code>10s</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">stop_signal:</span> <span class="string">SIGTERM</span></span><br><span class="line">    <span class="attr">stop_grace_period:</span> <span class="string">30s</span></span><br></pre></td></tr></table></figure>
+<h4 id="network-mode"><code>network_mode</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>network_mode</code>: 指定容器的网络模式。写了它就不能再写 <code>networks</code>，Compose 会拒绝这份文件。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>bridge</code></td>
+<td style="text-align:left">接到 Docker 默认网桥。这条网络上不能用服务名互相解析</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>host</code></td>
+<td style="text-align:left">直接使用宿主机网络栈，不要再写 <code>ports</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>none</code></td>
+<td style="text-align:left">关闭容器网络</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>service:服务名</code></td>
+<td style="text-align:left">使用另一个 Compose 服务的网络栈</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>container:容器名</code></td>
+<td style="text-align:left">使用指定容器的网络栈</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">host</span></span><br></pre></td></tr></table></figure>
+<h4 id="extra-hosts"><code>extra_hosts</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>extra_hosts</code>: 往容器的 <code>/etc/hosts</code> 追加记录。推荐用 <code>主机名=IP</code>。Compose 2.24.1 起也可以写成 <code>主机名:IP</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">extra_hosts:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;db.local=10.0.0.8&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;myhostv6=[::1]&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="dns、dns-search、dns-opt"><code>dns</code>、<code>dns_search</code>、<code>dns_opt</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>dns</code>、<code>dns_search</code>、<code>dns_opt</code> 分别对应容器 <code>/etc/resolv.conf</code> 里的 DNS 服务器、搜索域和选项。三个字段都可以写成单个字符串或列表。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">dns:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8.8</span><span class="number">.8</span><span class="number">.8</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">9.9</span><span class="number">.9</span><span class="number">.9</span></span><br><span class="line">    <span class="attr">dns_search:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">example.com</span></span><br><span class="line">    <span class="attr">dns_opt:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="literal">no</span><span class="string">-tld-query</span></span><br></pre></td></tr></table></figure>
+<h4 id="mac-address"><code>mac_address</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>mac_address</code>: 服务级 MAC 地址，Compose 2.24.0 起可以写。Docker Engine 25 及更新版本可能拒绝这个字段，那时改写到 <code>networks.&lt;网络名&gt;.mac_address</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">mac_address:</span> <span class="string">&quot;02:42:ac:11:00:02&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="privileged"><code>privileged</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>privileged</code>: <code>true</code> 时容器以特权运行，能力接近宿主机。只在设备或内核功能确实需要时打开。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">privileged:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h4 id="cap-add、cap-drop"><code>cap_add</code>、<code>cap_drop</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>cap_add</code> 追加 Linux 能力，<code>cap_drop</code> 去掉能力。<code>ALL</code> 表示全部。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">cap_drop:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ALL</span></span><br><span class="line">    <span class="attr">cap_add:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">NET_BIND_SERVICE</span> <span class="comment"># 允许绑定 1024 以下的端口</span></span><br></pre></td></tr></table></figure>
+<h4 id="security-opt"><code>security_opt</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>security_opt</code>: 覆盖容器默认的安全标签。布尔项可以只写名字，效果等同于 <code>=true</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">security_opt:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="literal">no</span><span class="string">-new-privileges:true</span> <span class="comment"># 进程不能再提升权限</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">label=user:USER</span></span><br></pre></td></tr></table></figure>
+<h4 id="devices"><code>devices</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>devices</code>: 把宿主机设备映射进容器，格式是 <code>宿主机路径:容器路径[:权限]</code>。权限是 <code>r</code> 读、<code>w</code> 写、<code>m</code> 创建设备节点。也可以写 CDI 设备名。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">devices:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;/dev/ttyUSB0:/dev/ttyUSB0&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;/dev/sda:/dev/xvda:rwm&quot;</span></span><br><span class="line">      <span class="comment"># - &quot;vendor1.com/device=gpu&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="group-add"><code>group_add</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>group_add</code>: 让容器里的用户额外加入这些组。可以写组名或组号。多个容器要读写同一个卷上的文件时，把它们加进同一个组。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">alpine</span></span><br><span class="line">    <span class="attr">group_add:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mail</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;100&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="gpus"><code>gpus</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>gpus</code>: 分配 GPU。写成 <code>all</code> 表示使用全部。列表里用 <code>driver</code> 和 <code>count</code> 按数量分配，或用 <code>device_ids</code> 指定设备。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">model:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/model</span></span><br><span class="line">    <span class="attr">gpus:</span> <span class="string">all</span></span><br><span class="line">    <span class="comment"># gpus:</span></span><br><span class="line">    <span class="comment">#   - driver: nvidia</span></span><br><span class="line">    <span class="comment">#     count: 1</span></span><br><span class="line">    <span class="comment">#   - driver: nvidia</span></span><br><span class="line">    <span class="comment">#     device_ids:</span></span><br><span class="line">    <span class="comment">#       - &quot;0&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="read-only、tmpfs"><code>read_only</code>、<code>tmpfs</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>read_only</code>: <code>true</code> 时容器根文件系统只读。需要写入的目录另外挂 <code>tmpfs</code> 或卷。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">read_only:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">tmpfs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/tmp:rw,noexec,nosuid,size=16m</span> <span class="comment"># 冒号后是逗号分隔的挂载选项</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/run:mode=755,uid=1000,gid=1000</span> <span class="comment"># mode 是权限，uid、gid 是属主</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">选项</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rw</code></td>
+<td style="text-align:left">这块内存文件系统可读写</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>noexec</code></td>
+<td style="text-align:left">不能在这个目录里执行程序</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>nosuid</code></td>
+<td style="text-align:left">忽略这里文件上的 setuid、setgid</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>size</code></td>
+<td style="text-align:left">容量上限，写成 <code>size=16m</code>。<code>m</code> 表示 MiB，还可以用 <code>k</code>、<code>g</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>mode</code></td>
+<td style="text-align:left">目录权限，如 <code>mode=755</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>uid</code>、<code>gid</code></td>
+<td style="text-align:left">属主的用户号和组号</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这是服务级 <code>tmpfs</code>，挂一块临时内存文件系统。短语法的容量写在选项里，例如 <code>size=16m</code>。写在 <code>volumes</code> 里且 <code>type: tmpfs</code> 时，容量和权限分别写 <code>tmpfs.size</code>、<code>tmpfs.mode</code>。</p>
+</li>
+</ul>
+<h4 id="pull-policy、platform"><code>pull_policy</code>、<code>platform</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>pull_policy</code>: 启动时如何处理镜像。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>missing</code></td>
+<td style="text-align:left">本机没有这张镜像才拉取。未使用 Build Specification 时的默认值。<code>if_not_present</code> 是它的旧名。标签为 <code>latest</code> 时仍然每次都拉</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>always</code></td>
+<td style="text-align:left">每次都从仓库拉取</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>never</code></td>
+<td style="text-align:left">只使用本机镜像。本机没有就失败</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>build</code></td>
+<td style="text-align:left">构建镜像。本机已经有也重新构建</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>daily</code></td>
+<td style="text-align:left">距离上次拉取超过 24 小时才检查仓库</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>weekly</code></td>
+<td style="text-align:left">距离上次拉取超过 7 天才检查仓库</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>every_&lt;时长&gt;</code></td>
+<td style="text-align:left">距离上次拉取超过这个时长才检查。单位可以是 <code>w</code>、<code>d</code>、<code>h</code>、<code>m</code>、<code>s</code>，例如 <code>every_12h</code></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">pull_policy:</span> <span class="string">every_12h</span></span><br><span class="line">    <span class="attr">platform:</span> <span class="string">linux/amd64</span> <span class="comment"># 拉取或构建所针对的平台，格式 os[/arch[/variant]]</span></span><br></pre></td></tr></table></figure>
+<h4 id="profiles"><code>profiles</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>profiles</code>: 给服务挂上配置档名称。没有 <code>profiles</code> 的服务每次都会启动；写了的服务，只有命令行带上同名 <code>--profile</code> 才会启动。名称须匹配 <code>[a-zA-Z0-9][a-zA-Z0-9_.-]+</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">phpmyadmin:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">phpmyadmin</span></span><br><span class="line">    <span class="attr">profiles:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">debug</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不带 --profile 时，phpmyadmin 不会启动</span></span><br><span class="line">docker compose --profile debug up -d</span><br></pre></td></tr></table></figure>
+<h4 id="scale"><code>scale</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>scale</code>: 这个服务默认启动的容器个数。命令行 <code>docker compose up --scale 服务名=数量</code> 只影响这一次。写了 <code>container_name</code> 时个数只能是 1。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">scale:</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h4 id="extends"><code>extends</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>extends</code>: 复用另一个服务的配置。<code>service</code> 是被引用的服务名，<code>file</code> 可省略，省略时表示当前这个 Compose 文件。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">extends:</span></span><br><span class="line">      <span class="attr">file:</span> <span class="string">common.yml</span> <span class="comment"># 相对路径相对于当前 Compose 文件</span></span><br><span class="line">      <span class="attr">service:</span> <span class="string">webapp</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">PORT:</span> <span class="string">&quot;8080&quot;</span> <span class="comment"># 映射类字段按键覆盖；被引用服务里其余的键仍保留</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">合并方式</th>
+<th style="text-align:left">适用情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">按键覆盖</td>
+<td style="text-align:left"><code>environment</code>、<code>labels</code>、<code>sysctls</code>、<code>healthcheck</code> 这类映射。当前文件里出现的键覆盖被引用服务的同名键</td>
+</tr>
+<tr>
+<td style="text-align:left">列表拼接</td>
+<td style="text-align:left"><code>ports</code>、<code>expose</code>、<code>cap_add</code>、<code>secrets</code> 等。被引用的项在前，当前文件的项在后，重复项去掉</td>
+</tr>
+<tr>
+<td style="text-align:left">标量取当前文件</td>
+<td style="text-align:left"><code>image</code>、<code>user</code> 这类单值。当前文件写了就用当前文件的</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>被引用服务依赖的 <code>volumes</code>、<code>networks</code>、<code>configs</code>、<code>secrets</code>、<code>depends_on</code> 不会自动带过来，当前文件里要再声明一次。<code>extends</code> 不能循环引用。<code>docker stack deploy</code> 不支持 <code>extends</code>。</p>
+</li>
+</ul>
+<h4 id="shm-size"><code>shm_size</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>shm_size</code>: <code>/dev/shm</code> 的大小，写成字节数或带单位的字符串。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">shm_size:</span> <span class="string">1gb</span></span><br></pre></td></tr></table></figure>
+<h4 id="ulimits"><code>ulimits</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>ulimits</code>: 覆盖容器的资源限制。只写一个整数时软限制和硬限制相同；分开写时用 <code>soft</code> 和 <code>hard</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">ulimits:</span></span><br><span class="line">      <span class="attr">nproc:</span> <span class="number">65535</span></span><br><span class="line">      <span class="attr">nofile:</span></span><br><span class="line">        <span class="attr">soft:</span> <span class="number">20000</span></span><br><span class="line">        <span class="attr">hard:</span> <span class="number">40000</span></span><br></pre></td></tr></table></figure>
+<h4 id="pids-limit"><code>pids_limit</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>pids_limit</code>: 容器内允许的进程数。<code>-1</code> 表示不限制。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">pids_limit:</span> <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<h4 id="sysctls"><code>sysctls</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>sysctls</code>: 设置容器命名空间内的内核参数。会改到宿主机的参数不能写在这里。可以用映射或列表。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">sysctls:</span></span><br><span class="line">      <span class="attr">net.core.somaxconn:</span> <span class="number">1024</span></span><br><span class="line">      <span class="attr">net.ipv4.tcp_syncookies:</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h4 id="pid"><code>pid</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>pid</code>: 进程号空间。Docker Engine 上常用 <code>host</code>（和宿主机共用）或 <code>service:服务名</code>（加入那个服务的进程号空间）。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">pid:</span> <span class="string">&quot;host&quot;</span></span><br><span class="line">    <span class="comment"># pid: &quot;service:db&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="labels-3"><code>labels</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>labels</code>: 给容器加元数据。建议用反向 DNS 作为键，避免和其他软件冲突。映射和列表都可以。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="attr">com.example.description:</span> <span class="string">&quot;web&quot;</span></span><br><span class="line">      <span class="attr">com.example.department:</span> <span class="string">&quot;ops&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="logging"><code>logging</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>logging</code>: 这个服务的日志驱动。<code>driver</code> 的可选值由运行时决定，本机常见 <code>json-file</code>（默认）、<code>local</code>、<code>syslog</code>、<code>none</code>。<code>options</code> 是驱动自己的参数。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">      <span class="attr">driver:</span> <span class="string">json-file</span></span><br><span class="line">      <span class="attr">options:</span></span><br><span class="line">        <span class="attr">max-size:</span> <span class="string">&quot;10m&quot;</span> <span class="comment"># 单个日志文件上限</span></span><br><span class="line">        <span class="attr">max-file:</span> <span class="string">&quot;3&quot;</span> <span class="comment"># 保留的文件个数</span></span><br></pre></td></tr></table></figure>
+<h4 id="secrets"><code>secrets</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>secrets</code>: 把顶层 <code>secrets</code> 里的敏感数据以只读文件挂进容器。短语法挂到 <code>/run/secrets/&lt;名字&gt;</code>。顶层声明了密钥，服务里没有写 <code>secrets</code>，容器也读不到。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">secrets:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">server-certificate</span> <span class="comment"># 文件名就是 server-certificate</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">source:</span> <span class="string">my-token</span></span><br><span class="line">        <span class="attr">target:</span> <span class="string">token</span> <span class="comment"># 容器里的文件名，默认等于 source</span></span><br><span class="line">        <span class="attr">uid:</span> <span class="string">&quot;103&quot;</span></span><br><span class="line">        <span class="attr">gid:</span> <span class="string">&quot;103&quot;</span></span><br><span class="line">        <span class="attr">mode:</span> <span class="string">0o440</span> <span class="comment"># 默认 0444。写权限会被忽略</span></span><br><span class="line"><span class="attr">secrets:</span></span><br><span class="line">  <span class="attr">server-certificate:</span></span><br><span class="line">    <span class="attr">file:</span> <span class="string">./server.cert</span></span><br><span class="line">  <span class="attr">my-token:</span></span><br><span class="line">    <span class="attr">environment:</span> <span class="string">MY_TOKEN</span> <span class="comment"># 从执行 Compose 时的环境变量读取</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>uid</code>、<code>gid</code>、<code>mode</code> 只在密钥来源是 <code>environment</code> 时生效。来源是 <code>file</code> 时 Compose 用绑定挂载，这三个字段会被忽略。</p>
+</li>
+</ul>
+<h4 id="configs"><code>configs</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>configs</code>: 把顶层 <code>configs</code> 里的文件挂进容器，用来放证书、配置，而不是密钥。短语法在 Linux 容器里挂到 <code>/&lt;配置名&gt;</code>，默认权限 <code>0444</code>。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">configs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">source:</span> <span class="string">nginx_conf</span></span><br><span class="line">        <span class="attr">target:</span> <span class="string">/etc/nginx/nginx.conf</span></span><br><span class="line">        <span class="attr">uid:</span> <span class="string">&quot;103&quot;</span></span><br><span class="line">        <span class="attr">gid:</span> <span class="string">&quot;103&quot;</span></span><br><span class="line">        <span class="attr">mode:</span> <span class="string">0o440</span></span><br><span class="line"><span class="attr">configs:</span></span><br><span class="line">  <span class="attr">nginx_conf:</span></span><br><span class="line">    <span class="attr">file:</span> <span class="string">./nginx.conf</span></span><br></pre></td></tr></table></figure>
+<h4 id="pre-start"><code>pre_start</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>pre_start</code>: 服务容器启动前，按顺序跑一组临时容器。每一步退出码为 0 才继续；<code>depends_on</code> 满足之后才开始。临时容器加入同一网络，并挂上该服务声明的卷。同一定义已经成功过的步骤，下次 <code>up</code> 或容器按 <code>restart</code> 重启时不会再跑；定义变了、上次失败、或服务被重建时会再跑。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">app:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="attr">db:</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_healthy</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">data:/data</span></span><br><span class="line">    <span class="attr">pre_start:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">command:</span> [<span class="string">&quot;./manage.py&quot;</span>, <span class="string">&quot;migrate&quot;</span>] <span class="comment"># 不写 image 时用本服务的镜像</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">        <span class="attr">command:</span> <span class="string">sh</span> <span class="string">-c</span> <span class="string">&#x27;chown -R 1000:1000 /data&#x27;</span></span><br><span class="line">        <span class="attr">user:</span> <span class="string">root</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres:16</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">data:</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>per_replica: false</code> 时，这一步在所有副本启动前只跑一次。它只能看见命名卷和绑定挂载，看不见每个副本自己的 <code>tmpfs</code> 或匿名卷。</p>
+</li>
+</ul>
+<h4 id="post-start"><code>post_start</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>post_start</code>: 容器已经启动之后，在这个容器里面执行。具体在启动后的哪一刻，Compose 没有进一步保证。</p>
+</li>
+</ul>
+<h4 id="pre-stop"><code>pre_stop</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>pre_stop</code>: 停止容器之前，在这个容器里面执行，字段和 <code>post_start</code> 相同。容器自己退出，或被直接杀掉时，这些命令不会跑。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">post_start:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">command:</span> <span class="string">./on_start.sh</span></span><br><span class="line">        <span class="attr">user:</span> <span class="string">root</span></span><br><span class="line">        <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">working_dir:</span> <span class="string">/app</span></span><br><span class="line">        <span class="attr">environment:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">FOO=BAR</span> <span class="comment"># 在服务环境变量之上追加或覆盖，只对这条命令有效</span></span><br><span class="line">    <span class="attr">pre_stop:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">command:</span> <span class="string">./on_stop.sh</span></span><br></pre></td></tr></table></figure>
+<h4 id="develop"><code>develop</code></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>develop</code>: 配合 <code>docker compose watch</code>。<code>watch</code> 里每一项都要有 <code>path</code> 和 <code>action</code>。<code>sync</code>、<code>sync+restart</code> 还要写 <code>target</code>，表示容器内的同步目录。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example/webapp</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">    <span class="attr">develop:</span></span><br><span class="line">      <span class="attr">watch:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">action:</span> <span class="string">sync</span> <span class="comment"># 把文件同步进正在运行的容器</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">./web</span></span><br><span class="line">          <span class="attr">target:</span> <span class="string">/app/web</span></span><br><span class="line">          <span class="attr">ignore:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">node_modules/</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">action:</span> <span class="string">rebuild</span> <span class="comment"># 重新构建镜像并重建容器</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">package.json</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">action:</span> <span class="string">sync+restart</span> <span class="comment"># 同步之后重启容器</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">./assets</span></span><br><span class="line">          <span class="attr">target:</span> <span class="string">/app/assets</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><code>action</code></th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>sync</code></td>
+<td style="text-align:left">把 <code>path</code> 同步到容器内的 <code>target</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rebuild</code></td>
+<td style="text-align:left">重新构建镜像并重建容器</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>restart</code></td>
+<td style="text-align:left">重启容器</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>sync+restart</code></td>
+<td style="text-align:left">先同步到 <code>target</code>，再重启容器</td>
+</tr>
+</tbody>
+</table>
 <h2 id="docker-run-转-docker-compose"><code>docker run</code> 转 <code>docker compose</code></h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -2036,6 +2668,7 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create directories that store your stacks and store Dockge&#x27;s stack</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/stacks /opt/dockge</span><br><span class="line"><span class="built_in">cd</span> /opt/dockge</span><br><span class="line"></span><br><span class="line"><span class="comment"># Download your compose.yaml</span></span><br><span class="line">curl <span class="string">&quot;https://dockge.kuma.pet/compose.yaml?port=5001&amp;stacksPath=%2Fopt%2Fstacks&quot;</span> --output compose.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start the Server</span></span><br><span class="line">docker compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 浏览器访问 http://localhost:5001，初次登录时需要注册账号密码，该账号即为 Dockge 的管理员账号</span></span><br></pre></td></tr></table></figure>
+
     </div>
 
     
@@ -2174,14 +2807,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">974k</span>
+    <span title="站点总字数">990k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">59:04</span>
+    <span title="站点阅读时长">59:59</span>
   </span>
 </div>
 <div class="busuanzi-count">
