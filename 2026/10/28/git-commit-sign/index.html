@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/atelier-seaside-light","dark":"tomorrow-night-bright"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="摘要  本文说明为什么要给提交签名，以及如何用现有的 ed25519 公钥签名，并让 GitHub 把该提交标成 Verified。签名从 Git 2.34 起可用。本文按 Git 2.56.0、gh 2.103.3。 密钥本身的生成见 Git安装和常用命令(最新) 第 17 节。两个账号各用各的密钥见 同一台电脑使用两个 GitHub 账号。仓库要求签名才能合并时，见 用 Rulesets 保护">
+    <meta name="description" content="摘要  本文说明为什么要给提交签名，以及如何用现有的 ed25519 公钥签名，并让 GitHub 把该提交标成 Verified。签名从 Git 2.34 起可用。本文按 Git 2.56.0、gh 2.103.3。 密钥本身的生成见 Git 的 HTTPS 凭据和 SSH 密钥。两个账号各用各的密钥见 同一台电脑使用两个 GitHub 账号。仓库要求签名才能合并时，见 用 Rulesets 保">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用 SSH 密钥签名 Git 提交">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2026/10/28/git-commit-sign/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要  本文说明为什么要给提交签名，以及如何用现有的 ed25519 公钥签名，并让 GitHub 把该提交标成 Verified。签名从 Git 2.34 起可用。本文按 Git 2.56.0、gh 2.103.3。 密钥本身的生成见 Git安装和常用命令(最新) 第 17 节。两个账号各用各的密钥见 同一台电脑使用两个 GitHub 账号。仓库要求签名才能合并时，见 用 Rulesets 保护">
+<meta property="og:description" content="摘要  本文说明为什么要给提交签名，以及如何用现有的 ed25519 公钥签名，并让 GitHub 把该提交标成 Verified。签名从 Git 2.34 起可用。本文按 Git 2.56.0、gh 2.103.3。 密钥本身的生成见 Git 的 HTTPS 凭据和 SSH 密钥。两个账号各用各的密钥见 同一台电脑使用两个 GitHub 账号。仓库要求签名才能合并时，见 用 Rulesets 保">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-28T09:20:00.000Z">
-<meta property="article:modified_time" content="2026-10-28T09:34:48.033Z">
+<meta property="article:modified_time" content="2026-10-29T05:52:28.631Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="git">
 <meta property="article:tag" content="github">
@@ -988,7 +988,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">328</span>
+          <span class="site-state-item-count">330</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1067,6 +1067,20 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/10/29/git-gitconfig/" rel="bookmark">
+        <time class="popular-posts-time">2026-10-29</time>
+        <br>
+      Git 的用户配置 ~/.gitconfig
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/10/29/git-credential-ssh/" rel="bookmark">
+        <time class="popular-posts-time">2026-10-29</time>
+        <br>
+      Git 的 HTTPS 凭据和 SSH 密钥
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2025/12/18/redis7-datatype-07-bitfield/" rel="bookmark">
         <time class="popular-posts-time">2025-12-18</time>
         <br>
@@ -1078,20 +1092,6 @@ i.ban {
         <time class="popular-posts-time">2026-10-28</time>
         <br>
       用 Rulesets 保护 GitHub 的 main 分支
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2026/10/28/git-gh/" rel="bookmark">
-        <time class="popular-posts-time">2026-10-28</time>
-        <br>
-      GitHub CLI 之 gh 命令
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2026/10/28/git-github-pat/" rel="bookmark">
-        <time class="popular-posts-time">2026-10-28</time>
-        <br>
-      创建 GitHub Personal Access Token
       </a>
     </li>
   </ul>
@@ -1142,9 +1142,15 @@ i.ban {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-10-28 17:20:00 / 修改时间：17:34:48" itemprop="dateCreated datePublished" datetime="2026-10-28T17:20:00+08:00">2026-10-28</time>
+      <time title="创建时间：2026-10-28 17:20:00" itemprop="dateCreated datePublished" datetime="2026-10-28T17:20:00+08:00">2026-10-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-29 13:52:28" itemprop="dateModified" datetime="2026-10-29T13:52:28+08:00">2026-10-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1280,14 +1286,14 @@ if (!window.__postViewReady) {
 <nav class="post-series" aria-label="系列文章">
   <div class="post-series-head">
     <span class="post-series-name">Git</span>
-    <span class="post-series-index">7 / 11</span>
+    <span class="post-series-index">9 / 13</span>
   </div>
   <div class="post-series-jump">
     <div class="post-series-prev">
         <a href="/2026/10/28/git-github-accounts/" rel="prev">上一篇：同一台电脑使用两个 GitHub 账号</a>
     </div>
     <div class="post-series-next">
-        <a href="/2026/10/28/git-worktree/" rel="next">下一篇：用 git worktree 同时打开两个分支</a>
+        <a href="/2026/10/28/git-fork-pr/" rel="next">下一篇：给别人的 GitHub 仓库提 Pull Request</a>
     </div>
   </div>
   <details class="post-series-toc">
@@ -1297,16 +1303,22 @@ if (!window.__postViewReady) {
           <a href="/2021/10/29/git-command/">Git安装和常用命令(最新)</a>
         </li>
         <li>
-          <a href="/2026/06/24/git-svn/">SVN 迁移到 Git</a>
-        </li>
-        <li>
           <a href="/2026/06/25/git-command2/">Git常用命令(快查手册)</a>
         </li>
         <li>
-          <a href="/2026/10/28/git-gh/">GitHub CLI 之 gh 命令</a>
+          <a href="/2026/10/29/git-gitconfig/">Git 的用户配置 ~/.gitconfig</a>
+        </li>
+        <li>
+          <a href="/2026/10/28/git-worktree/">用 git worktree 同时打开两个分支</a>
+        </li>
+        <li>
+          <a href="/2026/10/29/git-credential-ssh/">Git 的 HTTPS 凭据和 SSH 密钥</a>
         </li>
         <li>
           <a href="/2026/10/28/git-github-pat/">创建 GitHub Personal Access Token</a>
+        </li>
+        <li>
+          <a href="/2026/10/28/git-gh/">GitHub CLI 之 gh 命令</a>
         </li>
         <li>
           <a href="/2026/10/28/git-github-accounts/">同一台电脑使用两个 GitHub 账号</a>
@@ -1315,16 +1327,16 @@ if (!window.__postViewReady) {
           <a href="/2026/10/28/git-commit-sign/" aria-current="page">用 SSH 密钥签名 Git 提交</a>
         </li>
         <li>
-          <a href="/2026/10/28/git-worktree/">用 git worktree 同时打开两个分支</a>
+          <a href="/2026/10/28/git-fork-pr/">给别人的 GitHub 仓库提 Pull Request</a>
         </li>
         <li>
-          <a href="/2026/10/28/git-fork-pr/">给别人的 GitHub 仓库提 Pull Request</a>
+          <a href="/2026/07/11/github-action/">GitHub Actions Workflow 详细指南</a>
         </li>
         <li>
           <a href="/2026/10/28/git-github-rulesets/">用 Rulesets 保护 GitHub 的 main 分支</a>
         </li>
         <li>
-          <a href="/2026/07/11/github-action/">GitHub Actions Workflow 详细指南</a>
+          <a href="/2026/06/24/git-svn/">SVN 迁移到 Git</a>
         </li>
     </ol>
   </details>
@@ -1332,7 +1344,7 @@ if (!window.__postViewReady) {
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">本文说明为什么要给提交签名，以及如何用现有的 ed25519 公钥签名，并让 GitHub 把该提交标成 Verified。签名从 Git 2.34 起可用。本文按 Git 2.56.0、<code>gh</code> 2.103.3。</li>
-<li class="lvl-2">密钥本身的生成见 <a href="/2021/10/29/git-command/" title="Git安装和常用命令(最新)">Git安装和常用命令(最新)</a> 第 17 节。两个账号各用各的密钥见 <a href="/2026/10/28/git-github-accounts/" title="同一台电脑使用两个 GitHub 账号">同一台电脑使用两个 GitHub 账号</a>。仓库要求签名才能合并时，见 <a href="/2026/10/28/git-github-rulesets/" title="用 Rulesets 保护 GitHub 的 main 分支">用 Rulesets 保护 GitHub 的 main 分支</a>。</li>
+<li class="lvl-2">密钥本身的生成见 <a href="/2026/10/29/git-credential-ssh/" title="Git 的 HTTPS 凭据和 SSH 密钥">Git 的 HTTPS 凭据和 SSH 密钥</a>。两个账号各用各的密钥见 <a href="/2026/10/28/git-github-accounts/" title="同一台电脑使用两个 GitHub 账号">同一台电脑使用两个 GitHub 账号</a>。仓库要求签名才能合并时，见 <a href="/2026/10/28/git-github-rulesets/" title="用 Rulesets 保护 GitHub 的 main 分支">用 Rulesets 保护 GitHub 的 main 分支</a>。</li>
 <li class="lvl-2"><a target="_blank" rel="noopener" href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key">Telling Git about your signing key</a>，<a target="_blank" rel="noopener" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">Adding a new SSH key to your GitHub account</a>。</li>
 </ul>
 <span id="more"></span>
@@ -1347,7 +1359,7 @@ if (!window.__postViewReady) {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -S -m <span class="string">&quot;只签这一次&quot;</span></span><br></pre></td></tr></table></figure>
 <p>标签一并签名时再执行下面这条。它同样写入 <code>~/.gitconfig</code>。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global tag.gpgSign <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p>提交用的邮箱来自 <code>user.email</code>，并且要和 GitHub 账号里已验证的邮箱一致。查看和修改配置见 <a href="/2021/10/29/git-command/" title="Git安装和常用命令(最新)">Git安装和常用命令(最新)</a> 第 15 节。</p>
+<p>提交用的邮箱来自 <code>user.email</code>，并且要和 GitHub 账号里已验证的邮箱一致。查看和修改配置见 <a href="/2026/10/29/git-gitconfig/" title="Git 的用户配置 ~&#x2F;.gitconfig">Git 的用户配置 ~&#x2F;.gitconfig</a>。</p>
 <h2 id="把公钥加到-GitHub">把公钥加到 GitHub</h2>
 <p>同一把公钥如果已经用来登录，还要再加一次，类型选 <strong>Signing Key</strong>。登录和签名在 GitHub 上是两条记录。</p>
 <p>网页入口：头像 → <strong>Settings</strong> → <strong>SSH and GPG keys</strong> → <strong>New SSH key</strong>，Key type 选 <strong>Signing Key</strong>，Key 里粘贴 <code>~/.ssh/id_ed25519.pub</code> 的整行。</p>
@@ -1510,14 +1522,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">990k</span>
+    <span title="站点总字数">992k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">59:59</span>
+    <span title="站点阅读时长">60:06</span>
   </span>
 </div>
 <div class="busuanzi-count">
