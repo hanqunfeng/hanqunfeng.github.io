@@ -30,7 +30,7 @@
 <meta property="og:description" content="摘要   brew是一个软件包管理器，同时支持MacOS和Linux，可以很方便地安装各种软件，比如git、node、python等。   本文介绍如何在macos下创建自己的 Formula   本文基于 MacOS 15.7.2，brew 版本为 Homebrew 5.0.3。   关于 brew 的安装及使用可以参考 MacOS软件包管理器--brew">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-02T13:55:05.000Z">
-<meta property="article:modified_time" content="2026-10-26T06:59:22.234Z">
+<meta property="article:modified_time" content="2026-10-29T06:49:59.534Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="brew">
 <meta property="article:tag" content="macos">
@@ -1150,7 +1150,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
+      <time title="修改时间：2026-10-29 14:49:59" itemprop="dateModified" datetime="2026-10-29T14:49:59+08:00">2026-10-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1266,7 +1266,7 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.3k</span>
+      <span>4.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1413,10 +1413,16 @@ if (!window.__postViewReady) {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> $(brew --repo hanqunfeng/color_echo)</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Add color_echo 1.0.0&quot;</span></span><br><span class="line">git remote add origin https://github.com/hanqunfeng/homebrew-color_echo.git</span><br><span class="line">git push -u origin main</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Enumerating objects: 11, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (11/11), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (9/9), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 2.11 KiB | 2.11 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)</span><br><span class="line">To https://github.com/hanqunfeng/homebrew-color_echo.git</span><br><span class="line">! [remote rejected] main -&gt; main (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/publish.yml` without `workflow` scope)</span><br><span class="line">error: failed to push some refs to <span class="string">&#x27;https://github.com/hanqunfeng/homebrew-color_echo.git&#x27;</span></span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>提示缺少权限，需要给仓库添加权限。在 Github 中添加一个 Personal Access Token，并添加权限<code>repo</code> 和 <code>workflow</code>，重新推送</p>
+<p>报错是因为这次推送改了 <code>.github/workflows/publish.yml</code>，当前令牌没有 <code>workflow</code> 权限。远程地址保持 <code>https://github.com/hanqunfeng/homebrew-color_echo.git</code>，不要把令牌写进地址。</p>
+</li>
+<li class="lvl-2">
+<p>用的是已经保存的那张经典令牌时，在 GitHub 上给它补上 <code>repo</code> 和 <code>workflow</code>。令牌字符串不变，钥匙串里不用换，直接再推一次。细粒度令牌则给这个仓库 <strong>Contents</strong> 的 write 和 <strong>Workflows</strong> 的 write。勾选步骤见 <a href="/2026/10/28/git-github-pat/" title="创建 GitHub Personal Access Token">创建 GitHub Personal Access Token</a>。</p>
+</li>
+<li class="lvl-2">
+<p>另建了一张新令牌时，把凭据助手里 <code>github.com</code> 的旧令牌换成新的，再推送。助手怎么更新见 <a href="/2026/10/29/git-credential-ssh/" title="Git 的 HTTPS 凭据和 SSH 密钥">Git 的 HTTPS 凭据和 SSH 密钥</a>。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置远程仓库地址，注意替换为你的仓库地址，并且密钥替换为实际的密钥</span></span><br><span class="line">git remote set-url origin https://ghp_xxxxx@github.com/hanqunfeng/homebrew-color_echo.git</span><br><span class="line">git push -u origin main</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Enumerating objects: 11, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (11/11), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (9/9), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 2.11 KiB | 2.11 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)</span><br><span class="line">To https://github.com/hanqunfeng/homebrew-color_echo.git</span><br><span class="line">* [new branch]      main -&gt; main</span><br><span class="line">branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track <span class="string">&#x27;origin/main&#x27;</span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin main</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">Enumerating objects: 11, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (11/11), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (9/9), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 2.11 KiB | 2.11 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)</span><br><span class="line">To https://github.com/hanqunfeng/homebrew-color_echo.git</span><br><span class="line">* [new branch]      main -&gt; main</span><br><span class="line">branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track <span class="string">&#x27;origin/main&#x27;</span>.</span><br></pre></td></tr></table></figure>
 <h4 id="安装-Formula">安装 Formula</h4>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换 tap，注意: 执行搜索和安装时需要先切换 tap，否则需要使用完整包名 hanqunfeng/color_echo/color_echo</span></span><br><span class="line">brew tap hanqunfeng/color_echo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索</span></span><br><span class="line">brew search color_echo</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">==&gt; Formulae</span><br><span class="line">hanqunfeng/color_echo/color_echo              color-code</span><br><span class="line"></span><br><span class="line"><span class="comment"># 完整包名搜索</span></span><br><span class="line">brew search hanqunfeng/color_echo/color_echo</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">==&gt; Formulae</span><br><span class="line">color_echo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">brew install color_echo</span><br><span class="line"><span class="comment">## 输出</span></span><br><span class="line">==&gt; Fetching downloads <span class="keyword">for</span>: color_echo</span><br><span class="line">✔︎ Formula color_echo (1.0.0)                                   [Verifying     2.1KB/  2.1KB]</span><br><span class="line">==&gt; Installing color_echo from hanqunfeng/color_echo</span><br><span class="line">🍺  /usr/local/Cellar/color_echo/1.0.0: 4 files, 7.4KB, built <span class="keyword">in</span> 5 seconds</span><br><span class="line">==&gt; Running `brew cleanup color_echo`...</span><br><span class="line">Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.</span><br><span class="line">Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).</span><br></pre></td></tr></table></figure>
 <h4 id="测试-Formula">测试 Formula</h4>
@@ -1712,14 +1718,14 @@ if (!window.__postViewReady) {
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">992k</span>
+    <span title="站点总字数">993k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">60:06</span>
+    <span title="站点阅读时长">60:10</span>
   </span>
 </div>
 <div class="busuanzi-count">
