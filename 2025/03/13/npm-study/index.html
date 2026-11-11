@@ -22,15 +22,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"blog.hanqunfeng.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/atelier-seaside-light","dark":"tomorrow-night-bright"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="摘要   本文介绍如何使用npm   npm版本10.5.0">
+    <meta name="description" content="摘要   本文介绍如何使用 npm：常用命令、npx、镜像与配置、和 yarn &#x2F; pnpm 的对照，以及发包流程。   另有一节写 CI&#x2F;CD 里怎么用 npm ci、npm cit、npm audit、npx、npm pack 和 npm publish。   npm 按 10.5.0。Trusted Publishing 与本地辅助发布见 使用 GitHub Actions 和 OIDC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="npm使用手册">
 <meta property="og:url" content="https://blog.hanqunfeng.com/2025/03/13/npm-study/index.html">
 <meta property="og:site_name" content="飘逸峰的博客">
-<meta property="og:description" content="摘要   本文介绍如何使用npm   npm版本10.5.0">
+<meta property="og:description" content="摘要   本文介绍如何使用 npm：常用命令、npx、镜像与配置、和 yarn &#x2F; pnpm 的对照，以及发包流程。   另有一节写 CI&#x2F;CD 里怎么用 npm ci、npm cit、npm audit、npx、npm pack 和 npm publish。   npm 按 10.5.0。Trusted Publishing 与本地辅助发布见 使用 GitHub Actions 和 OIDC">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-13T13:30:05.000Z">
-<meta property="article:modified_time" content="2026-10-26T06:59:22.272Z">
+<meta property="article:modified_time" content="2026-11-11T03:22:01.530Z">
 <meta property="article:author" content="飘逸峰">
 <meta property="article:tag" content="npm">
 <meta name="twitter:card" content="summary">
@@ -972,7 +972,7 @@ i.ban {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">npm简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">npm 的安装与配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">npm 常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-init%EF%BC%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.1.</span> <span class="nav-text">npm init：初始化项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-create%EF%BC%9A%E5%9F%BA%E4%BA%8E%E6%A8%A1%E6%9D%BF%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.2.</span> <span class="nav-text">npm create：基于模板创建项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-install%EF%BC%9A%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.3.</span> <span class="nav-text">npm install：安装依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-update%EF%BC%9A%E6%9B%B4%E6%96%B0%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.4.</span> <span class="nav-text">npm update：更新依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-outdate%EF%BC%9A%E6%A3%80%E6%9F%A5%E5%93%AA%E4%BA%9B%E5%8C%85%E5%8F%AF%E4%BB%A5%E5%8D%87%E7%BA%A7"><span class="nav-number">4.5.</span> <span class="nav-text">npm outdate：检查哪些包可以升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-upgrade%EF%BC%9A%E5%88%A4%E6%96%ADpackage-json%E5%93%AA%E4%BA%9B%E5%8C%85%E9%9C%80%E8%A6%81%E5%8D%87%E7%BA%A7"><span class="nav-number">4.6.</span> <span class="nav-text">npm-upgrade：判断package.json哪些包需要升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-list%EF%BC%9A%E5%88%97%E5%87%BA%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.7.</span> <span class="nav-text">npm list：列出依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-uninstall%EF%BC%9A%E5%8D%B8%E8%BD%BD%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.8.</span> <span class="nav-text">npm uninstall：卸载依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-search%EF%BC%9A%E6%90%9C%E7%B4%A2%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.9.</span> <span class="nav-text">npm search：搜索依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-view-npm-info%EF%BC%9A%E6%9F%A5%E7%9C%8B%E5%8C%85%E4%BF%A1%E6%81%AF"><span class="nav-number">4.10.</span> <span class="nav-text">npm view &#x3D;&#x3D; npm info：查看包信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-home%EF%BC%9A%E6%89%93%E5%BC%80%E5%8C%85%E7%9A%84%E4%B8%BB%E9%A1%B5"><span class="nav-number">4.11.</span> <span class="nav-text">npm home：打开包的主页</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">5.</span> <span class="nav-text">npm 镜像源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">npm 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-config-save-exact"><span class="nav-number">6.1.</span> <span class="nav-text">npm config save-exact</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-config-loglevel"><span class="nav-number">6.2.</span> <span class="nav-text">npm config loglevel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-config-timing"><span class="nav-number">6.3.</span> <span class="nav-text">npm config timing</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm%E3%80%81pnpm%E3%80%81yarn-%E4%B9%8B%E9%97%B4%E7%9A%84%E8%81%94%E7%B3%BB%E5%92%8C%E5%8C%BA%E5%88%AB"><span class="nav-number">7.</span> <span class="nav-text">npm、pnpm、yarn 之间的联系和区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%8C%85%E5%88%B0npm%E4%BB%93%E5%BA%93"><span class="nav-number">8.</span> <span class="nav-text">发包到npm仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%B3%A8%E5%86%8C%E4%B8%8E%E7%99%BB%E5%BD%95"><span class="nav-number">8.1.</span> <span class="nav-text">1. 注册与登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BA-Access-Token"><span class="nav-number">8.2.</span> <span class="nav-text">2. 创建 Access Token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%85%8D%E7%BD%AE%E6%9C%AC%E5%9C%B0-Token"><span class="nav-number">8.3.</span> <span class="nav-text">3. 配置本地 Token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BC%96%E8%BE%91-package-json%EF%BC%8C%E6%8C%87%E5%AE%9A%E5%8C%85%E5%90%8D%EF%BC%8C%E7%89%88%E6%9C%AC%EF%BC%8C%E4%BB%A5%E5%8F%8A%E8%A6%81%E5%8F%91%E5%B8%83%E7%9A%84%E6%96%87%E4%BB%B6%EF%BC%8C%E7%AD%89%E7%AD%89"><span class="nav-number">8.4.</span> <span class="nav-text">4.编辑 package.json，指定包名，版本，以及要发布的文件，等等</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%A3%80%E6%9F%A5%E5%8C%85%E5%90%8D%E6%98%AF%E5%90%A6%E5%8F%AF%E7%94%A8"><span class="nav-number">8.5.</span> <span class="nav-text">5.检查包名是否可用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%8F%91%E5%B8%83%E5%89%8D%E6%89%93%E5%8C%85%E5%8F%8A%E6%A0%A1%E9%AA%8C"><span class="nav-number">8.6.</span> <span class="nav-text">6.发布前打包及校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%9B%B4%E6%96%B0%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-number">8.7.</span> <span class="nav-text">7.更新版本号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%8F%91%E5%B8%83"><span class="nav-number">8.8.</span> <span class="nav-text">8. 发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E9%AA%8C%E8%AF%81%E5%8F%91%E5%B8%83"><span class="nav-number">8.9.</span> <span class="nav-text">9. 验证发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E6%8E%A8%E8%8D%90%E4%B8%80%E4%B8%AA%E6%97%A5%E5%B8%B8%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B"><span class="nav-number">8.10.</span> <span class="nav-text">10. 推荐一个日常发布流程</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">npm简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">npm 的安装与配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">npm 常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-init%EF%BC%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.1.</span> <span class="nav-text">npm init：初始化项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-create%EF%BC%9A%E5%9F%BA%E4%BA%8E%E6%A8%A1%E6%9D%BF%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.2.</span> <span class="nav-text">npm create：基于模板创建项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-install%EF%BC%9A%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.3.</span> <span class="nav-text">npm install：安装依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-update%EF%BC%9A%E6%9B%B4%E6%96%B0%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.4.</span> <span class="nav-text">npm update：更新依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-outdate%EF%BC%9A%E6%A3%80%E6%9F%A5%E5%93%AA%E4%BA%9B%E5%8C%85%E5%8F%AF%E4%BB%A5%E5%8D%87%E7%BA%A7"><span class="nav-number">4.5.</span> <span class="nav-text">npm outdate：检查哪些包可以升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-upgrade%EF%BC%9A%E5%88%A4%E6%96%ADpackage-json%E5%93%AA%E4%BA%9B%E5%8C%85%E9%9C%80%E8%A6%81%E5%8D%87%E7%BA%A7"><span class="nav-number">4.6.</span> <span class="nav-text">npm-upgrade：判断package.json哪些包需要升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-list%EF%BC%9A%E5%88%97%E5%87%BA%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.7.</span> <span class="nav-text">npm list：列出依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-uninstall%EF%BC%9A%E5%8D%B8%E8%BD%BD%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.8.</span> <span class="nav-text">npm uninstall：卸载依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-search%EF%BC%9A%E6%90%9C%E7%B4%A2%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">4.9.</span> <span class="nav-text">npm search：搜索依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-view-npm-info%EF%BC%9A%E6%9F%A5%E7%9C%8B%E5%8C%85%E4%BF%A1%E6%81%AF"><span class="nav-number">4.10.</span> <span class="nav-text">npm view &#x3D;&#x3D; npm info：查看包信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-home%EF%BC%9A%E6%89%93%E5%BC%80%E5%8C%85%E7%9A%84%E4%B8%BB%E9%A1%B5"><span class="nav-number">4.11.</span> <span class="nav-text">npm home：打开包的主页</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npx%EF%BC%9A%E4%B8%B4%E6%97%B6%E6%89%A7%E8%A1%8C%E5%8C%85%E9%87%8C%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">npx：临时执行包里的命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%BE%E5%93%AA%E4%B8%AA%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-number">5.1.</span> <span class="nav-text">找哪个可执行文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%86%99%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">常用写法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C-npm-install-g%E3%80%81npm-run-%E7%9A%84%E5%88%86%E5%B7%A5"><span class="nav-number">5.3.</span> <span class="nav-text">和 npm install -g、npm run 的分工</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C-npm-create-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">5.4.</span> <span class="nav-text">和 npm create 的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npx-%E4%B8%8E-npm-exec-%E7%9A%84%E5%8F%82%E6%95%B0%E4%BD%8D%E7%BD%AE"><span class="nav-number">5.5.</span> <span class="nav-text">npx 与 npm exec 的参数位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">5.6.</span> <span class="nav-text">注意点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">6.</span> <span class="nav-text">npm 镜像源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E9%85%8D%E7%BD%AE"><span class="nav-number">7.</span> <span class="nav-text">npm 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-config-save-exact"><span class="nav-number">7.1.</span> <span class="nav-text">npm config save-exact</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-config-loglevel"><span class="nav-number">7.2.</span> <span class="nav-text">npm config loglevel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-config-timing"><span class="nav-number">7.3.</span> <span class="nav-text">npm config timing</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm%E3%80%81pnpm%E3%80%81yarn-%E4%B9%8B%E9%97%B4%E7%9A%84%E8%81%94%E7%B3%BB%E5%92%8C%E5%8C%BA%E5%88%AB"><span class="nav-number">8.</span> <span class="nav-text">npm、pnpm、yarn 之间的联系和区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E5%9C%A8-CI-CD-%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">npm 在 CI&#x2F;CD 中的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-ci%EF%BC%9A%E6%8C%89-lock-%E6%96%87%E4%BB%B6%E5%B9%B2%E5%87%80%E5%AE%89%E8%A3%85"><span class="nav-number">9.1.</span> <span class="nav-text">npm ci：按 lock 文件干净安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-install-ci-test%EF%BC%9A%E5%B9%B2%E5%87%80%E5%AE%89%E8%A3%85%E5%90%8E%E7%AB%8B%E5%88%BB%E6%B5%8B"><span class="nav-number">9.2.</span> <span class="nav-text">npm install-ci-test：干净安装后立刻测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF%E9%87%8C%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">9.3.</span> <span class="nav-text">流水线里其他常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E6%9D%A1%E6%9C%80%E5%B0%8F-CI-%E9%A1%BA%E5%BA%8F"><span class="nav-number">9.4.</span> <span class="nav-text">一条最小 CI 顺序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%8C%85%E5%88%B0npm%E4%BB%93%E5%BA%93"><span class="nav-number">10.</span> <span class="nav-text">发包到npm仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%B3%A8%E5%86%8C%E4%B8%8E%E7%99%BB%E5%BD%95"><span class="nav-number">10.1.</span> <span class="nav-text">1. 注册与登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BA-Access-Token"><span class="nav-number">10.2.</span> <span class="nav-text">2. 创建 Access Token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%85%8D%E7%BD%AE%E6%9C%AC%E5%9C%B0-Token"><span class="nav-number">10.3.</span> <span class="nav-text">3. 配置本地 Token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BC%96%E8%BE%91-package-json%EF%BC%8C%E6%8C%87%E5%AE%9A%E5%8C%85%E5%90%8D%EF%BC%8C%E7%89%88%E6%9C%AC%EF%BC%8C%E4%BB%A5%E5%8F%8A%E8%A6%81%E5%8F%91%E5%B8%83%E7%9A%84%E6%96%87%E4%BB%B6%EF%BC%8C%E7%AD%89%E7%AD%89"><span class="nav-number">10.4.</span> <span class="nav-text">4.编辑 package.json，指定包名，版本，以及要发布的文件，等等</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%A3%80%E6%9F%A5%E5%8C%85%E5%90%8D%E6%98%AF%E5%90%A6%E5%8F%AF%E7%94%A8"><span class="nav-number">10.5.</span> <span class="nav-text">5.检查包名是否可用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%8F%91%E5%B8%83%E5%89%8D%E6%89%93%E5%8C%85%E5%8F%8A%E6%A0%A1%E9%AA%8C"><span class="nav-number">10.6.</span> <span class="nav-text">6.发布前打包及校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%9B%B4%E6%96%B0%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-number">10.7.</span> <span class="nav-text">7.更新版本号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%8F%91%E5%B8%83"><span class="nav-number">10.8.</span> <span class="nav-text">8. 发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E9%AA%8C%E8%AF%81%E5%8F%91%E5%B8%83"><span class="nav-number">10.9.</span> <span class="nav-text">9. 验证发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E6%8E%A8%E8%8D%90%E4%B8%80%E4%B8%AA%E6%97%A5%E5%B8%B8%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B"><span class="nav-number">10.10.</span> <span class="nav-text">10. 推荐一个日常发布流程</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -987,7 +987,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">333</span>
+          <span class="site-state-item-count">334</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -998,7 +998,7 @@ i.ban {
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags">
-        <span class="site-state-item-count">94</span>
+        <span class="site-state-item-count">95</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1059,10 +1059,24 @@ i.ban {
   </div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/10/23/npm-publish-oidc/" rel="bookmark">
+        <time class="popular-posts-time">2026-10-23</time>
+        <br>
+      npm -- 用 npm-publish-oidc 发布包
+      </a>
+    </li>
+    <li class="popular-posts-item">
       <a class="popular-posts-link" href="/2026/07/11/npm-oidc-trusted-publishing/" rel="bookmark">
         <time class="popular-posts-time">2026-07-11</time>
         <br>
       使用 GitHub Actions 和 OIDC 安全发布 npm 包
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2018/03/27/protocol-buffer-study-python/" rel="bookmark">
+        <time class="popular-posts-time">2018-03-27</time>
+        <br>
+      Protocol Buffer学习笔记(Python)
       </a>
     </li>
     <li class="popular-posts-item">
@@ -1073,17 +1087,10 @@ i.ban {
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2026/10/23/npm-publish-oidc/" rel="bookmark">
-        <time class="popular-posts-time">2026-10-23</time>
+      <a class="popular-posts-link" href="/2023/03/21/linux-command09-makeinstall-nginx/" rel="bookmark">
+        <time class="popular-posts-time">2023-03-21</time>
         <br>
-      npm -- 用 npm-publish-oidc 发布包
-      </a>
-    </li>
-    <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2018/03/27/protocol-buffer-study-python/" rel="bookmark">
-        <time class="popular-posts-time">2018-03-27</time>
-        <br>
-      Protocol Buffer学习笔记(Python)
+      Linux常用命令--源代码安装nginx
       </a>
     </li>
   </ul>
@@ -1142,7 +1149,7 @@ i.ban {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-26 14:59:22" itemprop="dateModified" datetime="2026-10-26T14:59:22+08:00">2026-10-26</time>
+      <time title="修改时间：2026-11-11 11:22:01" itemprop="dateModified" datetime="2026-11-11T11:22:01+08:00">2026-11-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1266,14 +1273,14 @@ if (!window.__postViewReady) {
         <i class="far fa-file-lines"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.6k</span>
+      <span>7.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>17 分钟</span>
+      <span>27 分钟</span>
     </span>
 
         </div>
@@ -1341,10 +1348,13 @@ if (!window.__postViewReady) {
 <h2 id="摘要">摘要</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>本文介绍如何使用npm</p>
+<p>本文介绍如何使用 npm：常用命令、<code>npx</code>、镜像与配置、和 yarn / pnpm 的对照，以及发包流程。</p>
 </li>
 <li class="lvl-2">
-<p>npm版本10.5.0</p>
+<p>另有一节写 CI/CD 里怎么用 <code>npm ci</code>、<code>npm cit</code>、<code>npm audit</code>、<code>npx</code>、<code>npm pack</code> 和 <code>npm publish</code>。</p>
+</li>
+<li class="lvl-2">
+<p>npm 按 10.5.0。Trusted Publishing 与本地辅助发布见 <a href="/2026/07/11/npm-oidc-trusted-publishing/" title="使用 GitHub Actions 和 OIDC 安全发布 npm 包">使用 GitHub Actions 和 OIDC 安全发布 npm 包</a>、<a href="/2026/10/23/npm-publish-oidc/" title="npm -- 用 npm-publish-oidc 发布包">npm -- 用 npm-publish-oidc 发布包</a>。</p>
 </li>
 </ul>
 <span id="more"></span>
@@ -1531,6 +1541,106 @@ if (!window.__postViewReady) {
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm home express</span><br></pre></td></tr></table></figure>
+<h2 id="npx：临时执行包里的命令">npx：临时执行包里的命令</h2>
+<p><code>npx</code> 用来运行某个 npm 包提供的可执行文件（<code>package.json</code> 的 <code>bin</code>）。包已经在当前项目的依赖里时，直接跑本地的；本地没有时，临时下载到 npm 缓存目录，把该目录加入这次进程的 <code>PATH</code> 再执行。不会把这个包写进当前项目的 <code>package.json</code>，也不等于全局安装到 <code>-g</code> 目录。</p>
+<p>从 npm 7 起，<code>npx</code> 与 <code>npm exec</code>（别名 <code>npm x</code>）是同一套能力；日常习惯写 <code>npx</code>，脚本里两者都可以。</p>
+<h3 id="找哪个可执行文件">找哪个可执行文件</h3>
+<p>未指定 <code>--package</code> 时，<code>npx</code> 把第一个位置参数当成包名（可带 <code>@版本</code>），再按下面规则选出要跑的命令：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>包的 <code>bin</code> 只有一个条目，或所有条目都指向同一命令：用那一个。</p>
+</li>
+<li class="lvl-2">
+<p><code>bin</code> 有多个条目，且其中有一条与包名去掉 scope 后的名字相同：用那一条。</p>
+</li>
+<li class="lvl-2">
+<p>仍无法唯一确定时退出并报错。这时要用 <code>--package</code> 明确指定包，再写出真正要跑的命令名。</p>
+</li>
+</ul>
+<p>包名不带版本说明符时，会优先匹配当前项目依赖里已安装的同名包。带了 <code>@1.2.3</code> 这类说明符时，只有本地依赖的名字和版本完全一致才算命中；否则会去拉远端。</p>
+<h3 id="常用写法">常用写法</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 跑当前项目依赖里的本地二进制（等价于调用 node_modules/.bin 下的命令）</span></span><br><span class="line">npx eslint .</span><br><span class="line">npx tsc --noEmit</span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地没有该依赖时，临时下载再执行；交互环境可能询问是否安装</span></span><br><span class="line"><span class="comment"># CI 或非 TTY 下默认当作同意安装（相当于 --yes）</span></span><br><span class="line">npx cowsay <span class="string">&quot;hello&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 跳过询问，直接同意临时安装（脚本、CI 里常用）</span></span><br><span class="line">npx --<span class="built_in">yes</span> cowsay <span class="string">&quot;hello&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 拒绝临时安装：本地没有就失败</span></span><br><span class="line">npx --no some-unknown-cli</span><br><span class="line"></span><br><span class="line"><span class="comment"># 钉死版本，避免每次拉到不同的 latest</span></span><br><span class="line">npx --<span class="built_in">yes</span> create-vite@5.2.3 my-app</span><br></pre></td></tr></table></figure>
+<p>包名和要执行的命令名不一致、或一个包提供多个 <code>bin</code> 时：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --package 可写多次；其后的命令在这些包都已进入 PATH 的环境里执行</span></span><br><span class="line"><span class="comment"># npx 的自身选项必须写在位置参数之前</span></span><br><span class="line">npx --<span class="built_in">yes</span> --package=typescript --package=ts-node -- ts-node ./script.ts</span><br></pre></td></tr></table></figure>
+<p>用 <code>-c</code> / <code>--call</code> 可以把整条命令写成字符串，环境与 <code>npm run</code> 脚本类似（本地 <code>node_modules/.bin</code> 仍在 <code>PATH</code> 里）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx --<span class="built_in">yes</span> --package=cowsay -c <span class="string">&#x27;cowsay hi &amp;&amp; echo done&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="和-npm-install-g、npm-run-的分工">和 <code>npm install -g</code>、<code>npm run</code> 的分工</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">做法</th>
+<th style="text-align:left">装到哪里</th>
+<th style="text-align:left">是否改 <code>package.json</code></th>
+<th style="text-align:left">适合做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>npx &lt;pkg&gt;</code></td>
+<td style="text-align:left">已有则用项目依赖；否则进 npm 缓存，仅本次 <code>PATH</code> 可用</td>
+<td style="text-align:left">否</td>
+<td style="text-align:left">临时脚手架、一次性检查工具、试用 CLI</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>npm install -g &lt;pkg&gt;</code></td>
+<td style="text-align:left">全局 <code>prefix</code> 下的全局 <code>node_modules</code></td>
+<td style="text-align:left">否</td>
+<td style="text-align:left">本机长期使用的 CLI（要自己记得升级）</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>npm install -D &lt;pkg&gt;</code> 再 <code>npx</code> / <code>npm run</code></td>
+<td style="text-align:left">项目 <code>node_modules</code></td>
+<td style="text-align:left">是</td>
+<td style="text-align:left">团队共享的构建、测试、lint 工具</td>
+</tr>
+</tbody>
+</table>
+<p>项目里已经固定要用的工具，应写成 <code>devDependencies</code>，用 <code>npm run</code> 或 <code>npx &lt;本地命令&gt;</code> 调用，这样版本进 lock，CI 用 <code>npm ci</code> 后结果一致。只想试一下、或官方文档要求“一条命令生成项目”时，再用临时的 <code>npx</code> / <code>npm create</code>。</p>
+<h3 id="和-npm-create-的关系">和 <code>npm create</code> 的关系</h3>
+<p><code>npm create &lt;名字&gt;</code>（也写作 <code>npm init &lt;名字&gt;</code>）会转成执行对应的 <code>create-*</code> 包，底层同样走 <code>npm exec</code> / <code>npx</code>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">你写的命令</th>
+<th style="text-align:left">实际相当于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>npm create vue@latest</code></td>
+<td style="text-align:left"><code>npx create-vue@latest</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>npm create vite@latest</code></td>
+<td style="text-align:left"><code>npx create-vite@latest</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>npm init @scope</code></td>
+<td style="text-align:left"><code>npx @scope/create</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>npm init @scope/foo@2.0.0</code></td>
+<td style="text-align:left"><code>npx @scope/create-foo@2.0.0</code></td>
+</tr>
+</tbody>
+</table>
+<p>前文「npm create：基于模板创建项目」里的写法，与这里直接 <code>npx create-...</code> 是同一类操作。</p>
+<h3 id="npx-与-npm-exec-的参数位置"><code>npx</code> 与 <code>npm exec</code> 的参数位置</h3>
+<p><code>npx</code> 要求：<strong>所有属于 npx 自己的选项，必须写在位置参数（包名 / 命令）之前</strong>。包名后面的参数会原样传给被执行的命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --package 在包名后面：被当成传给 foo 的参数，不会让 npx 去装 @npmcli/foo</span></span><br><span class="line">npx foo@latest bar --package=@npmcli/foo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 等价意图用 npm exec 时，常用 -- 切开：左边是 npm 选项，右边交给要执行的命令</span></span><br><span class="line">npm <span class="built_in">exec</span> -- foo@latest bar --package=@npmcli/foo</span><br></pre></td></tr></table></figure>
+<p>拿不准某个包接受哪些参数时，查该包自己的文档；<code>npx --help</code> 只说明 npx / <code>npm exec</code> 本身。</p>
+<h3 id="注意点">注意点</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>临时执行会跑 registry 上的代码。不熟悉的包名、未钉版本的 <code>@latest</code>，有供应链风险；生产脚本应钉版本，或改为项目依赖。</p>
+</li>
+<li class="lvl-2">
+<p><code>npx</code> 成功只说明命令启动并退出码为 0；项目依赖是否按 lock 装好，仍要靠 <code>npm ci</code> / <code>npm install</code> 和后续测试确认。</p>
+</li>
+<li class="lvl-2">
+<p>流水线里的简要用法见下文「npm 在 CI/CD 中的应用」。</p>
+</li>
+</ul>
 <h2 id="npm-镜像源">npm 镜像源</h2>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -2017,6 +2127,124 @@ if (!window.__postViewReady) {
 </ul>
 </li>
 </ul>
+<h2 id="npm-在-CI-CD-中的应用">npm 在 CI/CD 中的应用</h2>
+<p>流水线里依赖安装要可重复：同一提交每次装出的版本必须一致，<code>package-lock.json</code> 不能被安装过程改写。这一节写 CI 里常用的 npm 命令，以及它们和日常开发命令的分工。</p>
+<h3 id="npm-ci：按-lock-文件干净安装"><code>npm ci</code>：按 lock 文件干净安装</h3>
+<p><code>npm ci</code>（别名 <code>clean-install</code>、<code>ic</code>、<code>install-clean</code>）专门给自动化环境和需要可重复构建的场景用。它只按 <code>package-lock.json</code>（或 <code>npm-shrinkwrap.json</code>）安装，不解析 <code>package.json</code> 里的版本范围去“找最新兼容版”。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">对比项</th>
+<th style="text-align:left"><code>npm ci</code></th>
+<th style="text-align:left"><code>npm install</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">依赖来源</td>
+<td style="text-align:left">只读 lock 文件</td>
+<td style="text-align:left">以 <code>package.json</code> 为准，必要时改写 lock</td>
+</tr>
+<tr>
+<td style="text-align:left">lock 与 <code>package.json</code> 不一致</td>
+<td style="text-align:left">直接报错退出</td>
+<td style="text-align:left">会更新 lock 去对齐</td>
+</tr>
+<tr>
+<td style="text-align:left">已有 <code>node_modules</code></td>
+<td style="text-align:left">先整目录删除，再全新安装</td>
+<td style="text-align:left">增量安装，尽量复用已有模块</td>
+</tr>
+<tr>
+<td style="text-align:left">能否单独加包</td>
+<td style="text-align:left">不能，一次只装整个项目</td>
+<td style="text-align:left">可以 <code>npm install &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">是否写回 lock / <code>package.json</code></td>
+<td style="text-align:left">从不写</td>
+<td style="text-align:left">可能写</td>
+</tr>
+<tr>
+<td style="text-align:left">典型场景</td>
+<td style="text-align:left">CI/CD、发布构建、要求依赖完全一致</td>
+<td style="text-align:left">本地开发、增删改依赖</td>
+</tr>
+</tbody>
+</table>
+<p>具体行为：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>项目里必须有 <code>package-lock.json</code> 或 <code>npm-shrinkwrap.json</code>。没有 lock 时 <code>npm ci</code> 直接失败，不会退化成 <code>npm install</code>。</p>
+</li>
+<li class="lvl-2">
+<p>会校验 <code>package.json</code> 与 lock 是否同步。lock 缺少声明的依赖，或版本对不上，立刻退出。</p>
+</li>
+<li class="lvl-2">
+<p>执行前删除现有 <code>node_modules</code>，再按 lock 全量安装，结果干净、可重复。</p>
+</li>
+<li class="lvl-2">
+<p>若当初生成 lock 时用过会影响依赖树形状的选项（例如 <code>--legacy-peer-deps</code>），<code>npm ci</code> 必须带同样选项，否则容易报错。可把该选项写进项目根目录的 <code>.npmrc</code> 并提交进仓库。</p>
+</li>
+</ul>
+<p>为什么 CI 优先用它：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>每次构建装到的版本与 lock 一致，减少“本地能过、流水线挂掉”。</p>
+</li>
+<li class="lvl-2">
+<p>跳过版本范围解析，通常比 <code>npm install</code> 更快。</p>
+</li>
+<li class="lvl-2">
+<p><code>package.json</code> 里的 <code>^</code> / <code>~</code> 不会在 CI 里悄悄拉到新版本。</p>
+</li>
+<li class="lvl-2">
+<p>lock 未提交或与 <code>package.json</code> 不同步时立刻失败，逼着把正确的 lock 提交上去。</p>
+</li>
+</ul>
+<p>使用前提：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>必须把 <code>package-lock.json</code>（或 <code>npm-shrinkwrap.json</code>）提交进版本库。两者同时存在时，<code>npm-shrinkwrap.json</code> 优先。</p>
+</li>
+<li class="lvl-2">
+<p>CI 可缓存 <code>~/.npm</code>（对应配置项 <code>cache</code>），加速下载；缓存的是下载缓存，不是项目里的 <code>node_modules</code>。</p>
+</li>
+<li class="lvl-2">
+<p>本地日常加包、升版本仍用 <code>npm install</code> / <code>npm update</code>；装完后把更新过的 lock 一并提交，再让 CI 跑 <code>npm ci</code>。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本地先保证 lock 与 package.json 同步，并提交 lock</span></span><br><span class="line">npm install</span><br><span class="line">git add package.json package-lock.json</span><br><span class="line">git commit -m <span class="string">&quot;chore: sync lockfile&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># CI 里只做干净安装，不改 lock</span></span><br><span class="line">npm ci</span><br></pre></td></tr></table></figure>
+<p>GitHub Actions 里常见写法（缓存 npm 下载目录）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 片段：安装步骤用 npm ci，并缓存 ~/.npm</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">node-version:</span> <span class="string">&quot;20&quot;</span></span><br><span class="line">    <span class="attr">cache:</span> <span class="string">npm</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">ci</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">test</span></span><br></pre></td></tr></table></figure>
+<div class="note warning"><p>流水线里不要用 <code>npm install</code> 代替 <code>npm ci</code> 去做正式构建或发布前的安装。<code>npm install</code> 可能改写 lock，同一提交在不同时间装出的树可能不同。只有尚未提交 lock、或流水线本身就要改依赖版本时，才考虑在 CI 里用 <code>npm install</code>。</p>
+</div>
+<h3 id="npm-install-ci-test：干净安装后立刻测"><code>npm install-ci-test</code>：干净安装后立刻测</h3>
+<p><code>npm install-ci-test</code>（别名 <code>npm cit</code>、<code>clean-install-test</code>）等于先 <code>npm ci</code>，再立刻 <code>npm test</code>。既要严格按 lock 安装、又要跑测试时，一条命令即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm cit</span><br><span class="line"><span class="comment"># 等价于</span></span><br><span class="line">npm ci &amp;&amp; npm <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<p><code>package.json</code> 里需要有可执行的 <code>test</code> 脚本，否则第二步会失败。</p>
+<h3 id="流水线里其他常用命令">流水线里其他常用命令</h3>
+<p>这些命令并非只给 CI 设计，但在自动化里最常成套出现。</p>
+<p><strong>安全审计：<code>npm audit</code></strong></p>
+<p>把当前依赖树提交给 registry，查已知漏洞。默认发现任意级别漏洞都以非 0 退出；CI 里常用 <code>--audit-level</code> 设定失败门槛，报告仍会列出更低级别的项，只是低于门槛时不让流水线失败。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 高危及以上才让 CI 失败</span></span><br><span class="line">npm audit --audit-level=high</span><br><span class="line"></span><br><span class="line"><span class="comment"># 校验已下载包的 registry 签名与 provenance（支持签名的 registry）</span></span><br><span class="line">npm audit signatures</span><br></pre></td></tr></table></figure>
+<p><strong>跑项目脚本：<code>npm run &lt;script&gt;</code></strong></p>
+<p>执行 <code>package.json</code> 的 <code>scripts</code>，例如 <code>npm run build</code>、<code>npm run lint</code>、<code>npm test</code>。<code>pre*</code> / <code>post*</code> 生命周期钩子在 CI 里同样会触发。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm ci</span><br><span class="line">npm run lint</span><br><span class="line">npm <span class="built_in">test</span></span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+<p><strong>临时跑工具：<code>npx</code></strong></p>
+<p>只需跑一次某 CLI、又不想写进依赖时用。完整说明见上文「npx：临时执行包里的命令」。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例：临时跑一次某检查工具（包名按实际替换）；CI 里建议加 --yes 并钉版本</span></span><br><span class="line">npx --<span class="built_in">yes</span> some-linter@1.2.3 .</span><br></pre></td></tr></table></figure>
+<p><strong>发布前预览打包：<code>npm pack</code></strong></p>
+<p>确认即将打进 tarball 的文件列表，避免把本地配置或密钥带进去。以 <code>--dry-run</code> 的预览为准，对照 <code>package.json</code> 的 <code>files</code> 字段。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm pack --dry-run</span><br></pre></td></tr></table></figure>
+<p><strong>发布：<code>npm publish</code></strong></p>
+<p>CI 自动发布的最后一步。长期 <code>NPM_TOKEN</code> 可以工作，但更推荐用 GitHub Actions 的 Trusted Publishing（OIDC），不必在仓库里存长期令牌。配置与工作流见 <a href="/2026/07/11/npm-oidc-trusted-publishing/" title="使用 GitHub Actions 和 OIDC 安全发布 npm 包">使用 GitHub Actions 和 OIDC 安全发布 npm 包</a>；本地升版本、打标签、推送后交给 Actions 发布，可用 <a href="/2026/10/23/npm-publish-oidc/" title="npm -- 用 npm-publish-oidc 发布包">npm -- 用 npm-publish-oidc 发布包</a>。</p>
+<p><strong>环境自检：<code>npm doctor</code></strong></p>
+<p>在流水线或本机排查“npm 本身是否正常”时用：检查 Node/npm、registry 连通、权限、缓存等。能打印健康报告，不等于当前项目的 <code>npm ci</code> 或 <code>npm test</code> 已经成功。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm doctor</span><br></pre></td></tr></table></figure>
+<h3 id="一条最小-CI-顺序">一条最小 CI 顺序</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 严格按 lock 安装</span></span><br><span class="line">npm ci</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 可选：漏洞门禁</span></span><br><span class="line">npm audit --audit-level=high</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 检查、测试、构建（脚本名以项目为准）</span></span><br><span class="line">npm run lint</span><br><span class="line">npm <span class="built_in">test</span></span><br><span class="line">npm run build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 发布前看一眼打包内容</span></span><br><span class="line">npm pack --dry-run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 需要发版时再 publish（权限与 OIDC 见同系列文章）</span></span><br><span class="line"><span class="comment"># npm publish --access public</span></span><br></pre></td></tr></table></figure>
+<p>安装失败时先看：项目根是否有已提交的 <code>package-lock.json</code>、<code>npm ci</code> 的报错是否在说 lock 与 <code>package.json</code> 不一致。审计失败先看 <code>npm audit</code> 的报告级别是否被 <code>--audit-level</code> 拦住。脚本失败先在同一环境手动跑对应的 <code>npm run ...</code>，确认是依赖问题还是测试本身失败。</p>
 <h2 id="发包到npm仓库">发包到npm仓库</h2>
 <h3 id="1-注册与登录">1. 注册与登录</h3>
 <ol>
@@ -2367,7 +2595,7 @@ if (!window.__postViewReady) {
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">60:58</span>
+    <span title="站点阅读时长">61:14</span>
   </span>
 </div>
 <div class="busuanzi-count">
