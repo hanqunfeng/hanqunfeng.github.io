@@ -984,7 +984,7 @@ i.ban {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">338</span>
+          <span class="site-state-item-count">339</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -995,7 +995,7 @@ i.ban {
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags">
-        <span class="site-state-item-count">100</span>
+        <span class="site-state-item-count">101</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1055,6 +1055,212 @@ i.ban {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/11/16/vue3-template/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.png">
+      <meta itemprop="name" content="飘逸峰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飘逸峰的博客">
+      <meta itemprop="description" content="分享成长与快乐的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 飘逸峰的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/16/vue3-template/" class="post-title-link" itemprop="url">Vue 3 模板语法速查</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-11-16 15:45:00 / 修改时间：15:53:10" itemprop="dateCreated datePublished" datetime="2026-11-16T15:45:00+08:00">2026-11-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+        </span>
+    </span>
+
+  
+  
+
+  
+
+  <!-- 置顶，精品 -->
+  <span class="post-meta-item post-meta-badges">
+      <span class="post-badge post-badge-top">
+        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
+        <span class="post-badge-text">置顶</span>
+      </span>
+      <span class="post-badge post-badge-essential">
+        <i class="fa-regular fa-newspaper post-badge-icon"></i>
+        <span class="post-badge-text">精品</span>
+      </span>
+  </span>
+
+
+    <span class="post-meta-break"></span>
+
+</div>
+<span title="阅读次数">
+    <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+    </span>
+    <span class="post-meta-item-text">阅读次数：</span>
+    <span class="myself-visitors-count"
+          data-path="2026/11/16/vue3-template/"
+          data-title="Vue 3 模板语法速查">0</span>
+</span>
+<script>
+if (!window.__postViewReady) {
+  window.__postViewReady = true;
+  jQuery(function ($) {
+    var API = 'https://wannianli.hanqunfeng.com';
+    // var API = 'http://127.0.0.1:5000';
+    var SITE_URL = 'https://blog.hanqunfeng.com';
+    var $nodes = $('.myself-visitors-count');
+    if (!$nodes.length) return;
+
+    function isProd() {
+      try {
+        return window.location.hostname === new URL(SITE_URL).hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function render($el, count) {
+      $el.text(count || 0);
+    }
+
+    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
+    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
+    var $incr = $nodes.filter('[data-incr="1"]');
+    if ($incr.length && isProd()) {
+      $incr.each(function () {
+        var $el = $(this);
+        $.ajax({
+          url: API + '/post_view/incr',
+          type: 'POST',
+          contentType: 'application/json;charset=utf-8',
+          data: JSON.stringify({
+            path: this.dataset.path,
+            title: this.dataset.title
+          }),
+          success: function (data) {
+            render($el, data && data.count);
+          },
+          error: function () {
+            render($el, 0);
+          }
+        });
+      });
+      return;
+    }
+
+    var paths = $nodes.map(function () { return this.dataset.path; }).get();
+    $.ajax({
+      url: API + '/post_view',
+      type: 'GET',
+      traditional: true,
+      data: { path: paths },
+      success: function (data) {
+        var views = (data && data.views) || {};
+        $nodes.each(function () {
+          render($(this), views[this.dataset.path]);
+        });
+      },
+      error: function () {
+        $nodes.each(function () { render($(this), 0); });
+      }
+    });
+  });
+}
+</script>
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="摘要">摘要</h2>
+<ul class="lvl-0">
+<li class="lvl-2">Vue 3 模板（<code>&lt;template&gt;</code>）语法速查：插值、指令解剖、<code>v-bind</code> / <code>v-on</code> / <code>v-if</code> / <code>v-for</code> / <code>v-model</code>、插槽、<code>ref</code> / <code>key</code>，以及 <code>v-once</code> / <code>v-memo</code> 等优化指令，配可直接对照的示例</li>
+<li class="lvl-2">本文按 Vue 3.4+（同名简写等按版本标注）。示例默认 Composition API + <code>&lt;script setup&gt;</code>，与 <a href="/2026/11/14/vue3-create-project/" title="用 create-vue 创建 Vue 3 项目">用 create-vue 创建 Vue 3 项目</a> 脚手架一致</li>
+<li class="lvl-2">官方文档：<a target="_blank" rel="noopener" href="https://cn.vuejs.org/guide/essentials/template-syntax.html">模板语法</a>、<a target="_blank" rel="noopener" href="https://cn.vuejs.org/api/built-in-directives.html">内置指令</a>、<a target="_blank" rel="noopener" href="https://cn.vuejs.org/guide/essentials/class-and-style.html">Class 与 Style 绑定</a>、<a target="_blank" rel="noopener" href="https://cn.vuejs.org/guide/essentials/conditional.html">条件渲染</a>、<a target="_blank" rel="noopener" href="https://cn.vuejs.org/guide/essentials/list.html">列表渲染</a>、<a target="_blank" rel="noopener" href="https://cn.vuejs.org/guide/essentials/event-handling.html">事件处理</a>、<a target="_blank" rel="noopener" href="https://cn.vuejs.org/guide/essentials/forms.html">表单输入绑定</a>、<a target="_blank" rel="noopener" href="https://cn.vuejs.org/guide/components/slots.html">插槽</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/16/vue3-template/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2915,214 +3121,6 @@ if (!window.__postViewReady) {
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.hanqunfeng.com/2026/10/29/git-gitconfig/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/me.png">
-      <meta itemprop="name" content="飘逸峰">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飘逸峰的博客">
-      <meta itemprop="description" content="分享成长与快乐的地方">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 飘逸峰的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/10/29/git-gitconfig/" class="post-title-link" itemprop="url">Git 的用户配置 ~/.gitconfig</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-10-29 10:20:00" itemprop="dateCreated datePublished" datetime="2026-10-29T10:20:00+08:00">2026-10-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-04 11:47:42" itemprop="dateModified" datetime="2026-11-04T11:47:42+08:00">2026-11-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-  
-
-  
-
-  <!-- 置顶，精品 -->
-  <span class="post-meta-item post-meta-badges">
-      <span class="post-badge post-badge-top">
-        <i class="fa-solid fa-thumbtack post-badge-icon"></i>
-        <span class="post-badge-text">置顶</span>
-      </span>
-      <span class="post-badge post-badge-essential">
-        <i class="fa-regular fa-newspaper post-badge-icon"></i>
-        <span class="post-badge-text">精品</span>
-      </span>
-  </span>
-
-
-    <span class="post-meta-break"></span>
-
-</div>
-<span title="阅读次数">
-    <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-    </span>
-    <span class="post-meta-item-text">阅读次数：</span>
-    <span class="myself-visitors-count"
-          data-path="2026/10/29/git-gitconfig/"
-          data-title="Git 的用户配置 ~/.gitconfig">0</span>
-</span>
-<script>
-if (!window.__postViewReady) {
-  window.__postViewReady = true;
-  jQuery(function ($) {
-    var API = 'https://wannianli.hanqunfeng.com';
-    // var API = 'http://127.0.0.1:5000';
-    var SITE_URL = 'https://blog.hanqunfeng.com';
-    var $nodes = $('.myself-visitors-count');
-    if (!$nodes.length) return;
-
-    function isProd() {
-      try {
-        return window.location.hostname === new URL(SITE_URL).hostname;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function render($el, count) {
-      $el.text(count || 0);
-    }
-
-    // data-incr="1" 仅文章详情页会输出（模板条件：not is_index）。
-    // 列表页 is_index 为 true，不加该属性，只查询次数，避免首页刷一次就把每篇文章都 +1。
-    var $incr = $nodes.filter('[data-incr="1"]');
-    if ($incr.length && isProd()) {
-      $incr.each(function () {
-        var $el = $(this);
-        $.ajax({
-          url: API + '/post_view/incr',
-          type: 'POST',
-          contentType: 'application/json;charset=utf-8',
-          data: JSON.stringify({
-            path: this.dataset.path,
-            title: this.dataset.title
-          }),
-          success: function (data) {
-            render($el, data && data.count);
-          },
-          error: function () {
-            render($el, 0);
-          }
-        });
-      });
-      return;
-    }
-
-    var paths = $nodes.map(function () { return this.dataset.path; }).get();
-    $.ajax({
-      url: API + '/post_view',
-      type: 'GET',
-      traditional: true,
-      data: { path: paths },
-      success: function (data) {
-        var views = (data && data.views) || {};
-        $nodes.each(function () {
-          render($(this), views[this.dataset.path]);
-        });
-      },
-      error: function () {
-        $nodes.each(function () { render($(this), 0); });
-      }
-    });
-  });
-}
-</script>
-
-
-
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-lines"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
-    </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="摘要">摘要</h2>
-<ul class="lvl-0">
-<li class="lvl-2">本文写当前用户的 Git 配置文件 <code>~/.gitconfig</code>：它为什么存在、和仓库里的 <code>.git/config</code> 谁生效、怎么创建和修改、常用项，以及怎么核对实际读到的值。<code>core.quotepath</code> 决定 <code>git status</code> 里的中文路径是原样显示，还是印成八进制转义。本文按 Git 2.56.0。</li>
-<li class="lvl-2">HTTPS 凭据助手见 <a href="/2026/10/29/git-credential-ssh/" title="Git 的 HTTPS 凭据和 SSH 密钥">Git 的 HTTPS 凭据和 SSH 密钥</a>。按目录换邮箱见 <a href="/2026/10/28/git-github-accounts/" title="同一台电脑使用两个 GitHub 账号">同一台电脑使用两个 GitHub 账号</a>。签名密钥写在这个文件里，见 <a href="/2026/10/28/git-commit-sign/" title="用 SSH 密钥签名 Git 提交">用 SSH 密钥签名 Git 提交</a>。</li>
-<li class="lvl-2"><a target="_blank" rel="noopener" href="https://git-scm.com/docs/git-config">git-config</a>。</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/10/29/git-gitconfig/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -3156,7 +3154,7 @@ if (!window.__postViewReady) {
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">62:01</span>
+    <span title="站点阅读时长">62:12</span>
   </span>
 </div>
 <div class="busuanzi-count">
